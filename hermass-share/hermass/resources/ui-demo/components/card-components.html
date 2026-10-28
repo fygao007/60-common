@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>卡片组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Card/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+    }
+
+    .card-page {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .card-page__head {
+      width: min(1120px, 100%);
+      margin-bottom: 20px;
+    }
+
+    .card-page__head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: var(--ds-font-size-title);
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: var(--ds-line-height-title);
+    }
+
+    .card-page__head p {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .card-section {
+      width: min(1120px, 100%);
+      margin-top: 16px;
+      padding: 20px;
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: var(--ds-radius-lg);
+    }
+
+    .card-section h2 {
+      margin: 0 0 16px;
+      color: var(--ds-color-black);
+      font-size: var(--ds-font-size-lg);
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: var(--ds-line-height-lg);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card-grid .ds-card-component--short {
+      max-width: none;
+    }
+
+    .card-fields {
+      display: grid;
+      gap: 8px;
+    }
+
+    .card-field {
+      display: grid;
+      grid-template-columns: 84px minmax(0, 1fr);
+      gap: 8px;
+      min-width: 0;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .card-field dt {
+      color: var(--ds-color-text-secondary);
+      text-align: right;
+    }
+
+    .card-field dd {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ds-color-black);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .demo-title-long {
+      max-width: 150px;
+    }
+
+    .image-card-copy {
+      display: grid;
+      gap: 8px;
+    }
+
+    .image-card-copy strong {
+      color: var(--ds-color-black);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .image-card-copy span {
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .demo-room-image {
+      width: 160px;
+      height: 110px;
+      background:
+        linear-gradient(135deg, rgba(49, 103, 255, 0.16), rgba(120, 71, 255, 0.1)),
+        linear-gradient(25deg, #c9d8ee 0 42%, #eef4ff 42% 58%, #9fb9dd 58%);
+      border-radius: 8px;
+    }
+
+    .demo-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-top: 12px;
+      border-top: 1px solid #f1f1f3;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+    }
+
+    .demo-toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      padding: 8px 12px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.76);
+      border-radius: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms;
+    }
+
+    .demo-toast.is-visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <main class="card-page ds-scope">
+    <header class="card-page__head">
+      <h1>卡片组件</h1>
+      <p>DSCard：覆盖短卡、长卡、发布状态、信息行、配置提示、启用开关、操作折叠、选择和图片卡。管理列表场景见 <a href="../scenarios/card-list-page.html">卡片列表页</a>。</p>
+    </header>
+
+    <section class="card-section">
+      <h2>基础布局与操作折叠</h2>
+      <div class="card-grid">
+        <section class="ds-card ds-card-component ds-card-component--short ds-card-component--padded">
+          <header class="ds-card-component__header">
+            <div class="ds-card-component__heading">
+              <strong class="ds-card-component__title demo-title-long" title="教职工培养发展与企业实践认定材料">教职工培养发展与企业实践认定材料</strong>
+              <span class="ds-card-component__tag">标签</span>
+            </div>
+          </header>
+          <div class="ds-card-component__body">
+            <div class="ds-card-component__content">
+              <dl class="card-fields">
+                <div class="card-field"><dt>标题名称</dt><dd title="此处是较长的文本内容">此处是较长的文本内容</dd></div>
+                <div class="card-field"><dt>负责人</dt><dd>张明</dd></div>
+                <div class="card-field"><dt>更新时间</dt><dd>2026-06-13</dd></div>
+              </dl>
+            </div>
+          </div>
+          <footer class="ds-card-component__footer">
+            <div class="ds-card-component__actions" role="group" aria-label="卡片操作">
+              <button class="ds-card-component__action" type="button" data-action="编辑">编辑</button>
+              <button class="ds-card-component__action" type="button" data-action="详情">详情</button>
+              <div class="ds-card-component__more">
+                <button class="ds-card-component__more-trigger" type="button" aria-haspopup="menu" aria-expanded="false" data-more-trigger>更多 <span aria-hidden="true">⌄</span></button>
+                <div class="ds-card-component__menu" role="menu" hidden data-more-menu>
+                  <button class="ds-card-component__action" type="button" role="menuitem" data-action="复制">复制</button>
+                  <button class="ds-card-component__action ds-card-component__action--danger" type="button" role="menuitem" data-action="删除">删除</button>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </section>
+
+        <section class="ds-card ds-card-component ds-card-component--long ds-card-component--padded ds-card-component--hover-actions">
+          <header class="ds-card-component__header">
+            <div class="ds-card-component__heading">
+              <strong class="ds-card-component__title">长卡片悬浮显示操作</strong>
+              <span class="ds-card-component__tag">独占一行</span>
+            </div>
+            <div class="ds-card-component__header-extra">
+              <div class="ds-card-component__actions" role="group" aria-label="长卡片操作">
+                <button class="ds-card-component__action" type="button" data-action="编辑">编辑</button>
+                <button class="ds-card-component__action ds-card-component__action--danger" type="button" data-action="删除">删除</button>
+              </div>
+            </div>
+          </header>
+          <div class="ds-card-component__body">
+            <div class="ds-card-component__content">
+              <dl class="card-fields">
+                <div class="card-field"><dt>适用范围</dt><dd>列表页中的跨栏信息卡</dd></div>
+                <div class="card-field"><dt>交互规则</dt><dd>鼠标悬浮或键盘聚焦时显示标题区操作</dd></div>
+              </dl>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="card-section">
+      <h2>启用状态</h2>
+      <div class="card-grid">
+        <section class="ds-card ds-card-component ds-card-component--short ds-card-component--padded ds-card-component--switchable" data-switch-card>
+          <header class="ds-card-component__header">
+            <div class="ds-card-component__heading">
+              <strong class="ds-card-component__title">主标题</strong>
+              <span class="ds-card-component__tag">标签</span>
+            </div>
+            <div class="ds-card-component__header-extra">
+              <button class="ds-card-component__switch" type="button" role="switch" aria-checked="false" data-switch>
+                <span data-switch-label>停用</span>
+                <span class="ds-card-component__switch-core" aria-hidden="true"></span>
+              </button>
+            </div>
+          </header>
+          <div class="ds-card-component__body">
+            <div class="ds-card-component__content">
+              <dl class="card-fields">
+                <div class="card-field"><dt>当前状态</dt><dd data-state-copy>未启用，标题区和标签使用灰色层级</dd></div>
+                <div class="card-field"><dt>切换方式</dt><dd>点击右上角开关</dd></div>
+              </dl>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="card-section">
+      <h2>选择状态</h2>
+      <div class="card-grid">
+        <section class="ds-card ds-card-component ds-card-component--short ds-card-component--padded ds-card-component--selection-light is-selectable" role="checkbox" aria-checked="false" tabindex="0" data-select-card>
+          <header class="ds-card-component__header">
+            <div class="ds-card-component__heading"><strong class="ds-card-component__title">轻量选择卡</strong></div>
+          </header>
+          <div class="ds-card-component__body">
+            <div class="ds-card-component__content">点击卡片或按 Enter / Space 切换选中状态。</div>
+          </div>
+        </section>
+
+        <section class="ds-card ds-card-component ds-card-component--short ds-card-component--padded ds-card-component--selection-prominent is-selectable" role="checkbox" aria-checked="false" tabindex="0" data-select-card data-prominent>
+          <span class="ds-card-component__selected-label" hidden>当前选择</span>
+          <header class="ds-card-component__header">
+            <div class="ds-card-component__heading"><strong class="ds-card-component__title">突出选择卡</strong></div>
+          </header>
+          <div class="ds-card-component__body">
+            <div class="ds-card-component__content">选中后显示主色边框与右上角状态标识。</div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="card-section">
+      <h2>图片卡</h2>
+      <div class="card-grid">
+        <section class="ds-card ds-card-component ds-card-component--image">
+          <div class="ds-card-component__body">
+            <div class="ds-card-component__media">
+              <div class="demo-room-image" role="img" aria-label="实验室示意图"></div>
+              <span class="ds-card-component__media-badge">空闲</span>
+            </div>
+            <div class="ds-card-component__content image-card-copy">
+              <strong>实验 1-20</strong>
+              <span>普通教室</span>
+              <span>69 人</span>
+              <span>北校区 实验楼 1 楼</span>
+            </div>
+          </div>
+          <footer class="ds-card-component__footer" style="padding: 12px 0 0">
+            <div class="demo-footer"><span>设备：电脑 / 投影 / Wi-Fi</span><span>4 项</span></div>
+          </footer>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="demo-toast" role="status" aria-live="polite" data-toast></div>
+
+  <script>
+    const toast = document.querySelector('[data-toast]');
+    let toastTimer;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 1200);
+    }
+
+    document.querySelectorAll('[data-action]').forEach((button) => {
+      button.addEventListener('click', () => {
+        showToast(`已触发：${button.dataset.action}`);
+        const menu = button.closest('[data-more-menu]');
+        if (menu) {
+          menu.hidden = true;
+          menu.previousElementSibling.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-more-trigger]').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const menu = trigger.nextElementSibling;
+        const open = menu.hidden;
+        menu.hidden = !open;
+        trigger.setAttribute('aria-expanded', String(open));
+      });
+    });
+
+    document.querySelectorAll('[data-switch]').forEach((control) => {
+      control.addEventListener('click', () => {
+        const card = control.closest('[data-switch-card]');
+        const enabled = !card.classList.contains('is-enabled');
+        card.classList.toggle('is-enabled', enabled);
+        control.setAttribute('aria-checked', String(enabled));
+        control.querySelector('[data-switch-label]').textContent = enabled ? '启用' : '停用';
+        card.querySelector('[data-state-copy]').textContent = enabled
+          ? '已启用，标题区和标签使用彩色层级'
+          : '未启用，标题区和标签使用灰色层级';
+      });
+    });
+
+    function toggleCard(card) {
+      const selected = !card.classList.contains('is-selected');
+      card.classList.toggle('is-selected', selected);
+      card.setAttribute('aria-checked', String(selected));
+      const label = card.querySelector('.ds-card-component__selected-label');
+      if (label) label.hidden = !selected;
+    }
+
+    document.querySelectorAll('[data-select-card]').forEach((card) => {
+      card.addEventListener('click', (event) => {
+        if (event.target.closest('button, a, input, select, textarea')) return;
+        toggleCard(card);
+      });
+      card.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggleCard(card);
+      });
+    });
+  </script>
+</body>
+</html>

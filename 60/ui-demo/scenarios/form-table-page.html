@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>分组表单表格页场景</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Field/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/ReadOnlyForm/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/GroupTitle/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .form-table-page {
+      min-height: 100vh;
+      padding: var(--ds-space-5);
+    }
+
+    .form-table-shell {
+      display: grid;
+      width: min(1240px, 100%);
+      margin: 0 auto;
+    }
+
+    .form-table-card {
+      min-width: 0;
+      padding: var(--ds-space-4);
+      background: var(--ds-color-bg-container);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: var(--ds-radius-xl);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .form-table-title {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 18px;
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: 26px;
+    }
+
+    .form-table-desc {
+      margin: var(--ds-space-1) 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .form-table-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--ds-space-2);
+      margin: 8px 0;
+    }
+
+    .form-table-actions__edit {
+      display: none;
+    }
+
+    .form-table-card.is-editing .form-table-actions__view {
+      display: none;
+    }
+
+    .form-table-card.is-editing .form-table-actions__edit {
+      display: flex;
+      gap: var(--ds-space-2);
+    }
+
+    .form-table-form {
+      padding-top: var(--ds-space-4);
+      border-top: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .form-table-body {
+      display: grid;
+      gap: var(--ds-space-4);
+      margin-top: var(--ds-space-4);
+    }
+
+    .form-table-group {
+      display: grid;
+      min-width: 0;
+      gap: var(--ds-space-3);
+    }
+
+    /* 分组标题：蓝色竖条 + 16px 加粗，无底色 */
+    .form-table-card .ds-group-title {
+      height: auto;
+      padding: 0;
+      background: none;
+      border-radius: 0;
+    }
+
+    .form-table-card .ds-group-title__main {
+      gap: 8px;
+    }
+
+    .form-table-card .ds-group-title__main::before {
+      content: "";
+      width: 3px;
+      height: 14px;
+      background: var(--ds-color-primary);
+      border-radius: 2px;
+    }
+
+    .form-table-card .ds-group-title__text {
+      font-size: 16px;
+    }
+
+    /* 表单一行 3 列（页面级扩展变体） */
+    .form-table-card .ds-readonly-form--3-column .ds-readonly-form__grid {
+      grid-template-columns: repeat(3, var(--ds-readonly-label-width) minmax(0, 1fr));
+    }
+
+    .form-table-card .ds-readonly-form--3-column .ds-readonly-field--full .ds-readonly-field__content {
+      grid-column: span 3;
+    }
+
+    /* 修复：空单元格露出网格灰底 */
+    .form-table-card .ds-readonly-form__grid {
+      background: var(--ds-color-bg-container);
+    }
+
+    /* 必填星号悬挂到文字前方，各列标签文字纵向对齐 */
+    .form-table-card .ds-readonly-field__label {
+      position: relative;
+    }
+
+    .form-table-card .ds-readonly-field__label b {
+      position: absolute;
+      left: 8px;
+    }
+
+    .form-table-group-body {
+      padding: 0;
+    }
+
+    .form-table-table {
+      min-width: 0;
+      min-height: 340px;
+      overflow: hidden;
+    }
+
+    .form-table-table ds-data-table {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      height: 340px;
+    }
+
+    .form-table-status {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .form-table-card .ds-readonly-field__content .ds-input {
+      width: 100%;
+      height: 32px;
+    }
+
+    .form-table-card .ds-readonly-field__content .ds-textarea {
+      width: 100%;
+      min-height: 88px;
+    }
+
+    .form-table-card .ds-readonly-field__content.is-editing-field {
+      display: grid;
+      gap: 4px;
+    }
+
+    .form-table-field-counter {
+      justify-self: end;
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    @media (max-width: 980px) {
+      .form-table-page {
+        padding: var(--ds-space-3);
+      }
+
+      .form-table-card {
+        padding: var(--ds-space-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="form-table-page ds-scope">
+    <div class="form-table-shell">
+      <section class="form-table-card" id="formTableRoot">
+        <header>
+          <h1 class="form-table-title">分组表单表格页</h1>
+          <p class="form-table-desc">用于同一页面内同时维护主表单、明细表格和补充说明的业务场景。</p>
+        </header>
+
+        <div class="form-table-actions">
+          <span class="form-table-actions__view">
+            <button class="ds-button ds-button--primary" id="editButton" type="button">编辑</button>
+            <button class="ds-button ds-button--ghost" type="button">按钮</button>
+            <button class="ds-button ds-button--default" type="button">按钮</button>
+          </span>
+          <span class="form-table-actions__edit">
+            <button class="ds-button ds-button--primary" id="saveButton" type="button">保存</button>
+            <button class="ds-button ds-button--default" id="cancelButton" type="button">取消</button>
+          </span>
+        </div>
+
+        <div class="form-table-form ds-readonly-form ds-readonly-form--3-column" aria-label="筛选字段">
+          <div class="ds-readonly-form__grid">
+            <div class="ds-readonly-field">
+              <span class="ds-readonly-field__label"><span>所属年度</span></span>
+              <div class="ds-readonly-field__content">2026</div>
+            </div>
+            <div class="ds-readonly-field">
+              <span class="ds-readonly-field__label"><span>业务类型</span></span>
+              <div class="ds-readonly-field__content">课程建设</div>
+            </div>
+            <div class="ds-readonly-field">
+              <span class="ds-readonly-field__label"><span>负责人</span></span>
+              <div class="ds-readonly-field__content">张老师</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-table-body">
+          <div class="form-table-group">
+            <div class="ds-group-title" role="heading" aria-level="2">
+              <div class="ds-group-title__main"><span class="ds-group-title__text">基础信息</span></div>
+              <div class="ds-group-title__extra">主表单</div>
+            </div>
+            <div class="form-table-group-body ds-readonly-form ds-readonly-form--3-column" aria-label="基础信息表单">
+              <div class="ds-readonly-form__grid">
+                <div class="ds-readonly-field">
+                  <span class="ds-readonly-field__label"><b aria-hidden="true">*</b><span>项目名称</span></span>
+                  <div class="ds-readonly-field__content">课程资源建设计划</div>
+                </div>
+                <div class="ds-readonly-field">
+                  <span class="ds-readonly-field__label"><b aria-hidden="true">*</b><span>归属部门</span></span>
+                  <div class="ds-readonly-field__content">教务处</div>
+                </div>
+                <div class="ds-readonly-field">
+                  <span class="ds-readonly-field__label"><span>开始日期</span></span>
+                  <div class="ds-readonly-field__content">2026/06/01</div>
+                </div>
+                <div class="ds-readonly-field">
+                  <span class="ds-readonly-field__label"><span>结束日期</span></span>
+                  <div class="ds-readonly-field__content">2026/09/30</div>
+                </div>
+                <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+                  <span class="ds-readonly-field__label"><span>建设目标</span></span>
+                  <div class="ds-readonly-field__content" data-multiline>完成资源清单梳理、校内评审和发布准备，确保明细任务可追踪。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-table-group">
+            <div class="ds-group-title" role="heading" aria-level="2">
+              <div class="ds-group-title__main"><span class="ds-group-title__text">明细表格</span></div>
+              <div class="ds-group-title__extra">主对象子项</div>
+            </div>
+            <div class="form-table-table">
+              <ds-data-table id="detailTable" title="任务明细" row-key="id" show-index min-width="940"></ds-data-table>
+            </div>
+          </div>
+
+          <div class="form-table-group">
+            <div class="ds-group-title" role="heading" aria-level="2">
+              <div class="ds-group-title__main"><span class="ds-group-title__text">补充说明</span></div>
+            </div>
+            <div class="form-table-group-body ds-readonly-form ds-readonly-form--1-column" aria-label="补充说明表单">
+              <div class="ds-readonly-form__grid">
+                <div class="ds-readonly-field ds-readonly-field--start">
+                  <span class="ds-readonly-field__label"><span>备注</span></span>
+                  <div class="ds-readonly-field__content" data-multiline><span class="ds-readonly-field__placeholder">-</span></div>
+                </div>
+              </div>
+            </div>
+            <span class="form-table-status" id="tableStatus">已加载 5 条明细。</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "lit": "../node_modules/lit/index.js",
+      "lit/": "../node_modules/lit/",
+      "lit-html": "../node_modules/lit-html/lit-html.js",
+      "lit-html/": "../node_modules/lit-html/",
+      "lit-element/": "../node_modules/lit-element/",
+      "@lit/reactive-element": "../node_modules/@lit/reactive-element/reactive-element.js",
+      "@lit/reactive-element/": "../node_modules/@lit/reactive-element/"
+    }
+  }
+  </script>
+  <script type="module" src="../packages/design-system/web-components/DataTable/ds-data-table.js"></script>
+  <script type="module">
+    const table = document.getElementById('detailTable');
+    const status = document.getElementById('tableStatus');
+    const root = document.getElementById('formTableRoot');
+
+    const records = [
+      { id: 1, task: '课程资源清单', type: 'course', owner: '张老师', progress: '已完成', deadline: '2026-06-20', count: 24 },
+      { id: 2, task: '企业案例采集', type: 'practice', owner: '李老师', progress: '进行中', deadline: '2026-07-15', count: 12 },
+      { id: 3, task: '教研成果映射', type: 'research', owner: '王老师', progress: '待确认', deadline: '2026-08-01', count: 8 },
+      { id: 4, task: '线上资源评审', type: 'course', owner: '赵老师', progress: '进行中', deadline: '2026-08-18', count: 16 },
+      { id: 5, task: '实训任务发布', type: 'practice', owner: '陈老师', progress: '未开始', deadline: '2026-09-05', count: 10 }
+    ];
+
+    let visibleRecords = records.map((item) => ({ ...item }));
+
+    table.columns = [
+      { key: 'task', title: '明细名称', width: 240, fixed: 'left' },
+      { key: 'owner', title: '负责人', width: 140 },
+      { key: 'progress', title: '状态', width: 140, type: 'tag' },
+      { key: 'deadline', title: '截止日期', width: 160 },
+      { key: 'count', title: '数量', width: 120, align: 'right' }
+    ];
+
+    function renderTable(nextRecords) {
+      visibleRecords = nextRecords;
+      table.data = visibleRecords;
+      status.textContent = `已加载 ${visibleRecords.length} 条明细。`;
+    }
+
+    renderTable(visibleRecords);
+
+    // === 编辑状态切换 ===
+    const EDIT_MAXLENGTH = 500;
+    const editableFields = Array.from(root.querySelectorAll('.ds-readonly-field__content'));
+    let fieldBackup = [];
+
+    function buildControl(el) {
+      const isMultiline = 'multiline' in el.dataset;
+      const control = document.createElement(isMultiline ? 'textarea' : 'input');
+      control.className = isMultiline ? 'ds-textarea' : 'ds-input';
+      if (isMultiline) {
+        control.maxLength = EDIT_MAXLENGTH;
+        control.rows = 3;
+      } else {
+        control.type = 'text';
+      }
+      control.value = el.textContent.trim();
+      return control;
+    }
+
+    function enterEdit() {
+      fieldBackup = editableFields.map((el) => ({ el, html: el.innerHTML }));
+      editableFields.forEach((el) => {
+        const control = buildControl(el);
+        el.replaceChildren(control);
+        if (control.tagName === 'TEXTAREA') {
+          el.classList.add('is-editing-field');
+          const counter = document.createElement('span');
+          counter.className = 'form-table-field-counter';
+          counter.textContent = `${control.value.length}/${EDIT_MAXLENGTH}`;
+          control.addEventListener('input', () => {
+            counter.textContent = `${control.value.length}/${EDIT_MAXLENGTH}`;
+          });
+          el.append(counter);
+        }
+      });
+      root.classList.add('is-editing');
+    }
+
+    function exitEdit() {
+      fieldBackup.forEach(({ el, html }) => {
+        el.innerHTML = html;
+        el.classList.remove('is-editing-field');
+      });
+      fieldBackup = [];
+      root.classList.remove('is-editing');
+    }
+
+    document.getElementById('editButton').addEventListener('click', enterEdit);
+
+    document.getElementById('saveButton').addEventListener('click', () => {
+      editableFields.forEach((el) => {
+        const control = el.querySelector('.ds-input, .ds-textarea');
+        if (control) el.textContent = control.value.trim();
+      });
+      fieldBackup = [];
+      root.classList.remove('is-editing');
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', exitEdit);
+  </script>
+</body>
+</html>

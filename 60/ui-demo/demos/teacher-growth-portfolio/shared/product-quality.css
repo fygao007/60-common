@@ -1,0 +1,230 @@
+/* Teacher Growth Portfolio · product-wide interaction and visual quality layer */
+
+:root {
+  --growth-accent: #3b5bdb;
+  --growth-accent-soft: rgba(59, 91, 219, .10);
+  --growth-line: #e8ecf3;
+  --growth-text-2: #515b70;
+  --growth-surface: rgba(255, 255, 255, .97);
+  --growth-shadow: 0 1px 2px rgba(20, 31, 58, .04), 0 10px 30px rgba(20, 31, 58, .07);
+  --growth-shadow-lg: 0 24px 70px rgba(20, 31, 58, .20);
+}
+
+html[data-growth-role="teacher"] { --growth-accent: #6366f1; --growth-accent-soft: rgba(99, 102, 241, .11); }
+
+/* 精炼设计令牌：冷调 slate-blue 中性色阶 + 皇室靛蓝主色 + 克制语义色。
+   仅在成长档案袋应用作用域内覆盖（由 html[data-growth-role] 限定），不影响其它 demo。
+   令牌挂在文档根而不是 .frame2-stage 上：自定义属性逐级继承，效果与挂在框架宿主
+   节点相同，但不需要书写 .frame2-* 选择器，符合框架2「禁止覆盖 .frame2-*」的约束。 */
+html[data-growth-role] {
+  /* —— 中性色阶 —— */
+  --ds-color-text: #1e2536;
+  --ds-color-text-heading: #18202f;
+  --ds-color-text-secondary: #515b70;
+  --ds-color-text-tertiary: #8089a0;
+  --ds-color-text-placeholder: #a7afc2;
+  --ds-color-text-rgb: 30, 37, 54;
+
+  --ds-color-border: #e3e8f1;
+  --ds-color-border-secondary: #d7deea;
+  --ds-color-border-tertiary: #eef1f7;
+  --ds-color-border-hover: var(--ds-color-primary);
+  --ds-color-border-weak: #eef1f7;
+  --ds-color-border-rgb: 227, 232, 241;
+
+  --ds-color-bg-page: #f5f8fc;
+  --ds-color-bg-container: #ffffff;
+  --ds-color-bg-hover: #f1f5fb;
+  --ds-color-bg-active: var(--ds-color-primary-light);
+  --ds-color-bg-disabled: #f1f3f8;
+  --ds-color-bg-subtle: var(--f2-bg-soft);
+  --ds-color-bg-soft: #f4f7fb;
+
+  /* —— 主色（皇室靛蓝，沉稳精致）—— */
+  --ds-color-primary: #3b5bdb;
+  --ds-color-primary-hover: #2f4ec9;
+  --ds-color-primary-active: #2842ad;
+  --ds-color-primary-disabled: #b9c5ee;
+  --ds-color-primary-light: #eef2fe;
+  --ds-color-primary-lighter: #f6f8fe;
+  --ds-color-primary-selected: #dde5fc;
+  --ds-color-primary-weak: #c3cdf0;
+  --ds-color-primary-rgb: 59, 91, 219;
+
+  /* —— 语义色（柔和克制）—— */
+  --ds-color-success: #12a96b;
+  --ds-color-success-active: #0b7a4d;
+  --ds-color-success-light: #e3f7ee;
+  --ds-color-success-rgb: 18, 169, 107;
+
+  --ds-color-warning: #e08a00;
+  --ds-color-warning-text: #9a5b00;
+  --ds-color-warning-light: #fdf0d9;
+
+  --ds-color-danger: #e5484d;
+  --ds-color-danger-active: #b42318;
+  --ds-color-danger-light: #fde8e8;
+
+  /* P2#10: info/提示 应为蓝色，与预警(danger)区分 */
+  --ds-color-info: #3b5bdb;
+  --ds-color-info-light: #eef2fe;
+}
+
+body[data-growth-ready="true"] {
+  background:
+    radial-gradient(120% 80% at 88% -12%, color-mix(in srgb, var(--growth-accent) 8%, transparent), transparent 55%),
+    linear-gradient(180deg, #f8fafd 0%, #f3f6fb 100%);
+  color: #18202f;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body[data-growth-ready="true"] [data-ds-business-page] {
+  animation: growth-page-enter .38s cubic-bezier(.2,.75,.25,1) both;
+}
+
+/* ==========================================================================
+   页面节奏统一层
+   --------------------------------------------------------------------------
+   背景：37 个页面各自定义了 30+ 套 root class 与各自的间距，节奏不一致。
+   本层用「一个口径」统一所有页面的外边距与区块间距，页面自身 CSS 不必逐个改。
+
+   口径对齐框架2固定规则（framework/README.md）：
+     操作区四周边距 12px（由框架 workspaceInset 提供，页面根一律 padding: 0）
+     卡片间距 12px  ·  卡片内容内边距 20px  ·  区块间距 16px
+
+   注意：全站 34 个页面根是 flex/grid + gap。早期这里写的是
+   `> * + * { margin-top: 16px }`，一旦生效会与 gap 叠加成 32px。
+   因此改用 row-gap 建立纵向节奏（对 flex/grid 生效、不影响 grid 的列间距、
+   对 block 根为无效声明），block 流式根再单独用 margin 补齐同样的节奏。
+   ========================================================================== */
+
+body[data-growth-ready="true"] {
+  --growth-page-gap: 16px;   /* 页面内区块与区块 */
+  --growth-card-gap: 12px;   /* 卡片与卡片 */
+  --growth-card-pad: 20px;   /* 卡片内容内边距 */
+}
+
+/* 页面根：统一纵向节奏。#app > * 覆盖全部 49 个页面，
+   含未标注 data-ds-business-page 的共享组件页（RoleFunctionHub / 能力对比 / 权限）。 */
+body[data-growth-ready="true"] #app > * { row-gap: var(--growth-page-gap); }
+
+/* 页面根：左右和顶部边距交还框架（框架已提供 12px 操作区边距），避免双重留白；
+   底部统一留一个区块间距作为滚动到底的呼吸位。
+   —— 统一前：36 个页面 padding: 0（滚到底贴边），t-archive 独有 18px/18px/40px。 */
+/* 页面根：底部留区块间距作为滚动到底的呼吸位；顶部固定 12px
+   （框架未提供顶部 inset，内容会贴住页签栏，统一按 12px 口径补齐）。 */
+body[data-growth-ready="true"] #app > [data-ds-business-page] {
+  padding: 12px 0 var(--growth-page-gap);
+}
+
+/* 二级页（t-data-detail）根容器为整块白色页面，自带水平内边距避免内容贴边 */
+body[data-growth-ready="true"] #app > [data-ds-business-page="t-data-detail"] {
+  padding: 12px 16px var(--growth-page-gap);
+}
+
+/* block 流式根（.ta-page / .hrl-page / .pg-page）没有 gap，用 margin 补齐同一节奏 */
+body[data-growth-ready="true"] .ta-page > * + *,
+body[data-growth-ready="true"] .hrl-page > * + *,
+body[data-growth-ready="true"] .pg-page > * + * { margin-top: var(--growth-page-gap); }
+
+body[data-growth-ready="true"] button,
+body[data-growth-ready="true"] a,
+body[data-growth-ready="true"] [role="button"],
+body[data-growth-ready="true"] input,
+body[data-growth-ready="true"] select,
+body[data-growth-ready="true"] textarea {
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease, transform .18s ease, opacity .18s ease;
+}
+
+body[data-growth-ready="true"] button:not(:disabled):active,
+body[data-growth-ready="true"] [role="button"]:active { transform: translateY(1px) scale(.99); }
+
+body[data-growth-ready="true"] button:focus-visible,
+body[data-growth-ready="true"] a:focus-visible,
+body[data-growth-ready="true"] [role="button"]:focus-visible,
+body[data-growth-ready="true"] input:focus-visible,
+body[data-growth-ready="true"] select:focus-visible,
+body[data-growth-ready="true"] textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--growth-accent) 24%, transparent);
+  outline-offset: 2px;
+}
+
+body[data-growth-ready="true"] button:disabled,
+body[data-growth-ready="true"] [aria-disabled="true"] { cursor: not-allowed; opacity: .48; }
+
+body[data-growth-ready="true"] [class*="card"] {
+  border-color: var(--growth-line);
+}
+
+body[data-growth-ready="true"] [class$="-card"]:not(.ds-card),
+body[data-growth-ready="true"] [class*="-card "]:not(.ds-card) {
+  box-shadow: var(--growth-shadow);
+}
+
+/* DS 标准表格（DSDataTable）回归组件默认样式：不带投影、标准表头/hover/边框，
+   本层的表格美化只作用于 demo 自定义表格。 */
+body[data-growth-ready="true"] .ds-data-table.ds-card { box-shadow: none; }
+body[data-growth-ready="true"] table:not(.ds-data-table__table) { border-collapse: separate; border-spacing: 0; }
+body[data-growth-ready="true"] table:not(.ds-data-table__table) thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f3f6fc !important;
+  color: #4a566b !important;
+  font-weight: 600 !important;
+}
+body[data-growth-ready="true"] table:not(.ds-data-table__table) tbody tr:hover td { background: var(--growth-accent-soft) !important; }
+body[data-growth-ready="true"] table:not(.ds-data-table__table) tbody td { border-bottom-color: #eef1f7 !important; }
+
+body[data-growth-ready="true"] [class*="tabs"] [class*="tab"] { cursor: pointer; }
+body[data-growth-ready="true"] [class*="tab"].is-active { color: var(--growth-accent); }
+
+body[data-growth-ready="true"] [class*="modal"],
+body[data-growth-ready="true"] [class*="drawer"] { --growth-shadow: 0 24px 70px rgba(20, 31, 58, .20); }
+
+body[data-growth-ready="true"] ::selection { color: #fff; background: var(--growth-accent); }
+body[data-growth-ready="true"] ::-webkit-scrollbar { width: 8px; height: 8px; }
+body[data-growth-ready="true"] ::-webkit-scrollbar-thumb { background: #c4cde0; border-radius: 99px; }
+body[data-growth-ready="true"] ::-webkit-scrollbar-thumb:hover { background: #aab6cd; }
+
+@keyframes growth-page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-growth-ready="true"] [data-ds-business-page],
+  body[data-growth-ready="true"] *,
+  body[data-growth-ready="true"] *::before,
+  body[data-growth-ready="true"] *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   RoleFunctionHub 容器高度自适应
+   让列表模板根容器随页面高度占满剩余空间，避免内容少时底部大面积留白。
+   ========================================================================== */
+
+body[data-growth-ready="true"] [data-ds-business-page="role-function-list"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+body[data-growth-ready="true"] [data-ds-business-page="role-function-list"] .role-function-hub__template {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+body[data-growth-ready="true"] [data-ds-business-page="role-function-list"] .role-function-hub__template .ds-regular-list-template__content {
+  flex: 1;
+  min-height: 0;
+}

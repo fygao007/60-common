@@ -1,0 +1,116 @@
+@import '../tokens.css';
+
+.ds-sub-page-header {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  gap: var(--ds-space-2);
+  padding: 12px var(--ds-space-4);
+  color: var(--ds-color-black);
+  font-family: var(--ds-font-family);
+}
+
+.ds-sub-page-header--surface {
+  background: var(--ds-color-bg-container);
+  border-radius: var(--ds-radius-xl);
+}
+
+.ds-sub-page-header__back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-1);
+  min-height: var(--ds-control-height-md);
+  padding: 5px var(--ds-space-2);
+  color: var(--ds-color-black);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  font: inherit;
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  transition:
+    color var(--ds-motion-duration) var(--ds-motion-ease),
+    background-color var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-sub-page-header__back:hover {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-sub-page-header__back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ds-color-focus-ring-strong);
+}
+
+.ds-sub-page-header__back-icon,
+.ds-sub-page-header__back-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-sub-page-header__back-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ds-sub-page-header__divider {
+  flex: none;
+  width: 1px;
+  height: 20px;
+  background: var(--ds-color-border-secondary);
+}
+
+.ds-sub-page-header__title-wrap {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding-inline: var(--ds-space-2);
+}
+
+.ds-sub-page-header__title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-sub-page-header__content {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.ds-sub-page-header__actions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .ds-sub-page-header {
+    padding-inline: var(--ds-space-3);
+  }
+
+  .ds-sub-page-header__title-wrap {
+    flex: 1;
+  }
+}

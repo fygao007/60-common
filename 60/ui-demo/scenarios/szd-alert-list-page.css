@@ -1,0 +1,17 @@
+html,
+body,
+#app {
+  min-height: 100%;
+  margin: 0;
+}
+
+.szd-alert-list-page {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(270deg, #ebf5ff 0%, #f0f7ff 33%, #f1f4ff 66%, #fafbff 100%);
+}
+
+.szd-alert-list-template {
+  flex: 1;
+  min-height: 100vh;
+}

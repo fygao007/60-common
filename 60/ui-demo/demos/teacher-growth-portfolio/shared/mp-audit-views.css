@@ -1,0 +1,204 @@
+/* M07 方案确认与版本发布：列表页与详情页共用的展示样式（状态、详情分区、决定弹窗、轻提示）。
+   页面专属布局（列表页 .mpa-page / 详情页 .mpad-page）留在各自页面的 CSS 里。 */
+
+/* 状态指示：圆点 + 文字 */
+.mpa-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--ds-color-text);
+}
+
+.mpa-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--ds-color-text-tertiary);
+}
+
+.mpa-status.is-success i {
+  background: var(--ds-color-success);
+}
+
+.mpa-status.is-danger i {
+  background: var(--ds-color-danger);
+}
+
+.mpa-status.is-warning i {
+  background: var(--ds-color-warning);
+}
+
+.mpa-status.is-info i {
+  background: var(--ds-color-info);
+}
+
+.mpa-muted {
+  color: var(--ds-color-text-tertiary);
+}
+
+/* 关键要求标记：中性描边，不使用彩色标签块 */
+.mpa-flag {
+  padding: 1px 6px;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-xs);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-xs);
+}
+
+/* 详情：分区纵向排列 */
+.mpa-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mpa-detail__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mpa-detail__section h3 {
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+  font-size: var(--ds-font-size-md);
+  font-weight: 600;
+  color: var(--ds-color-text-heading);
+}
+
+.mpa-subblock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--ds-color-bg-soft);
+  border-radius: var(--ds-radius-sm);
+}
+
+.mpa-subblock h4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: var(--ds-font-size-sm);
+  font-weight: 600;
+  color: var(--ds-color-text-heading);
+}
+
+.mpa-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.9;
+}
+
+.mpa-hint {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.7;
+}
+
+.mpa-quote {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 2px solid var(--ds-color-border);
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.7;
+}
+
+.mpa-modal-text {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.8;
+}
+
+/* 任务要求：逐条列出目标、证据核验与指标引用 */
+.mpa-requirement-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mpa-requirement-list > li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--ds-color-border-secondary);
+}
+
+.mpa-requirement-list > li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mpa-requirement-list__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-heading);
+}
+
+.mpa-requirement-list__line {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.7;
+}
+
+/* 版本与发布记录 */
+.mpa-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mpa-timeline li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text);
+}
+
+.mpa-timeline__time {
+  color: var(--ds-color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 决定动作组（详情页底部固定条内） */
+.mpa-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mpa-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  max-width: 560px;
+  padding: 10px 16px;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-text-heading);
+  color: var(--ds-color-bg-container);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.5;
+  z-index: 20;
+}

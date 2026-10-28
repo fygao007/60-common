@@ -1,0 +1,35 @@
+ontology: szpu-hr
+version: 0.1.0
+levels:
+  - id: public
+    label: 公开
+    examples: [公开招聘公告, 公开岗位名称, 已发布政策]
+    fullTextIndex: allowed
+    vectorIndex: allowed
+  - id: internal
+    label: 内部
+    examples: [组织编码, 内部流程状态, 岗位编制统计]
+    fullTextIndex: controlled
+    vectorIndex: controlled
+  - id: sensitive
+    label: 敏感
+    examples: [姓名, 工号, 联系方式, 合同, 考核结果]
+    fullTextIndex: field-authorized
+    vectorIndex: denied-by-default
+  - id: restricted
+    label: 高敏
+    examples: [证件号码, 银行卡, 薪酬, 社保, 家庭关系, 工伤, 保密人才称号]
+    fullTextIndex: denied
+    vectorIndex: denied
+
+controls:
+  - id: purpose-limitation
+    rule: 查询必须声明业务目的，授权范围由角色、组织范围、字段和用途共同决定。
+  - id: retrieval-before-generation
+    rule: 权限过滤必须在全文检索、图查询和向量召回之前执行。
+  - id: evidence-audit
+    rule: AI回答涉及人员结论时必须记录查询人、使用事实、规则版本、来源和时间。
+  - id: masked-display
+    rule: 敏感字段默认脱敏展示，高敏字段仅允许经审批的精确查询。
+  - id: no-secret-ingestion
+    rule: 账号、密码、令牌和私钥不得进入本体资料库、全文索引或向量库。

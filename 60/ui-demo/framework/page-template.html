@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2业务页面模板</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <style>
+    /* 只允许编写业务内容样式，禁止覆盖任何 .frame2-* 选择器。 */
+    .demo-page {
+      min-height: 100%;
+      padding: 20px;
+      background: #fff;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <section class="demo-page">
+    <h1>业务页面内容</h1>
+  </section>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="./framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="./framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    activeFeature: 'example-list',
+    workspaceVariant: 'canvas',
+    appMenus: {
+      'example-list': [
+        { key: 'example-manage', label: '示例管理', icon: 'home', children: [
+          { key: 'example-list', label: '示例列表' },
+          { key: 'example-create', label: '新增示例' }
+        ] }
+      ],
+      'example-report': []
+    },
+    tabs: [
+      { key: 'example-list', label: '示例列表', closable: true }
+    ]
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+@import '../tokens.css';
+
+.ds-card-list-template {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 756px;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg);
+  border-radius: 12px;
+  font-family: var(--ds-font-family);
+}
+
+.ds-card-list-template__header {
+  display: flex;
+  min-height: 52px;
+  flex: none;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  background: var(--ds-color-bg-container);
+}
+
+.ds-card-list-template__tabs {
+  flex: none;
+}
+
+.ds-card-list-template__meta {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 0;
+  color: var(--ds-color-text-secondary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  line-height: 22px;
+}
+
+.ds-card-list-template__meta strong {
+  max-width: 180px;
+  overflow: hidden;
+  color: var(--ds-color-text);
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-card-list-template__dropdown-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  background: url('../../../../assets/card-scenario-icons/svg_001956de.svg') center / 14px 14px no-repeat;
+}
+
+.ds-card-list-template__content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px 0;
+  overflow: auto;
+}
+
+.ds-card-list-template .ds-filter-area {
+  flex: none;
+  gap: 0;
+}
+
+.ds-card-list-template .ds-filter-area__panel {
+  min-height: auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 16px 16px 8px;
+  background: linear-gradient(180deg, #fafafc 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.ds-card-list-template .ds-filter-area__fields {
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.ds-card-list-template .ds-filter-area__field {
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.ds-card-list-template .ds-filter-area__label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.ds-card-list-template .ds-filter-area__field .ds-input,
+.ds-card-list-template .ds-filter-area__field .ds-select,
+.ds-card-list-template .ds-filter-area__field .ds-select__trigger,
+.ds-card-list-template .ds-filter-area__actions .ds-button {
+  height: 32px;
+  min-height: 32px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.ds-card-list-template__toolbar {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ds-card-list-template__toolbar-actions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ds-card-list-template__tools {
+  display: inline-flex;
+  height: 32px;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.ds-card-list-template__tool {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  place-items: center;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 14px 14px;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ds-card-list-template__tool:hover {
+  background-color: var(--ds-color-bg-hover);
+}
+
+.ds-card-list-template__tool.is-fullscreen {
+  background-image: url('../../../../assets/card-scenario-icons/svg_d244ff39.svg');
+}
+
+.ds-card-list-template__tool.is-columns {
+  background-image: url('../../../../assets/card-scenario-icons/svg_3d4c6c1f.svg');
+}
+
+.ds-card-list-template__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(350px, 1fr));
+  align-items: stretch;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.ds-card-list-template__grid > * {
+  margin-top: 0;
+}
+
+/* 覆盖 base.css 里 .ds-card + .ds-card 的相邻卡片 margin-top：grid 网格内已用 gap 控制间距 */
+.ds-card-list-template__grid .ds-card + .ds-card {
+  margin-top: 0;
+}
+
+.ds-card-list-template__grid .ds-card-component {
+  width: 100%;
+  max-width: none;
+}
+
+.ds-card-list-template__empty {
+  grid-column: 1 / -1;
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-card-list-template__footer {
+  display: flex;
+  min-height: 64px;
+  flex: none;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(10px);
+}
+
+.ds-card-list-template__pagination {
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.ds-card-list-template__pagination .ds-pagination__current {
+  color: var(--ds-color-text);
+  background: var(--ds-color-border-secondary);
+}
+
+@media (max-width: 1180px) {
+  .ds-card-list-template__grid {
+    grid-template-columns: repeat(2, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .ds-card-list-template {
+    border-radius: 8px;
+  }
+
+  .ds-card-list-template__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .ds-card-list-template__meta {
+    margin-left: 0;
+  }
+
+  .ds-card-list-template__content {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .ds-card-list-template .ds-filter-area__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-card-list-template .ds-filter-area__fields,
+  .ds-card-list-template__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-card-list-template .ds-filter-area__field {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .ds-card-list-template .ds-filter-area__label {
+    justify-content: flex-start;
+  }
+}

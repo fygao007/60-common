@@ -1,0 +1,344 @@
+{
+  "$schema": "./resume-field-set.schema.json",
+  "library": "szpu-hr-resume",
+  "version": "1.3.0",
+  "description": "应聘人员简历通用字段表（单源）。v1.2.0 依据现场人事模型导出（现场表结构 model_20260917*）与深圳职业技术大学 2026 年招聘报名表原始表样双向校准：每个字段补 source 标注其对应的现场模型列（model.column），报名表原始表样上存在的字段标 onForm=true（用于生成报名表 PDF 时的取值口径）。修改本文件的字段/列定义，所有引用本库的页面（简历信息、过程审核、监控大屏等）一并调整。环节字段（体检、调档、录用结果、审核等）不在此库，由各页面单独维护。",
+  "resumeSetId": "ApplicantResume",
+  "sectionCount": 14,
+  "sourceSnapshot": "现场表结构 model_20260917134029 ~ model_20260917140252",
+  "models": {
+    "rstbjzgjbxx": { "label": "基本信息填报", "table": "T_RS_TB_JZG_JBXX" },
+    "rstbjzgxlxw": { "label": "学历学位填报", "table": "T_RS_TB_JZG_XLXW" },
+    "rstbjzggzjl": { "label": "工作经历填报", "table": "T_RS_TB_JZG_GZJL" },
+    "exttrsjzgzyzgzs": { "label": "职业资格证书", "table": "ext_t_rs_jzg_zyzgzs" },
+    "rsjzgkylw": { "label": "科研论文信息", "table": "T_RS_JZG_KYLW" },
+    "rsjzgkyzz": { "label": "科研著作信息", "table": "T_RS_JZG_KYZZ" },
+    "rsjzgkyzl": { "label": "科研专利基本信息", "table": "T_RS_JZG_KYZL" },
+    "extkyzxxm": { "label": "科研纵向项目", "table": "ext_t_rs_jzg_kyzxxm" },
+    "extkyhxxm": { "label": "科研横向项目", "table": "ext_t_rs_jzg_kyhxxm" },
+    "rsjzgkycghj": { "label": "成果获奖信息", "table": "T_RS_JZG_KYCGHJ" }
+  },
+  "sections": [
+    {
+      "sectionKey": "basic",
+      "title": "基本信息",
+      "kind": "form",
+      "model": "rstbjzgjbxx",
+      "fields": [
+        { "fieldId": "Resume.basic.name", "label": "姓名", "path": "basic.name", "source": "rstbjzgjbxx.xm", "onForm": true },
+        { "fieldId": "Resume.basic.gender", "label": "性别", "path": "basic.gender", "source": "rstbjzgjbxx.xbdm", "onForm": true },
+        { "fieldId": "Resume.basic.birth", "label": "出生日期", "path": "basic.birth", "source": "rstbjzgjbxx.csrq", "onForm": true },
+        { "fieldId": "Resume.basic.workStart", "label": "参加工作时间", "path": "basic.workStart", "source": "rstbjzgjbxx.cjgzrq", "onForm": true },
+        { "fieldId": "Resume.basic.nation", "label": "民族", "path": "basic.nation", "source": "rstbjzgjbxx.mzdm", "onForm": true },
+        { "fieldId": "Resume.basic.marriage", "label": "婚姻状况", "path": "basic.marriage", "source": "rstbjzgjbxx.hyzkdm", "onForm": true },
+        { "fieldId": "Resume.basic.idType", "label": "证件类型", "path": "basic.idType", "source": "rstbjzgjbxx.zjlx" },
+        { "fieldId": "Resume.basic.idCard", "label": "身份证号", "path": "basic.idCard", "render": "maskedId", "source": "rstbjzgjbxx.zjhm", "onForm": true },
+        { "fieldId": "Resume.basic.nativePlace", "label": "籍贯", "path": "basic.nativePlace", "source": "rstbjzgjbxx.jgdm", "onForm": true },
+        { "fieldId": "Resume.basic.household", "label": "户籍地", "path": "basic.household", "source": "rstbjzgjbxx.hkszd", "onForm": true },
+        { "fieldId": "Resume.basic.birthPlace", "label": "出生地", "path": "basic.birthPlace", "source": "rstbjzgjbxx.csddm" },
+        { "fieldId": "Resume.basic.health", "label": "健康状况", "path": "basic.health", "source": "rstbjzgjbxx.jkzkdm" },
+        { "fieldId": "Resume.basic.phone", "label": "联系电话", "path": "basic.phone", "source": "rstbjzgjbxx.sj", "onForm": true },
+        { "fieldId": "Resume.basic.usedName", "label": "曾用名", "path": "basic.usedName", "source": "rstbjzgjbxx.cym", "onForm": true },
+        { "fieldId": "Resume.basic.politics", "label": "政治面貌", "path": "basic.politics", "source": "rstbjzgjbxx.zzmmdm", "onForm": true },
+        { "fieldId": "Resume.basic.joinPartyDate", "label": "参加党派日期", "path": "basic.joinPartyDate", "source": "rstbjzgjbxx.cjdprq" },
+        { "fieldId": "Resume.basic.email", "label": "电子邮箱", "path": "basic.email", "source": "rstbjzgjbxx.dzxx", "onForm": true },
+        { "fieldId": "Resume.basic.address", "label": "通讯地址", "path": "basic.address", "source": "rstbjzgjbxx.yxtxdz" },
+        { "fieldId": "Resume.basic.postcode", "label": "邮政编码", "path": "basic.postcode", "source": "rstbjzgjbxx.yxyzbm" },
+        { "fieldId": "Resume.basic.topEducation", "label": "最高学历", "path": "basic.topEducation", "source": "rstbjzgjbxx.zgxldm" },
+        { "fieldId": "Resume.basic.topDegree", "label": "最高学位", "path": "basic.topDegree", "source": "rstbjzgjbxx.zgxwdm" },
+        { "fieldId": "Resume.basic.topMajor", "label": "最高学历所学专业", "path": "basic.topMajor", "source": "rstbjzgjbxx.sxzy", "onForm": true },
+        { "fieldId": "Resume.basic.topSchool", "label": "最高学历毕业院校", "path": "basic.topSchool", "source": "rstbjzgjbxx.byxx", "onForm": true },
+        { "fieldId": "Resume.basic.topGraduateDate", "label": "最高学历毕业年月", "path": "basic.topGraduateDate", "source": "rstbjzgjbxx.byrq" },
+        { "fieldId": "Resume.basic.nationality", "label": "国籍", "path": "basic.nationality", "source": "rstbjzgjbxx.gjdqdm" },
+        { "fieldId": "Resume.basic.overseas", "label": "海外经历", "path": "basic.overseas", "source": "rstbjzgjbxx.hwjl" },
+        { "fieldId": "Resume.basic.photo", "label": "照片", "path": "basic.photo", "render": "photo", "source": null, "note": "报名表「贴相片处」；现场基本信息表无照片列，走附件材料（jbxx.zmcl01~10）", "onForm": true }
+      ]
+    },
+    {
+      "sectionKey": "spouse",
+      "title": "配偶信息",
+      "kind": "form",
+      "model": null,
+      "note": "报名表原始表样有配偶信息行；现场导出的基本信息表无配偶列（仅 hyzkdm 婚姻状况 / jhsj 结婚时间 / extJszk 子女情况），配偶明细由招聘系统自采集，入职时再落人事家庭成员表。",
+      "fields": [
+        { "fieldId": "Resume.spouse.name", "label": "配偶姓名", "path": "spouse.name", "source": null, "onForm": true },
+        { "fieldId": "Resume.spouse.birth", "label": "配偶出生日期", "path": "spouse.birth", "source": null, "onForm": true },
+        { "fieldId": "Resume.spouse.household", "label": "配偶户口所在地", "path": "spouse.household", "source": null, "onForm": true },
+        { "fieldId": "Resume.spouse.nation", "label": "配偶民族", "path": "spouse.nation", "source": null, "onForm": true },
+        { "fieldId": "Resume.spouse.nativePlace", "label": "配偶籍贯", "path": "spouse.nativePlace", "source": null, "onForm": true },
+        { "fieldId": "Resume.spouse.workUnit", "label": "配偶工作单位", "path": "spouse.workUnit", "source": null, "onForm": true }
+      ]
+    },
+    {
+      "sectionKey": "application",
+      "title": "报名信息",
+      "kind": "form",
+      "model": null,
+      "note": "招聘系统自有环节字段，现场人事模型中无对应列；仅「应聘岗位」出现在报名表原始表样上。",
+      "fields": [
+        { "fieldId": "Resume.application.batch", "label": "招聘批次", "path": "application.batch", "source": null },
+        { "fieldId": "Resume.application.department", "label": "应聘部门", "path": "application.department", "source": null, "onForm": true },
+        { "fieldId": "Resume.application.position", "label": "应聘岗位", "path": "application.position", "source": null, "onForm": true },
+        { "fieldId": "Resume.application.positionCode", "label": "岗位编号", "path": "application.positionCode", "source": null },
+        { "fieldId": "Resume.application.campus", "label": "校区", "path": "application.campus", "source": null },
+        { "fieldId": "Resume.application.recruitType", "label": "招聘方式", "path": "application.recruitType", "source": null },
+        { "fieldId": "Resume.application.applyTime", "label": "报名时间", "path": "application.applyTime", "source": null },
+        { "fieldId": "Resume.application.status", "label": "当前状态", "path": "application.status", "render": "statusTag", "source": null }
+      ]
+    },
+    {
+      "sectionKey": "education",
+      "title": "学历学位",
+      "kind": "table",
+      "model": "rstbjzgxlxw",
+      "columns": [
+        { "key": "level", "title": "学历层次", "width": 90, "source": "rstbjzgxlxw.xldm", "note": "本科/硕士/博士，由获得学历派生", "onForm": true },
+        { "key": "period", "title": "起止时间", "width": 190, "computed": "period", "source": "rstbjzgxlxw.rxrq,byrq", "onForm": true },
+        { "key": "school", "title": "学校", "width": 160, "source": "rstbjzgxlxw.byyxxhdw", "onForm": true },
+        { "key": "major", "title": "专业", "width": 140, "source": "rstbjzgxlxw.sxzy", "onForm": true },
+        { "key": "majorCode", "title": "专业代码", "width": 110, "source": null, "note": "招聘系统学科专业选择器口径，现场学历表无专业代码列" },
+        { "key": "education", "title": "学历", "width": 90, "source": "rstbjzgxlxw.xldm" },
+        { "key": "degree", "title": "学位", "width": 90, "source": "rstbjzgxlxw.xwdm" },
+        { "key": "studyMode", "title": "学习方式", "width": 100, "source": "rstbjzgxlxw.xxfsdm" },
+        { "key": "degreeDate", "title": "学位授予年月", "width": 120, "source": "rstbjzgxlxw.xwsyrq" },
+        { "key": "degreeUnit", "title": "学位授予单位", "width": 160, "source": "rstbjzgxlxw.xwsydw" },
+        { "key": "eduCertNo", "title": "学历证书号", "width": 150, "source": "rstbjzgxlxw.xlzsh" },
+        { "key": "degreeCertNo", "title": "学位证书号", "width": 150, "source": "rstbjzgxlxw.xwzsh" },
+        { "key": "overseas", "title": "境内外", "width": 90, "source": "rstbjzgxlxw.xlsygjdm" },
+        { "key": "certificate", "title": "证书附件", "width": 90, "attachmentView": true, "source": "rstbjzgxlxw.fj,extxwfj" }
+      ]
+    },
+    {
+      "sectionKey": "work",
+      "title": "工作经历",
+      "kind": "table",
+      "model": "rstbjzggzjl",
+      "columns": [
+        { "key": "period", "title": "起止时间", "width": 190, "computed": "period", "source": "rstbjzggzjl.qsrq,jzrq", "onForm": true },
+        { "key": "unit", "title": "工作单位", "width": 200, "source": "rstbjzggzjl.szdwmc", "onForm": true },
+        { "key": "department", "title": "所在部门", "width": 140, "source": "rstbjzggzjl.extszbm" },
+        { "key": "position", "title": "岗位／职务", "width": 150, "source": "rstbjzggzjl.extgw", "onForm": true },
+        { "key": "techTitle", "title": "曾任专业技术职务", "width": 150, "source": "rstbjzggzjl.crzyjszwdm" },
+        { "key": "duty", "title": "主要工作", "minWidth": 260, "source": "rstbjzggzjl.csgznr", "onForm": true },
+        { "key": "unitNature", "title": "单位性质", "width": 120, "source": "rstbjzggzjl.dwxzlbdm" },
+        { "key": "overseas", "title": "是否海外经历", "width": 110, "source": "rstbjzggzjl.sfhwjl" },
+        { "key": "witness", "title": "证明人", "width": 100, "source": "rstbjzggzjl.zmr" },
+        { "key": "certificate", "title": "证明附件", "width": 90, "attachmentView": true, "source": "rstbjzggzjl.fj" }
+      ]
+    },
+    {
+      "sectionKey": "technical",
+      "title": "专业技术职务或技术工人等级",
+      "kind": "table",
+      "model": "rstbjzgjbxx",
+      "note": "现场按「专业技术职务信息」「工人技术信息」两组列存放在基本信息表；报名表此处为信息集（多行），招聘阶段按行采集，入职时取最新一行回填基本信息表。",
+      "columns": [
+        { "key": "title", "title": "专业技术职务", "source": "rstbjzgjbxx.zyjszwdm", "onForm": true },
+        { "key": "level", "title": "职务级别", "source": "rstbjzgjbxx.zyjszwjbdm" },
+        { "key": "major", "title": "专业", "source": null, "note": "现场专业技术职务组无专业列，招聘自采集", "onForm": true },
+        { "key": "acquireDate", "title": "取得时间", "source": "rstbjzgjbxx.zyjszwpdrq", "onForm": true },
+        { "key": "workerType", "title": "工人技术工种", "source": "rstbjzgjbxx.grjsgzdm" },
+        { "key": "workerLevel", "title": "工人技术等级", "source": "rstbjzgjbxx.grjsdjdm" },
+        { "key": "certificate", "title": "证书附件", "attachmentView": true, "source": "rstbjzgjbxx.zmcl01" }
+      ]
+    },
+    {
+      "sectionKey": "professional",
+      "title": "职业资格",
+      "kind": "table",
+      "model": "exttrsjzgzyzgzs",
+      "columns": [
+        { "key": "qualification", "title": "职（执）业资格名称", "source": "exttrsjzgzyzgzs.extzyzgmc", "onForm": true },
+        { "key": "level", "title": "等级", "source": "exttrsjzgzyzgzs.extdj" },
+        { "key": "obtainWay", "title": "取得途径", "source": "exttrsjzgzyzgzs.extqdtj" },
+        { "key": "acquireDate", "title": "取得时间", "source": "exttrsjzgzyzgzs.extqdsj", "onForm": true },
+        { "key": "issueDate", "title": "发证时间", "source": "exttrsjzgzyzgzs.extfzsj" },
+        { "key": "issuer", "title": "发证单位", "source": "exttrsjzgzyzgzs.extfzdw" },
+        { "key": "certNo", "title": "证书编号", "source": "exttrsjzgzyzgzs.extzsbh" },
+        { "key": "certificate", "title": "证书附件", "attachmentView": true, "source": "exttrsjzgzyzgzs.extfj" }
+      ]
+    },
+    {
+      "sectionKey": "qualification",
+      "title": "资质信息",
+      "kind": "form",
+      "model": "rstbjzgjbxx",
+      "note": "对应现场基本信息表「资质信息」列组；教师岗招聘的岗位匹配依赖学科口径，故在简历阶段即采集。",
+      "fields": [
+        { "fieldId": "Resume.qualification.teacherCertNo", "label": "教师资格证号", "path": "qualification.teacherCertNo", "source": "rstbjzgjbxx.jszgzh" },
+        { "fieldId": "Resume.qualification.teacherCertDate", "label": "教师资格获得日期", "path": "qualification.teacherCertDate", "source": "rstbjzgjbxx.jszghdrq" },
+        { "fieldId": "Resume.qualification.subjectCategory", "label": "学科类别", "path": "qualification.subjectCategory", "source": "rstbjzgjbxx.xklbdm" },
+        { "fieldId": "Resume.qualification.firstSubject", "label": "一级学科", "path": "qualification.firstSubject", "source": "rstbjzgjbxx.yjxkdm" },
+        { "fieldId": "Resume.qualification.secondSubject", "label": "二级学科", "path": "qualification.secondSubject", "source": "rstbjzgjbxx.ejxkdm" },
+        { "fieldId": "Resume.qualification.degreeSubject", "label": "学位归属学科", "path": "qualification.degreeSubject", "source": "rstbjzgjbxx.extXwgsxk" },
+        { "fieldId": "Resume.qualification.research", "label": "研究方向", "path": "qualification.research", "source": "rstbjzgjbxx.yjfx" },
+        { "fieldId": "Resume.qualification.computerLevel", "label": "计算机水平", "path": "qualification.computerLevel", "source": "rstbjzgjbxx.jsjsp" },
+        { "fieldId": "Resume.qualification.skillCert", "label": "是否具备职业技能等级证书", "path": "qualification.skillCert", "source": "rstbjzgjbxx.sfjbzyjndjzs" }
+      ]
+    },
+    {
+      "sectionKey": "postdoc",
+      "title": "博士后经历",
+      "kind": "form",
+      "model": "rstbjzgjbxx",
+      "note": "设站单位与起止时间取自工作经历表中 extsfbshjl=是 的记录；入站时间与导师信息对应基本信息表「博士后专项个性化信息」列组。",
+      "fields": [
+        { "fieldId": "Resume.postdoc.station", "label": "流动站", "path": "postdoctoral.station", "source": "rstbjzggzjl.szdwmc", "onForm": true },
+        { "fieldId": "Resume.postdoc.research", "label": "研究方向", "path": "postdoctoral.research", "source": "rstbjzgjbxx.yjfx", "onForm": true },
+        { "fieldId": "Resume.postdoc.period", "label": "起止时间", "path": "postdoctoral", "computed": "period", "source": "rstbjzggzjl.qsrq,jzrq", "onForm": true },
+        { "fieldId": "Resume.postdoc.entryDate", "label": "入站时间", "path": "postdoctoral.entryDate", "source": "rstbjzgjbxx.extRzsj" },
+        { "fieldId": "Resume.postdoc.supervisor", "label": "合作导师", "path": "postdoctoral.supervisor", "source": "rstbjzgjbxx.extLhpyds", "onForm": true },
+        { "fieldId": "Resume.postdoc.jointUnit", "label": "联合培养单位", "path": "postdoctoral.jointUnit", "source": "rstbjzgjbxx.extLhpydw" }
+      ]
+    },
+    {
+      "sectionKey": "paperStats",
+      "title": "科研能力（各类论文数）",
+      "kind": "form",
+      "model": "rsjzgkylw",
+      "note": "报名表原始表样的统计行，无独立现场列；由科研论文信息表按 extsslb 收录类别 / extlwjb 论文级别 / kwjbdm 刊物级别 汇总得出。",
+      "fields": [
+        { "fieldId": "Resume.paperStats.sci", "label": "SCI论文数", "path": "paperStats.sci", "source": "rsjzgkylw.extsslb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.ei", "label": "EI论文数", "path": "paperStats.ei", "source": "rsjzgkylw.extsslb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.istp", "label": "ISTP论文数", "path": "paperStats.istp", "source": "rsjzgkylw.extsslb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.rucopy", "label": "人大复印资料索引论文数", "path": "paperStats.rucopy", "source": "rsjzgkylw.extsslb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.core", "label": "核心刊物论文数", "path": "paperStats.core", "source": "rsjzgkylw.kwjbdm", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.national", "label": "国家级论文数", "path": "paperStats.national", "source": "rsjzgkylw.extlwjb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.ministerial", "label": "部级", "path": "paperStats.ministerial", "source": "rsjzgkylw.extlwjb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.provincial", "label": "省级", "path": "paperStats.provincial", "source": "rsjzgkylw.extlwjb", "computed": "count", "onForm": true },
+        { "fieldId": "Resume.paperStats.municipal", "label": "市级", "path": "paperStats.municipal", "source": "rsjzgkylw.extlwjb", "computed": "count", "onForm": true }
+      ]
+    },
+    {
+      "sectionKey": "research",
+      "title": "科研与业绩成果",
+      "kind": "research",
+      "subsections": [
+        {
+          "key": "papers",
+          "title": "论文成果",
+          "model": "rsjzgkylw",
+          "columns": [
+            { "key": "title", "title": "论文标题", "minWidth": 220, "source": "rsjzgkylw.lwmc", "onForm": true },
+            { "key": "authors", "title": "作者", "source": "rsjzgkylw.extdyzzm,extcyzz", "onForm": true },
+            { "key": "role", "title": "本人角色", "source": "rsjzgkylw.brjs" },
+            { "key": "rank", "title": "本人排名", "source": "rsjzgkylw.brpm" },
+            { "key": "journal", "title": "期刊", "source": "rsjzgkylw.kwmc", "onForm": true },
+            { "key": "level", "title": "级别", "source": "rsjzgkylw.extlwjb", "onForm": true },
+            { "key": "indexType", "title": "收录类别", "source": "rsjzgkylw.extsslb" },
+            { "key": "publishDate", "title": "发表时间", "source": "rsjzgkylw.fbrq", "onForm": true },
+            { "key": "impact", "title": "影响因子", "source": "rsjzgkylw.yxyz" },
+            { "key": "representative", "title": "是否代表作", "source": "rsjzgkylw.sfdbz" },
+            { "key": "certificate", "title": "佐证附件", "attachmentView": true, "source": "rsjzgkylw.fj" }
+          ]
+        },
+        {
+          "key": "publications",
+          "title": "著作",
+          "model": "rsjzgkyzz",
+          "columns": [
+            { "key": "title", "title": "著作名称", "minWidth": 220, "source": "rsjzgkyzz.zzmc", "onForm": true },
+            { "key": "authors", "title": "作者", "source": "rsjzgkyzz.zzxm,names", "onForm": true },
+            { "key": "role", "title": "本人角色", "source": "rsjzgkyzz.zzzbrjs" },
+            { "key": "publisher", "title": "出版社", "source": "rsjzgkyzz.cbsmc", "onForm": true },
+            { "key": "publisherLevel", "title": "出版社级别", "source": "rsjzgkyzz.cbsjbdm" },
+            { "key": "publishDate", "title": "出版时间", "source": "rsjzgkyzz.cbrq", "onForm": true },
+            { "key": "type", "title": "类型", "source": "rsjzgkyzz.lzlbdm", "onForm": true },
+            { "key": "isbn", "title": "ISBN号", "source": "rsjzgkyzz.isbnh" },
+            { "key": "words", "title": "本人撰写字数", "source": "rsjzgkyzz.brzxzs" },
+            { "key": "certificate", "title": "佐证附件", "attachmentView": true, "source": "rsjzgkyzz.fj" }
+          ]
+        },
+        {
+          "key": "patents",
+          "title": "专利",
+          "model": "rsjzgkyzl",
+          "columns": [
+            { "key": "title", "title": "专利名称", "minWidth": 220, "source": "rsjzgkyzl.zlmc", "onForm": true },
+            { "key": "type", "title": "类型", "source": "rsjzgkyzl.zllxdm", "onForm": true },
+            { "key": "status", "title": "状态", "source": "rsjzgkyzl.zlzt", "onForm": true },
+            { "key": "patentNo", "title": "专利号", "source": "rsjzgkyzl.zlh", "onForm": true },
+            { "key": "applyDate", "title": "申请日期", "source": "rsjzgkyzl.shenqrq" },
+            { "key": "grantDate", "title": "授权日期", "source": "rsjzgkyzl.zlsqrq" },
+            { "key": "authors", "title": "发明人", "source": "rsjzgkyzl.firstauthorname,names", "onForm": true },
+            { "key": "rank", "title": "本人排名", "source": "rsjzgkyzl.brpm" },
+            { "key": "owner", "title": "专利权人", "source": "rsjzgkyzl.zlqr" },
+            { "key": "certificate", "title": "佐证附件", "attachmentView": true, "source": "rsjzgkyzl.fj" }
+          ]
+        },
+        {
+          "key": "projects",
+          "title": "科研项目",
+          "model": "extkyzxxm",
+          "note": "纵向项目取 extkyzxxm，横向项目取 extkyhxxm（合同口径），由「项目归属」区分。",
+          "columns": [
+            { "key": "category", "title": "项目归属", "width": 100, "source": "extkyzxxm.xmgs" },
+            { "key": "title", "title": "项目名称", "minWidth": 220, "source": "extkyzxxm.xmmc|extkyhxxm.htmc", "onForm": true },
+            { "key": "projectNo", "title": "项目编号", "width": 140, "source": "extkyzxxm.xmbh|extkyhxxm.htbh" },
+            { "key": "type", "title": "类型", "source": "extkyzxxm.xmfl|extkyhxxm.htlb", "onForm": true },
+            { "key": "level", "title": "项目级别", "source": "extkyzxxm.xmjb" },
+            { "key": "origin", "title": "项目来源", "source": "extkyzxxm.xmly|extkyhxxm.xmly" },
+            { "key": "role", "title": "角色", "source": "extkyzxxm.fzrlx|extkyhxxm.fzrlx", "onForm": true },
+            { "key": "period", "title": "起止时间", "width": 190, "computed": "period", "source": "extkyzxxm.ksrq,jxrq|extkyhxxm.ksrq,zzrq", "onForm": true },
+            { "key": "funding", "title": "经费", "source": "extkyzxxm.pzjf|extkyhxxm.htjf", "onForm": true },
+            { "key": "status", "title": "项目状态", "source": "extkyzxxm.xmzt|extkyhxxm.xmzt" }
+          ]
+        },
+        {
+          "key": "awards",
+          "title": "个人获奖情况",
+          "model": "rsjzgkycghj",
+          "columns": [
+            { "key": "title", "title": "获奖名称", "minWidth": 220, "source": "rsjzgkycghj.jlmc", "onForm": true },
+            { "key": "achievement", "title": "成果名称", "minWidth": 180, "source": "rsjzgkycghj.cgmc" },
+            { "key": "category", "title": "奖励类别", "source": "rsjzgkycghj.jllb" },
+            { "key": "level", "title": "级别", "source": "rsjzgkycghj.hjjbdm", "onForm": true },
+            { "key": "grade", "title": "授奖等级", "source": "rsjzgkycghj.sjdjdm", "onForm": true },
+            { "key": "year", "title": "年份", "source": "rsjzgkycghj.hjrq", "onForm": true },
+            { "key": "organization", "title": "颁奖单位", "minWidth": 180, "source": "rsjzgkycghj.sjdw", "onForm": true },
+            { "key": "rank", "title": "本人排名", "source": "rsjzgkycghj.pm", "onForm": true },
+            { "key": "certificate", "title": "佐证附件", "attachmentView": true, "source": "rsjzgkycghj.fj" }
+          ]
+        }
+      ]
+    },
+    {
+      "sectionKey": "language",
+      "title": "外语等级及成绩",
+      "kind": "form",
+      "model": "rstbjzgjbxx",
+      "note": "报名表「外语等级及成绩」行；现场仅有 yysp 英语水平 单列，语种/成绩/取得时间为招聘阶段自采集，入职时按等级归一到 yysp。",
+      "fields": [
+        { "fieldId": "Resume.language.type", "label": "语种", "path": "language.type", "source": null, "onForm": true },
+        { "fieldId": "Resume.language.level", "label": "等级", "path": "language.level", "source": "rstbjzgjbxx.yysp", "onForm": true },
+        { "fieldId": "Resume.language.score", "label": "成绩", "path": "language.score", "source": null, "onForm": true },
+        { "fieldId": "Resume.language.acquireDate", "label": "取得时间", "path": "language.acquireDate", "source": null }
+      ]
+    },
+    {
+      "sectionKey": "submission",
+      "title": "填表信息",
+      "kind": "form",
+      "model": null,
+      "note": "报名表页尾字段，由招聘系统生成报名表时写入。",
+      "fields": [
+        { "fieldId": "Resume.submission.formDate", "label": "填表日期", "path": "submission.formDate", "source": null, "onForm": true },
+        { "fieldId": "Resume.submission.signature", "label": "签名", "path": "submission.signature", "source": null, "onForm": true }
+      ]
+    },
+    {
+      "sectionKey": "attachments",
+      "title": "附件材料",
+      "kind": "table",
+      "model": "rstbjzgjbxx",
+      "note": "招聘阶段的材料清单；入职归档时逐项落到基本信息表 zmcl01~zmcl10 证明材料列。",
+      "columns": [
+        { "key": "cat", "title": "材料类别", "width": 130, "source": null },
+        { "key": "name", "title": "文件名", "width": 180, "source": "rstbjzgjbxx.zmcl01" },
+        { "key": "time", "title": "上传时间", "width": 140, "source": null },
+        { "key": "status", "title": "材料状态", "width": 100, "render": "statusTone", "source": null },
+        { "key": "op", "title": "操作", "width": 120, "source": null }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教学档案袋首页 · 图表字段英文名称对照</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --sub:#646a73;
+    --line:#e5e6eb; --ok:#1f8a4c; --okbg:#e8f7ee;
+    --warn:#b76e00; --warnbg:#fff6e6; --bad:#c0392b; --badbg:#fdecea;
+    --prop:#2f6fed; --propbg:#eaf1ff;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+    line-height:1.55;padding:24px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  h1{font-size:22px;margin:0 0 4px;}
+  .meta{color:var(--sub);font-size:13px;margin-bottom:18px;}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;font-size:12.5px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;background:var(--card);
+    border:1px solid var(--line);border-radius:20px;padding:4px 12px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .d-ok{background:var(--ok);} .d-warn{background:var(--warn);} .d-bad{background:var(--bad);} .d-prop{background:var(--prop);}
+  table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:22px;font-size:13px;}
+  thead th{background:#f0f2f5;color:var(--sub);font-weight:600;text-align:left;
+    padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  tbody td{padding:9px 12px;border-bottom:1px solid #f0f1f3;vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  .sec{background:#fafbfc;font-weight:700;color:var(--ink);}
+  .en{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    background:#f4f5f7;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+    color:#2f3a4a;white-space:nowrap;}
+  .tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:11.5px;font-weight:600;white-space:nowrap;}
+  .t-ok{background:var(--okbg);color:var(--ok);}
+  .t-warn{background:var(--warnbg);color:var(--warn);}
+  .t-bad{background:var(--badbg);color:var(--bad);}
+  .t-prop{background:var(--propbg);color:var(--prop);}
+  .note{font-size:12px;color:var(--sub);background:var(--card);border:1px dashed var(--line);
+    border-radius:8px;padding:12px 14px;margin-bottom:18px;}
+  .code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:#f4f5f7;padding:0 4px;border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>教学档案袋首页 · 统计图表字段英文名称对照</h1>
+  <div class="meta">基于 ontology 本体（entity-field-models.json）+ 已并入的《教师档案袋_分组及字典-4.0.xlsx》生成。状态说明见下方图例。</div>
+
+  <div class="legend">
+    <span><i class="dot d-ok"></i> 本体已建模（真实英文 fieldId）</span>
+    <span><i class="dot d-prop"></i> xlsx 字段·提案英文名（需随实体化确认）</span>
+    <span><i class="dot d-bad"></i> 无源头（需新增实体/字段）</span>
+  </div>
+
+  <div class="note">
+    关键事实：xlsx 4.0 全部 49 个 sheet 仅给「中文字段 + 字典标记」，<b>未提供任何英文编码</b>（见 <span class="code">portfolio-spec-4.0.json</span> 的 <span class="code">noFieldCode</span>）。
+    因此下方标记为 <b>提案</b> 的英文名，是按本体现有命名约定（camelCase，如 <span class="code">completedHours</span>/<span class="code">achievementType</span>）推导的 <b>建议 fieldId</b>，最终以实体化落库为准，并非 xlsx 自带。
+  </div>
+
+  <table>
+    <thead>
+      <tr><th style="width:150px">图表区域 / 指标</th><th style="width:170px">来源表（sheet）</th><th>中文字段</th><th>英文名称（fieldId）</th><th style="width:96px">覆盖状态</th></tr>
+    </thead>
+    <tbody>
+      <tr class="sec"><td colspan="5">一、个人信息条（图左上）</td></tr>
+      <tr><td>姓名 · 张伟</td><td>基本信息</td><td>姓名</td><td><span class="en">Person.name</span></td><td><span class="tag t-ok">已建模</span></td></tr>
+      <tr><td>工号 · 20261231</td><td>基本信息</td><td>职工号</td><td><span class="en">Person.employeeNumber</span><br><span class="en">StaffBasicInformation.zgh</span></td><td><span class="tag t-ok">已建模</span></td></tr>
+      <tr><td>教学科研型教师</td><td>基本信息</td><td>专任教师类型</td><td><span class="en">StaffBasicInformation.jslx</span></td><td><span class="tag t-ok">已建模</span></td></tr>
+      <tr><td>汽车学院</td><td>基本信息</td><td>所属部门</td><td><span class="en">Organization</span> ← <span class="en">Course.owningOrganizationId</span></td><td><span class="tag t-ok">已建模</span></td></tr>
+      <tr><td>待专业负责人审核</td><td>档案袋流程</td><td>提交状态</td><td><span class="en">PortfolioSubmission.status</span></td><td><span class="tag t-ok">已建模</span></td></tr>
+
+      <tr class="sec"><td colspan="5">二、业绩纵览（6 指标卡）</td></tr>
+      <tr><td>教学工作量 288 学时</td><td>（无对应表）</td><td>—（仅课程级「学时」，无个人工作量）</td><td>待新增 <span class="en">TeachingWorkload.personalHours</span> / <span class="en">plannedHours</span> / <span class="en">completedHours</span></td><td><span class="tag t-bad">无源头</span></td></tr>
+      <tr><td>学生评教分 4.78 / 5</td><td>学期授课信息-教学评价</td><td>教师课程得分 / 教师教学班平均分</td><td><span class="en">TeachingEvaluation.teacherCourseScore</span><br><span class="en">TeachingEvaluation.teacherClassAvgScore</span></td><td><span class="tag t-prop">提案</span></td></tr>
+      <tr><td>科研经费 42.6 万元</td><td>科研项目<br>教研项目</td><td>合同经费 / 到账经费 / 实际支出金额 / 配套经费；经费额</td><td><span class="en">ResearchProject.contractFunding</span> / <span class="en">receivedFunding</span> / <span class="en">actualExpense</span> / <span class="en">supportingFunding</span><br><span class="en">TeachingResearchProject.fundingAmount</span></td><td><span class="tag t-prop">提案</span></td></tr>
+      <tr><td>发表论文 6 篇</td><td>论文</td><td>刊物级别 / 影响因子 / 是否通讯作者 …</td><td><span class="en">ResearchPaper.publicationLevel</span> / <span class="en">impactFactor</span> / <span class="en">isCorrespondingAuthor</span></td><td><span class="tag t-prop">提案</span></td></tr>
+      <tr><td>指导学生 18 人</td><td>（无对应表）</td><td>—（"指导学生"为文本字段，非人数）</td><td>待新增 <span class="en">StudentSupervision.trainingLevel</span> + <span class="en">guidedStudentCount</span></td><td><span class="tag t-bad">无源头</span></td></tr>
+      <tr><td>获奖成果 3 项</td><td>成果获奖</td><td>获奖级别 + 成果获奖等级 + 获奖金额</td><td><span class="en">AchievementAward.awardLevel</span> / <span class="en">awardGrade</span> / <span class="en">awardAmount</span><br>或复用 <span class="en">TeachingAchievement.level</span> + <span class="en">title</span></td><td><span class="tag t-prop">提案</span></td></tr>
+
+      <tr class="sec"><td colspan="5">三、教学建设成果</td></tr>
+      <tr><td>课程建设 4 档<br>国2/省部3/校1/院4</td><td>（无对应表）</td><td>—（课程基本信息无任何"建设级别"字段）</td><td>待新增 <span class="en">CourseConstruction.buildLevel</span>（国家级/省部级/校级/院级）</td><td><span class="tag t-bad">无源头</span></td></tr>
+      <tr><td>指导学生环形图<br>本科55 / 专科45</td><td>（无对应表）</td><td>—（无培养层次维度）</td><td>待新增 <span class="en">StudentSupervision.trainingLevel</span>（本科/专科/研究生）</td><td><span class="tag t-bad">无源头</span></td></tr>
+
+      <tr class="sec"><td colspan="5">四、教研与学术（4 指标卡）</td></tr>
+      <tr><td>教研项目 12 项</td><td>教研项目</td><td>项目类型 / 经费额 / 本人排名</td><td><span class="en">TeachingResearchProject.projectType</span> / <span class="en">fundingAmount</span> / <span class="en">authorRank</span></td><td><span class="tag t-prop">提案</span></td></tr>
+      <tr><td>科研项目 8 项</td><td>科研项目</td><td>项目类别 / 项目级别 / 合同经费 …</td><td><span class="en">ResearchProject.projectCategory</span> / <span class="en">projectLevel</span> / <span class="en">contractFunding</span> …</td><td><span class="tag t-prop">提案</span></td></tr>
+      <tr><td>论文 / 著作 10 项</td><td>论文<br>著作</td><td>刊物级别 / 出版社级别 …</td><td><span class="en">ResearchPaper.publicationLevel</span><br><span class="en">ResearchPublication.publisherLevel</span> / <span class="en">isbn</span></td><td><span class="tag t-prop">提案</span></td></tr>
+      <tr><td>获奖成果 6 项</td><td>成果获奖</td><td>获奖级别 + 成果获奖等级</td><td><span class="en">AchievementAward.awardLevel</span> / <span class="en">awardGrade</span></td><td><span class="tag t-prop">提案</span></td></tr>
+
+      <tr class="sec"><td colspan="5">五、学期课程（5 行明细）</td></tr>
+      <tr><td>课程名称 / 学年学期 / 学时 / 选课人数 / 授课班级</td><td>学期授课信息-课程基本信息</td><td>课程名 / 学年学期 / 学时 / 选课人数 / 授课班级</td><td><span class="en">SemesterCourse.courseName</span>（可映射 <span class="en">Course.name</span>）/ <span class="en">academicTerm</span> / <span class="en">hours</span> / <span class="en">enrollmentCount</span> / <span class="en">teachingClassName</span><br>学年学期亦可映射 <span class="en">TeachingAssignment.academicYear</span> + <span class="en">term</span></td><td><span class="tag t-prop">提案</span></td></tr>
+
+      <tr class="sec"><td colspan="5">六、教学档案完整度</td></tr>
+      <tr><td>75% 档案完整度（中心）</td><td>（无对应表）</td><td>—（无完整度/必填字段，xlsx 全表无"是否必填"列）</td><td>待新增派生规则 <span class="en">PortfolioCompleteness.completenessRatio</span></td><td><span class="tag t-bad">无源头</span></td></tr>
+      <tr><td>教学2级分细 100%（×5 横条）</td><td>（无对应表）</td><td>—（分组为目录树文本，无完成率）</td><td>同上，按分组聚合</td><td><span class="tag t-bad">无源头</span></td></tr>
+      <tr><td>教学理念分项</td><td>教育理念</td><td>教育初心 / 育人理念（仅 2 个文本字段，无分项）</td><td><span class="en">TeachingPhilosophy.educationInitialIntention</span> / <span class="en">educationPhilosophy</span></td><td><span class="tag t-prop">提案</span></td></tr>
+
+      <tr class="sec"><td colspan="5">七、考核批次横幅</td></tr>
+      <tr><td>2026年春季学期教学档案考核</td><td>学期授课信息-课程基本信息<br>（学年学期字段有）</td><td>学年学期</td><td><span class="en">TeachingAssignment.academicYear</span> + <span class="en">term</span>（已建模）<br>考核批次本身待新增 <span class="en">PortfolioAssessmentBatch</span></td><td><span class="tag t-warn">部分</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <b>落地前需补齐（不胡编）：</b><br>
+    1. 字典取值回填：xlsx 4.0 所有字典字段（获奖级别/项目级别/刊物级别/出版社级别/学年学期/培养层次…）均<b>无 code+name 取值</b>，需从人事/教务/科研/研究生系统导出。<br>
+    2. 将提案英文名对应的 xlsx 字段实体化进 <span class="code">model-library/entity-field-models.json</span>（按 README 由 <span class="code">entity-models.js</span> 生成，不手改 JSON）。<br>
+    3. 新增缺失实体：<span class="code">TeachingWorkload</span> / <span class="code">StudentSupervision</span> / <span class="code">CourseConstruction</span>(建设级别) / <span class="code">PortfolioCompleteness</span> / <span class="code">PortfolioAssessmentBatch</span>。
+  </div>
+</div>
+</body>
+</html>

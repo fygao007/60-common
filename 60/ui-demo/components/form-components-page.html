@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>表单组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Radio/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/RichTextEditor/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/TimePicker/index.css" />
+  <style>
+    .form-page {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .form-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 16px 16px 72px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .form-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-title {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .form-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .form-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-subtitle {
+      color: #737585;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .form-card {
+      width: min(1180px, 100%);
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .form-section {
+      padding: 20px 24px 24px;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .form-section:last-child {
+      border-bottom: 0;
+    }
+
+    .form-section-title {
+      margin: 0 0 18px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 18px 32px;
+    }
+
+    .form-grid.is-one {
+      grid-template-columns: minmax(320px, 560px);
+    }
+
+    .form-item {
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      align-items: start;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .form-item.is-wide {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-height: 32px;
+      color: #505266;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: right;
+    }
+
+    .form-label.is-required::before {
+      content: "*";
+      margin-right: 4px;
+      color: #fa5151;
+    }
+
+    .form-control {
+      min-width: 0;
+    }
+
+    .form-help,
+    .form-error {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .form-help { color: #737585; }
+    .form-error { color: #fa5151; }
+
+    .ant-input,
+    .ant-textarea,
+    .ant-picker,
+    .ant-select-trigger {
+      width: 100%;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 160ms cubic-bezier(.2, 0, 0, 1), box-shadow 160ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .ant-input,
+    .ant-picker,
+    .ant-select-trigger {
+      height: 32px;
+      padding: 5px 12px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .ant-input::placeholder,
+    .ant-textarea::placeholder,
+    .ant-placeholder {
+      color: #9697a3;
+    }
+
+    .ant-input:hover,
+    .ant-textarea:hover,
+    .ant-picker:hover,
+    .ant-select-trigger:hover {
+      border-color: #b8c3ff;
+    }
+
+    .ant-input:focus,
+    .ant-textarea:focus,
+    .ant-picker-wrap.is-open .ant-picker,
+    .ant-select.is-open .ant-select-trigger {
+      border-color: #303fff;
+      box-shadow: 0 0 0 2px rgba(48, 63, 255, .12);
+    }
+
+    .ant-input[disabled],
+    .ant-select.is-disabled .ant-select-trigger {
+      color: #c9cdd4;
+      background: #f2f3f5;
+      border-color: #e5e6eb;
+      cursor: not-allowed;
+    }
+
+    .ant-textarea {
+      min-height: 88px;
+      padding: 5px 12px;
+      font: inherit;
+      line-height: 22px;
+      resize: vertical;
+    }
+
+    .ant-control-error .ant-input,
+    .ant-control-error .ant-select-trigger {
+      border-color: #fa5151;
+    }
+
+    .ant-select,
+    .ant-picker-wrap {
+      position: relative;
+    }
+
+    .ant-select-trigger,
+    .ant-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .ant-select-value,
+    .ant-picker-value {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ant-suffix {
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      color: #737585;
+    }
+
+    .ant-suffix svg,
+    .ant-suffix img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .ant-clear {
+      display: none;
+      flex: none;
+      width: 16px;
+      height: 16px;
+      align-items: center;
+      justify-content: center;
+      color: #9697a3;
+      background: transparent;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .ant-select.has-value:hover .ant-clear,
+    .ant-picker-wrap.has-value:hover .ant-clear {
+      display: inline-flex;
+    }
+
+    .ant-select.has-value:hover .ant-suffix,
+    .ant-picker-wrap.has-value:hover .ant-suffix {
+      display: none;
+    }
+
+    .ant-dropdown,
+    .ant-picker-panel {
+      position: absolute;
+      z-index: 20;
+      left: 0;
+      top: calc(100% + 4px);
+      width: 100%;
+      padding: 4px;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 6px 16px rgba(70, 79, 105, .16);
+      border: 1px solid rgba(238, 238, 240, .8);
+      display: none;
+    }
+
+    .ant-select.is-open .ant-dropdown,
+    .ant-picker-wrap.is-open .ant-picker-panel {
+      display: block;
+    }
+
+    .ant-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 32px;
+      padding: 5px 8px;
+      color: #000;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .ant-option:hover {
+      background: #f6f6f7;
+    }
+
+    .ant-option.is-selected {
+      color: #333fff;
+      font-weight: 600;
+      background: #f5f5ff;
+    }
+
+    .ant-checkmark {
+      display: none;
+      color: #333fff;
+    }
+
+    .ant-option.is-selected .ant-checkmark {
+      display: inline;
+    }
+
+    .ant-tags {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .ant-tag {
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      height: 22px;
+      max-width: 124px;
+      gap: 4px;
+      padding: 0 6px;
+      color: #505266;
+      background: #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .ant-tag span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ant-tag button {
+      flex: none;
+      padding: 0;
+      color: #737585;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .choice-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 24px;
+      min-height: 32px;
+      padding: 5px 0;
+    }
+
+    .choice {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #000;
+      font-size: 14px;
+      line-height: 22px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .choice-mark {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      flex: none;
+    }
+
+    .choice.is-radio .choice-mark {
+      border-radius: 50%;
+    }
+
+    .choice.is-checkbox .choice-mark {
+      border-radius: 2px;
+    }
+
+    .choice.is-checked .choice-mark {
+      border-color: #333fff;
+      background: #333fff;
+    }
+
+    .choice.is-radio.is-checked .choice-mark::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+    }
+
+    .choice.is-checkbox.is-checked .choice-mark::after {
+      content: "";
+      width: 7px;
+      height: 4px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 48px;
+      height: 24px;
+      padding: 2px 2px 2px 6px;
+      color: #fff;
+      background: #333fff;
+      border: 0;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .switch-knob {
+      width: 20px;
+      height: 20px;
+      margin-left: auto;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .16);
+    }
+
+    .switch.is-off {
+      padding: 2px 6px 2px 2px;
+      color: #505266;
+      background: #eeeef0;
+    }
+
+    .switch.is-off .switch-knob {
+      order: -1;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    .picker-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 32px;
+      padding: 0 4px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .picker-nav {
+      width: 24px;
+      height: 24px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      color: #737585;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      padding: 4px;
+    }
+
+    .calendar-week,
+    .calendar-day {
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .calendar-week {
+      color: #737585;
+    }
+
+    .calendar-day {
+      color: #000;
+      cursor: pointer;
+    }
+
+    .calendar-day:hover {
+      background: #f6f6f7;
+    }
+
+    .calendar-day.is-selected {
+      color: #fff;
+      background: #333fff;
+    }
+
+    .time-list {
+      max-height: 192px;
+      overflow: auto;
+    }
+
+    .upload-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .upload-btn,
+    .form-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 32px;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .upload-btn:hover,
+    .form-btn:hover {
+      color: #333fff;
+      border-color: #333fff;
+    }
+
+    .form-btn.is-primary {
+      color: #fff;
+      background: #333fff;
+      border-color: #333fff;
+    }
+
+    .form-btn.is-danger {
+      color: #fa5151;
+    }
+
+    .upload-icon {
+      width: 14px;
+      height: 14px;
+      color: #505266;
+    }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 280px;
+      min-height: 28px;
+      padding: 4px 8px;
+      color: #505266;
+      background: #fafafa;
+      border-radius: 4px;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .file-item span {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-item button {
+      padding: 0;
+      color: #9697a3;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .dragger {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 320px;
+      min-height: 124px;
+      color: #505266;
+      background: #fff;
+      border: 1px dashed #dcdce0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 160ms, background 160ms;
+    }
+
+    .dragger:hover,
+    .dragger.is-dragover {
+      border-color: #333fff;
+      background: #f5f5ff;
+    }
+
+    .dragger-icon {
+      width: 22px;
+      height: 22px;
+      color: #9697a3;
+    }
+
+    .dragger-text {
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .dragger-text b {
+      color: #333fff;
+      font-weight: 400;
+    }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: min(1180px, 100%);
+      padding: 12px 24px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-top: 0;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 100;
+      left: 50%;
+      top: 72px;
+      transform: translateX(-50%);
+      display: none;
+      padding: 8px 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      box-shadow: 0 6px 16px rgba(70, 79, 105, .16);
+      font-size: 14px;
+    }
+
+    .toast.is-show {
+      display: block;
+    }
+
+    @media (max-width: 1080px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="form-page">
+    <section class="form-stage">
+      <div class="form-head">
+        <h1 class="form-title"><span>表单组件</span></h1>
+        <span class="form-subtitle">整合输入、选择、日期时间、开关、单选、多选、上传等表单控件</span>
+      </div>
+
+      <div class="form-card">
+        <section class="form-section">
+          <h2 class="form-section-title">基础信息</h2>
+          <div class="form-grid">
+            <label class="form-item">
+              <span class="form-label is-required">项目名称</span>
+              <span class="form-control">
+                <input class="ant-input" value="研究生招生材料配置" placeholder="请输入项目名称" />
+                <span class="form-help">支持中文、英文和数字，最多 50 个字符</span>
+              </span>
+            </label>
+
+            <label class="form-item">
+              <span class="form-label">负责人</span>
+              <span class="form-control">
+                <input class="ant-input" placeholder="请输入负责人" />
+              </span>
+            </label>
+
+            <div class="form-item">
+              <span class="form-label is-required">所属分类</span>
+              <div class="form-control">
+                <div class="ant-select js-select has-value" data-placeholder="请选择分类">
+                  <div class="ant-select-trigger" role="combobox" aria-expanded="false" tabindex="0">
+                    <span class="ant-select-value">招生配置</span>
+                    <button class="ant-clear" type="button" aria-label="清空">×</button>
+                    <span class="ant-suffix" data-wise-icon="arrowDown"></span>
+                  </div>
+                  <div class="ant-dropdown" role="listbox">
+                    <div class="ant-option is-selected" data-value="招生配置">招生配置<span class="ant-checkmark">✓</span></div>
+                    <div class="ant-option" data-value="材料审核">材料审核<span class="ant-checkmark">✓</span></div>
+                    <div class="ant-option" data-value="导师管理">导师管理<span class="ant-checkmark">✓</span></div>
+                    <div class="ant-option" data-value="通知公告">通知公告<span class="ant-checkmark">✓</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label">启用状态</span>
+              <div class="form-control">
+                <button class="switch js-switch" type="button" role="switch" aria-checked="true">
+                  <span class="switch-text">是</span>
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+            </div>
+
+            <label class="form-item">
+              <span class="form-label">只读字段</span>
+              <span class="form-control">
+                <input class="ant-input" value="系统自动生成" readonly />
+              </span>
+            </label>
+
+            <label class="form-item ant-control-error">
+              <span class="form-label is-required">校验示例</span>
+              <span class="form-control">
+                <input class="ant-input" placeholder="请输入编码" />
+                <span class="form-error">编码不能为空</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section-title">选择与日期</h2>
+          <div class="form-grid">
+            <div class="form-item">
+              <span class="form-label">多选下拉</span>
+              <div class="form-control">
+                <div class="ant-select js-multi-select has-value" data-placeholder="请选择标签">
+                  <div class="ant-select-trigger" role="combobox" aria-expanded="false" tabindex="0">
+                    <div class="ant-tags">
+                      <span class="ant-tag" data-tag="重点"><span>重点</span><button type="button">×</button></span>
+                      <span class="ant-tag" data-tag="启用"><span>启用</span><button type="button">×</button></span>
+                    </div>
+                    <button class="ant-clear" type="button" aria-label="清空">×</button>
+                    <span class="ant-suffix" data-wise-icon="arrowDown"></span>
+                  </div>
+                  <div class="ant-dropdown" role="listbox" aria-multiselectable="true">
+                    <div class="ant-option is-selected" data-value="重点">重点<span class="ant-checkmark">✓</span></div>
+                    <div class="ant-option is-selected" data-value="启用">启用<span class="ant-checkmark">✓</span></div>
+                    <div class="ant-option" data-value="待审核">待审核<span class="ant-checkmark">✓</span></div>
+                    <div class="ant-option" data-value="归档">归档<span class="ant-checkmark">✓</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label">日期选择</span>
+              <div class="form-control">
+                <div class="ant-picker-wrap js-date-picker has-value" data-placeholder="请选择日期">
+                  <div class="ant-picker" tabindex="0">
+                    <span class="ant-picker-value">2026-05-17</span>
+                    <button class="ant-clear" type="button" aria-label="清空">×</button>
+                    <span class="ant-suffix" data-wise-icon="calendar"></span>
+                  </div>
+                  <div class="ant-picker-panel">
+                    <div class="picker-header">
+                      <button class="picker-nav" type="button">‹</button>
+                      <span>2026 年 5 月</span>
+                      <button class="picker-nav" type="button">›</button>
+                    </div>
+                    <div class="calendar-grid" data-calendar>
+                      <span class="calendar-week">一</span><span class="calendar-week">二</span><span class="calendar-week">三</span><span class="calendar-week">四</span><span class="calendar-week">五</span><span class="calendar-week">六</span><span class="calendar-week">日</span>
+                      <button class="calendar-day" type="button" data-date="2026-05-11">11</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-12">12</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-13">13</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-14">14</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-15">15</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-16">16</button>
+                      <button class="calendar-day is-selected" type="button" data-date="2026-05-17">17</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-18">18</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-19">19</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-20">20</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-21">21</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-22">22</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-23">23</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-24">24</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label">日期范围</span>
+              <div class="form-control">
+                <div class="ant-picker-wrap js-range-picker has-value" data-placeholder="开始日期 ~ 结束日期" data-step="start">
+                  <div class="ant-picker" tabindex="0">
+                    <span class="ant-picker-value">2026-05-17 ~ 2026-05-24</span>
+                    <button class="ant-clear" type="button" aria-label="清空">×</button>
+                    <span class="ant-suffix" data-wise-icon="calendar"></span>
+                  </div>
+                  <div class="ant-picker-panel">
+                    <div class="picker-header"><span>选择日期范围</span></div>
+                    <div class="calendar-grid">
+                      <span class="calendar-week">一</span><span class="calendar-week">二</span><span class="calendar-week">三</span><span class="calendar-week">四</span><span class="calendar-week">五</span><span class="calendar-week">六</span><span class="calendar-week">日</span>
+                      <button class="calendar-day" type="button" data-date="2026-05-12">12</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-13">13</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-14">14</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-15">15</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-16">16</button>
+                      <button class="calendar-day is-selected" type="button" data-date="2026-05-17">17</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-18">18</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-19">19</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-20">20</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-21">21</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-22">22</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-23">23</button>
+                      <button class="calendar-day is-selected" type="button" data-date="2026-05-24">24</button>
+                      <button class="calendar-day" type="button" data-date="2026-05-25">25</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label">时间选择</span>
+              <div class="form-control">
+                <div class="ds-time-picker js-time-picker has-value" data-placeholder="请选择时间" data-value="09:30" data-clearable="true"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section-title">选项与文本</h2>
+          <div class="form-grid">
+            <div class="form-item">
+              <span class="form-label">单选组</span>
+              <div class="form-control">
+                <div class="ds-radio-group js-radio-group" role="radiogroup">
+                  <label class="ds-radio is-checked"><input class="ds-radio__input" type="radio" name="visibleScope" value="公开" checked /><span class="ds-radio__mark"></span><span class="ds-radio__label">公开</span></label>
+                  <label class="ds-radio"><input class="ds-radio__input" type="radio" name="visibleScope" value="内部" /><span class="ds-radio__mark"></span><span class="ds-radio__label">内部</span></label>
+                  <label class="ds-radio"><input class="ds-radio__input" type="radio" name="visibleScope" value="仅管理员" /><span class="ds-radio__mark"></span><span class="ds-radio__label">仅管理员</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label">多选组</span>
+              <div class="form-control">
+                <div class="choice-group js-checkbox-group">
+                  <span class="choice is-checkbox is-checked" role="checkbox" aria-checked="true" tabindex="0"><span class="choice-mark"></span><span>短信提醒</span></span>
+                  <span class="choice is-checkbox is-checked" role="checkbox" aria-checked="true" tabindex="0"><span class="choice-mark"></span><span>站内信</span></span>
+                  <span class="choice is-checkbox" role="checkbox" aria-checked="false" tabindex="0"><span class="choice-mark"></span><span>邮件</span></span>
+                </div>
+              </div>
+            </div>
+
+            <label class="form-item">
+              <span class="form-label">说明备注</span>
+              <span class="form-control">
+                <textarea class="ant-textarea" maxlength="500" placeholder="请输入说明">用于演示组件库里的表单控件组合与常见交互。</textarea>
+                <span class="form-help">0/500</span>
+              </span>
+            </label>
+
+            <label class="form-item">
+              <span class="form-label">禁用输入</span>
+              <span class="form-control">
+                <input class="ant-input" value="已归档字段不可编辑" disabled />
+              </span>
+            </label>
+
+            <div class="form-item is-wide">
+              <span class="form-label">富文本</span>
+              <div class="form-control">
+                <div class="ds-richtext js-richtext" data-max="5000">
+                  <div class="ds-richtext__toolbar" role="toolbar" aria-label="富文本工具栏"></div>
+                  <div class="ds-richtext__editor" contenteditable="true" data-placeholder="请输入正文内容"><p>用于演示组件库里的富文本编辑区域和常见工具栏。</p></div>
+                  <div class="ds-richtext__footer"><span class="ds-richtext__hint">支持基础文字、列表、引用、链接和图片内容</span><span class="ds-richtext__counter">0/5000</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2 class="form-section-title">上传组件</h2>
+          <div class="form-grid">
+            <div class="form-item">
+              <span class="form-label">附件上传</span>
+              <div class="form-control">
+                <div class="upload-row">
+                  <button class="upload-btn js-upload" type="button">
+                    <span class="upload-icon" data-wise-icon="paperclip"></span>
+                    <span>上传附件</span>
+                  </button>
+                  <span class="form-help">支持 PDF、Word、Excel，单个文件不超过 20MB</span>
+                </div>
+                <div class="file-list js-file-list">
+                  <div class="file-item"><span>招生材料模板.docx</span><button type="button">删除</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label">拖拽上传</span>
+              <div class="form-control">
+                <div class="dragger js-dragger" role="button" tabindex="0">
+                  <span class="dragger-icon" data-wise-icon="uploadCloud"></span>
+                  <span class="dragger-text">拖拽至此处，或点击<b>上传</b></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="form-footer">
+        <button class="form-btn is-primary js-submit" type="button">提交</button>
+        <button class="form-btn" type="button">保存草稿</button>
+        <button class="form-btn" type="button">重置</button>
+        <button class="form-btn is-danger" type="button">删除</button>
+      </div>
+    </section>
+  </main>
+  <div class="toast js-toast">已提交</div>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+
+  const stage = document.querySelector('.form-stage');
+
+  function closePopups(except) {
+    stage.querySelectorAll('.ant-select.is-open, .ant-picker-wrap.is-open').forEach((node) => {
+      if (node !== except) node.classList.remove('is-open');
+    });
+  }
+
+  function setSingleValue(select, value) {
+    const valueNode = select.querySelector('.ant-select-value');
+    const placeholder = select.dataset.placeholder || '请选择';
+    valueNode.textContent = value || placeholder;
+    valueNode.classList.toggle('ant-placeholder', !value);
+    select.classList.toggle('has-value', Boolean(value));
+    select.querySelectorAll('.ant-option').forEach(option => {
+      option.classList.toggle('is-selected', option.dataset.value === value);
+    });
+  }
+
+  stage.addEventListener('click', (event) => {
+    const clear = event.target.closest('.ant-clear');
+    if (clear) {
+      const select = clear.closest('.ant-select');
+      const picker = clear.closest('.ant-picker-wrap');
+      if (select && select.classList.contains('js-multi-select')) {
+        select.querySelector('.ant-tags').innerHTML = '<span class="ant-placeholder">请选择标签</span>';
+        select.querySelectorAll('.ant-option').forEach(option => option.classList.remove('is-selected'));
+        select.classList.remove('has-value');
+      } else if (select) {
+        setSingleValue(select, '');
+      } else if (picker) {
+        const valueNode = picker.querySelector('.ant-picker-value');
+        valueNode.textContent = picker.dataset.placeholder || '请选择';
+        valueNode.classList.add('ant-placeholder');
+        picker.classList.remove('has-value');
+      }
+      event.stopPropagation();
+      return;
+    }
+
+    const trigger = event.target.closest('.ant-select-trigger, .ant-picker');
+    if (trigger) {
+      const popup = trigger.closest('.ant-select, .ant-picker-wrap');
+      if (popup.classList.contains('is-disabled')) return;
+      const isOpen = popup.classList.contains('is-open');
+      closePopups(popup);
+      popup.classList.toggle('is-open', !isOpen);
+      return;
+    }
+
+    const option = event.target.closest('.ant-option');
+    if (option) {
+      const multi = option.closest('.js-multi-select');
+      const select = option.closest('.ant-select');
+      if (multi) {
+        option.classList.toggle('is-selected');
+        const selected = Array.from(multi.querySelectorAll('.ant-option.is-selected')).map(item => item.dataset.value);
+        const tags = multi.querySelector('.ant-tags');
+        tags.innerHTML = selected.length
+          ? selected.map(item => `<span class="ant-tag" data-tag="${item}"><span>${item}</span><button type="button">×</button></span>`).join('')
+          : '<span class="ant-placeholder">请选择标签</span>';
+        multi.classList.toggle('has-value', selected.length > 0);
+      } else if (select) {
+        setSingleValue(select, option.dataset.value);
+        select.classList.remove('is-open');
+      }
+      return;
+    }
+
+    const tagRemove = event.target.closest('.ant-tag button');
+    if (tagRemove) {
+      const tag = tagRemove.closest('.ant-tag');
+      const multi = tag.closest('.js-multi-select');
+      const value = tag.dataset.tag;
+      tag.remove();
+      multi.querySelectorAll('.ant-option').forEach(option => {
+        if (option.dataset.value === value) option.classList.remove('is-selected');
+      });
+      if (!multi.querySelector('.ant-tag')) {
+        multi.querySelector('.ant-tags').innerHTML = '<span class="ant-placeholder">请选择标签</span>';
+        multi.classList.remove('has-value');
+      }
+      event.stopPropagation();
+      return;
+    }
+
+    const day = event.target.closest('.calendar-day');
+    if (day) {
+      const picker = day.closest('.ant-picker-wrap');
+      const valueNode = picker.querySelector('.ant-picker-value');
+      if (picker.classList.contains('js-range-picker')) {
+        const current = valueNode.textContent.includes('~') ? valueNode.textContent.split('~').map(item => item.trim()) : ['', ''];
+        if (picker.dataset.step === 'start') {
+          valueNode.textContent = `${day.dataset.date} ~ ${current[1] || '结束日期'}`;
+          picker.dataset.step = 'end';
+        } else {
+          valueNode.textContent = `${current[0] || '开始日期'} ~ ${day.dataset.date}`;
+          picker.dataset.step = 'start';
+          picker.classList.remove('is-open');
+        }
+      } else {
+        valueNode.textContent = day.dataset.date;
+        picker.classList.remove('is-open');
+      }
+      valueNode.classList.remove('ant-placeholder');
+      picker.classList.add('has-value');
+      picker.querySelectorAll('.calendar-day').forEach(item => item.classList.remove('is-selected'));
+      day.classList.add('is-selected');
+      return;
+    }
+
+    const radio = event.target.closest('.js-radio-group .ds-radio');
+    if (radio) {
+      const group = radio.closest('.js-radio-group');
+      if (radio.classList.contains('is-disabled') || radio.querySelector('.ds-radio__input')?.disabled) return;
+      group.querySelectorAll('.ds-radio').forEach(item => {
+        const input = item.querySelector('.ds-radio__input');
+        item.classList.toggle('is-checked', item === radio);
+        input.checked = item === radio;
+      });
+      return;
+    }
+
+    const checkbox = event.target.closest('.js-checkbox-group .choice');
+    if (checkbox) {
+      checkbox.classList.toggle('is-checked');
+      checkbox.setAttribute('aria-checked', String(checkbox.classList.contains('is-checked')));
+      return;
+    }
+
+    const switcher = event.target.closest('.js-switch');
+    if (switcher) {
+      const off = switcher.classList.toggle('is-off');
+      switcher.setAttribute('aria-checked', String(!off));
+      switcher.querySelector('.switch-text').textContent = off ? '否' : '是';
+      return;
+    }
+
+    const upload = event.target.closest('.js-upload, .js-dragger');
+    if (upload) {
+      addFile(upload.classList.contains('js-dragger') ? '拖拽上传材料.pdf' : '新增附件.xlsx');
+      return;
+    }
+
+    const fileDelete = event.target.closest('.file-item button');
+    if (fileDelete) {
+      fileDelete.closest('.file-item').remove();
+      return;
+    }
+
+    const submit = event.target.closest('.js-submit');
+    if (submit) {
+      const toast = document.querySelector('.js-toast');
+      toast.classList.add('is-show');
+      window.clearTimeout(window.__formToastTimer);
+      window.__formToastTimer = window.setTimeout(() => toast.classList.remove('is-show'), 1600);
+      return;
+    }
+
+    closePopups();
+  });
+
+  function addFile(name) {
+    const list = document.querySelector('.js-file-list');
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.innerHTML = `<span>${name}</span><button type="button">删除</button>`;
+    list.appendChild(item);
+  }
+
+  const richTextTools = [
+    ['undo', 'arrow-go-back-line', '撤销', 'undo'],
+    ['redo', 'arrow-go-forward-line', '重做', 'redo'],
+    ['heading1', 'heading-1', '一级标题', 'formatBlock', 'h1'],
+    ['heading2', 'heading-2', '二级标题', 'formatBlock', 'h2'],
+    ['bold', 'bold', '加粗', 'bold'],
+    ['italic', 'italic', '斜体', 'italic'],
+    ['underline', 'underline', '下划线', 'underline'],
+    ['strike', 'strikethrough', '删除线', 'strikeThrough'],
+    ['ordered', 'list-ordered', '有序列表', 'insertOrderedList'],
+    ['unordered', 'list-unordered', '无序列表', 'insertUnorderedList'],
+    ['quote', 'double-quotes-r', '引用', 'formatBlock', 'blockquote'],
+    ['code', 'code-s-slash-line', '代码', 'formatBlock', 'pre'],
+    ['link', 'link-s', '链接', 'createLink', '#'],
+    ['image', 'image-2-line', '图片', 'insertImage', '']
+  ];
+
+  function updateRichTextCounter(root) {
+    const editor = root.querySelector('.ds-richtext__editor');
+    const counter = root.querySelector('.ds-richtext__counter');
+    const max = root.dataset.max || '5000';
+    counter.textContent = `${editor.textContent.trim().length}/${max}`;
+  }
+
+  document.querySelectorAll('.js-richtext').forEach((root) => {
+    const toolbar = root.querySelector('.ds-richtext__toolbar');
+    const editor = root.querySelector('.ds-richtext__editor');
+    richTextTools.forEach(([key, icon, label, command, value]) => {
+      const button = document.createElement('button');
+      button.className = 'ds-richtext__tool';
+      button.type = 'button';
+      button.title = label;
+      button.setAttribute('aria-label', label);
+      button.dataset.icon = icon;
+      button.disabled = root.classList.contains('is-disabled');
+      button.addEventListener('click', () => {
+        if (root.classList.contains('is-disabled')) return;
+        editor.focus();
+        document.execCommand(command, false, value);
+        updateRichTextCounter(root);
+      });
+      toolbar.appendChild(button);
+    });
+    editor.addEventListener('input', () => updateRichTextCounter(root));
+    updateRichTextCounter(root);
+  });
+
+  const timePickerHours = Array.from({ length: 24 }, (_, index) => String(index).padStart(2, '0'));
+  const timePickerMinutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'));
+
+  function parseTimePickerValue(value) {
+    const parts = String(value || '').split(':');
+    return { hour: parts[0] || '09', minute: parts[1] || '00' };
+  }
+
+  function renderFormTimePicker(root, state) {
+    const placeholder = root.dataset.placeholder || '请选择时间';
+    const clearable = root.dataset.clearable === 'true';
+    root.classList.toggle('has-value', Boolean(state.value));
+    root.innerHTML = `
+      <button class="ds-time-picker__trigger" type="button" aria-haspopup="dialog" aria-expanded="${root.classList.contains('is-open')}">
+        <span class="${state.value ? 'ds-time-picker__text' : 'ds-time-picker__placeholder'}">${state.value || placeholder}</span>
+        ${clearable && state.value ? '<span class="ds-time-picker__clear" role="button" tabindex="-1" aria-label="清除"></span>' : ''}
+        <span class="ds-time-picker__clock" aria-hidden="true"></span>
+      </button>
+      ${root.classList.contains('is-open') ? renderFormTimePanel(state) : ''}
+    `;
+    window.requestAnimationFrame(() => {
+      root.querySelectorAll('.ds-time-picker__column').forEach((column) => {
+        column.querySelector('.ds-time-picker__option.is-selected')?.scrollIntoView({ block: 'center' });
+      });
+    });
+  }
+
+  function renderFormTimePanel(state) {
+    return `<div class="ds-time-picker__panel"><div class="ds-time-picker__columns">${[
+      ['hour', timePickerHours],
+      ['minute', timePickerMinutes]
+    ].map(([key, values]) => `<div class="ds-time-picker__column" role="listbox">${values.map((value) => `<button class="ds-time-picker__option ${state.draft[key] === value ? 'is-selected' : ''}" type="button" data-part="${key}" data-value="${value}">${value}</button>`).join('')}</div>`).join('')}</div><div class="ds-time-picker__footer"><button class="ds-time-picker__link js-time-now" type="button">此刻</button><button class="ds-time-picker__confirm js-time-confirm" type="button">确定</button></div></div>`;
+  }
+
+  document.querySelectorAll('.js-time-picker').forEach((root) => {
+    const state = { value: root.dataset.value || '', draft: parseTimePickerValue(root.dataset.value) };
+    renderFormTimePicker(root, state);
+    root.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (event.target.closest('.ds-time-picker__clear')) {
+        state.value = '';
+        state.draft = parseTimePickerValue('');
+        root.classList.remove('is-open');
+        renderFormTimePicker(root, state);
+        return;
+      }
+      if (event.target.closest('.ds-time-picker__trigger')) {
+        root.classList.toggle('is-open');
+        state.draft = parseTimePickerValue(state.value);
+        renderFormTimePicker(root, state);
+        return;
+      }
+      const option = event.target.closest('.ds-time-picker__option');
+      if (option) {
+        state.draft[option.dataset.part] = option.dataset.value;
+        renderFormTimePicker(root, state);
+        return;
+      }
+      if (event.target.closest('.js-time-now')) {
+        const now = new Date();
+        state.draft = { hour: String(now.getHours()).padStart(2, '0'), minute: String(now.getMinutes()).padStart(2, '0') };
+        renderFormTimePicker(root, state);
+        return;
+      }
+      if (event.target.closest('.js-time-confirm')) {
+        state.value = `${state.draft.hour}:${state.draft.minute}`;
+        root.classList.remove('is-open');
+        renderFormTimePicker(root, state);
+      }
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll('.js-time-picker.is-open').forEach((root) => {
+      if (root.contains(event.target)) return;
+      root.classList.remove('is-open');
+      root.querySelector('.ds-time-picker__panel')?.remove();
+      root.querySelector('.ds-time-picker__trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.querySelectorAll('.js-dragger').forEach((dragger) => {
+    dragger.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dragger.classList.add('is-dragover');
+    });
+    dragger.addEventListener('dragleave', () => dragger.classList.remove('is-dragover'));
+    dragger.addEventListener('drop', (event) => {
+      event.preventDefault();
+      dragger.classList.remove('is-dragover');
+      addFile('拖拽上传材料.pdf');
+    });
+  });
+</script>
+</body>
+</html>

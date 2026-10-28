@@ -1,0 +1,128 @@
+/* ===================== t-home 页面专属样式 =====================
+ * 结构化原语（卡片/面板/标题行/标签/表单/表格）一律复用标准组件：
+ *   ds-card / ds-tag / ds-select / ds-page（design-system base.css）
+ *   ap-panel / ap-title-row / ap-card-grid / ap-btn / ap-table（shared/portfolio-v3.css）
+ * 栅格间距、面板内边距由 portfolio-compact.css（portfolio-frame.js 挂载时自动注入）统一管控。
+ * 本文件仅承载框架未提供的业务数据可视化：横条 / 环形 / 进度环 / 待办条。
+ * 调色板变量 --ap-* 由 shared/portfolio-v3.css 统一提供。 */
+
+/* 页面容器 */
+.th-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+}
+
+/* 顶/底两栏栅格 */
+.th-grid { display: grid; gap: 16px; align-items: stretch; }
+.th-grid--top { grid-template-columns: 320px minmax(0, 1fr); }
+.th-grid--bottom { grid-template-columns: minmax(440px, 0.8fr) minmax(540px, 1.65fr); }
+
+/* 待办 */
+.th-todo { display: flex; align-items: center; gap: 14px; padding: 14px 20px; }
+.th-todo__icon { flex: none; width: 24px; height: 24px; color: #ad6800; }
+.th-todo__copy { flex: 1; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.th-todo__copy strong { font-size: 15px; font-weight: 600; color: #1f2937; }
+.th-todo__copy span { font-size: 13px; }
+.th-todo .ap-btn { margin-left: auto; }
+
+/* 基本信息 */
+.th-profile { display: flex; gap: 20px; padding: 16px 20px; align-items: center; }
+.th-avatar {
+  flex: none; width: 70px; height: 70px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, #5188ff, #2f6fff);
+  color: #fff; font-size: 26px; font-weight: 700;
+  box-shadow: inset 0 0 0 1px #d9e5ff;
+}
+.th-profile__info { min-width: 0; }
+.th-profile__name { display: flex; align-items: center; gap: 10px; }
+.th-profile__name h1 { margin: 0; font-size: 28px; font-weight: 600; color: #1f2937; letter-spacing: -0.02em; }
+.th-profile__info p { margin: 6px 0 0; color: #9094a6; font-size: 14px; line-height: 1.5; }
+
+/* 业绩纵览 */
+.th-perf { padding: 16px 20px; }
+.th-perf .ap-title-row { margin-bottom: 4px; }
+.th-perf-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: center; margin-top: 16px; }
+.th-perf-item { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 0 12px; border-left: 1px solid var(--ap-line); }
+.th-perf-item:first-child { padding-left: 0; border-left: 0; }
+.th-perf-item__label { color: #9094a6; font-size: 13px; white-space: nowrap; }
+.th-perf-item__value { color: #1f2937; font-size: 24px; font-weight: 600; line-height: 28px; white-space: nowrap; }
+.th-perf-item__value small { margin-left: 2px; color: #9094a6; font-size: 13px; font-weight: 400; }
+
+/* 教学建设成果 */
+.th-stats-grid { margin-top: 0; }
+.th-stat-block { display: flex; flex-direction: column; gap: 12px; min-height: 200px; padding: 16px; }
+.th-block-title { margin: 0; font-size: 14px; font-weight: 600; color: #1f2937; }
+
+/* 课程建设横条 */
+.th-bar-list { display: flex; flex-direction: column; gap: 16px; }
+.th-bar-row { display: flex; align-items: center; gap: 12px; }
+.th-bar-row__name { width: 56px; flex: none; text-align: right; color: #4b5563; font-size: 14px; line-height: 16px; }
+.th-bar-area { position: relative; flex: 1; height: 16px; margin-right: 60px; }
+.th-bar-track { position: absolute; inset: 0; background: #f1f5f9; border-radius: 0 8px 8px 0; }
+.th-bar-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 0 8px 8px 0; }
+.th-bar-val { position: absolute; top: 50%; transform: translateY(-50%); color: #0f172a; font-size: 15px; font-weight: 600; white-space: nowrap; }
+
+/* 指导学生环形 */
+.th-donut-wrap { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 16px 0; flex-wrap: wrap; }
+.th-donut { width: 150px; height: 150px; border-radius: 50%; position: relative; display: grid; place-items: center; box-shadow: 0 0 0 8px #f7f8fa; }
+.th-donut > div { width: 100px; height: 100px; border-radius: 50%; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.th-donut strong { color: #2f6bff; font-size: 26px; line-height: 30px; letter-spacing: -0.03em; }
+.th-donut span { font-size: 11px; color: #737585; }
+.th-legend { display: grid; gap: 10px; }
+.th-legend__item { display: grid; grid-template-columns: 9px auto auto; align-items: center; gap: 8px; font-size: 13px; color: #505266; }
+.th-legend__item i { width: 9px; height: 9px; border-radius: 50%; }
+.th-legend__item b { color: #1f2937; font-weight: 400; }
+.th-legend__item .pct { color: #1f2937; }
+
+/* 教研学术 2x2 彩色卡 */
+.th-rcard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 10px; }
+.th-rcard { display: flex; flex-direction: column; justify-content: space-between; min-height: 92px; gap: 12px; padding: 14px 12px; border-radius: 8px; border-left: 2px solid currentColor; }
+.th-rcard__name { font-size: 12px; line-height: 20px; color: inherit; }
+.th-rcard__bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.th-rcard__val { font-size: 30px; font-weight: 600; line-height: 32px; color: inherit; }
+.th-rcard__val small { margin-left: 2px; font-size: 10px; font-weight: 400; }
+.th-rcard__pct { font-size: 10px; line-height: 14px; color: inherit; }
+.rc-purple { color: #15309e; background: #f0f6ff; }
+.rc-cyan { color: #047857; background: #d1fae5; }
+.rc-pink { color: #b91c1c; background: #fee2e2; }
+.rc-blue { color: #8b5cf6; background: #ede9fe; }
+
+/* 学期课程 */
+.th-courses .ap-title-row { margin-bottom: 12px; }
+.th-course-table { margin-top: 4px; }
+.th-course-row__action { text-align: center; }
+.th-link-btn { border: 0; background: transparent; color: #2f6bff; font-size: 13px; cursor: pointer; padding: 0; }
+
+/* 完整度 */
+.th-completeness { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 36px; align-items: center; margin-top: 16px; }
+.th-ring { position: relative; width: 152px; height: 152px; display: grid; place-items: center; }
+.th-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.th-ring__track { fill: none; stroke: #eeeef0; stroke-width: 10; }
+.th-ring__value { fill: none; stroke: #2f6bff; stroke-width: 10; stroke-linecap: round; }
+.th-ring__center { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.th-ring__center strong { color: #2f6bff; font-size: 34px; line-height: 40px; letter-spacing: -0.04em; }
+.th-ring__center span { font-size: 11px; color: #737585; }
+.th-comp-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; }
+.th-comp-item { display: grid; align-items: center; gap: 8px; font-size: 12px; color: #505266; grid-template-columns: 112px minmax(60px, 1fr) 34px; }
+.th-comp-item > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-comp-item > i { display: block; height: 7px; overflow: hidden; border-radius: 4px; background: #eeeef0; }
+.th-comp-item > i > b { display: block; height: 100%; border-radius: 4px; background: #2f6bff; }
+.th-comp-item > strong { color: #1f2937; font-weight: 400; }
+
+/* 下拉筛选（覆盖 .ds-select 全宽：固定为自然宽度） */
+.th-select { width: auto; min-width: 200px; flex: none; }
+
+@media (max-width: 1180px) {
+  .th-grid--top { grid-template-columns: 1fr; }
+  .th-grid--bottom { grid-template-columns: 1fr; }
+  .th-stat-block { min-height: 0; }
+}
+@media (max-width: 720px) {
+  .th-perf-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .th-perf-item:nth-child(4) { padding-left: 0; border-left: 0; }
+  .th-completeness { grid-template-columns: 1fr; }
+  .th-comp-list { grid-template-columns: 1fr; }
+}

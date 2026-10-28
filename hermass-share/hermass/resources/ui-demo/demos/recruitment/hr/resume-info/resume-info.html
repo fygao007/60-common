@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>高校招聘管理系统（人事处管理员 · 应聘者简历信息表）</title>
+  <link rel="stylesheet" href="../../../../framework/theme.css" />
+  <link rel="stylesheet" href="../../../../assets/bundles/pages/resume-info.bundle.css?v=20260822-resume-realalign" />
+</head>
+<body>
+  <div class="frame2-stage ds-scope" data-ds-page="react">
+    <div id="app"></div>
+  </div>
+
+  <script src="../../../../assets/icon-registry.js"></script>
+  <script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+  <script src="../../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+  <script src="../../../../framework/framework-2.js?v=2.2.3"></script>
+  <script src="../../shared/recruitment-mock.js?v=20260822-resume-realalign"></script>
+  <script src="../../shared/recruitment-frame.js?v=20260901-remove-talent-pool"></script>
+  <script>
+    window.RecruitmentFrame.mount({ role: 'hr', view: 'resume-info', tabLabel: '应聘者简历信息表' });
+  </script>
+  <script defer src="../../../../assets/bundles/pages/resume-info.bundle.js?v=20260822-resume-realalign"></script>
+</body>
+</html>

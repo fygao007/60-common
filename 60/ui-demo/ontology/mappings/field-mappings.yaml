@@ -1,0 +1,72 @@
+ontology: szpu-hr
+version: 0.2.0
+relatedMappings:
+  - file: rsjxdad-table-mappings.yaml
+    scope: 教学档案袋应用（rsjxdad）19 张现网物理表到标准实体的映射草案。
+mappings:
+  - concept: Person.personId
+    sources:
+      - { source: staff-info-prototype, field: id, status: not-equivalent, note: 页面自增序号，不可迁移为人员主键 }
+      - { source: staff-info-prototype, field: jzgbh/zgh, status: legacy-identifier, note: 工号映射到 employeeNumber }
+  - concept: Person.name
+    sources:
+      - { source: staff-info-prototype, field: xm, status: mapped }
+      - { source: recruitment-mock, field: name, status: mapped }
+  - concept: Person.employeeNumber
+    sources:
+      - { source: staff-info-prototype, field: jzgbh/zgh, status: mapped }
+      - { source: staff-basic-data-structure, field: 工号, status: mapped }
+      - { source: onboarding-requirement-spec, field: 职工号, status: synonym }
+      - { source: teaching-portfolio-data-demand, field: 任课教师工号/RKJSGH, status: external-reference }
+  - concept: PersonIdentity.documentType
+    sources:
+      - { source: staff-basic-data-structure, field: 身份证件类型, status: mapped }
+      - { source: recruitment-field-requirements, field: 证件类型, status: mapped }
+  - concept: PersonIdentity.documentNumber
+    sources:
+      - { source: staff-basic-data-structure, field: 身份证号/身份证件号, status: synonym }
+      - { source: recruitment-field-requirements, field: 证件号码, status: mapped }
+      - { source: onboarding-requirement-spec, field: 身份证号, status: mapped }
+  - concept: Person.personnelCategory
+    sources:
+      - { source: staff-basic-data-structure, field: 教职工类别, status: mapped }
+      - { source: staff-basic-data-structure, field: 人员身份, status: not-equivalent }
+      - { source: staff-basic-data-structure, field: 用人方式, status: not-equivalent }
+      - { source: staff-basic-data-structure, field: 专任教师类型, status: not-equivalent }
+  - concept: Organization
+    sources:
+      - { source: staff-info-prototype, field: szdw, status: label-only, note: 需通过组织主数据匹配 organizationId }
+      - { source: staff-basic-data-structure, field: 所在部门/任职部门, status: candidate }
+      - { source: teaching-portfolio-data-demand, field: 学院代码/YXDM, status: external-reference }
+      - { source: teaching-portfolio-data-demand, field: 学院名称/YXMC, status: external-label }
+    confirmation: 需要正式组织机构编码表和层级关系。
+  - concept: Position.positionCategory
+    sources:
+      - { source: staff-basic-data-structure, field: 岗位类别, status: candidate }
+      - { source: staff-basic-data-structure, field: 岗位类型, status: not-equivalent }
+  - concept: RecruitmentPosition.positionId
+    sources:
+      - { source: recruitment-mock, field: positionId, status: legacy-identifier, note: pos-001 等原型编号需映射，不符合标准 UUID 规则 }
+  - concept: Candidate.candidateId
+    sources:
+      - { source: recruitment-mock, field: id/candidateId, status: legacy-identifier, note: r-001 与 todo-handled-* 均不可直接作为标准主键 }
+  - concept: Position.positionLevel
+    sources:
+      - { source: staff-basic-data-structure, field: 岗位等级, status: mapped }
+      - { source: staff-basic-data-structure, field: 职称等级, status: not-equivalent }
+  - concept: EmploymentAssignment
+    sources:
+      - { source: staff-basic-data-structure, field: 聘岗信息, status: mapped }
+      - { source: staff-basic-data-structure, field: 党政职务, status: assignment-subtype }
+      - { source: staff-basic-data-structure, field: 专业带头人经历, status: assignment-subtype }
+      - { source: staff-basic-data-structure, field: 专业（群）负责人经历, status: assignment-subtype }
+      - { source: staff-basic-data-structure, field: 外派（挂职、借调）经历, status: assignment-subtype }
+  - concept: Candidate.convertedToPerson
+    sources:
+      - { source: recruitment-requirement-spec, field: 招聘数据流转到入职和人事档案, status: business-requirement }
+      - { source: onboarding-requirement-spec, field: 报到完成后建立人事信息, status: business-requirement }
+
+unresolved:
+  - 需要确定候选人跨批次、跨岗位重复身份合并规则。
+  - 需要提供组织机构、岗位目录和岗位编制的正式编码数据。
+  - 需要确认聘岗信息中“岗位类别”与学校正式岗位分类的对应关系。

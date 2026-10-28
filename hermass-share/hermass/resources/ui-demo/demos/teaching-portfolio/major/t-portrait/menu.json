@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "t-portrait",
+    "label": "我的教学画像",
+    "group": "我的教学画像",
+    "defaultFeature": "t-portrait"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-t-portrait",
+      "label": "我的教学画像（专业群带头人）",
+      "type": "static-prototype-menu",
+      "html": "t-portrait.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../t-home/t-home.html",
+          "../t-overview/t-overview.html",
+          "../p-review/p-review.html",
+          "../a-integration/a-integration.html"
+        ]
+      }
+    }
+  ]
+}

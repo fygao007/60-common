@@ -1,0 +1,34 @@
+@import '../tokens.css';
+
+.ds-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--ds-color-text-tertiary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--ds-motion-duration) var(--ds-motion-ease),
+    background-color var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-icon-button:hover {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-icon-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ds-color-focus-ring-strong);
+}
+
+.ds-icon-button svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}

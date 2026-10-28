@@ -1,0 +1,251 @@
+/* 教师档案详情页 · 业务布局样式（不覆盖 .ds-* / .frame2-*，颜色使用设计 token） */
+@import '../../shared/portfolio-v3.css';
+@import '../../../../framework/react-page-host.css';
+
+/* 灰底消除（教学档案袋框架） */
+.pf-views {
+  background: transparent !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+#app {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}.pd-page{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border-radius: 8px;
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-container);
+  overflow: hidden;
+}.pd-page h1,
+.pd-page h2,
+.pd-page h3,
+.pd-page p{
+  margin: 0;
+}/* 详情视图走标准子页框架：顶部页头贴边 + 下方内容区留白 */
+.pd-page.pd-page--detail{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pd-top-header {
+  border-bottom: 0;
+  border-radius: 0;
+}.pd-detail-page{
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  padding: 0;
+  border-radius: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* 教育教学信息嵌入面板（复用 teaching-info 页，去掉自身头部与边框，撑满剩余高度） */
+.pd-teaching-info-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}.pd-teaching-info.ti-page{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  border-radius: 8px;
+}.pd-teaching-info .ti-content-card{
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+}
+
+.pd-teaching-info .ti-layout {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  /* 左侧课程导航自适应变窄：随视口收窄，下限 200px、上限 300px */
+  grid-template-columns: clamp(200px, 22vw, 300px) minmax(0, 1fr);
+}
+
+/* 课程导航内边距收紧，配合变窄 */
+.pd-teaching-info .ti-course-pane {
+  padding: 16px 12px 24px 16px;
+}
+
+/* 详情视角：隐藏数据来源/纠错补录、编辑按钮 */
+[data-ds-business-page="portfolio-detail"] .ti-source-note { display: none !important; }
+[data-ds-business-page="portfolio-detail"] .ti-section-head .ds-button { display: none !important; }[data-ds-business-page="portfolio-detail"] .ti-plan-card__actions .ds-button{ display: none !important; }
+
+
+/* ===== 追加: 查看更多/导航行/业绩抽屉样式(复用 major portfolio-detail) =====
+.pd-header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  background: var(--ds-color-bg-container);
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+}
+
+.pd-header-row .ti-top-header {
+  flex: 1;
+  border-bottom: 0;
+}
+
+.pd-header-row .ds-button--default {
+  flex: none;
+}
+
+@media (max-width: 640px) {
+  .pd-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+  }
+
+  .pd-header-row .ds-button--default {
+    align-self: flex-end;
+    margin: 8px 16px;
+  }
+}
+
+/* ========== 查看更多 · 全屏大抽屉 ========== */
+
+.pd-more-drawer {
+  width: 100vw !important;
+  max-width: 100vw !important;
+}
+
+.pd-more-drawer .ds-drawer__body {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.pd-more-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  height: calc(100vh - 56px);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pd-more-main {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px 24px 40px;
+  background: var(--ds-color-bg-container);
+}
+
+.pd-more-anchor {
+  width: 100%;
+  min-width: 150px;
+  max-width: 220px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--ds-space-5) 0;
+  background: var(--ds-color-bg-container);
+}/* 一级分组 */
+.pd-more-section{
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  scroll-margin-top: 16px;
+}
+
+.pd-more-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.pd-more-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-lg);
+}
+
+.pd-more-section-title::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-primary);
+}/* 二级分组（表单/表格） */
+.pd-more-sub-section{
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  scroll-margin-top: 16px;
+}
+
+.pd-more-sub-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.pd-more-sub-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}
+
+.pd-more-sub-title::before {
+  content: "";
+  width: 3px;
+  height: 14px;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-primary-light);
+}
+
+.pd-more-source {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.pd-more-table {
+  border-radius: 0;
+}
+
+@media (max-width: 1100px) {
+  .pd-more-layout {
+    grid-template-columns: minmax(0, 1fr) 170px;
+  }
+}[data-ds-business-page="portfolio-detail"] .ti-base-group .ds-button{ display: none !important; }

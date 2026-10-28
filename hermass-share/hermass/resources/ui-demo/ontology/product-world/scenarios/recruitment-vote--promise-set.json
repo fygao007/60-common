@@ -1,0 +1,84 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--promise-set",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "配置参评人签署的承诺书正文与签署方式",
+      "统一评审纪律口径，减少评委私下沟通"
+    ],
+    "painPoints": [
+      "原系统承诺书正文写死在页面，不同批次口径难统一"
+    ],
+    "openQuestions": [
+      "是否需要按评审批次维护多套承诺书模板，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "承诺书设置",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票项目已创建"
+    ],
+    "mainFlow": [
+      "进入承诺书设置，开启承诺书开关",
+      "选择是否需要参评人手写电子签名",
+      "编辑或恢复默认承诺书正文",
+      "预览承诺书效果后保存"
+    ],
+    "exceptions": [
+      "启用状态下正文为空时阻止保存并提示",
+      "关闭承诺书开关后正文与签名设置置为不可编辑"
+    ]
+  },
+  "page": {
+    "title": "承诺书设置",
+    "templateId": "edit-form",
+    "menuRef": "recruitment.vote:promise-set",
+    "fieldRefs": [
+      "Business.vote.promiseEnabled",
+      "Business.vote.promiseContent",
+      "Business.vote.signatureEnabled"
+    ],
+    "components": [
+      "DSAlert",
+      "DSButton",
+      "DSEditField",
+      "DSEditForm",
+      "DSFormGroup",
+      "DSModal",
+      "DSSwitch",
+      "DSTextarea"
+    ],
+    "demoPath": "demos/vote/promise-set/promise-set.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「项目设置」分组下「承诺书设置」处于高亮态",
+      "承诺书开关关闭时正文与签名开关不可编辑",
+      "编辑正文后可预览承诺书渲染效果",
+      "保存时正文为空给出错误提示，正常保存给出成功提示"
+    ]
+  }
+}

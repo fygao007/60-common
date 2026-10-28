@@ -1,0 +1,2289 @@
+{
+  "id": "teacher-growth-management-design",
+  "version": "draft-1.0",
+  "status": "design-blueprint",
+  "date": "2026-10-08",
+  "research": {
+    "sources": [
+      {
+        "id": "human-brief",
+        "type": "user-request",
+        "title": "本会话管理侧优先、金字塔结构与学校发展比较要求"
+      },
+      {
+        "id": "current-system",
+        "type": "local-code",
+        "title": "teacher-growth-portfolio当前菜单与管理页面"
+      },
+      {
+        "id": "template-catalog",
+        "type": "local-spec",
+        "title": "page-template-catalog与设计系统公开出口"
+      }
+    ],
+    "openQuestions": [
+      "见尾部待学校确认清单；蓝图不是已发布学校制度"
+    ]
+  },
+  "introductorySpecification": "# 教师成长档案袋：管理侧学校发展与师资队伍建设详细设计\n\n> 版本：设计草案 v1.0｜日期：2026-10-08｜先实现管理侧，同时保留教师侧后续承接。\n> 本文由 ontology/product-world/designs/teacher-growth-management-design.json 装配生成；新增字段从 ontology 草案读取。本文没有创建 Demo，也没有启用新菜单。学校的目标值、认定制度、确认权限和真实接口仍待业务确认。\n\n## 一、产品目标、角色和业务链\n\n管理者能够在统一口径下看清全校教师发展结构，并比较教师队伍能否支撑学校现阶段发展。核心链路为：发展方案→发展任务→师资要求→可信人员/事实→现状与目标对照→差距下钻→建设行动→验收和指标再分析。\n\n人才金字塔表达互斥的主梯队结构；学历、职称、双师、教学科研实践能力是独立分析维度。不能按任意综合分把教师分成高低等级，也不能用金字塔替代全部发展分析。\n\n角色分工：校级业务管理员配置方案/要求、组织认定与行动；归口部门负责业务口径和证据确认；学院负责人查看本院差距、分解行动和反馈；校领导查看全校分析与行动成效；系统管理员维护主数据、数据源和技术配置；教师后续仅承接本人资料确认、培养行动和反馈。综合视图用于演示，不能作为真实授权实现。\n\n一阶段优先手动配置、确定性分析、人工确认、真实行动闭环；AI文件提取作为可选增强，不能影响基础功能可用性。\n\n## 二、现有系统改造落点\n\n|现有入口/能力|本设计处理|禁止的做法|\n|---|---|---|\n|l-workbench|管理首页入口，展示正式方案与重点待办|继续用固定总分、固定增长替代分析|\n|l-faculty-dashboard|改造为全校队伍发展总览、梯队和结构分析|把页面内1864人等快照与另一引擎人群混用|\n|d-faculty-dashboard|使用相同分析口径，仅查询本院授权范围|按学院再实现一套公式|\n|l-school-dashboard|承接发展任务支撑对照|没有方案也自造目标值|\n|l-upgrade-dashboard|作为特定发展方案的专项视图|把升本阈值作为全系统唯一学校目标|\n|sys-indicator-lib|扩展组织统计指标，与个人评价指标区分用途|直接复用个人评分的target当校级要求|\n|sys-rule-lib|维护正式判定、期间和证据规则|未知字段/规则默认通过|\n|sys-model-manage|保留个人/团队评价配置；可提供规则测试入口|用个人五维得分决定所有人才梯队|\n|hr/d-archive、hr/d-data-manage|人员、事实下钻和数据核验入口|重复造人员名单、把0当退回|\n|hr-permission、sys-permission|落地校级/院级范围和操作权限|只隐藏菜单不控制查询、附件和导出|\n|sys-integration|提供数据状态和同步问题追踪|有来源名称就认定接入成功|\n\n新增业务功能建议放在职能部门分组：发展规划与目标、人才梯队管理、队伍建设行动；领导分组增加发展任务分析或由已有学校驾驶舱承接。详情页作为二级路由，不占满一级菜单。\n\n本设计不启用路由。实现时产品menus集中注册teacher-growth-portfolio.management、teacher-growth-portfolio.leadership、teacher-growth-portfolio.college等拟定ID，确认唯一性后使用WiseMenuRegistry.route/link。物理目录沿用现有teacher/<view>风格，页面通过业务角色控制范围，不能因物理目录teacher就认为都是个人页面。\n\n## 三、模板实际能力与选择约束\n\n模板已核对specs/page-template-catalog.json和设计系统公开出口。管理台账采用regular-list；编辑采用edit-form；确认队列采用audit；看板采用dashboard；导入采用import-wizard。\n\n目录中的crud-list语义匹配配置管理，但当前DSCrudTemplate源码是早期示例：筛选未完整受控，行编辑/删除及分页缺少可用事件。不能把它视为开箱可用的业务CRUD。第一期先选择功能语义同时包含查询台账的regular-list，新增/编辑通过标准编辑页完成；如后续必须采用crud-list，先在公共设计系统补齐并登记模板能力，不复制内部DOM。\n\nDSRegularListTemplate负责筛选、工具栏、DSDataTable和真实分页；DSEditForm负责字段布局，不自动提供状态机、验证或数据提交。DSAuditTemplate默认动作和数据必须显式替换；审核详情使用DSAuditDetailDrawer/标准只读组件；禁止误保留模板默认批量通过、示例数量和无处理按钮。\n\nDashboard用DSDashboardGrid、DSCard、DSChartCard、DSEChartBase组合。金字塔不是已存在的专用业务组件，采用图表组件或业务专属可视化；无法真实呈现数量的固定三角形只能作为层级导航，必须同时显示真实分层条形图。\n\n所有页面拟采用custom模式，实施前登记page-compositions。页面不导入其他Demo或公共页面内部实现；公共领域能力放正式领域包，不能继续向demo shared新增公共业务。无框架根容器列表才要求inset=12/contentGap=12/toolbarGap=8、表格lowcode+bordered与footer弹性贴底；当前带框架页不要机械套用无框架规则。\n\n## 四、字段与配置字典使用说明\n\n下文B.代表Business.teacher-growth.；这是已登记为draft的业务专属字段命名空间，不是页面自造字段。类型、字典候选、语义目标和分级仅维护在ontology。本文字段表只引用字段和描述产品约束，正式上线前需确认草案并生成场景。\n\n姓名、职工号、单位、职称、学历学位、双师等直接引用StaffBasicInformation；人员关联用Person.personId；组织主数据用Organization.organizationId；任职历史用EmploymentAssignment。不能用姓名/工号做实体主键，不能把“所在单位”任意重命名成新字段定义。\n\n条件组件仅允许本体已登记、已授权、可计算的字段；业务引用Person时，展示姓名从StaffBasicInformation.xm获取。学位和学历分别使用zgxwdm和zgxldm；职称、专业技术职务、现聘职务含义不同，要求配置必须明确选哪一种。\n\n周期、状态、要求类型等候选值在ontology中维护；页面只读取。任务方向与教师特征标签不预设为学校正式分类，由学校维护业务分类并登记字典。本设计表中的“必填”是产品约束，不覆盖标准字段类型或分级。\n",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "发展方案台账",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "新增：职能部门→发展规划与目标；方案为第一层列表",
+      "actors": [
+        "校级业务管理员",
+        "归口部门",
+        "校领导只读"
+      ],
+      "usageScenarios": [
+        "建立年度师资建设方案",
+        "建立中期学校发展方案",
+        "查阅专项建设方案及历史版本"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.planName",
+          "productConstraint": "新增必填；名称长度上限由正式产品约束确认"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planCode",
+          "productConstraint": "系统生成只读，唯一"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planPeriodType",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.stageName",
+          "productConstraint": "必填；引用经确认阶段名称"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.periodStart",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.periodEnd",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementCount",
+          "productConstraint": "派生只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.businessUpdatedAt",
+          "productConstraint": "系统维护"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "方案名称/编号模糊搜索"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "behavior": "多选状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planPeriodType",
+          "behavior": "周期类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "授权组织树"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.periodStart",
+          "behavior": "高级筛选：与查询期间重叠的方案"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.planCode",
+          "display": "次要编号"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planName",
+          "display": "可点击详情"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planPeriodType",
+          "display": "类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.stageName",
+          "display": "阶段"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.periodStart",
+          "display": "与periodEnd组合显示规划周期"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任部门"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementCount",
+          "display": "点击进入要求列表"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "display": "文字状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "display": "版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.businessUpdatedAt",
+          "display": "默认倒序"
+        }
+      ],
+      "interactionSpecification": "**页面结构**：状态页签（全部/草稿/待确认/已发布/已归档）→筛选→工具栏→表格→分页。工具栏：新建方案、从文件辅助创建（可选）、导出当前台账。\n\n**行操作**：草稿编辑/提交确认/删除；待确认查看/允许时撤回；已发布查看/复制为新版本/归档；已替代或归档只读/复制为新方案。不得直接编辑已发布版本。\n\n**复制区别**：“复制为新方案”生成新planId，不继承认定名单和行动；“创建修订版本”保持方案主体，版本递增，保留旧发布版。删除只允许无提交历史且无业务引用的草稿；有历史使用归档。\n\n**查询规则**：筛选采用编辑条件→查询生效；重置恢复全部授权范围及默认状态；筛选/页大小变化回第一页。total由真实查询结果返回，默认每页20条，支持10/20/50；排序为最近更新时间倒序，编号作为稳定次序。\n\n**异常**：暂无方案展示新建入口；无筛选结果提供清除条件；失去范围授权时清理旧缓存。无编辑权限不展示新建，但查看入口仍按授权保留。",
+      "acceptanceCriteria": [
+        "创建方案后真实出现在台账并可刷新恢复",
+        "筛选1条时total=1",
+        "复制不会携带原行动或教师名单"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M02",
+      "title": "方案配置与发布预览",
+      "templateId": "edit-form",
+      "mode": "custom",
+      "placement": "新增二级页：从M01新建/编辑进入",
+      "actors": [
+        "校级业务管理员"
+      ],
+      "usageScenarios": [
+        "从零创建学校发展方案",
+        "修订已发布方案的下一版本"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.planName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planPeriodType",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.stageName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.stageDescription",
+          "productConstraint": "选填，不代替正式要求"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.periodStart",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.periodEnd",
+          "productConstraint": "必填且不早于开始"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.baselineDate",
+          "productConstraint": "必填且不晚于数据截止日期"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "productConstraint": "必填，人员范围条件引用登记字段"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "必填且在允许责任范围"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.documentRefs",
+          "productConstraint": "至少附件或明确来源记录；发布前校验"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.sourceClause",
+          "productConstraint": "可选重点依据"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.effectiveFrom",
+          "productConstraint": "发布必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.changeReason",
+          "productConstraint": "修订必填"
+        }
+      ],
+      "filters": [],
+      "columns": [],
+      "interactionSpecification": "**组件**：DSSubPageHeader、DSSteps、DSFormGroup、DSEditForm(columns=2)、DSEditField、DSInput/DSSelect/DSDatePicker/DSTextarea/DSUpload/组织与人员选择组合、DSButtonGroup。\n\n**五步配置**：①规划背景（名称、阶段、期间、责任、依据）；②统计范围（学校/学院、人员类别、任职状态、主任职、基准日期）；③发展任务（M03内嵌已有任务查询，新增进入M04）；④师资要求（M05，未配置项提示）；⑤预览确认（人员总数、任务/要求数、可计算数、待核验、规则冲突、发布影响）。\n\n**范围预览**：选择组织与教师类型后显示去重人数、人员名单和排除原因。方案组织范围不是登录授权；两者取交集。人员条件通过已有Person/任职/基础信息字段组合，不新建人员类别字典。\n\n**保存与继续**：允许保存不完整草稿；下一步校验当前步；最终提交验证全部。数据范围变更后基准预览标记过期，必须重新计算。未保存离开提供保存后离开/放弃本次变更/继续编辑。\n\n**发布前阻断**：无责任、无有效周期、无任务、要求配置不完整、来源/字典/算法不存在、权限超范围、规则冲突未处理。资料待核验可在明确记录影响并经确认后发布，但分析显示待核验；人工要求允许存在并显示未评估。\n\n**确认策略**：是否需学校指定确认人及流程待确认。默认设计为提交确认再发布；若学校决定允许直接发布，在正式场景登记策略，不隐藏跳过确认。发布事务固定方案、要求、规则、范围、梯队版本，创建初次分析任务。失败保留草稿，不能半发布。",
+      "acceptanceCriteria": [
+        "规则未配置完整不能发布",
+        "发布后版本只读，修改生成新版本",
+        "数据范围变化不会沿用旧基准人数"
+      ],
+      "components": [
+        "DSEditForm",
+        "DSFormGroup",
+        "DSEditField",
+        "DSInput",
+        "DSSelect",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M03",
+      "title": "发展任务台账",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "新增：方案详情页“发展任务”页签；可支持跨方案查询",
+      "actors": [
+        "校级业务管理员",
+        "学院负责人",
+        "校领导只读"
+      ],
+      "usageScenarios": [
+        "把学校规划分解成师资建设任务",
+        "查看某学院承担的任务"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.taskId",
+          "productConstraint": "系统标识"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "关联方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskDirection",
+          "productConstraint": "正式分类引用"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskPurpose",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.priority",
+          "productConstraint": "默认普通"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskStatus",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementCount",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionCount",
+          "productConstraint": "只读"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "任务名称/编号"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "behavior": "选择方案与版本，方案内固定只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskDirection",
+          "behavior": "任务方向"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "责任组织"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskStatus",
+          "behavior": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "behavior": "高级：期限范围"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.priority",
+          "behavior": "高级：优先级"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.taskName",
+          "display": "点击详情"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planName",
+          "display": "跨方案查询才显示"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskDirection",
+          "display": "分类"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "display": "日期加逾期标记"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementCount",
+          "display": "关联要求"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionCount",
+          "display": "关联行动"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskStatus",
+          "display": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.priority",
+          "display": "优先级"
+        }
+      ],
+      "interactionSpecification": "**操作**：新增任务、导出清单；草稿方案下任务可编辑/复制/删除；发布方案任务正文锁定，行动办理状态可变化。要改任务口径须修订方案。\n\n**详情页签**：任务说明、师资要求、关联行动、版本历史。说明含学校预期成果和责任；要求列表逐项显示现状/目标/待核验；行动列表可多条。一个行动可关联多个要求，行动数按actionId去重。\n\n**单位协作**：学院可查看分配到本院的任务并反馈行动，不能改校级目标。协同单位能提供证据/进展，不能替换牵头单位。取消任务要有原因和关联行动处置，不直接删除已发布内容。\n\n**结项**：所有关联行动完成不自动使发展任务达标；发起结项时同时展示要求最新分析和未完成事项。若目标有缺口仍结项，必须按学校允许的例外流程确认并留说明，历史结果保持。",
+      "acceptanceCriteria": [
+        "学院只能查看本院授权任务",
+        "行动完成与任务目标满足分别显示",
+        "发布方案的任务不能直接改写"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M04",
+      "title": "发展任务编辑",
+      "templateId": "edit-form",
+      "mode": "custom",
+      "placement": "新增二级页/标准分组抽屉：M03新增编辑",
+      "actors": [
+        "校级业务管理员"
+      ],
+      "usageScenarios": [
+        "登记一项规划任务",
+        "细化牵头与协同责任"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "父方案固定"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskDirection",
+          "productConstraint": "必填，引用学校已登记分类"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskPurpose",
+          "productConstraint": "必填，描述可交付成果"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.collaboratingOrganizations",
+          "productConstraint": "选填组织多选"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "productConstraint": "必填，应在方案周期内；例外需确认"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.priority",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.documentRefs",
+          "productConstraint": "可继承方案依据引用，不复制文件"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.sourceClause",
+          "productConstraint": "关键原文，引用文件位置"
+        }
+      ],
+      "filters": [],
+      "columns": [],
+      "interactionSpecification": "分组：任务定义、责任范围、时间与依据。任务方向采用已有或新登记的业务分类；无分类可先保存草稿，正式发布前补齐。\n\n任务保存后引导“添加师资要求”，但不自动生成指标或目标值。AI或文本解析产生的责任/期限先为候选，逐项确认后写草稿。\n\n同方案同范围同名称提示重复候选，允许查看已有或说明不同任务；不按名称强制合并。责任人调岗后发起责任变更记录，不能修改原提交者或历史责任。",
+      "acceptanceCriteria": [
+        "不填写任务目的不能提交",
+        "继承依据不生成附件副本",
+        "任务保存不会自动产生虚构指标"
+      ],
+      "components": [
+        "DSEditForm",
+        "DSFormGroup",
+        "DSEditField",
+        "DSInput",
+        "DSSelect",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M05",
+      "title": "师资要求台账",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "新增：发展任务详情“师资要求”页签",
+      "actors": [
+        "校级业务管理员",
+        "归口部门",
+        "学院负责人只读"
+      ],
+      "usageScenarios": [
+        "配置学校目标的具体师资条件",
+        "检查哪些要求尚不可计算"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.requirementName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementType",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.metricRef",
+          "productConstraint": "自动要求必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "productConstraint": "继承方案，可进一步收窄"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetLower",
+          "productConstraint": "条件必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetUpper",
+          "productConstraint": "区间时必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetOperator",
+          "productConstraint": "自动类型必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetUnit",
+          "productConstraint": "由类型/指标约束"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "productConstraint": "继承任务，可设置中间节点"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "归口业务责任"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.mandatory",
+          "productConstraint": "是否关键要求"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementStatus",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "productConstraint": "派生"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actualValue",
+          "productConstraint": "派生"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unknownCount",
+          "productConstraint": "派生"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "要求名称"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementType",
+          "behavior": "人数/比例/覆盖/梯队/培养/人工"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementStatus",
+          "behavior": "配置状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "behavior": "分析结果，未分析时不混作缺口"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "归口部门"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.mandatory",
+          "behavior": "高级：关键要求"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.requirementName",
+          "display": "点击查看口径与证据"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementType",
+          "display": "类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.metricRef",
+          "display": "指标名称由引用解析"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetOperator",
+          "display": "与目标值组合"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actualValue",
+          "display": "当前值及单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unknownCount",
+          "display": "待核验"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "display": "分析结果"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "归口"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementStatus",
+          "display": "配置完整性"
+        }
+      ],
+      "interactionSpecification": "工具栏：添加要求、引用已有指标；可选复制已有要求到草稿，重新确认范围/目标/期限。行操作：编辑、口径预览、测试计算、删除草稿要求；已发布只读或发起修订。\n\n规则和目标分离：统计指标定义“计算什么”，要求定义“在哪个范围、什么周期、目标多少”。同一指标可被不同任务引用，目标不覆盖指标库默认值。\n\n不用所有要求权重合成一个“学校发展总分”。默认汇总已满足/缺口/待核验/人工评估数量，并特别展示关键要求；将来确需综合指数须另确认模型。\n\n引用停用指标时阻止新发布；已有历史快照保留。指标版本升级后提示影响，不能静默把已发布要求改为新规则。",
+      "acceptanceCriteria": [
+        "同一指标能在两个任务设置不同目标而互不覆盖",
+        "停用规则不能被新方案发布",
+        "人工要求不因无数值而报配置错误"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M06",
+      "title": "师资要求编辑与条件配置",
+      "templateId": "edit-form",
+      "mode": "custom",
+      "placement": "新增：M05添加/编辑；核心配置页",
+      "actors": [
+        "校级业务管理员",
+        "归口业务管理员"
+      ],
+      "usageScenarios": [
+        "设置人数/比例/覆盖等要求",
+        "把文件中的模糊目标细化成可判断条件"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.requirementName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementType",
+          "productConstraint": "必填；切换类型会预警不兼容内容"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.metricRef",
+          "productConstraint": "选择已登记组织统计指标"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "productConstraint": "必填、只能收窄父范围"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.filterGroups",
+          "productConstraint": "自动计算类型必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.conditionFieldRef",
+          "productConstraint": "每条条件必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.conditionOperator",
+          "productConstraint": "由字段类型决定"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.conditionValue",
+          "productConstraint": "运算需要时必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.groupLogic",
+          "productConstraint": "全部/任一"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetOperator",
+          "productConstraint": "不低于/不高于/区间"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetLower",
+          "productConstraint": "非负，比例0–100"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetUpper",
+          "productConstraint": "区间必填且≥下限"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetUnit",
+          "productConstraint": "指标派生只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.denominatorMode",
+          "productConstraint": "比例必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.coverageOrganizations",
+          "productConstraint": "覆盖类型必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.coverageMinimum",
+          "productConstraint": "覆盖类型正整数"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.evidencePolicy",
+          "productConstraint": "必填，引用已核验口径"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.manualAssessmentGuide",
+          "productConstraint": "人工类型必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.mandatory",
+          "productConstraint": "默认否"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.assignmentPeriods",
+          "productConstraint": "可选单位年度分解，子记录引用同要求字段"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.sourceClause",
+          "productConstraint": "目标来源"
+        }
+      ],
+      "filters": [],
+      "columns": [],
+      "interactionSpecification": "**六种类型的条件显示**：\n\n|类型|必须配置|计算结果|第一期限制|\n|---|---|---|---|\n|人数|人员范围、符合条件、目标人数|去重符合人数与缺口|不把附件/记录数当人数|\n|比例|分子条件、分母、目标比例|实际比例、待核验、百分点差|分母为0显示不适用|\n|覆盖|单位集合、每单位最低人数、符合条件|已覆盖/未覆盖/待核验单位|逐单位判断，不以全校平均替代|\n|梯队|发布梯队版本、各层目标区间|逐层人数与缺口|不合成单个梯队分数|\n|培养完成|固定培养对象、完成证据、目标|已完成/待核验/未完成人数比例|对象变更要版本化|\n|人工评估|评估说明、依据、责任人、期限|待评估/已满足/存在缺口/待核验|无数值也可完整配置|\n\n**条件编辑器**：DSEditForm配DSSelect、DSInput、DSDatePicker、DSButton；每行“字段→运算→值”，支持添加/删除条件。一阶段最多两层条件组（组内全部/任一，组间全部/任一），不开放任意代码、SQL或无限嵌套。新增范围筛选能从ontology检索授权字段，字典选项从正式字典加载。\n\n**字段能力白名单**：学历学位/双师等标准字段、正式任职关系、已核验培训/实践/成果、正式梯队结果。某字段未接数据则禁用并提示缺少映射。宗教、健康、婚姻、证件等无关敏感字段不作为默认队伍条件。科研/专业群如暂无正式实体或归属关系，要求只能草稿待映射，不能把文本专业名称冒充组织主数据。\n\n**适配运算**：数值允许≥/≤/区间；日期按确定日期范围；概念用等于/属于；关系用存在已核验记录；不以空值代替0。多选内为“属于集合”，组间逻辑明确展示自然语言。\n\n**统计预览**：展示范围人数、符合人数、已核验不符合、待核验、排除项、自然语言口径、对应人员下钻。测试计算不发布，标“配置预览”；保存后保留预览输入哈希，修改条件时失效。\n\n**统计目标与年度目标**：只设置最终目标即可发布；配置中间年度/单位目标时明确是管理分解，不改变全校最终目标。人数分解只有互斥归属下才可求和；比例目标不能直接相加，应按各单位分母加权核对；共享人员覆盖允许多单位覆盖但全校人数去重。\n\n**切换类型**：先说明将清除哪些不兼容配置，确认后清除；取消保持原值。不会把百分比数值80直接保留为80人。",
+      "acceptanceCriteria": [
+        "比例目标超100被阻止",
+        "不存在的字典/指标不能测试通过",
+        "自然语言口径与计算一致",
+        "切换类型不静默改变原目标含义"
+      ],
+      "components": [
+        "DSEditForm",
+        "DSFormGroup",
+        "DSEditField",
+        "DSInput",
+        "DSSelect",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M07",
+      "title": "方案确认与版本发布",
+      "templateId": "audit",
+      "mode": "custom",
+      "placement": "新增：职能部门配置确认队列；与hr-data-review分开业务类型",
+      "actors": [
+        "学校指定确认人",
+        "提交业务管理员"
+      ],
+      "usageScenarios": [
+        "确认正式目标口径",
+        "审批下一版本及其影响"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "审核对象"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "productConstraint": "提交版本冻结"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "productConstraint": "流程状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "责任人"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.documentRefs",
+          "productConstraint": "查看依据"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.changeReason",
+          "productConstraint": "修订说明"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.sourceClause",
+          "productConstraint": "依据"
+        },
+        {
+          "fieldRef": "PortfolioReview.comment",
+          "productConstraint": "确认意见"
+        },
+        {
+          "fieldRef": "PortfolioReview.decision",
+          "productConstraint": "确认决定"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "方案名称/编号"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "behavior": "待我确认/我已处理/授权全部"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "责任组织"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.businessUpdatedAt",
+          "behavior": "提交时间查询以实际提交记录实现，不能拿更新时间替代"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.planName",
+          "display": "申请对象"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "display": "版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任部门"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "display": "责任人"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "display": "当前节点"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.changeReason",
+          "display": "修订摘要"
+        }
+      ],
+      "interactionSpecification": "DSAuditTemplate显式提供筛选、动作、真实分页；批量确认第一期关闭，以空动作覆盖模板默认。详情用DSAuditDetailDrawer和DSReadOnlyForm，分为方案背景、人员范围、任务要求、试算结果、变更影响、原文依据。\n\n**操作**：确认通过并发布、退回修改、查看；提交者可在允许节点撤回。退回必须意见并可标记问题位置。确认人查看的是冻结提交版本，提交者新草稿不覆盖本次审查。\n\n**复用边界**：PortfolioReview.decision/comment只复用决定与意见语义，不把方案硬塞入PortfolioSubmission的教师档案提交关系；通用确认实例及对象引用在实现前登记正式流程实体，本设计已有affectedObject可作草案对象引用。具体审批节点、代理、本人回避和直接发布策略列openQuestions。\n\n**发布原子性**：确认通过后固定配置版本与有效日期，开启初次分析；分析失败不撤销有效配置，显示“已发布，分析失败”，重试同配置/数据快照。生效日期未来时发布不替代当前有效版；到生效日切换。相同范围/周期允许多个专项方案，但只有一个显式默认方案，不按更新时间自动选任意方案。\n\n**历史**：保留提交、意见、发布时间、版本关系、启停和默认切换记录。旧版已生成报告/快照继续可读，不能被新规则覆盖。",
+      "acceptanceCriteria": [
+        "并发确认不会重复发布",
+        "未来生效版本不提前替代现行版",
+        "分析失败可重试且发布记录不丢失"
+      ],
+      "components": [
+        "DSAuditTemplate",
+        "DSAuditDetailDrawer",
+        "DSAuditOpinionModal",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M08",
+      "title": "人才梯队方案与层级配置",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "新增：职能部门→人才梯队管理；配置台账，编辑用edit-form",
+      "actors": [
+        "校级业务管理员",
+        "归口部门"
+      ],
+      "usageScenarios": [
+        "建立学校人才梯队口径",
+        "调整层级或认定条件并版本化"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.ladderName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ladderId",
+          "productConstraint": "系统标识"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelName",
+          "productConstraint": "层级必填，不预填正式学校层级"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelOrder",
+          "productConstraint": "顺序唯一"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionMode",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionRule",
+          "productConstraint": "条件模式必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.conflictPolicy",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionValidFrom",
+          "productConstraint": "正式认定有效开始"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionValidTo",
+          "productConstraint": "有期限才填写"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "productConstraint": "版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "productConstraint": "状态"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "梯队方案名称"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "behavior": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "归口组织"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.ladderName",
+          "display": "名称"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "display": "范围摘要"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.entityCount",
+          "display": "层级数，派生"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.conflictPolicy",
+          "display": "冲突策略"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "display": "版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationStatus",
+          "display": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.businessUpdatedAt",
+          "display": "更新时间"
+        }
+      ],
+      "interactionSpecification": "新增/编辑打开DSEditForm，分组为梯队定义、层级设置、认定与冲突、发布预览。层级表使用DSDataTable；新增/编辑层级使用标准分组编辑抽屉。首期不做自由拖拽画布，排序使用上移/下移或顺序输入并校验唯一。\n\n**层级表列**：层级名称、顺序、认定方式、条件摘要、正式人数、待确认人数、操作。学校可定义两层或多层；“领军/带头/骨干/基础”只是示例，不写为固定字典。\n\n**认定方式**：引用正式认定来源；人工认定；已确认规则筛选候选后人工确认。条件预览不自动形成正式人才称号。规则筛选字段和类型复用M06；个人五维分数不作为默认层级依据。\n\n**主梯队互斥**：同一方案、同一日期、同一人员只能一个主层级；最高符合策略也必须有学校确认依据。多层冲突待人工处理时保留已有有效正式层级，另标待处理；新人员列未认定。特征标签可多选，不进入主梯队总数求和。\n\n**发布约束**：至少两层用于金字塔；单层方案允许名单台账但不用金字塔。删除有认定引用层级须创建新版本并指定迁移方式。改规则只生成候选变化，旧正式认定不静默失效。是否另有后备梯队需要正式关系数据，首期不根据年龄和分数猜“后备人才”。",
+      "acceptanceCriteria": [
+        "主层级人数之和+未认定人数=同范围去重人数",
+        "标签人数不参与主层级求和",
+        "规则修订不自动撤销正式人才认定"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M09",
+      "title": "人才认定与名单确认",
+      "templateId": "audit",
+      "mode": "custom",
+      "placement": "新增：人才梯队详情“认定管理”；院级提交、归口确认",
+      "actors": [
+        "学院提名人员",
+        "归口确认人"
+      ],
+      "usageScenarios": [
+        "导入正式名单",
+        "确认规则候选",
+        "处理到期和多层命中"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Person.personId",
+          "productConstraint": "主体标识，必填"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.xm",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgh",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.szdwdm",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelId",
+          "productConstraint": "拟认定层级必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionMode",
+          "productConstraint": "来源方式"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionState",
+          "productConstraint": "流程状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionEvidence",
+          "productConstraint": "正式确认需有效依据"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionReason",
+          "productConstraint": "人工或冲突处理必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionValidFrom",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionValidTo",
+          "productConstraint": "条件填写"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.nominationOrganization",
+          "productConstraint": "自动提名组织"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "姓名/职工号"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.szdwdm",
+          "behavior": "授权所在单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelId",
+          "behavior": "拟/正式层级选择须明示"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionState",
+          "behavior": "待确认/有效/退回/失效"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionMode",
+          "behavior": "认定来源"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "StaffBasicInformation.xm",
+          "display": "姓名"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgh",
+          "display": "职工号"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.szdwdm",
+          "display": "所在单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelName",
+          "display": "候选或正式层级"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionMode",
+          "display": "来源"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionState",
+          "display": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionValidTo",
+          "display": "有效期"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.recognitionReason",
+          "display": "依据摘要"
+        }
+      ],
+      "interactionSpecification": "工具栏：人工提名、正式名单导入、生成候选、导出授权名单；审核人确认/退回/查看证据，批量确认只适用于同版本同层级且无冲突的记录。\n\n确认详情显示实际档案、拟层级条件、命中依据、原层级、变更影响和有效期。名单来源不足时标待核验；候选入队列不改变总览正式人数。不同人同名用personId区分，工号用于查找映射不能做唯一领域主键。\n\n名单导入通过DSImportWizard：选择梯队/版本→上传→字段映射→匹配人员→校验层级/日期/依据→确认。未知人员/重复有效认定/多个层级冲突不自动覆盖；错误行可下载，成功行产生待确认记录。只允许经学校确认的来源直入正式认定，且需留导入批次和原依据。\n\n人员离职、认定到期和层级修订是不同事件。统计按分析日期和方案范围决定是否计入，原认定历史保留。失效/撤销需原因和权限；不能简单删除名单。\n\n数据最小化：层级分析是岗位与队伍规划支持，不能根据宗教、健康等敏感因素认定人才层级；AI仅整理证据，不作正式人才认定。",
+      "acceptanceCriteria": [
+        "待确认名单不改变正式金字塔",
+        "导入同名人员能可靠定位主体或进入人工处理",
+        "认定有效期在截止日正确生效/失效"
+      ],
+      "components": [
+        "DSAuditTemplate",
+        "DSAuditDetailDrawer",
+        "DSAuditOpinionModal",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M10",
+      "title": "全校教师队伍发展总览",
+      "templateId": "dashboard",
+      "mode": "custom",
+      "placement": "改造l-faculty-dashboard，l-workbench提供入口；d-faculty-dashboard为院级范围",
+      "actors": [
+        "校领导",
+        "校级业务管理员",
+        "学院负责人"
+      ],
+      "usageScenarios": [
+        "阶段性查看全校队伍",
+        "会议前了解梯队与发展差距",
+        "院级查看本院结构"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "必须选择已发布有效方案，暂无则无目标模式"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "productConstraint": "跟随方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisSnapshotId",
+          "productConstraint": "正式快照"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.dataCutoff",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.populationCount",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelPopulation",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unclassifiedPopulation",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unresolvedPopulation",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "productConstraint": "汇总各状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.configurationCoverage",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.measuredChange",
+          "productConstraint": "同口径才可比较"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "behavior": "顶部方案切换，含版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "behavior": "授权全校/学院/专业群；只有映射存在才能专业群筛选"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisSnapshotId",
+          "behavior": "当前正式/历史快照选择"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ladderId",
+          "behavior": "已发布梯队方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.featureTags",
+          "behavior": "高级：正式特征标签"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Organization.name",
+          "display": "学院/专业群对照"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.populationCount",
+          "display": "人数"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelPopulation",
+          "display": "分层显示"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unknownCount",
+          "display": "待核验"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "display": "重点缺口"
+        }
+      ],
+      "interactionSpecification": "**布局**：顶部上下文（方案、范围、快照、截止时间）→概览（教师数、层级已认定/未认定、已满足/缺口/待核验要求）→左右两区（金字塔/目标支撑）→学院或专业群差距矩阵→历史趋势与重点行动。\n\n**金字塔**：各层名称、人数、占比、目标区间和同口径变化；点击层级→M12当前层级人员。推荐等高层带，宽度按人数同一尺度；人数结构异常仍如实显示，必要时切换分层横向条形图。固定三角形不声称面积代表人数。正式层+未认定人数等于总人数，待处理是附加标记不再加总。后备培养仅有正式关系数据才展示。\n\n**目标支撑区**：每项发展任务下按要求展示当前/目标/缺口/待核验；汇总用任务关键要求状态而非任意平均得分。学院矩阵用颜色+文字，未知与缺口不同色；点击单元格→M11/M12对应范围。\n\n**结构图**：学历/学位、职称、双师及学科专业等按已有正式字段展示。年龄按截止日期计算且分段可配置，不存手填年龄。人数对比用条形图，趋势用折线，比例只在明确分母时显示。单位与职称分类必须使用标准字典，不把学历博士与博士学位混同。\n\n**无方案模式**：允许看已知结构，但显示“尚未配置发展目标”，目标差距区域引导有权限者配置；不把系统Mock升本阈值当默认。无梯队认定显示未认定和配置入口；没有历史则不给虚假增长。\n\n**联动**：任一顶部条件变化，所有卡片/图/矩阵重新按同快照查询；加载失败保留旧完整快照并明确时间，不能卡片新旧混用。数据导出固定当前上下文。1280×720首屏至少有上下文、关键概览、梯队和支撑入口，禁止大宣传hero挤走业务内容。",
+      "acceptanceCriteria": [
+        "金字塔人数与名单下钻一致",
+        "方案切换同步更新全部模块",
+        "没有目标仍能看现状但不制造达标结论",
+        "院级用户无法切到未授权学院"
+      ],
+      "components": [
+        "DSDashboardGrid",
+        "DSCard",
+        "DSChartCard",
+        "DSEChartBase",
+        "DSSelect"
+      ]
+    },
+    {
+      "id": "M11",
+      "title": "学校发展任务支撑与差距分析",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "改造l-school-dashboard承接；l-upgrade-dashboard引用专项方案",
+      "actors": [
+        "校领导",
+        "校级业务管理员",
+        "学院负责人"
+      ],
+      "usageScenarios": [
+        "判断现有师资能否支撑当前任务",
+        "查找未覆盖单位和紧缺层级"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.requirementName",
+          "productConstraint": "要求"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actualValue",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetLower",
+          "productConstraint": "来自发布版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetUpper",
+          "productConstraint": "区间目标"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.gapValue",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.gapUnit",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unknownCount",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "责任"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "productConstraint": "期限"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisSnapshotId",
+          "productConstraint": "上下文"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionCount",
+          "productConstraint": "关联行动"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "behavior": "必选已发布方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskId",
+          "behavior": "发展任务"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.scopeDefinition",
+          "behavior": "授权组织"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementType",
+          "behavior": "要求类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "behavior": "结果"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.mandatory",
+          "behavior": "高级：关键要求"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.taskName",
+          "display": "父任务"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementName",
+          "display": "要求名称可下钻"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actualValue",
+          "display": "当前值含分子分母"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetOperator",
+          "display": "目标条件"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.gapValue",
+          "display": "差距及单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unknownCount",
+          "display": "待核验"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "display": "结果文字"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "display": "期限"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionCount",
+          "display": "措施数"
+        }
+      ],
+      "interactionSpecification": "页面顶部统计满足/缺口/待核验/待人工评估数量；主体用regular-list。可选矩阵页签仍通过DSCard/DSEChartBase/DSDataTable组合，不自建第二套数据口径。\n\n**操作**：查看口径与依据、查看符合/不符合/待核验人员、查看单位覆盖、创建行动、提出数据问题、导出分析；创建行动带入方案/任务/要求/范围/快照，不自动指定人或承诺补足人数。\n\n**差距语义**：人数为人；比例为百分点；覆盖为未满足单位数并分别列明；区间分别显示低于下限或高于上限；人工评估显示说明，不显示0分。没有目标不计算缺口。全校达标但学院缺口仍逐单位展示。\n\n**比例不确定性**：默认保留完整统计基数，未知人数不从分母消失。已知符合K、未知U、总N的可能范围为[K/N,(K+U)/N]；下限要求在最低值已达标时满足，最高值仍不足时明确缺口，否则待核验。缺口展示已确认缺口和可能区间，不能把所有未知当能力不足。\n\n**单位目标**：直接看各单位目标和当前值；未设置分解目标时显示“无单位目标，仅看分布”，不能用全校目标给每院造目标。升本生师比等非教师事实来源需正式学生/编制数据源，否则显示数据不完整，不推算。\n\n**人工评估入口**：授权评估人填写已满足/缺口/待核验、意见和证据，保存为带时点与版本的评估记录；不覆盖其他人的历史意见。",
+      "acceptanceCriteria": [
+        "未知人员不自动判为不符合",
+        "比例差距单位为百分点",
+        "全校满足时仍能看到单位缺口",
+        "未配置院级目标不自动产生院级达标结论"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M12",
+      "title": "人员与事实依据下钻",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "复用hr/d/l-archive的入口语义，改造为统一领域查询的二级页",
+      "actors": [
+        "授权管理人员"
+      ],
+      "usageScenarios": [
+        "解释一个分析数字",
+        "定位待核验资料",
+        "查看某梯队或要求人员"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Person.personId",
+          "productConstraint": "关联主键不默认展示"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.xm",
+          "productConstraint": "人员姓名"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgh",
+          "productConstraint": "职工号"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.szdwdm",
+          "productConstraint": "所在单位"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zcdm",
+          "productConstraint": "职称"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgxldm",
+          "productConstraint": "最高学历"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgxwdm",
+          "productConstraint": "最高学位"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.sfssxjs",
+          "productConstraint": "双师状态"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.ssrdjb",
+          "productConstraint": "双师认定级别"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelName",
+          "productConstraint": "正式主层级"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "productConstraint": "本要求判定"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.unknownCount",
+          "productConstraint": "待核验项摘要，个人项可按适用要求派生"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "姓名/职工号"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.szdwdm",
+          "behavior": "只能收窄带入范围"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zcdm",
+          "behavior": "标准职称字典"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgxwdm",
+          "behavior": "标准学位字典"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelId",
+          "behavior": "层级"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultState",
+          "behavior": "符合/不符合/待核验用要求结果映射，组别标签不另造正式字段"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "StaffBasicInformation.xm",
+          "display": "详情入口"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgh",
+          "display": "工号"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.szdwdm",
+          "display": "单位"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zcdm",
+          "display": "职称"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.zgxwdm",
+          "display": "学位"
+        },
+        {
+          "fieldRef": "StaffBasicInformation.sfssxjs",
+          "display": "双师"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.levelName",
+          "display": "主层级"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resultReason",
+          "display": "本要求证据说明"
+        }
+      ],
+      "interactionSpecification": "上方上下文条显示来源要求/层级、方案版本、快照、组织、基数、当前集合类别；上下文不可被普通筛选扩大。页签分为符合、已核验不符合、待核验、排除，四个集合对应计算分区。\n\n教师详情使用DSDrawer+DSReadOnlyForm，展示本次判定相关事实、来源、核验状态、业务期间和规则条件。历史快照先展示当时事实版本，可再点击当前档案；不能拿今天值解释去年人数。附件按字段/文件权限过滤。\n\n业务事实复用EnterprisePractice、TrainingExperience、TeachingAchievement、ProfessionalAppointment及其status/evidence；真实科研、专业群关联未建模时列为接入缺口，不能从演示分数逆推原始成果。\n\n**返回**：保留来源页面筛选和滚动；下钻URL用菜单注册route再附受控对象ID，服务端复验。默认导出最小职业信息，不导出健康/宗教/证件等。查看者没有处理权限时不显示补资料按钮；有权限者可创建数据问题或采集任务，不直接改教师正式资料。",
+      "acceptanceCriteria": [
+        "详情证据能解释来源人数",
+        "历史下钻不混用当前人员事实",
+        "篡改参数不能越权查看附件"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M13",
+      "title": "队伍建设行动台账",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "新增：职能部门→队伍建设行动；学院工作台显示本院待办",
+      "actors": [
+        "校级业务管理员",
+        "学院负责人",
+        "行动负责人"
+      ],
+      "usageScenarios": [
+        "从缺口制定培养措施",
+        "跟踪引进/实践/团队建设任务"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.actionName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionType",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "关联方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskId",
+          "productConstraint": "关联任务"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementId",
+          "productConstraint": "可多要求关联，引用集合须登记实体关系"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStart",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionEnd",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStatus",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionProgress",
+          "productConstraint": "按里程碑计算或明确报告方式"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisEffect",
+          "productConstraint": "只读最新与基准对照"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "行动名称/编号"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "behavior": "方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskId",
+          "behavior": "任务"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionType",
+          "behavior": "行动类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "behavior": "负责人"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStatus",
+          "behavior": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionEnd",
+          "behavior": "高级：期限/逾期"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.priority",
+          "behavior": "高级优先级"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.actionName",
+          "display": "点击详情"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskName",
+          "display": "所属任务"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionType",
+          "display": "类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "display": "负责人"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionEnd",
+          "display": "期限与逾期"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionProgress",
+          "display": "执行进度"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStatus",
+          "display": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisEffect",
+          "display": "关联指标变化入口"
+        }
+      ],
+      "interactionSpecification": "工具栏新建行动、导出；从M11创建带入差距，台账手动创建时需选择任务。列表默认本人/本单位范围，校级查看授权全部。逾期为独立标记，不替代已暂停/待验收等状态。\n\n行操作：草稿编辑/下达/删除；待接收确认接收/请求调整；进行中填报进展/申请验收；待验收查看；退回修改；已完成查看成效；暂停/取消由有权限者填写原因。不能点击“完成”直接增加人才人数或学历比例。\n\n行动可以多要求关联；台账按actionId显示一条，任务/要求详情可分别引用。引进行动只跟踪计划与最终正式入职事实，具体招聘流程通过菜单注册跳转正式业务，不复制招聘模块。\n\n队伍培养与个人目标保持关联：第一期管理人员可以录入核验进展；教师侧后续接收本人任务和上传证据，仍进入同一行动对象。不得另造个人任务副本。",
+      "acceptanceCriteria": [
+        "多要求引用不重复统计行动",
+        "行动完成不会直接改人员指标",
+        "学院只能处理本院责任行动"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M14",
+      "title": "建设行动编辑与分解",
+      "templateId": "edit-form",
+      "mode": "custom",
+      "placement": "新增：M13新增/编辑；复杂分解独立编辑页",
+      "actors": [
+        "行动创建人",
+        "责任单位负责人"
+      ],
+      "usageScenarios": [
+        "安排培养对象和资源",
+        "分解到单位或具体里程碑"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.actionName",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionType",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "必填已发布方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskId",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementId",
+          "productConstraint": "至少一个关联要求，非指标支撑任务可经场景确认例外"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionSubjects",
+          "productConstraint": "按类型选择组织/团队/人员引用"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.collaboratingOrganizations",
+          "productConstraint": "选填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStart",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionEnd",
+          "productConstraint": "必填且≥开始"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.completionStandard",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.resources",
+          "productConstraint": "选填，不实现财务审批"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.milestones",
+          "productConstraint": "里程碑集合"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.milestoneName",
+          "productConstraint": "子项必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.milestoneDeadline",
+          "productConstraint": "子项必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.milestoneCompletion",
+          "productConstraint": "子项必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.milestoneWeight",
+          "productConstraint": "如加权进度则必填且合计100"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.baselineSnapshotId",
+          "productConstraint": "自动带入用于对照"
+        }
+      ],
+      "filters": [],
+      "columns": [],
+      "interactionSpecification": "分组：关联差距、行动内容、对象与责任、期限资源、里程碑、下达预览。人员选择只在授权范围，具体操作委派要服务端复验。没有正式专业群/团队主数据时只选已存在组织和人员，不用自由文本关系替代。\n\n**类型联动**：培养/实践需对象和完成证据标准；引进可先选组织/岗位方向，不造未来人员；团队建设需要团队对象正式关系；数据核验需关联问题。输入资源描述不表示已审批预算。\n\n**进度**：有里程碑时按已确认里程碑权重求和；待确认节点不计完成。无里程碑时选择阶段性报告，显示“执行报告”而非精确百分比。对象和目标不能一边调整、一边保持旧基准默认不变，变更留版本/理由。\n\n**分解**：同类型且独立责任可建立子行动，父行动进度按确认的子行动规则计算；第一期可只实现里程碑，不做无限层级计划管理。父子数量和人员有重叠时明确去重，不简单求和称为培养人数。\n\n保存草稿与下达分开；下达前确认接收人、对象、期限和完成标准，生成站内待办；负责人接收后进入进行中，请求调整不视为退回教师能力。",
+      "acceptanceCriteria": [
+        "里程碑权重非法不能下达",
+        "引进行动不需要虚构未来教师ID",
+        "未接收行动不显示进行中"
+      ],
+      "components": [
+        "DSEditForm",
+        "DSFormGroup",
+        "DSEditField",
+        "DSInput",
+        "DSSelect",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M15",
+      "title": "进展反馈、验收与成效复盘",
+      "templateId": "audit",
+      "mode": "custom",
+      "placement": "新增：建设行动详情进展页签；验收队列用audit",
+      "actors": [
+        "行动负责人",
+        "学院确认人",
+        "校级验收人"
+      ],
+      "usageScenarios": [
+        "反馈完成情况",
+        "核验行动结果",
+        "比较行动前后队伍变化"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.progressSummary",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.progressOccurredAt",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.progressEvidence",
+          "productConstraint": "按完成标准必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.progressBlocker",
+          "productConstraint": "有阻碍时填写"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.milestoneState",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.acceptanceDecision",
+          "productConstraint": "验收必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.acceptanceComment",
+          "productConstraint": "退回必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStatus",
+          "productConstraint": "流程"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisEffect",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.baselineSnapshotId",
+          "productConstraint": "只读基准"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisSnapshotId",
+          "productConstraint": "只读最新比较快照"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "行动名称"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStatus",
+          "behavior": "待验收/已验收/退回"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "授权责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "behavior": "行动负责人"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionType",
+          "behavior": "类型"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.actionName",
+          "display": "行动"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "display": "负责人"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.completionStandard",
+          "display": "验收标准摘要"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.progressSummary",
+          "display": "申请摘要"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.actionStatus",
+          "display": "当前状态"
+        }
+      ],
+      "interactionSpecification": "行动详情页签：内容、里程碑、进展、相关事实、成效、办理历史。填报进展用edit-form+DSUpload，正式事实用引用；附件上传不自动形成已核验培训或人才称号。\n\n申请验收冻结进展版本和证据，检查完成标准；验收队列与教师资料审核不同对象，复用审核组件和统一流程能力。归口需先认定某成果时，验收页面显示待核验，不提前给完成结论。\n\n验收通过仅表示建设行动完成；随后创建队伍重算任务。成效卡并列“行动执行结果”和“关联师资要求变化”。同一时间其他行动/人员调动也会改变指标，默认叫同期变化，不声称全部由本行动造成。\n\n退回保留原反馈，负责人修订后新版本重提；跨人员范围或规则版本变化时标不可直接比较，可分别展示两期，不生成虚假提升。",
+      "acceptanceCriteria": [
+        "验收只处理冻结提交版本",
+        "上传证据不会直接变成正式学位/人才认定",
+        "成效页说明同期变化而非未经验证因果"
+      ],
+      "components": [
+        "DSAuditTemplate",
+        "DSAuditDetailDrawer",
+        "DSAuditOpinionModal",
+        "DSButton"
+      ]
+    },
+    {
+      "id": "M16",
+      "title": "数据问题与核验闭环",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "改造hr/d-data-manage增加数据问题页签，与sys-integration联动",
+      "actors": [
+        "归口部门",
+        "学院数据管理员",
+        "系统数据管理员"
+      ],
+      "usageScenarios": [
+        "分析缺资料",
+        "处理人员来源冲突",
+        "补专业群归属映射"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.issueType",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.issueDescription",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.affectedObject",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "productConstraint": "必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerPerson",
+          "productConstraint": "分派后必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.issueState",
+          "productConstraint": "系统维护"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "productConstraint": "处理期限"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.issueEvidence",
+          "productConstraint": "处理结果引用"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.issueType",
+          "behavior": "问题类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.issueState",
+          "behavior": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "behavior": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "behavior": "关联方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "问题摘要/人员检索"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.issueType",
+          "display": "类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.issueDescription",
+          "display": "问题摘要"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.affectedObject",
+          "display": "影响要求/人员"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.ownerOrganization",
+          "display": "责任单位"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "display": "期限"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.issueState",
+          "display": "状态"
+        }
+      ],
+      "interactionSpecification": "M11/M12“提出数据问题”带入分析快照与对象；相同来源对象同类问题未结束时提示已有问题，不重复催办。需资料补充的进入现有采集业务；来源冲突到对应归口；同步异常到集成负责人；归属未建模到主数据治理。\n\n操作为分派、处理反馈、申请复核、复核关闭/退回；处理完成需可查看的来源修正或核验证据。关闭后重算相关要求，仍缺口则保留业务缺口，不以关闭数据问题当作目标满足。\n\n禁止管理员在问题页直接填一个符合值绕过正式事实核验。系统失败、数据缺失和教师能力缺口分别统计。",
+      "acceptanceCriteria": [
+        "关闭问题后只有正式事实改变才影响目标",
+        "同问题不重复创建多条催办",
+        "来源异常不自动降低教师能力判定"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M17",
+      "title": "报告与分析快照管理",
+      "templateId": "regular-list",
+      "mode": "custom",
+      "placement": "新增二级页：总览/分析“报告与历史”；不新增一级复杂入口",
+      "actors": [
+        "校领导",
+        "授权业务管理员"
+      ],
+      "usageScenarios": [
+        "会议汇报",
+        "年度复盘",
+        "查看历史口径与分析"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.reportName",
+          "productConstraint": "生成报告必填"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "productConstraint": "固定当前方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "productConstraint": "固定版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.analysisSnapshotId",
+          "productConstraint": "固定快照"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.dataCutoff",
+          "productConstraint": "只读"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportFormat",
+          "productConstraint": "选择xlsx或pdf"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportSections",
+          "productConstraint": "章节选择"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.jobState",
+          "productConstraint": "任务状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.jobProgress",
+          "productConstraint": "真实进度"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportArtifact",
+          "productConstraint": "生成结果"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportGeneratedAt",
+          "productConstraint": "系统时间"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "报告名称"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planId",
+          "behavior": "方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportFormat",
+          "behavior": "格式"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.jobState",
+          "behavior": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportGeneratedAt",
+          "behavior": "生成日期"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.reportName",
+          "display": "报告"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.planName",
+          "display": "方案"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.schemeVersion",
+          "display": "版本"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.dataCutoff",
+          "display": "截止时间"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportFormat",
+          "display": "格式"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.jobState",
+          "display": "状态"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.reportGeneratedAt",
+          "display": "时间"
+        }
+      ],
+      "interactionSpecification": "生成弹层用标准编辑模板：名称、范围摘要、固定快照、章节、是否含授权人员清单。清单xlsx先实现；PDF如首期无生成能力不显示可成功按钮，应明确后续范围。\n\n报告包含上下文、梯队结构、目标对照、组织分布、数据问题、建设行动及来源/计算说明。可选AI文字分析必须与确定性表格分开、标草稿；数字和事实引用来自快照，缺证据不能补写。\n\n任务异步排队/处理中/成功/失败，失败原因与重试可见。生成过程中数据更新不影响已选快照。下载重新校验当前权限，存储保留期和导出可包含哪些人员字段待学校确认。\n\n历史快照包括配置版本、梯队版本、统计范围、人员归属时点、数据版本、算法版本和计算时间；不能只保存一个总数。趋势比较需说明可比性；规则变化时不直接计算同比。",
+      "acceptanceCriteria": [
+        "导出数据与当前快照行数一致",
+        "失败重试不换成新的数据上下文",
+        "历史报告不被新版本重写"
+      ],
+      "components": [
+        "DSRegularListTemplate",
+        "DSDataTable",
+        "DSPagination",
+        "DSButton",
+        "DSInput",
+        "DSSelect",
+        "DSDrawer"
+      ]
+    },
+    {
+      "id": "M18",
+      "title": "AI规划文件辅助创建",
+      "templateId": "import-wizard",
+      "mode": "custom",
+      "placement": "可选增强：M01从文件辅助创建；不单独成为主菜单",
+      "actors": [
+        "校级业务管理员"
+      ],
+      "usageScenarios": [
+        "从发展规划/会议纪要整理候选任务与要求"
+      ],
+      "fieldUses": [
+        {
+          "fieldRef": "Business.teacher-growth.documentRefs",
+          "productConstraint": "上传/选择依据文件"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiCandidateType",
+          "productConstraint": "候选类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiSuggestedValue",
+          "productConstraint": "候选内容"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiSourceLocation",
+          "productConstraint": "文件/页码/原文位置"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiDecision",
+          "productConstraint": "逐项决定"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiDecisionReason",
+          "productConstraint": "修改或忽略说明"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.taskName",
+          "productConstraint": "采纳后的任务字段"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.requirementName",
+          "productConstraint": "采纳后的要求字段"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.targetLower",
+          "productConstraint": "仅明确原文才提取"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.deadline",
+          "productConstraint": "明确日期才提取"
+        }
+      ],
+      "filters": [
+        {
+          "fieldRef": "Business.teacher-growth.aiCandidateType",
+          "behavior": "候选结果类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiDecision",
+          "behavior": "未处理/采纳/修改/忽略"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.searchKeyword",
+          "behavior": "候选内容关键词"
+        }
+      ],
+      "columns": [
+        {
+          "fieldRef": "Business.teacher-growth.aiCandidateType",
+          "display": "类型"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiSuggestedValue",
+          "display": "建议内容"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiSourceLocation",
+          "display": "原文依据"
+        },
+        {
+          "fieldRef": "Business.teacher-growth.aiDecision",
+          "display": "处理决定"
+        }
+      ],
+      "interactionSpecification": "使用import-wizard框架语义，步骤为上传/选择→提取候选→核对与去重→进入方案草稿。DSImportUpload/Steps/ValidationPanel组合，AI处理是业务任务，不声称标准导入组件自带OCR能力。\n\n显示“加强骨干队伍建设”原文时，只提取方向，不补出人数、比例或人才名单。明确目标也要人工确认单位、期限和范围；“高级职称”和“高级双师”不得自动合并。\n\n每候选显示来源原文，允许引用已有任务/指标、采纳、修改后采纳、忽略。提取结果不能自动发布，不自动正式认定人员，不能把无依据置信百分比当可信度。\n\n不支持的文件、未识别、部分结果、来源位置缺失均明确提示；用户随时可切换手动创建。采纳仅写草稿并复用M02/M06校验，未设置目标就留待配置。",
+      "acceptanceCriteria": [
+        "无AI服务仍可完整创建方案",
+        "模糊原文不会自动产生目标值",
+        "候选采纳后仍是草稿且有原文溯源"
+      ],
+      "components": [
+        "DSImportWizard",
+        "DSUpload",
+        "DSDataTable",
+        "DSButton"
+      ]
+    }
+  ],
+  "sharedSpecification": "## 六、共用计算规则与状态边界\n\n### 6.1 人员范围与事实\n\n统一主体personId、去重规则、任职归属时点和授权范围。当前分析默认用所选数据截止日有效主任职；兼职/跨团队是关系，不把一个人重复加入全校人数。专业群、团队成员关系有正式数据才开启相应维度。统计周期内发生的成果与截止日拥有的资格分别计算，不能都按“当前值”处理。\n\n基准快照固定于基准日。动态范围每期按当时实际人员计算；固定培养名单按发布时对象计算，离职/转出单列排除及批准原因，不静默改变分母。人员招聘增加分母，因此不能用“差几个百分点”直接声称需要招聘同样数量的人。\n\n### 6.2 比例缺口、人数测算与未知\n\n例：假设某范围100人，符合30人、未知10人，下限目标35%。当前已确认比例30%，可能范围30%–40%，结果是待核验；不能结论为确定缺5人。若未知为0，则确定差5个百分点，在固定分母下可表达培养5名现有人员达到条件。\n\n若采用新增符合人员改善比例，N为当前总数、K为符合数、目标比例t，且新增人员全部符合，所需人数为ceil(max(0,(tN-K)/(1-t)))，t=1时若存在不符合人员则新增无法有限补足。若培养现有人且分母固定，数量为ceil(max(0,tN-K))。这些只作为标注假设的测算；未知、流失、调动和重复满足要另考虑，不自动变成引进计划。\n\n上限要求不鼓励简单“越低越好”；区间目标分别判断两端。人数负数、比例超100、区间倒置、N=0、数值缺失都要明确处理。比较使用未取整值，展示时取整不能改变结果；比例变化用百分点。\n\n覆盖要求逐单位判定：已满足、已确认不满足、待核验互斥。一个人能否支撑多个单位由正式服务/任职关系决定，不能按姓名重复分配。梯队没有学校目标时只展示结构，不强行说“金字塔不健康”。\n\n### 6.3 任务汇总\n\n先判断可配置性，再数据充分性，再要求结果。关键要求存在确定缺口→任务有关键缺口；没有确定缺口但关键项待核验→任务待核验；关键项满足但一般项缺口→关键条件满足、存在改进项；所有适用要求满足→当前要求已满足。无适用要求不显示100%达标。人工结项是独立办理状态，不能覆盖计算结论。\n\n状态不要混成一个字段：配置状态、分析状态、要求结果、行动状态、逾期标记、数据新鲜度分别展示。重算过程保留最近完整正式结果；失败显示原因和重试，不临时显示0。\n\n## 七、跨模块场景 walkthrough\n\n### 场景A：年度师资规划与会议决策\n\n管理员M01新建→M02配置周期/人员/依据→M03/M04建立发展任务→M05/M06配置要求并试算→M07确认发布→M10总览→M11发现差距→M12查看证据→M14创建行动→M15验收→重新分析→M17生成会议报告。整个过程共用planId、配置版本和快照。\n\n### 场景B：人才梯队建设\n\nM08定义层级与认定依据→M09提名/导入/确认→M10看正式梯队和未认定→M11按已配置层级目标看缺口→M14安排培养→正式认定事实变化后M10更新。行动验收本身不等于人才认定。\n\n### 场景C：重点专业群支撑检查\n\n先确认专业群与教师/学院关系已建模→M06设置逐专业群覆盖要求→M11看未覆盖/待核验单位→M12定位人员和关系证据→M16补映射或M14建设措施。不能用全校比例掩盖某专业群无人承担。\n\n### 场景D：分析发现数据不完整\n\nM11显示待核验→M12查看缺失依据→M16分派到归口或现有采集→hr/d-data-review核验正式事实→重算M11。补齐数据与提升能力是两种不同的行动。\n\n### 场景E：规划调整与历史复盘\n\nM01对已发布方案创建修订→M02/M06调整要求→M07看影响确认→生效后形成新快照。M17保留旧报告；版本变更后不直接比较总分和达标率，而列出同口径可比项。\n\n## 八、权限、UI和异常统一要求\n\n角色与范围按业务权限配置：领导聚合查看；校级管理员方案配置/行动下达；学院仅本院任务与反馈；归口核验指定类型；技术管理员不自动有敏感业务查看权限。确认、下达和下载服务端复验，人员条件与授权范围取交集，筛选不扩大范围。教师侧后续只看到本人资料/行动，不看到他人梯队候选与全校人员清单。\n\n统一查询模型包含方案、版本、快照、组织、人员范围、梯队版本。筛选可用“编辑→查询生效”且同步显示当前生效条件，返回下钻保留上下文。规则预览可以实时但标演示/预览，不替换正式分析。人员基础数据字典只读自标准库。\n\n配置页面用分组标题、双列表单和单列长文本；规则编辑每行完整可读，辅助原文/预览折叠，不遮住输入。复杂详情独立页，短编辑标准抽屉；不嵌套多个抽屉。1280和1024宽度优先关键列与操作，768辅助区下移/折叠。状态含文字，图表有表格替代和键盘入口。\n\n必须覆盖：无方案、无梯队、无数据、无目标、查询无结果、字典加载失败、来源映射缺失、N=0、异步分析中、失败、历史不可比、失去权限、版本冲突、附件失败、AI未提取、导出失败。所有工具栏和行操作必须可完成或明确禁用原因，不留空函数。\n\n方案/要求/层级采用版本校验；提交重复点击用幂等标识；最后确认时发现旧版本已被替代则提示重新检查，不覆盖。业务日与截止时间采用学校时区；Demo若固定日期须明显显示演示日期。\n\n## 九、实施依赖与第一期边界\n\n第一期核心：M01–M07规划任务和要求配置，M08–M09梯队配置/认定，M10–M12可追溯分析，M13–M15行动闭环，M16必要数据核验，M17真实xlsx清单和历史快照。M18 AI提取、复杂预测、PDF自动报告、无限规则/流程画布、财务审批等是增强，不阻塞核心。\n\n建议顺序：统一人员/组织/事实与本体→方案任务要求→快照计算→梯队认定→总览与下钻→行动验收→历史报告。UI与校验同步完成，不最后统一补。\n\n本设计源模型位于product-world/designs，为尚待确认的跨模块设计蓝图，不伪装成已注册可生成Demo的正式scenario。每模块实施前必须转换为scenarios下正式场景，填入已注册menuRef、实际demoPath、fieldRefs、模板、公开组件、规则、验收与openQuestions。再运行generate:requirement与generate:demo-context；正式需求与页面只从同场景装配。\n\n新增字段当前为draft；实施前确认负责人、类型、分级、字典和语义并启用。任何新增业务字段继续先登记ontology，不能直接向表单/Mock补定义。列定义使用defineTableColumns，表单使用defineOntologyFields，人员产品约束只修改必填/只读/显隐/提示，不覆盖标准语义。\n\n任何共用计算、仓储、规则解释和关系能力进入正式领域包；本轮不为设计文档新增运行代码。现有demo shared的Mock分数和页面SCHOOL_SNAPSHOT只是现状样例，不是新功能事实源。\n\n## 十、待学校确认并登记openQuestions\n\n1. 当前学校阶段、规划周期、首批发展任务和正式目标值。\n2. 专任/在职等统计范围，主任职、跨院、兼职、离职及固定培养名单的处理。\n3. 学校梯队层级、正式认定来源、互斥归属、有效期、后备关系。\n4. 专业群/团队主数据及教师关系的正式来源；没有就先禁用该维度。\n5. 方案确认人、发布节点、直接发布、代理、回避、撤回和生效策略。\n6. 各师资要求的归口、证据时效、未知/不适用判定和人工评估权限。\n7. 行动接收/验收、责任变更、超期结项和例外政策。\n8. 教师个人可见梯队信息范围、人员清单/附件导出权限与报告保留期限。\n9. AI实际服务、可处理文档类型、来源片段能力和数据处理边界。\n10. 一阶段持久化Demo还是正式后端；各人员、事实、组织和分析接口可用性。\n\n## 十一、端到端验收重点\n\n1. 没有正式方案仍能查看队伍现状，不能产生默认达标结论。\n2. 方案草稿试算不改变正式总览；发布后各模块指向同版本。\n3. 比例缺口以百分点表达，未知人员按可能范围判断，分母0明确不适用。\n4. 主层级互斥，层人数+未认定=总人数；待处理标记不重复加总。\n5. 全校指标满足仍能看到具体单位未覆盖；没有院级目标不虚构院级标准。\n6. 一个行动关联两项要求不重复计算两次行动或两个人才成果。\n7. 行动完成、事实认定、目标满足分别处理，不能验收后直接加人数。\n8. 历史报告能追溯当时人员、事实、范围、规则和梯队版本。\n9. 改URL/组织筛选不能扩大授权，附件和下载复验权限。\n10. 同比仅在可比口径显示；新规则发布不改写旧报告。\n11. 页面筛选、分页、排序、按钮、异步失败和返回上下文实际可用。\n12. 手工配置不依赖AI；AI候选不能自动发布或正式认定人才。\n13. 学位博士与学历博士分开配置，中文标签/字典不在页面复制。\n14. 1280/1024/768宽度无字段遮挡，图表有文字/表格替代，键盘可完成主要流程。\n\n## 十二、实现模型执行说明\n\n先读取本设计蓝图、字段本体和现有页面，复核最新组件能力。按模块完成场景登记和学校待确认项，禁止拿示例值当学校制度。先实现M01/M02/M05/M06的手动配置与试算，再完成版本发布、正式数据下钻和行动闭环。不要一次生成18个各自Mock的独立页面。\n\n修改字段运行sync:field-ontology、validate:field-ontology、sync-basic-info-package-data、validate-basic-info-ontology和basic-information测试。创建/修改Demo必须运行validate:product-world、validate:page-compositions、validate:business-pages、npm run validate，任一失败不得交付。生成页面前运行generate:requirement、generate:demo-context，菜单和页面模式必须真实登记。\n\n交付说明必须包含实际完成模块、字段与场景引用、未确认学校口径、真实验证结果、关键视口截图及完整可复现操作路径。\n\n## 十三、本次交付与验证记录\n\n本次交付详细设计和设计蓝图，未修改业务页面、菜单或启用功能。新增136个业务字段均为draft，仅登记在ontology并同步领域包；学校确认后才可启用。基础信息测试5项通过，已有76个正式场景校验通过；本蓝图尚未登记为正式场景，该结果不代表蓝图已经完成上线校验。\n\n字段总校验仍被warning-center两个页面的内联字段定义阻断；基本信息本体校验仍被既有Business.recruitment.employmentForm与标准字段同名阻断。以上与本功能无关，未改动其他业务以绕过校验。基础信息测试的业务字段数量断言改为读取正式目录，避免新增合法字段后固定数量失效。\n",
+  "artifacts": {
+    "document": "demos/teacher-growth-portfolio/管理侧发展规划与师资队伍建设详细设计.md"
+  },
+  "registration": {
+    "runtimeMenus": "not-enabled",
+    "scenarios": "pending-confirmation",
+    "pageCompositions": "proposed-custom"
+  },
+  "verification": {
+    "basicInformationTests": "5/5 passed",
+    "productWorldValidation": "76 existing scenarios passed; design blueprint not a formal scenario",
+    "fieldOntologyValidation": "blocked by existing warning-center inline field definitions",
+    "basicInformationOntologyValidation": "blocked by existing Business.recruitment.employmentForm label conflict"
+  }
+}

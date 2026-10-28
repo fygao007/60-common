@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 底层框架</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+</head>
+<body>
+<div class="frame2-stage ds-scope"></div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="./framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="./framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    versionLabel: '底层框架',
+    userName: '教职工',
+    activeApp: 'info',
+    activeFeature: 'basic-info',
+    emptyContent: true,
+  secondaryNav: {
+      items: [
+        { key: 'person', label: '人员信息', icon: 'home', children: [
+          { key: 'basic-info', label: '基本信息' },
+          { key: 'job-info', label: '岗位信息' },
+          { key: 'contact-info', label: '联系信息' },
+          { key: 'attachment-info', label: '附件材料' }
+        ] },
+        { key: 'archive', label: '档案袋', icon: 'prepare', children: [
+          { key: 'education', label: '学历学位' },
+          { key: 'experience', label: '岗位经历' },
+          { key: 'certification', label: '证书资质' }
+        ] }
+      ]
+    },
+    tabs: [
+      { key: 'home', label: '首页', wiseIcon: 'homeOutline', closable: false },
+      { key: 'basic-info', label: '基本信息', closable: false }
+    ]
+  });
+</script>
+</body>
+</html>

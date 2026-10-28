@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架选择</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <style>
+    body { margin: 0; }
+
+    .framework-page {
+      min-height: 100%;
+      padding: 24px;
+      background: #fff;
+    }
+
+    .framework-page__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .framework-page__title {
+      margin: 0;
+      color: #101828;
+      font-size: 22px;
+      line-height: 32px;
+    }
+
+    .framework-page__desc {
+      margin: 6px 0 0;
+      color: #667085;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .framework-page__back {
+      display: inline-flex;
+      height: 34px;
+      align-items: center;
+      padding: 0 16px;
+      color: #333fff;
+      border: 1px solid #cfd3ff;
+      border-radius: 6px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .framework-page__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 1180px;
+    }
+
+    .framework-card {
+      display: flex;
+      min-height: 230px;
+      flex-direction: column;
+      padding: 24px;
+      border: 1px solid #e4e7ec;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .framework-card.is-default {
+      border-color: #9da4ff;
+      box-shadow: 0 8px 24px rgba(51, 63, 255, .10);
+    }
+
+    .framework-card__badge {
+      width: fit-content;
+      margin-bottom: 16px;
+      padding: 3px 10px;
+      color: #475467;
+      background: #f2f4f7;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .framework-card.is-default .framework-card__badge {
+      color: #333fff;
+      background: #eef0ff;
+    }
+
+    .framework-card h2 {
+      margin: 0;
+      color: #101828;
+      font-size: 20px;
+      line-height: 30px;
+    }
+
+    .framework-card p {
+      margin: 10px 0 20px;
+      color: #667085;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .framework-card__link {
+      display: inline-flex;
+      width: fit-content;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      margin-top: auto;
+      padding: 0 18px;
+      color: #fff;
+      background: #333fff;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .framework-card:not(.is-default) .framework-card__link {
+      color: #333fff;
+      background: #fff;
+      border: 1px solid #cfd3ff;
+    }
+
+    @media (max-width: 760px) {
+      .framework-page { padding: 16px; }
+      .framework-page__head { flex-direction: column; }
+      .framework-page__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="framework-page">
+    <header class="framework-page__head">
+      <div>
+        <h1 class="framework-page__title">框架选择</h1>
+        <p class="framework-page__desc">框架2是默认框架；框架1仅用于兼容历史页面和视觉对照。</p>
+      </div>
+      <a class="framework-page__back" href="../components/component-library-index.html">返回功能索引</a>
+    </header>
+
+    <section class="framework-page__grid" aria-label="框架版本">
+      <article class="framework-card">
+        <span class="framework-card__badge">兼容版本</span>
+        <h2>框架1</h2>
+        <p>一级竖向导航、二级导航、顶部页签和右侧操作区。仅保留历史兼容，不作为新页面默认底座。</p>
+        <a class="framework-card__link" href="./primary-nav.html">进入框架1</a>
+      </article>
+
+      <article class="framework-card is-default">
+        <span class="framework-card__badge">默认框架</span>
+        <h2>框架2</h2>
+        <p>顶部应用导航、左侧菜单、页签工作区和 Shadow DOM 样式隔离。新页面和全部索引统一使用。</p>
+        <a class="framework-card__link" href="./personal-workbench.html">进入框架2</a>
+      </article>
+
+      <article class="framework-card">
+        <span class="framework-card__badge">框架2布局模式</span>
+        <h2>无侧栏业务页</h2>
+        <p>面向日程、待办、消息中心等横向高密度页面，提供全宽白色卡片工作区和统一滚动边界。</p>
+        <a class="framework-card__link" href="./no-sidebar-page-template.html">查看无侧栏模板</a>
+      </article>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="./framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="./framework-2.js?v=2.2.3"></script>
+<script>
+  const frameworkFeatureRoutes = {
+    'component-library': '../components/component-library-index.html',
+    'scenario-templates': '../scenarios/scenario-templates-index.html',
+    'current-components': '../components/current-components-index.html',
+    'all-components': '../components/all-components-index.html',
+    'framework': './framework-index.html'
+  };
+
+  WiseFramework2.mount({
+    activeApp: 'component-library',
+    activeFeature: 'framework',
+    versionLabel: '组件库',
+    appMenus: {
+      'component-library': [
+        {
+          key: 'design-assets',
+          label: '设计资源',
+          icon: 'home',
+          children: [
+            { key: 'component-library', label: '功能索引' },
+            { key: 'scenario-templates', label: '场景模板' },
+            { key: 'current-components', label: '当前组件' },
+            { key: 'all-components', label: 'Ant目录' },
+            { key: 'framework', label: '框架' }
+          ]
+        }
+      ]
+    },
+    tabs: [
+      { key: 'component-library', label: '功能索引', href: '../components/component-library-index.html', closable: false },
+      { key: 'framework', label: '框架', href: './framework-index.html', closable: true }
+    ],
+    onFeatureChange(feature) {
+      const target = frameworkFeatureRoutes[feature];
+      if (target) window.location.href = target;
+    }
+  });
+</script>
+</body>
+</html>

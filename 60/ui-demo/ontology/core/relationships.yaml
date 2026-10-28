@@ -1,0 +1,51 @@
+ontology: szpu-hr
+version: 0.1.0
+relationships:
+  - { id: hasIdentity, from: Person, to: PersonIdentity, cardinality: one-to-many, temporal: true }
+  - { id: convertedToPerson, from: Candidate, to: Person, cardinality: zero-or-one, inverse: originatedFromCandidate }
+  - { id: parentOrganization, from: Organization, to: Organization, cardinality: zero-or-one, temporal: true }
+  - { id: definesPosition, from: Organization, to: Position, cardinality: one-to-many, temporal: true }
+  - { id: instantiatesPosition, from: PositionSlot, to: Position, cardinality: many-to-one }
+  - { id: ownedByOrganization, from: PositionSlot, to: Organization, cardinality: many-to-one, temporal: true }
+  - { id: assignmentPerson, from: EmploymentAssignment, to: Person, cardinality: many-to-one, required: true }
+  - { id: assignmentOrganization, from: EmploymentAssignment, to: Organization, cardinality: many-to-one, required: true }
+  - { id: assignmentPosition, from: EmploymentAssignment, to: Position, cardinality: many-to-one, required: true }
+  - { id: occupiesSlot, from: EmploymentAssignment, to: PositionSlot, cardinality: zero-or-one, temporal: true }
+  - { id: containsRecruitmentPosition, from: RecruitmentPlan, to: RecruitmentPosition, cardinality: one-to-many }
+  - { id: recruitsForOrganization, from: RecruitmentPosition, to: Organization, cardinality: many-to-one }
+  - { id: basedOnPosition, from: RecruitmentPosition, to: Position, cardinality: zero-or-one }
+  - { id: submittedBy, from: Application, to: Candidate, cardinality: many-to-one, required: true }
+  - { id: appliesFor, from: Application, to: RecruitmentPosition, cardinality: many-to-one, required: true }
+  - { id: startsOnboarding, from: Application, to: OnboardingCase, cardinality: zero-or-one }
+  - { id: onboardingCandidate, from: OnboardingCase, to: Candidate, cardinality: many-to-one, required: true }
+  - { id: onboardingPerson, from: OnboardingCase, to: Person, cardinality: zero-or-one }
+  - { id: signedByPerson, from: Contract, to: Person, cardinality: many-to-one, required: true }
+  - { id: courseOwnedBy, from: Course, to: Organization, cardinality: many-to-one, required: true }
+  - { id: assignmentTeacher, from: TeachingAssignment, to: Person, cardinality: many-to-one, required: true }
+  - { id: assignmentCourse, from: TeachingAssignment, to: Course, cardinality: many-to-one, required: true }
+  - { id: portfolioForAssignment, from: CoursePortfolio, to: TeachingAssignment, cardinality: one-to-one, required: true }
+  - { id: practiceOfTeacher, from: EnterprisePractice, to: Person, cardinality: many-to-one, required: true }
+  - { id: achievementOfTeacher, from: TeachingAchievement, to: Person, cardinality: many-to-one, required: true }
+  - { id: trainingOfTeacher, from: TrainingExperience, to: Person, cardinality: many-to-one, required: true }
+  - { id: appointmentOfTeacher, from: ProfessionalAppointment, to: Person, cardinality: many-to-one, required: true }
+  - { id: submissionByTeacher, from: PortfolioSubmission, to: Person, cardinality: many-to-one, required: true }
+  - { id: reviewForSubmission, from: PortfolioReview, to: PortfolioSubmission, cardinality: many-to-one, required: true }
+  - { id: reviewedBy, from: PortfolioReview, to: Person, cardinality: many-to-one, required: true }
+
+constraints:
+  - id: one-primary-assignment-per-time
+    rule: 同一人员在任一时间点至多存在一条有效的主要任职关系。
+  - id: assignment-valid-period
+    rule: 任职结束日期不得早于开始日期。
+  - id: candidate-conversion-evidence
+    rule: Candidate 转化为 Person 必须关联已批准的录用或报到完成事件。
+  - id: occupied-slot-capacity
+    rule: 岗位编制有效占用数不得超过核定人数，特殊超编必须记录审批依据。
+  - id: one-course-portfolio-per-assignment
+    rule: 一条授课任务至多对应一个有效课程档案。
+  - id: portfolio-subject-type-match
+    rule: PortfolioSubmission.subjectType 必须与 subjectId 所指实体类型一致。
+  - id: immutable-review-history
+    rule: PortfolioReview 审核记录只追加不覆盖，退回后重新提交形成新的审核序列。
+  - id: evidence-period-validity
+    rule: 企业实践、培训和专业任职的结束日期不得早于开始日期。

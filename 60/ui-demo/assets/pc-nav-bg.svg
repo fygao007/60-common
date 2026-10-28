@@ -1,0 +1,65 @@
+<svg width="204" height="1778" viewBox="0 0 204 1778" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="204" height="1778" fill="url(#bg)"/>
+
+  <!-- upper soft diagonal glow -->
+  <g opacity=".58" filter="url(#blurA)">
+    <path d="M-60 625C-4 588 67 545 264 506" stroke="url(#upperLight)" stroke-width="22" stroke-linecap="round"/>
+  </g>
+  <g opacity=".24" filter="url(#blurB)">
+    <path d="M-70 659C-9 622 69 575 275 530" stroke="#29188F" stroke-width="28" stroke-linecap="round"/>
+  </g>
+
+  <!-- middle dark arc -->
+  <g opacity=".34" filter="url(#blurB)">
+    <path d="M-92 1052C-2 1070 97 1092 300 1104" stroke="#25177E" stroke-width="17" stroke-linecap="round"/>
+  </g>
+  <g opacity=".18" filter="url(#blurB)">
+    <path d="M-84 1096C12 1090 110 1094 292 1120" stroke="#150E5F" stroke-width="42" stroke-linecap="round"/>
+  </g>
+
+  <!-- lower blue layered arcs -->
+  <g opacity=".48" filter="url(#blurC)">
+    <path d="M-112 1418C-4 1462 88 1518 324 1604" stroke="url(#lowerBlue)" stroke-width="24" stroke-linecap="round"/>
+  </g>
+  <g opacity=".36" filter="url(#blurB)">
+    <path d="M-124 1455C-2 1497 91 1555 320 1640" stroke="#2347C9" stroke-width="13" stroke-linecap="round"/>
+  </g>
+  <g opacity=".28" filter="url(#blurB)">
+    <path d="M-132 1490C-8 1530 82 1586 314 1674" stroke="#5A7DFF" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <g opacity=".26" filter="url(#blurB)">
+    <path d="M-138 1530C-6 1560 92 1618 316 1712" stroke="#2439A8" stroke-width="16" stroke-linecap="round"/>
+  </g>
+
+  <rect y="1772" width="204" height="2" fill="#82A7FF" opacity=".55"/>
+
+  <defs>
+    <linearGradient id="bg" x1="102" y1="0" x2="102" y2="1778" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#684BFA"/>
+      <stop offset=".23" stop-color="#5D43F3"/>
+      <stop offset=".53" stop-color="#4D43E4"/>
+      <stop offset=".76" stop-color="#4659E5"/>
+      <stop offset="1" stop-color="#3B7DF1"/>
+    </linearGradient>
+    <linearGradient id="upperLight" x1="-60" y1="625" x2="264" y2="506" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#21127D" stop-opacity="0"/>
+      <stop offset=".45" stop-color="#7C6DFF" stop-opacity=".72"/>
+      <stop offset=".75" stop-color="#9A91FF" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="lowerBlue" x1="-112" y1="1418" x2="324" y2="1604" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B2297" stop-opacity=".22"/>
+      <stop offset=".48" stop-color="#2C66FF" stop-opacity=".76"/>
+      <stop offset="1" stop-color="#78A4FF" stop-opacity=".22"/>
+    </linearGradient>
+    <filter id="blurA" x="-120" y="430" width="450" height="260" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="blurB" x="-170" y="480" width="560" height="1260" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <filter id="blurC" x="-180" y="1340" width="580" height="360" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+</svg>

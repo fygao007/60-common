@@ -1,0 +1,17 @@
+/* 专业群建设详情页 · 复用成果与荣誉详情页布局样式 */
+@import './achievements-honors.css';
+
+/* 仅定义本页特有的样式：大文本展示区 */
+.mc-large-text {
+  padding: var(--ds-space-4);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-sm);
+}
+
+.mc-large-text p {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.9;
+  white-space: pre-wrap;
+}

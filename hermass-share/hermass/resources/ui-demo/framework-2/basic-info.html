@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 基本信息</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShellV2/app-shell-v2.css" />
+  <style>
+    body { margin: 0; }
+
+    .basic-page {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      background: var(--ds-color-white);
+    }
+
+    .basic-main {
+      flex: 1;
+      min-width: 0;
+      padding: 0 20px 20px;
+      overflow: auto;
+    }
+
+    .basic-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 56px;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .basic-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ds-color-text);
+      background: transparent;
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .basic-titlebar h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: var(--ds-font-size-title);
+      line-height: var(--ds-line-height-title);
+    }
+
+    .basic-section {
+      margin-top: 16px;
+    }
+
+    .basic-section-title {
+      display: flex;
+      align-items: center;
+      height: 52px;
+      padding: 0 24px;
+      color: var(--ds-color-text-heading);
+      background: var(--ds-color-primary-light);
+      border-radius: var(--ds-radius-md);
+      font-size: var(--ds-font-size-lg);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .basic-grid {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) 150px minmax(0, 1fr);
+      border-top: 1px solid var(--ds-color-border-secondary);
+      border-left: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .basic-cell-label,
+    .basic-cell-control {
+      min-height: 56px;
+      border-right: 1px solid var(--ds-color-border-secondary);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .basic-cell-label {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-bg-subtle);
+    }
+
+    .basic-cell-label.is-required::before {
+      content: "*";
+      margin-right: 2px;
+      color: var(--ds-color-danger);
+    }
+
+    .basic-cell-control {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .basic-input,
+    .basic-select,
+    .basic-textarea {
+      width: 100%;
+      padding: 0 12px;
+      color: var(--ds-color-text);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      outline: none;
+    }
+
+    .basic-input,
+    .basic-select {
+      height: 36px;
+    }
+
+    .basic-textarea {
+      min-height: 72px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      resize: vertical;
+    }
+
+    .basic-input:focus,
+    .basic-select:focus,
+    .basic-textarea:focus {
+      border-color: var(--ds-color-primary);
+      box-shadow: 0 0 0 2px var(--ds-color-focus-ring);
+    }
+
+    .basic-cell-control.is-multiline {
+      align-items: stretch;
+      min-height: 88px;
+    }
+
+    .basic-cell-control.is-span-3 {
+      grid-column: span 3;
+    }
+
+    .basic-radio-row,
+    .basic-file-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .basic-radio-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ds-color-text-secondary);
+      white-space: nowrap;
+    }
+
+    .basic-file-row {
+      flex-wrap: wrap;
+    }
+
+    .basic-file-name {
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .basic-edit-table {
+      width: 100%;
+      margin-top: 16px;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .basic-edit-table th,
+    .basic-edit-table td {
+      height: 56px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+      text-align: left;
+    }
+
+    .basic-edit-table th {
+      height: 52px;
+      color: var(--ds-color-text-heading);
+      background: var(--ds-color-bg-subtle);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .basic-link {
+      color: var(--ds-color-primary);
+      text-decoration: none;
+    }
+
+    .basic-add {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 12px;
+      color: var(--ds-color-primary);
+      background: transparent;
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .basic-actions {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 12px 0 0;
+      background: var(--ds-color-white);
+    }
+
+    .basic-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 32px;
+      padding: 0 16px;
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .basic-btn.primary {
+      color: var(--ds-color-white);
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .basic-anchor {
+      flex: none;
+      width: 184px;
+      padding: 52px 20px 0;
+      border-left: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .basic-anchor a {
+      position: relative;
+      display: block;
+      padding: 8px 0 8px 18px;
+      color: var(--ds-color-text-secondary);
+      text-decoration: none;
+    }
+
+    .basic-anchor a.is-active {
+      color: var(--ds-color-primary);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .basic-anchor a.is-active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 16px;
+      width: 8px;
+      height: 8px;
+      background: var(--ds-color-primary);
+      border-radius: var(--ds-radius-pill);
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="basic-page">
+    <section class="basic-main">
+      <header class="basic-titlebar">
+        <button class="basic-back" type="button">← 返回</button>
+        <h1 data-frame2-title>基本信息页面</h1>
+      </header>
+
+      <section class="basic-section" id="section-basic">
+        <div class="basic-section-title">教职工基本信息</div>
+        <div class="basic-grid">
+          <div class="basic-cell-label is-required">姓名</div>
+          <div class="basic-cell-control"><input class="basic-input" type="text" value="陈若然" /></div>
+          <div class="basic-cell-label is-required">工号</div>
+          <div class="basic-cell-control"><input class="basic-input" type="text" value="2026001" /></div>
+          <div class="basic-cell-label is-required">性别</div>
+          <div class="basic-cell-control">
+            <div class="basic-radio-row">
+              <label><input type="radio" name="gender" checked /> 女</label>
+              <label><input type="radio" name="gender" /> 男</label>
+            </div>
+          </div>
+          <div class="basic-cell-label is-required">出生日期</div>
+          <div class="basic-cell-control"><input class="basic-input" type="date" value="1992-06-18" /></div>
+          <div class="basic-cell-label">证件类型</div>
+          <div class="basic-cell-control"><select class="basic-select"><option>居民身份证</option><option>护照</option><option>港澳居民来往内地通行证</option></select></div>
+          <div class="basic-cell-label">证件号码</div>
+          <div class="basic-cell-control"><input class="basic-input" type="text" value="4403**********1842" /></div>
+        </div>
+      </section>
+
+      <section class="basic-section" id="section-course">
+        <div class="basic-section-title">岗位信息</div>
+        <div class="basic-grid">
+          <div class="basic-cell-label is-required">所属学院</div>
+          <div class="basic-cell-control"><select class="basic-select"><option>信息学院</option><option>经济管理学院</option><option>材料科学学院</option></select></div>
+          <div class="basic-cell-label is-required">所属部门</div>
+          <div class="basic-cell-control"><select class="basic-select"><option>软件工程系</option><option>计算机科学系</option><option>人工智能系</option></select></div>
+          <div class="basic-cell-label is-required">岗位类别</div>
+          <div class="basic-cell-control"><select class="basic-select"><option>专任教师</option><option>管理岗</option><option>辅导员</option></select></div>
+          <div class="basic-cell-label is-required">人员状态</div>
+          <div class="basic-cell-control"><select class="basic-select"><option>在职</option><option>试用期</option><option>离职</option></select></div>
+        </div>
+        <table class="basic-edit-table" aria-label="岗位经历">
+          <thead>
+            <tr><th>任职部门</th><th>岗位名称</th><th>起止时间</th><th style="width: 140px">操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>信息学院</td>
+              <td>软件工程系教师</td>
+              <td>2021-09 至今</td>
+              <td><a class="basic-link" href="#">编辑</a>　<a class="basic-link" href="#">删除</a></td>
+            </tr>
+            <tr>
+              <td><select class="basic-select"><option>请选择部门</option></select></td>
+              <td><input class="basic-input" type="text" placeholder="请输入岗位名称" /></td>
+              <td><input class="basic-input" type="text" placeholder="例如 2024-01 至今" /></td>
+              <td><a class="basic-link" href="#">保存</a>　<a class="basic-link" href="#">取消</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="basic-add" type="button">＋ 新增</button>
+      </section>
+
+      <section class="basic-section" id="section-apply">
+        <div class="basic-section-title">联系信息</div>
+        <div class="basic-grid">
+          <div class="basic-cell-label is-required">手机号码</div>
+          <div class="basic-cell-control"><input class="basic-input" type="tel" value="138****9021" /></div>
+          <div class="basic-cell-label">办公电话</div>
+          <div class="basic-cell-control"><input class="basic-input" type="text" value="0755-26019021" /></div>
+          <div class="basic-cell-label is-required">电子邮箱</div>
+          <div class="basic-cell-control"><input class="basic-input" type="email" value="chenrr@szpu.edu.cn" /></div>
+          <div class="basic-cell-label">办公地点</div>
+          <div class="basic-cell-control"><input class="basic-input" type="text" value="留仙洞校区明德楼 A508" /></div>
+          <div class="basic-cell-label">通讯地址</div>
+          <div class="basic-cell-control is-span-3"><input class="basic-input" type="text" value="广东省深圳市南山区西丽街道留仙大道7098号" /></div>
+        </div>
+      </section>
+
+      <section class="basic-section" id="section-extra">
+        <div class="basic-section-title">附件材料</div>
+        <div class="basic-grid">
+          <div class="basic-cell-label">学历证明</div>
+          <div class="basic-cell-control">
+            <div class="basic-file-row">
+              <button class="basic-btn" type="button">上传</button>
+              <span class="basic-file-name">博士学历证明.pdf</span>
+            </div>
+          </div>
+          <div class="basic-cell-label">职称证明</div>
+          <div class="basic-cell-control">
+            <div class="basic-file-row">
+              <button class="basic-btn" type="button">上传</button>
+              <span class="basic-file-name">高级工程师证书.pdf</span>
+            </div>
+          </div>
+          <div class="basic-cell-label">备注说明</div>
+          <div class="basic-cell-control is-span-3 is-multiline"><textarea class="basic-textarea" placeholder="请输入备注">该人员已完成入职材料核验，岗位信息待人事处复核。</textarea></div>
+        </div>
+      </section>
+
+      <div class="basic-actions">
+        <button class="basic-btn" type="button">取消</button>
+        <button class="basic-btn primary" type="button">保存</button>
+      </div>
+    </section>
+
+    <aside class="basic-anchor" aria-label="页面锚点">
+      <a class="is-active" href="#section-basic">教职工基本信息</a>
+      <a href="#section-course">岗位信息</a>
+      <a href="#section-apply">联系信息</a>
+      <a href="#section-extra">附件材料</a>
+    </aside>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js"></script>
+<script>
+  WiseAppShellV2.init({
+    activeModule: 'doctor',
+    activeApp: 'selected',
+    systemName: '人力资源管理系统',
+    versionLabel: '框架2',
+    assetBase: '../assets',
+    frameworkAssetBase: './assets',
+    topTools: [
+      { key: 'search', label: '搜索', icon: './assets/top-search.svg' },
+      { key: 'skin', label: '换肤', icon: './assets/top-skin.svg' },
+      { key: 'language', label: '语言', icon: './assets/top-language.svg' }
+    ],
+    appGroups: [
+      { key: 'home', label: '首页' },
+      { key: 'task', label: '任务中心' },
+      { key: 'selected', label: '选择的应用', apps: [
+        { key: 'selected-main', label: '人事服务' },
+        { key: 'selected-archive', label: '档案管理' }
+      ] },
+      { key: 'daily', label: '日常管理', apps: [
+        { key: 'attendance', label: '考勤管理' },
+        { key: 'approval', label: '流程审批' }
+      ] },
+      { key: 'ai', label: 'AI观察室' },
+      { key: 'stats', label: '数据统计' }
+    ],
+    secondaryNav: {
+      title: '组件库',
+      items: [
+        { key: '工作台', label: '工作台', icon: 'home', children: [
+          { key: '框架2首页', label: '框架2首页' },
+          { key: '基本信息页面', label: '基本信息页面' },
+          { key: '基本信息表格', label: '基本信息表格' },
+          { key: '页面配置', label: '页面配置' }
+        ] },
+        { key: '业务管理', label: '业务管理', icon: 'flow', expanded: false, children: [
+          { key: '业务列表', label: '业务列表' },
+          { key: '数据维护', label: '数据维护' }
+        ] },
+        { key: '系统设置', label: '系统设置', icon: 'settings', expanded: false, children: [
+          { key: '角色权限', label: '角色权限' },
+          { key: '操作日志', label: '操作日志' }
+        ] }
+      ]
+    },
+    activeFeature: '基本信息页面',
+    tabs: ['框架2首页', '基本信息页面', '基本信息表格', '页面配置'],
+    onFeatureChange(feature) {
+      const routes = {
+        '框架2首页': './index.html',
+        '基本信息页面': './basic-info.html',
+        '基本信息表格': './basic-info-table.html',
+        '页面配置': './index.html'
+      };
+      if (routes[feature] && feature !== '基本信息页面') window.location.href = routes[feature];
+    }
+  });
+</script>
+</body>
+</html>

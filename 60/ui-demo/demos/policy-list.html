@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>政策文件/资料下载 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+body{margin:0}
+.pl-head { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.pl-tabs { display:flex; align-items:center; gap:28px; }
+.pl-tab { border:0; background:none; padding:6px 2px 12px; font-size:15px; font-weight:600; color:var(--ap-muted); cursor:pointer; position:relative; }
+.pl-tab.active { color:var(--ap-blue); }
+.pl-tab.active::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:var(--ap-blue); border-radius:1px; }
+.pl-search { display:flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid var(--ap-line); border-radius:18px; background:#f7f9fc; color:var(--ap-muted); font-size:13px; min-width:220px; }
+.pl-search input { border:0; background:none; outline:none; font-size:13px; color:var(--ap-text); flex:auto; min-width:0; }
+.pl-list { display:flex; flex-direction:column; }
+.pl-item { display:block; padding:16px 4px; border-bottom:1px solid var(--ap-line); text-decoration:none; color:inherit; cursor:pointer; }
+.pl-item:last-child { border-bottom:0; }
+.pl-item:hover h3 { color:var(--ap-blue); }
+.pl-item h3 { margin:0 0 8px; overflow:hidden; color:var(--ap-text); font-size:14px; font-weight:400; line-height:22px; text-overflow:ellipsis; white-space:nowrap; }
+.pl-tag { display:inline-block; padding:1px 8px; margin-right:8px; font-size:12px; border-radius:4px; background:var(--ap-blue); color:#fff; vertical-align:middle; }
+.pl-meta { display:flex; gap:18px; font-size:13px; color:var(--ap-muted); }
+.pl-empty { padding:60px 20px; text-align:center; color:var(--ap-muted); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">政策文件/资料下载</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">策</span><span>政策文件/资料下载</span></h1>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head">
+          <div class="pl-head" style="width:100%">
+            <div class="pl-tabs" id="plTabs">
+              <button class="pl-tab active" type="button" data-cat="policy">政策文件</button>
+              <button class="pl-tab" type="button" data-cat="material">资料下载</button>
+            </div>
+            <div class="pl-search">
+              <span>🔍</span>
+              <input type="text" id="plSearchInput" placeholder="搜索文件、资料" />
+            </div>
+          </div>
+        </div>
+        <div class="ap-panel-body">
+          <div class="pl-list" id="plList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'policy-list', versionLabel:'政策文件/资料下载', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'policy-list',label:'政策文件/资料下载',closable:true}]
+});
+</script>
+<script>
+(function () {
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var POLICIES = [
+    { id: 'p1', title: '中共深圳职业技术大学委员会关于印发《深职大教职工职业发展三年行动计划（2026-2028年）》的通知', time: '2026-09-12 11:23', views: 2398, pinned: true },
+    { id: 'p2', title: '深圳职业技术大学绩效工资核算实施细则（试行）', time: '2026-09-12 11:23', views: 531, pinned: false },
+    { id: 'p3', title: '【劳资福利】教职工带薪休假与考勤管理制度', time: '2026-09-12 11:23', views: 64, pinned: false }
+  ];
+  var MATERIALS = [
+    { id: 'd1', title: '2026年度职称评审申报材料模板.docx', time: '2026-08-20 10:12', views: 1206, pinned: false },
+    { id: 'd2', title: '教职工因公出国（境）报备材料清单.xlsx', time: '2026-07-02 09:05', views: 842, pinned: false },
+    { id: 'd3', title: '新教师入职培训手册.pdf', time: '2026-03-15 14:30', views: 2031, pinned: false }
+  ];
+
+  function getQuery(name) {
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+
+  var tabsWrap = document.getElementById('plTabs');
+  var listEl = document.getElementById('plList');
+  var searchInput = document.getElementById('plSearchInput');
+  var activeTab = getQuery('type') === 'material' ? 'material' : 'policy';
+
+  function itemHtml(item, type) {
+    var metaLabel = type === 'material' ? '更新时间' : '发布时间';
+    var countLabel = type === 'material' ? '下载量' : '浏览量';
+    return '<a class="pl-item" href="./policy-detail.html?type=' + type + '&id=' + item.id + '">' +
+        '<h3>' + (item.pinned ? '<span class="pl-tag">置顶</span>' : '') + escapeHtml(item.title) + '</h3>' +
+        '<div class="pl-meta"><span>' + metaLabel + '：' + escapeHtml(item.time) + '</span><span>' + countLabel + '：' + item.views + '</span></div>' +
+      '</a>';
+  }
+
+  function render() {
+    tabsWrap.querySelectorAll('.pl-tab').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-cat') === activeTab); });
+    var list = activeTab === 'material' ? MATERIALS : POLICIES;
+    searchInput.placeholder = activeTab === 'material' ? '搜索资料、模板' : '搜索文件、政策';
+    listEl.innerHTML = list.length
+      ? list.map(function (it) { return itemHtml(it, activeTab); }).join('')
+      : '<div class="pl-empty">暂无内容</div>';
+  }
+
+  tabsWrap.querySelectorAll('.pl-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      activeTab = btn.getAttribute('data-cat');
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

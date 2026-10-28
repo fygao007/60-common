@@ -1,0 +1,10 @@
+@import '../framework/react-page-host.css';
+
+.{{PAGE_PREFIX}}-page {
+  display: grid;
+  min-height: 100%;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-4);
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-page);
+}

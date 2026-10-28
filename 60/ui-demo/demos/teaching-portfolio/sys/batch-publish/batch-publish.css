@@ -1,0 +1,175 @@
+@import '../../../../framework/react-page-host.css';
+@import '../sys-accounts/sys-accounts.css';
+@import '../form-management/form-management.css';
+
+.sys-admin-page--audit-batch {
+  min-height: 100%;
+}
+
+/* portfolio-compact.css 通过 .ds-scope :is(.sys-admin-page,...) 强制 padding:0，
+   本页需要 12px 内边距，用更高特异性的声明覆盖（(0,3,0)，不依赖加载顺序）。 */
+.ds-scope .sys-admin-page--audit-batch[data-ds-business-page]{
+  padding: var(--ds-space-3);
+}
+
+/* 详情页不再用 flex 把单个步骤内容撑满整屏，所有区块按内容自然排列。 */
+.ab-detail-page{
+  display: flex;
+  height: auto;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 0;
+  align-content: initial;
+  overflow: visible;
+  border-radius: 8px;
+}
+
+.ab-detail-page > .ab-detail-header{
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 16px;
+}
+
+.ab-detail-steps {
+  flex: none;
+  width: calc(100% - 32px);
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0;
+  border-bottom: 0;
+}
+
+.ab-detail-steps .ds-steps {
+  background: transparent;
+}
+
+.ab-detail-page > .ab-detail-group{
+  flex: 1;
+  display: block;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+}
+
+.ab-detail-page .ab-detail-group__body{
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 0;
+}
+
+.ab-detail-footer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid var(--ds-color-border-secondary);
+  background: var(--ds-color-bg-container);
+}
+
+.ab-info-group .ab-info-grid{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+/* 批次信息表单：左右布局（标题在左，输入框在右） */
+.ab-info-group .ab-info-grid .ds-edit-field {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.ab-info-group .ab-info-grid .ds-edit-field--full {
+  grid-column: 1 / -1;
+}
+
+.ab-info-group .ab-info-grid .ds-edit-field__label {
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.ab-info-group .ab-info-grid .ds-edit-field__content {
+  min-width: 0;
+}
+
+.ab-info-readonly {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ab-info-readonly__item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ab-info-readonly__item > span {
+  min-width: 100px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ab-info-readonly__item > strong {
+  flex: 1;
+  color: var(--ds-color-text);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.ab-content-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ab-content-head__name {
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.ab-content-head__spacer {
+  flex: 1;
+}
+
+.ab-field-list__select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ds-color-text-heading);
+  cursor: pointer;
+}
+
+.ab-field-list__select-all input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ds-color-primary);
+  cursor: pointer;
+}
+
+.ab-permission-main__hint {
+  padding: 8px 12px;
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+  border-radius: var(--ds-radius-sm);
+  font-size: var(--ds-font-size-sm);
+}
+
+/* 与 form-management 保持一致：用户组活动项浅蓝底 + 蓝字（覆盖 sys-accounts 的深底白字） */
+.sys-admin-page--audit-batch .archive-permission-groups__item.is-active {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+@media (max-width: 980px) {
+  .ab-info-group .ab-info-grid{
+    max-width: 100%;
+  }
+}

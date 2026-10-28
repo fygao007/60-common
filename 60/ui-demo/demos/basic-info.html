@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 基本信息</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../framework/theme.css" />
+  <style>
+    body { margin: 0; }
+
+    .basic-info-frame {
+      --basic-page: #f4f7fb;
+      --basic-card: #fff;
+      --basic-ink: #132033;
+      font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .basic-info-page {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      color: var(--basic-ink);
+      background: transparent;
+    }
+
+    .basic-scroll {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .basic-inner {
+      min-width: 980px;
+      padding: 0 0 72px;
+    }
+
+    .basic-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      background: var(--basic-card);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(28, 64, 128, .04);
+    }
+
+    .basic-back {
+      display: inline-grid;
+      flex: none;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .basic-avatar {
+      display: grid;
+      flex: none;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      color: var(--ds-color-white);
+      background: linear-gradient(135deg, #3565ea 0%, #168fb3 100%);
+      border-radius: 6px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .basic-heading {
+      display: grid;
+      flex: 1;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .basic-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .basic-title-row h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 20px;
+      line-height: 28px;
+      white-space: nowrap;
+    }
+
+    .basic-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      color: var(--ds-color-success-active);
+      background: var(--ds-color-success-light);
+      border-radius: var(--ds-radius-sm);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+      white-space: nowrap;
+    }
+
+    .basic-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .basic-header-actions {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .basic-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 32px;
+      padding: 0 14px;
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .basic-btn:hover {
+      color: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .basic-btn.primary {
+      color: var(--ds-color-white);
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .basic-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      margin-top: 16px;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(28, 64, 128, .04);
+    }
+
+    .summary-item {
+      min-width: 0;
+      padding: 12px 16px;
+      border-right: 1px solid var(--ds-color-border-secondary);
+      background: var(--ds-color-bg-subtle);
+    }
+
+    .summary-item:last-child {
+      border-right: 0;
+    }
+
+    .summary-label {
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .summary-value {
+      margin-top: 6px;
+      overflow: hidden;
+      color: var(--ds-color-text-heading);
+      font-size: var(--ds-font-size-md);
+      font-weight: 600;
+      line-height: var(--ds-line-height-md);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .basic-section {
+      margin-top: 20px;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--basic-card);
+      box-shadow: 0 8px 20px rgba(28, 64, 128, .04);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 44px;
+      padding: 0 16px;
+      background: var(--ds-color-bg-subtle);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .section-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ds-color-text-heading);
+      font-size: var(--ds-font-size-lg);
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: var(--ds-line-height-lg);
+    }
+
+    .section-title::before {
+      content: "";
+      width: 3px;
+      height: 16px;
+      background: var(--ds-color-primary);
+      border-radius: 2px;
+    }
+
+    .section-note {
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 128px minmax(0, 1fr) 128px minmax(0, 1fr) 128px minmax(0, 1fr);
+      border-top: 0;
+    }
+
+    .form-label,
+    .form-control {
+      min-height: 54px;
+      border-right: 1px solid var(--ds-color-border-secondary);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .form-grid > :nth-last-child(-n + 6) {
+      border-bottom: 0;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 12px;
+      color: var(--ds-color-text-secondary);
+      background: #fbfcfe;
+      text-align: right;
+    }
+
+    .form-label.required::before {
+      content: "*";
+      margin-right: 3px;
+      color: var(--ds-color-danger);
+    }
+
+    .form-control {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      padding: 8px;
+    }
+
+    .form-control.span-3 {
+      grid-column: span 3;
+    }
+
+    .form-control.span-5 {
+      grid-column: span 5;
+    }
+
+    .basic-input,
+    .basic-select,
+    .basic-textarea {
+      width: 100%;
+      min-width: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      outline: none;
+    }
+
+    .basic-input,
+    .basic-select {
+      height: 32px;
+      padding: 0 10px;
+    }
+
+    .basic-textarea {
+      min-height: 78px;
+      padding: 8px 10px;
+      resize: vertical;
+    }
+
+    .basic-input:focus,
+    .basic-select:focus,
+    .basic-textarea:focus {
+      border-color: var(--ds-color-primary);
+      box-shadow: 0 0 0 2px var(--ds-color-focus-ring);
+    }
+
+    .radio-group,
+    .check-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+    }
+
+    .radio-group label,
+    .check-group label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ds-color-text-secondary);
+      white-space: nowrap;
+    }
+
+    .basic-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .basic-table th,
+    .basic-table td {
+      height: 44px;
+      padding: 8px 12px;
+      border-right: 1px solid var(--ds-color-border-secondary);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .basic-table th {
+      color: var(--ds-color-text-heading);
+      background: #fbfcfe;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .basic-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .basic-table th:last-child,
+    .basic-table td:last-child {
+      border-right: 0;
+    }
+
+    .basic-link {
+      margin-right: 10px;
+      color: var(--ds-color-primary);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .upload-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .file-pill {
+      display: inline-flex;
+      align-items: center;
+      max-width: 260px;
+      height: 28px;
+      padding: 0 10px;
+      overflow: hidden;
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-bg-subtle);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: var(--ds-radius-sm);
+      font-size: var(--ds-font-size-sm);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .basic-anchor {
+      flex: none;
+      width: 168px;
+      padding: 88px 18px 0;
+      border-left: 1px solid var(--ds-color-border-secondary);
+      background: rgba(255, 255, 255, .86);
+    }
+
+    .basic-anchor nav {
+      position: sticky;
+      top: 20px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .basic-anchor a {
+      position: relative;
+      display: block;
+      padding: 8px 0 8px 16px;
+      color: var(--ds-color-text-secondary);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .basic-anchor a.is-active {
+      color: var(--ds-color-primary);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .basic-anchor a.is-active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 15px;
+      width: 6px;
+      height: 6px;
+      background: var(--ds-color-primary);
+      border-radius: 50%;
+    }
+
+    .basic-footer {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin: 24px -24px -72px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid var(--ds-color-border-secondary);
+      backdrop-filter: blur(8px);
+    }
+
+    @media (max-width: 1360px) {
+      .form-grid {
+        grid-template-columns: 128px minmax(0, 1fr) 128px minmax(0, 1fr);
+      }
+
+      .form-control.span-5 {
+        grid-column: span 3;
+      }
+
+      .basic-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary-item:nth-child(2) {
+        border-right: 0;
+      }
+
+      .summary-item:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--ds-color-border-secondary);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="basic-info-page basic-info-frame">
+    <section class="basic-scroll">
+      <div class="basic-inner">
+        <header class="basic-header">
+          <button class="basic-back" type="button" aria-label="返回">‹</button>
+          <div class="basic-avatar" aria-hidden="true">陈</div>
+          <div class="basic-heading">
+            <div class="basic-title-row">
+              <h1 data-frame2-title>教职工基本信息</h1>
+              <span class="basic-tag">在职</span>
+            </div>
+            <div class="basic-meta">
+              <span>工号：2026001</span>
+              <span>所属学院：信息学院</span>
+              <span>岗位：软件工程系专任教师</span>
+              <span>最近更新：2026-05-29 15:30</span>
+            </div>
+          </div>
+          <div class="basic-header-actions">
+            <button class="basic-btn" type="button">查看日志</button>
+            <button class="basic-btn" type="button">暂存</button>
+            <button class="basic-btn primary" type="button">提交</button>
+          </div>
+        </header>
+
+        <section class="basic-summary" aria-label="人员摘要">
+          <div class="summary-item">
+            <div class="summary-label">人员类别</div>
+            <div class="summary-value">事业编制</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">入校日期</div>
+            <div class="summary-value">2021-09-01</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">职称</div>
+            <div class="summary-value">高级工程师</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">资料完整度</div>
+            <div class="summary-value">92%</div>
+          </div>
+        </section>
+
+        <section class="basic-section" id="base">
+          <div class="section-head">
+            <div class="section-title">基础信息</div>
+            <div class="section-note">用于人员档案、合同和流程审批的主数据</div>
+          </div>
+          <div class="form-grid">
+            <div class="form-label required">姓名</div>
+            <div class="form-control"><input class="basic-input" type="text" value="陈若然" /></div>
+            <div class="form-label required">工号</div>
+            <div class="form-control"><input class="basic-input" type="text" value="2026001" /></div>
+            <div class="form-label required">性别</div>
+            <div class="form-control">
+              <div class="radio-group">
+                <label><input type="radio" name="gender" checked /> 女</label>
+                <label><input type="radio" name="gender" /> 男</label>
+              </div>
+            </div>
+
+            <div class="form-label required">出生日期</div>
+            <div class="form-control"><input class="basic-input" type="date" value="1992-06-18" /></div>
+            <div class="form-label">民族</div>
+            <div class="form-control"><select class="basic-select"><option>汉族</option><option>壮族</option><option>回族</option></select></div>
+            <div class="form-label">政治面貌</div>
+            <div class="form-control"><select class="basic-select"><option>中共党员</option><option>群众</option><option>民主党派</option></select></div>
+
+            <div class="form-label required">证件类型</div>
+            <div class="form-control"><select class="basic-select"><option>居民身份证</option><option>护照</option><option>港澳居民来往内地通行证</option></select></div>
+            <div class="form-label required">证件号码</div>
+            <div class="form-control"><input class="basic-input" type="text" value="4403**********1842" /></div>
+            <div class="form-label">籍贯</div>
+            <div class="form-control"><input class="basic-input" type="text" value="广东深圳" /></div>
+          </div>
+        </section>
+
+        <section class="basic-section" id="job">
+          <div class="section-head">
+            <div class="section-title">岗位信息</div>
+            <div class="section-note">岗位调整后将同步更新组织关系</div>
+          </div>
+          <div class="form-grid">
+            <div class="form-label required">所属学院</div>
+            <div class="form-control"><select class="basic-select"><option>信息学院</option><option>经济管理学院</option><option>材料科学学院</option></select></div>
+            <div class="form-label required">所属部门</div>
+            <div class="form-control"><select class="basic-select"><option>软件工程系</option><option>计算机科学系</option><option>人工智能系</option></select></div>
+            <div class="form-label required">人员状态</div>
+            <div class="form-control"><select class="basic-select"><option>在职</option><option>试用期</option><option>离职</option></select></div>
+
+            <div class="form-label required">岗位类别</div>
+            <div class="form-control"><select class="basic-select"><option>专任教师</option><option>管理岗</option><option>辅导员</option></select></div>
+            <div class="form-label">职称</div>
+            <div class="form-control"><select class="basic-select"><option>高级工程师</option><option>副教授</option><option>讲师</option></select></div>
+            <div class="form-label">聘用形式</div>
+            <div class="form-control"><select class="basic-select"><option>事业编制</option><option>合同聘用</option><option>劳务派遣</option></select></div>
+
+            <div class="form-label">任职标签</div>
+            <div class="form-control span-5">
+              <div class="check-group">
+                <label><input type="checkbox" checked /> 双师型教师</label>
+                <label><input type="checkbox" checked /> 项目负责人</label>
+                <label><input type="checkbox" /> 班主任</label>
+                <label><input type="checkbox" /> 兼职导师</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="basic-section" id="contact">
+          <div class="section-head">
+            <div class="section-title">联系信息</div>
+            <div class="section-note">手机号和邮箱用于消息通知</div>
+          </div>
+          <div class="form-grid">
+            <div class="form-label required">手机号码</div>
+            <div class="form-control"><input class="basic-input" type="tel" value="138****9021" /></div>
+            <div class="form-label">办公电话</div>
+            <div class="form-control"><input class="basic-input" type="text" value="0755-26019021" /></div>
+            <div class="form-label required">电子邮箱</div>
+            <div class="form-control"><input class="basic-input" type="email" value="chenrr@szpu.edu.cn" /></div>
+
+            <div class="form-label">办公地点</div>
+            <div class="form-control"><input class="basic-input" type="text" value="留仙洞校区明德楼 A508" /></div>
+            <div class="form-label">紧急联系人</div>
+            <div class="form-control"><input class="basic-input" type="text" value="陈先生 139****7766" /></div>
+            <div class="form-label">微信企业号</div>
+            <div class="form-control"><input class="basic-input" type="text" value="已绑定" /></div>
+
+            <div class="form-label">通讯地址</div>
+            <div class="form-control span-5"><input class="basic-input" type="text" value="广东省深圳市南山区西丽街道留仙大道7098号" /></div>
+          </div>
+        </section>
+
+        <section class="basic-section" id="experience">
+          <div class="section-head">
+            <div class="section-title">岗位经历</div>
+            <button class="basic-btn" type="button">新增经历</button>
+          </div>
+          <table class="basic-table" aria-label="岗位经历">
+            <thead>
+              <tr>
+                <th style="width: 22%">任职部门</th>
+                <th style="width: 22%">岗位名称</th>
+                <th style="width: 22%">起止时间</th>
+                <th>说明</th>
+                <th style="width: 128px">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>信息学院</td>
+                <td>软件工程系教师</td>
+                <td>2021-09 至今</td>
+                <td>承担软件工程、低代码平台课程建设</td>
+                <td><a class="basic-link" href="#">编辑</a><a class="basic-link" href="#">删除</a></td>
+              </tr>
+              <tr>
+                <td>企业实践基地</td>
+                <td>项目导师</td>
+                <td>2023-07 至 2024-01</td>
+                <td>指导校企合作项目和学生实训</td>
+                <td><a class="basic-link" href="#">编辑</a><a class="basic-link" href="#">删除</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="basic-section" id="attachment">
+          <div class="section-head">
+            <div class="section-title">附件材料</div>
+            <div class="section-note">支持 PDF、Word 和图片格式</div>
+          </div>
+          <div class="form-grid">
+            <div class="form-label">学历证明</div>
+            <div class="form-control">
+              <div class="upload-row">
+                <button class="basic-btn" type="button">上传</button>
+                <span class="file-pill">博士学历证明.pdf</span>
+              </div>
+            </div>
+            <div class="form-label">职称证明</div>
+            <div class="form-control">
+              <div class="upload-row">
+                <button class="basic-btn" type="button">上传</button>
+                <span class="file-pill">高级工程师证书.pdf</span>
+              </div>
+            </div>
+            <div class="form-label">聘用材料</div>
+            <div class="form-control">
+              <div class="upload-row">
+                <button class="basic-btn" type="button">上传</button>
+                <span class="file-pill">聘用审批表.docx</span>
+              </div>
+            </div>
+
+            <div class="form-label">备注说明</div>
+            <div class="form-control span-5"><textarea class="basic-textarea">该人员已完成入职材料核验，岗位信息待人事处复核。</textarea></div>
+          </div>
+        </section>
+
+        <div class="basic-footer">
+          <button class="basic-btn" type="button">取消</button>
+          <button class="basic-btn" type="button">保存草稿</button>
+          <button class="basic-btn primary" type="button">保存并提交</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="basic-anchor" aria-label="页面锚点">
+      <nav>
+        <a class="is-active" href="#base">基础信息</a>
+        <a href="#job">岗位信息</a>
+        <a href="#contact">联系信息</a>
+        <a href="#experience">岗位经历</a>
+        <a href="#attachment">附件材料</a>
+      </nav>
+    </aside>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    activeApp: 'info',
+    versionLabel: '基本信息',
+    userName: '教职工',
+    assetBase: '../assets',
+  secondaryNav: {
+      items: [
+        { key: 'person', label: '人员信息', icon: 'home', children: [
+          { key: 'basic-info', label: '基本信息' },
+          { key: 'job-info', label: '岗位信息' },
+          { key: 'contact-info', label: '联系信息' },
+          { key: 'attachment-info', label: '附件材料' }
+        ] },
+        { key: 'archive', label: '档案袋', icon: 'prepare', children: [
+          { key: 'education', label: '学历学位' },
+          { key: 'experience', label: '岗位经历' },
+          { key: 'certification', label: '证书资质' }
+        ] },
+        { key: 'change', label: '变更管理', icon: 'flow', expanded: false, children: [
+          { key: 'change-apply', label: '变更申请' },
+          { key: 'change-record', label: '变更记录' }
+        ] }
+      ]
+    },
+    activeFeature: 'basic-info',
+    tabs: [
+      { key: 'home', label: '首页', wiseIcon: 'homeOutline', closable: false },
+      { key: 'basic-info', label: '基本信息', closable: false }
+    ],
+    onFeatureChange(feature) {
+      const routes = {
+        home: '../framework/personal-workbench.html',
+        'basic-info': './basic-info.html'
+      };
+      if (routes[feature] && feature !== 'basic-info') window.location.href = routes[feature];
+    }
+  });
+</script>
+</body>
+</html>

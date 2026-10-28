@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://szpu.example/schemas/basic-information-field-set-1.0.0.json",
+  "type": "object",
+  "required": ["library", "version", "fieldSetId", "fieldCount", "fields"],
+  "properties": {
+    "fieldSetId": { "const": "StaffBasicInformation" },
+    "fieldCount": { "type": "integer", "minimum": 1 },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fieldId", "fieldKind", "ownerDomain", "reusePolicy", "sourceCode", "label", "group", "dataType", "classification", "lifecycle", "searchable", "status"],
+        "properties": {
+          "fieldId": { "type": "string", "pattern": "^StaffBasicInformation\\.[a-z0-9_]+$" },
+          "fieldKind": { "const": "standard" },
+          "ownerDomain": { "const": "hr-core" },
+          "reusePolicy": { "const": "prefer-reference" },
+          "sourceCode": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]+$" },
+          "classification": { "enum": ["public", "internal", "sensitive", "restricted"] },
+          "lifecycle": { "enum": ["stored", "derived", "system"] },
+          "status": { "enum": ["not-applicable", "bound", "bound-with-dictionary-conflict", "external-master-data", "review-required"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

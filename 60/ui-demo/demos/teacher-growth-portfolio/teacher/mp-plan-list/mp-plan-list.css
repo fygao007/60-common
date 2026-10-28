@@ -1,0 +1,170 @@
+@import '../../../../framework/react-page-host.css';
+
+/* M01 发展方案台账：DSRegularListTemplate 组合，只写页面专属样式 */
+
+.mpl-page {
+  display: grid;
+  min-height: 100%;
+}
+
+/* 状态指示：圆点 + 文字 */
+.mpl-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--ds-color-text);
+}
+
+.mpl-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--ds-color-text-tertiary);
+}
+
+.mpl-status.is-success i {
+  background: var(--ds-color-success);
+}
+
+.mpl-status.is-danger i {
+  background: var(--ds-color-danger);
+}
+
+.mpl-status.is-warning i {
+  background: var(--ds-color-warning);
+}
+
+.mpl-status.is-info i {
+  background: var(--ds-color-info);
+}
+
+.mpl-muted {
+  color: var(--ds-color-text-tertiary);
+}
+
+/* 行操作：等距排列，避免换行撑高行高 */
+.mpl-ops {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+/* 导出条：左对齐主色按钮置于筛选区与表格之间 */
+.mpl-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mpl-summary-bar__text {
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mpl-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mpl-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mpl-drawer-section h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ds-color-text-heading);
+}
+
+.mpl-drawer-quote {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 2px solid var(--ds-color-border);
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.mpl-drawer-hint {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.mpl-blocker-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ds-color-text);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.mpl-drawer-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mpl-process-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+  padding-top: 4px;
+}
+
+
+.mpl-event-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mpl-event-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ds-color-text);
+}
+
+.mpl-event-list__time {
+  color: var(--ds-color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.mpl-modal-text {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.mpl-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  max-width: 520px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  background: var(--ds-color-text-heading);
+  color: var(--ds-color-bg-container);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 20;
+}

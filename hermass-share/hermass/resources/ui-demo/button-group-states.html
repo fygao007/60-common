@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>按钮组状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/ButtonGroup/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .group-page {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .group-stage {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .group-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1200px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .group-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .group-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .group-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .group-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .group-source {
+      color: var(--ds-color-primary);
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .group-section {
+      width: min(1200px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .group-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .group-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .group-section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 0;
+    }
+
+    .group-card {
+      min-height: 176px;
+      padding: 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .group-card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .group-card h3 {
+      margin: 0 0 12px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .group-demo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .group-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .state-row {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+    }
+
+    .state-name {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .group-note {
+      display: block;
+      margin-top: 10px;
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .ds-button-group.is-hover .ds-button:nth-child(2) {
+      z-index: 1;
+      color: var(--ds-color-primary);
+      background: #f5f5ff;
+      border-color: var(--ds-color-primary);
+    }
+
+    .ds-button-group.is-active .ds-button:nth-child(2) {
+      z-index: 1;
+      color: var(--ds-color-primary-active);
+      background: #ebecff;
+      border-color: var(--ds-color-primary-active);
+    }
+
+    .ds-button-group.is-focus .ds-button:nth-child(2) {
+      z-index: 1;
+      color: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+      box-shadow: 0 0 0 2px rgba(61, 90, 254, 0.18);
+    }
+
+    .ds-button-group.is-primary-hover .ds-button:nth-child(2) {
+      z-index: 1;
+      color: #fff;
+      background: var(--ds-color-primary-hover);
+      border-color: var(--ds-color-primary-hover);
+    }
+
+    .ds-button-group.is-primary-active .ds-button:nth-child(2) {
+      z-index: 1;
+      color: #fff;
+      background: var(--ds-color-primary-active);
+      border-color: var(--ds-color-primary-active);
+    }
+
+    .ds-button-group.is-link-hover .ds-button:nth-child(2) {
+      z-index: 1;
+      color: var(--ds-color-primary-hover);
+      background: #f5f5ff;
+    }
+
+    .ds-button-group.is-link-active .ds-button:nth-child(2) {
+      z-index: 1;
+      color: var(--ds-color-primary-active);
+      background: #ebecff;
+    }
+
+    .ds-button-group--segmented .ds-button.is-selected {
+      z-index: 2;
+      color: #fff;
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .ds-button-group--segmented.is-hover .ds-button:nth-child(2) {
+      color: var(--ds-color-primary);
+      background: #f5f5ff;
+      border-color: var(--ds-color-primary);
+    }
+
+    .ds-button-group--segmented.is-active .ds-button:nth-child(2) {
+      color: var(--ds-color-primary-active);
+      background: #ebecff;
+      border-color: var(--ds-color-primary-active);
+    }
+
+    .ds-button-group--segmented.is-focus .ds-button:nth-child(2) {
+      color: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+      box-shadow: inset 0 0 0 1px var(--ds-color-primary);
+    }
+
+    .ds-button-group--toolbar {
+      gap: 8px;
+      height: auto;
+    }
+
+    .ds-button-group--toolbar .ds-button {
+      border-radius: var(--ds-radius-sm);
+      margin-left: 0;
+    }
+
+    .click-log {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      color: var(--ds-color-text-secondary);
+      background: #fafafa;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .group-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .group-card,
+      .group-card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="group-page">
+    <section class="group-stage">
+      <header class="group-head">
+        <div>
+          <h1 class="group-title"><span>按钮组状态</span></h1>
+          <p class="group-desc">覆盖 ButtonGroup 的间距按钮、分段按钮、工具栏按钮、图标按钮、块级按钮和单项状态。</p>
+        </div>
+        <a class="group-source" href="./packages/design-system/docs/button-group.md">ButtonGroup 规范</a>
+      </header>
+
+      <section class="group-section">
+        <div class="group-section-head">
+          <h2 class="group-section-title">基础组合</h2>
+          <span class="group-section-meta">Default / Mixed / Toolbar / Link</span>
+        </div>
+        <div class="group-grid">
+          <article class="group-card">
+            <h3>普通间距按钮组</h3>
+            <div class="ds-button-group" role="group" aria-label="普通按钮组">
+              <button class="ds-button ds-button--default" type="button">新增</button>
+              <button class="ds-button ds-button--default" type="button">导入</button>
+              <button class="ds-button ds-button--default" type="button">导出</button>
+            </div>
+            <span class="group-note">按钮之间保留 8px 间距，每个按钮独立圆角。</span>
+          </article>
+          <article class="group-card">
+            <h3>主次组合</h3>
+            <div class="ds-button-group" role="group" aria-label="主次按钮组">
+              <button class="ds-button ds-button--default" type="button">重置</button>
+              <button class="ds-button ds-button--primary" type="button">查询</button>
+            </div>
+            <span class="group-note">查询区通常使用重置 + 查询，主按钮放右侧。</span>
+          </article>
+          <article class="group-card">
+            <h3>工具栏按钮组</h3>
+            <div class="ds-button-group ds-button-group--toolbar" role="group" aria-label="工具栏按钮组">
+              <button class="ds-button ds-button--default" type="button">新增</button>
+              <button class="ds-button ds-button--default" type="button">删除</button>
+              <button class="ds-button ds-button--default" type="button">导入</button>
+              <button class="ds-button ds-button--default" type="button">导出</button>
+            </div>
+            <span class="group-note">工具栏按钮保持独立圆角和固定间距。</span>
+          </article>
+          <article class="group-card">
+            <h3>行内 Link 组</h3>
+            <div class="ds-button-group" role="group" aria-label="行内按钮组">
+              <button class="ds-button ds-button--link" type="button">编辑</button>
+              <button class="ds-button ds-button--link" type="button">详情</button>
+              <button class="ds-button ds-button--link ds-button--danger" type="button">删除</button>
+            </div>
+            <span class="group-note">用于表格操作列，按钮间距 8px，不共边框。</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="group-section">
+        <div class="group-section-head">
+          <h2 class="group-section-title">状态与尺寸</h2>
+          <span class="group-section-meta">Hover / Press / Focus / Disabled / Loading / Block</span>
+        </div>
+        <div class="group-grid">
+          <article class="group-card">
+            <h3>普通按钮组状态</h3>
+            <div class="group-stack">
+              <div class="state-row">
+                <span class="state-name">默认</span>
+                <div class="ds-button-group" role="group" aria-label="默认按钮组">
+                  <button class="ds-button ds-button--default" type="button">新增</button>
+                  <button class="ds-button ds-button--default" type="button">导入</button>
+                  <button class="ds-button ds-button--default" type="button">导出</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">悬浮</span>
+                <div class="ds-button-group is-hover" role="group" aria-label="悬浮按钮组">
+                  <button class="ds-button ds-button--default" type="button">新增</button>
+                  <button class="ds-button ds-button--default" type="button">导入</button>
+                  <button class="ds-button ds-button--default" type="button">导出</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">按下</span>
+                <div class="ds-button-group is-active" role="group" aria-label="按下按钮组">
+                  <button class="ds-button ds-button--default" type="button">新增</button>
+                  <button class="ds-button ds-button--default" type="button">导入</button>
+                  <button class="ds-button ds-button--default" type="button">导出</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">聚焦</span>
+                <div class="ds-button-group is-focus" role="group" aria-label="聚焦按钮组">
+                  <button class="ds-button ds-button--default" type="button">新增</button>
+                  <button class="ds-button ds-button--default" type="button">导入</button>
+                  <button class="ds-button ds-button--default" type="button">导出</button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="group-card">
+            <h3>主按钮组状态</h3>
+            <div class="group-stack">
+              <div class="state-row">
+                <span class="state-name">默认</span>
+                <div class="ds-button-group" role="group" aria-label="主按钮默认状态">
+                  <button class="ds-button ds-button--default" type="button">重置</button>
+                  <button class="ds-button ds-button--primary" type="button">查询</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">悬浮</span>
+                <div class="ds-button-group is-primary-hover" role="group" aria-label="主按钮悬浮状态">
+                  <button class="ds-button ds-button--default" type="button">重置</button>
+                  <button class="ds-button ds-button--primary" type="button">查询</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">按下</span>
+                <div class="ds-button-group is-primary-active" role="group" aria-label="主按钮按下状态">
+                  <button class="ds-button ds-button--default" type="button">重置</button>
+                  <button class="ds-button ds-button--primary" type="button">查询</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">禁用</span>
+                <div class="ds-button-group" role="group" aria-label="主按钮禁用状态">
+                  <button class="ds-button ds-button--default" type="button" disabled>重置</button>
+                  <button class="ds-button ds-button--primary" type="button" disabled>查询</button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="group-card">
+            <h3>禁用 / 加载</h3>
+            <div class="group-stack">
+              <div class="state-row">
+                <span class="state-name">单项</span>
+                <div class="ds-button-group" role="group" aria-label="单项禁用按钮组">
+                  <button class="ds-button ds-button--default" type="button">可点</button>
+                  <button class="ds-button ds-button--default" type="button" disabled>禁用</button>
+                  <button class="ds-button ds-button--primary" type="button">查询</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">加载</span>
+                <div class="ds-button-group" role="group" aria-label="加载按钮组">
+                  <button class="ds-button ds-button--default" type="button">取消</button>
+                  <button class="ds-button ds-button--primary" type="button" disabled><span class="ds-button__spinner" aria-hidden="true"></span><span class="ds-button__label">提交中</span></button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">整组</span>
+                <div class="ds-button-group" role="group" aria-label="整组禁用按钮组">
+                  <button class="ds-button ds-button--default" type="button" disabled>新增</button>
+                  <button class="ds-button ds-button--default" type="button" disabled>导入</button>
+                  <button class="ds-button ds-button--default" type="button" disabled>导出</button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="group-card" id="link-button-group">
+            <h3>Link 按钮组状态</h3>
+            <div class="group-stack">
+              <div class="state-row">
+                <span class="state-name">默认</span>
+                <div class="ds-button-group" role="group" aria-label="链接默认按钮组">
+                  <button class="ds-button ds-button--link" type="button">编辑</button>
+                  <button class="ds-button ds-button--link" type="button">详情</button>
+                  <button class="ds-button ds-button--link ds-button--danger" type="button">删除</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">悬浮</span>
+                <div class="ds-button-group is-link-hover" role="group" aria-label="链接悬浮按钮组">
+                  <button class="ds-button ds-button--link" type="button">编辑</button>
+                  <button class="ds-button ds-button--link" type="button">详情</button>
+                  <button class="ds-button ds-button--link ds-button--danger" type="button">删除</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">按下</span>
+                <div class="ds-button-group is-link-active" role="group" aria-label="链接按下按钮组">
+                  <button class="ds-button ds-button--link" type="button">编辑</button>
+                  <button class="ds-button ds-button--link" type="button">详情</button>
+                  <button class="ds-button ds-button--link ds-button--danger" type="button">删除</button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="group-card">
+            <h3>分段按钮组</h3>
+            <div class="group-stack">
+              <div class="state-row">
+                <span class="state-name">默认</span>
+                <div class="ds-button-group ds-button-group--segmented" role="group" aria-label="分段按钮组" id="segmentGroup">
+                  <button class="ds-button ds-button--default is-selected" type="button">日</button>
+                  <button class="ds-button ds-button--default" type="button">周</button>
+                  <button class="ds-button ds-button--default" type="button">月</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">悬浮</span>
+                <div class="ds-button-group ds-button-group--segmented is-hover" role="group" aria-label="分段悬浮按钮组">
+                  <button class="ds-button ds-button--default" type="button">日</button>
+                  <button class="ds-button ds-button--default" type="button">周</button>
+                  <button class="ds-button ds-button--default" type="button">月</button>
+                </div>
+              </div>
+              <div class="state-row">
+                <span class="state-name">按下</span>
+                <div class="ds-button-group ds-button-group--segmented is-active" role="group" aria-label="分段按下按钮组">
+                  <button class="ds-button ds-button--default" type="button">日</button>
+                  <button class="ds-button ds-button--default" type="button">周</button>
+                  <button class="ds-button ds-button--default" type="button">月</button>
+                </div>
+              </div>
+            </div>
+            <span class="group-note">点击切换选中项。</span>
+          </article>
+          <article class="group-card">
+            <h3>图标按钮组</h3>
+            <div class="ds-button-group" role="group" aria-label="图标按钮组">
+              <button class="ds-button ds-button--default ds-button--icon-only" type="button" aria-label="刷新">↻</button>
+              <button class="ds-button ds-button--default ds-button--icon-only" type="button" aria-label="列设置">▥</button>
+              <button class="ds-button ds-button--default ds-button--icon-only" type="button" aria-label="全屏">□</button>
+            </div>
+          </article>
+          <article class="group-card">
+            <h3>块级按钮组</h3>
+            <div class="ds-button-group ds-button-group--block" role="group" aria-label="块级按钮组">
+              <button class="ds-button ds-button--default" type="button">上一步</button>
+              <button class="ds-button ds-button--primary" type="button">下一步</button>
+            </div>
+          </article>
+          <article class="group-card">
+            <h3>点击反馈</h3>
+            <div class="group-demo">
+              <div class="ds-button-group" role="group" aria-label="点击反馈按钮组" id="clickGroup">
+                <button class="ds-button ds-button--default" type="button">新增</button>
+                <button class="ds-button ds-button--default" type="button">导入</button>
+                <button class="ds-button ds-button--primary" type="button">查询</button>
+              </div>
+              <span class="click-log" id="clickLog">等待点击</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  document.querySelectorAll('#segmentGroup .ds-button').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('#segmentGroup .ds-button').forEach(item => item.classList.remove('is-selected'));
+      button.classList.add('is-selected');
+    });
+  });
+
+  document.querySelectorAll('#clickGroup .ds-button').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.getElementById('clickLog').textContent = `点击了：${button.textContent.trim()}`;
+    });
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

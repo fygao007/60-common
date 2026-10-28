@@ -1,0 +1,39 @@
+/* 日期时间选择器弹窗面板（shared/datetime-field.jsx） */
+.dtf-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  min-width: 320px;
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-lg);
+  overflow: hidden;
+}
+.dtf-panel__body {
+  display: flex;
+}
+.dtf-panel__date {
+  flex: 1;
+  padding: 8px;
+}
+.dtf-panel__time {
+  flex: 0 0 140px;
+  padding: 8px;
+  border-left: 1px solid var(--ds-color-border);
+}
+.dtf-panel__time-label {
+  font-size: 12px;
+  color: var(--ds-color-text-secondary);
+  padding: 4px 8px;
+  margin-bottom: 4px;
+}
+.dtf-panel__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--ds-color-border);
+  background: var(--ds-color-bg-subtle);
+}

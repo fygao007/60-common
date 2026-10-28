@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核评分页场景</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Tag/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/ReadOnlyForm/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/GroupTitle/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .arp-page {
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .arp-shell {
+      display: grid;
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      gap: 12px;
+    }
+
+    .arp-card {
+      min-width: 0;
+      padding: 16px;
+      background: var(--ds-color-bg-container);
+      border-radius: var(--ds-radius-xl);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .arp-scope-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .arp-scope-bar__info {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .arp-scope-bar__info span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .arp-scope-bar__info strong {
+      font-size: 16px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .arp-segment {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .arp-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .arp-summary__item {
+      display: grid;
+      gap: 2px;
+      padding: 12px 16px;
+      background: var(--ds-color-bg-page);
+      border-radius: var(--ds-radius-lg);
+    }
+
+    .arp-summary__item span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .arp-summary__item strong {
+      font-size: 22px;
+      line-height: 30px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .arp-table-card ds-data-table {
+      width: 100%;
+      min-width: 0;
+      height: 420px;
+    }
+
+    .arp-detail-header {
+      display: grid;
+      gap: 12px;
+    }
+
+    .arp-detail-header__title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .arp-detail-header__title h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .arp-detail-header__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 32px;
+    }
+
+    .arp-detail-header__meta-item {
+      display: grid;
+      gap: 2px;
+    }
+
+    .arp-detail-header__meta-item span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .arp-detail-header__meta-item strong {
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .arp-material {
+      display: grid;
+      gap: 12px;
+    }
+
+    .arp-score-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .arp-score-form__row {
+      display: grid;
+      gap: 4px;
+    }
+
+    .arp-score-form__row label {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .arp-input {
+      width: 160px;
+      height: 32px;
+      padding: 0 8px;
+      font: inherit;
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-md);
+    }
+
+    .arp-textarea {
+      width: 100%;
+      min-height: 88px;
+      padding: 6px 8px;
+      font: inherit;
+      resize: vertical;
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-md);
+    }
+
+    .arp-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .arp-footer__group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .arp-toast {
+      position: fixed;
+      z-index: 50;
+      right: 24px;
+      bottom: 24px;
+      padding: 9px 16px;
+      color: #fff;
+      background: rgba(31, 38, 153, .94);
+      border-radius: var(--ds-radius-md);
+      box-shadow: var(--ds-shadow-sm);
+    }
+
+    .arp-toast[hidden],
+    [data-view][hidden] { display: none; }
+
+    @media (max-width: 900px) {
+      .arp-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="arp-page ds-scope">
+    <!-- 列表视图：范围条 + 汇总 + 提交列表 -->
+    <div class="arp-shell" data-view="list">
+      <section class="arp-card arp-scope-bar">
+        <div class="arp-scope-bar__info">
+          <span>评审范围</span>
+          <strong>示例学院 · 示例教研室</strong>
+        </div>
+        <div class="arp-segment" role="group" aria-label="切换批次" data-batch-segment></div>
+      </section>
+
+      <section class="arp-card arp-summary" aria-label="批次汇总" data-summary></section>
+
+      <section class="arp-card arp-table-card">
+        <ds-data-table id="submissionTable" title="提交名单" row-key="id" show-index min-width="920"></ds-data-table>
+      </section>
+    </div>
+
+    <!-- 详情视图：对象信息 + 只读材料 + 评分表单 -->
+    <div class="arp-shell" data-view="detail" hidden>
+      <section class="arp-card arp-detail-header">
+        <div class="arp-detail-header__title">
+          <h2 data-detail-name>—</h2>
+          <span data-detail-status></span>
+        </div>
+        <div class="arp-detail-header__meta" data-detail-meta></div>
+      </section>
+
+      <section class="arp-card arp-material">
+        <div class="ds-group-title" role="heading" aria-level="2">
+          <div class="ds-group-title__main"><span class="ds-group-title__text">提交材料</span></div>
+          <div class="ds-group-title__extra">只读</div>
+        </div>
+        <div class="ds-readonly-form ds-readonly-form--2-column" aria-label="提交材料">
+          <div class="ds-readonly-form__grid">
+            <div class="ds-readonly-field">
+              <span class="ds-readonly-field__label"><span>材料名称</span></span>
+              <div class="ds-readonly-field__content">2026 年度业务材料汇总</div>
+            </div>
+            <div class="ds-readonly-field">
+              <span class="ds-readonly-field__label"><span>提交时间</span></span>
+              <div class="ds-readonly-field__content" data-detail-submit-time>-</div>
+            </div>
+            <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+              <span class="ds-readonly-field__label"><span>内容摘要</span></span>
+              <div class="ds-readonly-field__content">目标设定完整，过程记录连续，佐证材料齐全；改进措施部分建议结合评价结果进一步细化。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="arp-card arp-score-form" data-score-form>
+        <div class="ds-group-title" role="heading" aria-level="2">
+          <div class="ds-group-title__main"><span class="ds-group-title__text">评分意见</span></div>
+        </div>
+        <div class="arp-score-form__row">
+          <label for="scoreInput">评分（0-100）</label>
+          <input id="scoreInput" class="arp-input" type="number" min="0" max="100" placeholder="请输入分数" />
+        </div>
+        <div class="arp-score-form__row">
+          <label for="commentInput">评语</label>
+          <textarea id="commentInput" class="arp-textarea" placeholder="请输入评审意见"></textarea>
+        </div>
+      </section>
+
+      <section class="arp-card arp-footer">
+        <div class="arp-footer__group">
+          <button class="ds-button ds-button--default ds-button--default-size" type="button" data-back><span class="ds-button__label">返回列表</span></button>
+        </div>
+        <div class="arp-footer__group">
+          <button class="ds-button ds-button--default ds-button--default-size" type="button" data-prev><span class="ds-button__label">上一条</span></button>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button" data-next><span class="ds-button__label">下一条</span></button>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button" data-reject><span class="ds-button__label">退回</span></button>
+          <button class="ds-button ds-button--primary ds-button--default-size" type="button" data-submit><span class="ds-button__label">提交评分</span></button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="arp-toast" role="status" data-toast hidden></div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "lit": "../node_modules/lit/index.js",
+      "lit/": "../node_modules/lit/",
+      "lit-html": "../node_modules/lit-html/lit-html.js",
+      "lit-html/": "../node_modules/lit-html/",
+      "lit-element/": "../node_modules/lit-element/",
+      "@lit/reactive-element": "../node_modules/@lit/reactive-element/reactive-element.js",
+      "@lit/reactive-element/": "../node_modules/@lit/reactive-element/"
+    }
+  }
+  </script>
+  <script type="module" src="../packages/design-system/web-components/DataTable/ds-data-table.js"></script>
+  <script type="module">
+    const BATCHES = [
+      { id: 'b1', name: '2026 春季批次', status: '评审中' },
+      { id: 'b2', name: '2025 秋季批次', status: '已完结' },
+    ];
+
+    const ROWS = [
+      { id: 'r1', batch: 'b1', name: '张三', jobNo: '20201101', submitStatus: '已提交', submitTime: '2026-06-20', evalStatus: '待评分', score: null },
+      { id: 'r2', batch: 'b1', name: '李四', jobNo: '20191045', submitStatus: '未提交', submitTime: '-', evalStatus: '待评分', score: null },
+      { id: 'r3', batch: 'b1', name: '王五', jobNo: '20180230', submitStatus: '已提交', submitTime: '2026-06-25', evalStatus: '待评分', score: null },
+      { id: 'r4', batch: 'b1', name: '赵六', jobNo: '20211189', submitStatus: '已提交', submitTime: '2026-06-28', evalStatus: '已评分', score: 88 },
+      { id: 'r5', batch: 'b2', name: '张三', jobNo: '20201101', submitStatus: '已提交', submitTime: '2025-12-25', evalStatus: '已评分', score: 90 },
+      { id: 'r6', batch: 'b2', name: '李四', jobNo: '20191045', submitStatus: '逾期未交', submitTime: '-', evalStatus: '待评分', score: null },
+      { id: 'r7', batch: 'b2', name: '王五', jobNo: '20180230', submitStatus: '已提交', submitTime: '2025-12-27', evalStatus: '已评分', score: 85 },
+    ];
+
+    const table = document.getElementById('submissionTable');
+    const listView = document.querySelector('[data-view="list"]');
+    const detailView = document.querySelector('[data-view="detail"]');
+    const segment = document.querySelector('[data-batch-segment]');
+    const summaryBox = document.querySelector('[data-summary]');
+    const toast = document.querySelector('[data-toast]');
+
+    let activeBatch = BATCHES[0].id;
+    let activeRowId = null;
+
+    const tagHtml = (text, tone) => `<span class="ds-tag ds-process-tag ds-process-tag--filled ds-tag--${tone}">${text}</span>`;
+    const evalTone = (s) => (s === '已评分' ? 'success' : 'warning');
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.hidden = false;
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => { toast.hidden = true; }, 1800);
+    }
+
+    function batchRows() {
+      return ROWS.filter((row) => row.batch === activeBatch);
+    }
+
+    function renderSegment() {
+      segment.innerHTML = BATCHES.map((batch) => `
+        <button class="ds-button ds-button--${batch.id === activeBatch ? 'primary' : 'default'} ds-button--small" type="button" data-batch="${batch.id}">
+          <span class="ds-button__label">${batch.name}</span>
+        </button>`).join('');
+    }
+
+    function renderSummary() {
+      const rows = batchRows();
+      const submitted = rows.filter((row) => row.submitStatus === '已提交');
+      const scored = submitted.filter((row) => row.evalStatus === '已评分');
+      const avg = scored.length ? (scored.reduce((sum, row) => sum + row.score, 0) / scored.length).toFixed(1) : '-';
+      const items = [
+        ['应评对象', rows.length],
+        ['已提交', submitted.length],
+        ['已评分', scored.length],
+        ['平均分', avg],
+      ];
+      summaryBox.innerHTML = items.map(([label, value]) => `
+        <div class="arp-summary__item"><span>${label}</span><strong>${value}</strong></div>`).join('');
+    }
+
+    function renderTable() {
+      table.columns = [
+        { key: 'name', title: '姓名', width: 120, fixed: 'left' },
+        { key: 'jobNo', title: '工号', width: 130 },
+        { key: 'submitStatus', title: '提交状态', width: 120, type: 'tag' },
+        { key: 'submitTime', title: '提交时间', width: 140 },
+        { key: 'evalStatus', title: '评分状态', width: 120, type: 'tag' },
+        { key: 'score', title: '得分', width: 90, align: 'right', render: (value) => (value == null ? '-' : String(value)) },
+      ];
+      table.actions = [{ key: 'review', label: '评分 / 查看' }];
+      table.data = batchRows();
+    }
+
+    function openDetail(rowId) {
+      const row = ROWS.find((item) => item.id === rowId);
+      if (!row || row.submitStatus !== '已提交') {
+        showToast('该对象未提交，暂无法评分');
+        return;
+      }
+      activeRowId = rowId;
+      const batch = BATCHES.find((item) => item.id === row.batch);
+      detailView.querySelector('[data-detail-name]').textContent = `${row.name}（${row.jobNo}）`;
+      detailView.querySelector('[data-detail-status]').innerHTML = tagHtml(row.evalStatus, evalTone(row.evalStatus));
+      detailView.querySelector('[data-detail-submit-time]').textContent = row.submitTime;
+      detailView.querySelector('[data-detail-meta]').innerHTML = [
+        ['所属批次', batch.name],
+        ['批次状态', batch.status],
+        ['提交状态', row.submitStatus],
+      ].map(([label, value]) => `
+        <div class="arp-detail-header__meta-item"><span>${label}</span><strong>${value}</strong></div>`).join('');
+      document.getElementById('scoreInput').value = row.score == null ? '' : row.score;
+      document.getElementById('commentInput').value = '';
+      listView.hidden = true;
+      detailView.hidden = false;
+    }
+
+    function backToList() {
+      detailView.hidden = true;
+      listView.hidden = false;
+      renderSummary();
+      renderTable();
+    }
+
+    function step(offset) {
+      const rows = batchRows().filter((row) => row.submitStatus === '已提交');
+      const index = rows.findIndex((row) => row.id === activeRowId);
+      const next = rows[index + offset];
+      if (!next) {
+        showToast(offset > 0 ? '已经是最后一条' : '已经是第一条');
+        return;
+      }
+      openDetail(next.id);
+    }
+
+    table.addEventListener('ds-row-action', (event) => {
+      openDetail(event.detail.record.id);
+    });
+
+    segment.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-batch]');
+      if (!button) return;
+      activeBatch = button.dataset.batch;
+      renderSegment();
+      renderSummary();
+      renderTable();
+    });
+
+    detailView.querySelector('[data-back]').addEventListener('click', backToList);
+    detailView.querySelector('[data-prev]').addEventListener('click', () => step(-1));
+    detailView.querySelector('[data-next]').addEventListener('click', () => step(1));
+    detailView.querySelector('[data-reject]').addEventListener('click', () => {
+      showToast('已退回，等待对象重新提交');
+      backToList();
+    });
+    detailView.querySelector('[data-submit]').addEventListener('click', () => {
+      const value = Number(document.getElementById('scoreInput').value);
+      if (Number.isNaN(value) || value < 0 || value > 100) {
+        showToast('请输入 0-100 的分数');
+        return;
+      }
+      const row = ROWS.find((item) => item.id === activeRowId);
+      row.score = value;
+      row.evalStatus = '已评分';
+      showToast('评分已提交');
+      backToList();
+    });
+
+    renderSegment();
+    renderSummary();
+    renderTable();
+  </script>
+</body>
+</html>

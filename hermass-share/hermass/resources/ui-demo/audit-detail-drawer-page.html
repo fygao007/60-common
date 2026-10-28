@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核详情抽屉 DSAuditDetailDrawer</title>
+  <link rel="stylesheet" href="packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="packages/design-system/src/AuditDetailDrawer/index.css" />
+  <style>
+    body { margin: 0; background: var(--ds-color-bg-page); font-family: var(--ds-font-family); color: var(--ds-color-text); }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .page-header p { margin: 0; color: var(--ds-color-text-tertiary); font-size: 14px; }
+
+    .demo-section { margin-bottom: 32px; }
+    .demo-section__title { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .demo-section__desc { margin: 0 0 16px; font-size: 13px; color: var(--ds-color-text-tertiary); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; margin-right: 8px; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+
+    /* Drawer */
+    .ds-drawer__overlay { position: fixed; inset: 0; z-index: 1100; display: flex; background: var(--ds-color-bg-mask); visibility: hidden; opacity: 0; transition: opacity 0.24s ease, visibility 0.24s ease; }
+    .ds-drawer__overlay.is-open { visibility: visible; opacity: 1; }
+    .ds-drawer { display: flex; flex-direction: column; width: 560px; max-width: calc(100vw - 48px); height: 100%; margin-left: auto; background: var(--ds-color-white); box-shadow: var(--ds-shadow-lg); transform: translateX(100%); transition: transform 0.24s ease; }
+    .ds-drawer__overlay.is-open .ds-drawer { transform: translateX(0); }
+    .ds-drawer__header { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 0 24px; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .ds-drawer__header h3 { margin: 0; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .ds-drawer__close { width: 28px; height: 28px; background: transparent; border: 0; border-radius: 4px; color: var(--ds-color-text-tertiary); cursor: pointer; font-size: 18px; }
+    .ds-drawer__close:hover { background: var(--ds-color-bg-hover); }
+    .ds-drawer__body { flex: 1; min-height: 0; overflow: auto; padding: 24px; }
+    .ds-drawer__footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--ds-color-border-secondary); }
+
+    /* Tag */
+    .ds-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; color: var(--ds-color-primary); background: var(--ds-color-primary-light); border-radius: var(--ds-radius-pill); font-size: var(--ds-font-size-xs); }
+    .ds-tag--success { color: var(--ds-color-success); background: var(--ds-color-success-light); }
+    .ds-tag--danger { color: var(--ds-color-danger); background: var(--ds-color-danger-light); }
+    .ds-tag--warning { color: var(--ds-color-warning-text); background: var(--ds-color-warning-light); }
+
+    .ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 72px; height: 36px; padding: 0 16px; border: 1px solid #dcdce0; border-radius: 4px; background: var(--ds-color-white); color: var(--ds-color-text); cursor: pointer; font-size: 14px; }
+    .ds-btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>审核详情抽屉 DSAuditDetailDrawer</h1>
+    <p>审核详情右侧抽屉，展示审核对象信息与流程进度</p>
+  </header>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">触发</h2>
+    <p class="demo-section__desc">点击按钮打开详情抽屉。</p>
+    <button class="btn" onclick="openDrawer()">打开详情</button>
+  </section>
+</div>
+
+<!-- Drawer -->
+<div id="drawer-overlay" class="ds-drawer__overlay" onclick="closeOnOverlay(event)">
+  <div class="ds-drawer">
+    <div class="ds-drawer__header">
+      <h3>审核详情</h3>
+      <button class="ds-drawer__close" onclick="closeDrawer()" aria-label="关闭">&times;</button>
+    </div>
+    <div class="ds-drawer__body">
+      <dl class="ds-audit-detail-drawer__list">
+        <div class="ds-audit-detail-drawer__item">
+          <dt>名称</dt>
+          <dd>张三</dd>
+        </div>
+        <div class="ds-audit-detail-drawer__item">
+          <dt>业务类型</dt>
+          <dd>辞职申请</dd>
+        </div>
+        <div class="ds-audit-detail-drawer__item">
+          <dt>提交部门</dt>
+          <dd>计算机学院</dd>
+        </div>
+        <div class="ds-audit-detail-drawer__item">
+          <dt>提交人</dt>
+          <dd>张三 (T20210001)</dd>
+        </div>
+        <div class="ds-audit-detail-drawer__item">
+          <dt>提交时间</dt>
+          <dd>2026-06-05 10:30</dd>
+        </div>
+        <div class="ds-audit-detail-drawer__item">
+          <dt>审核状态</dt>
+          <dd><span class="ds-tag">待审核</span></dd>
+        </div>
+      </dl>
+      <div class="ds-audit-detail-drawer__extra">
+        <h4 style="margin:0 0 12px;font-size:14px;font-weight:600;">流程进度</h4>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;gap:16px;">
+          <li style="flex:1;display:flex;align-items:center;gap:8px;">
+            <span style="width:24px;height:24px;border-radius:4px;background:var(--ds-color-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px;">✓</span>
+            <span style="font-size:14px;color:var(--ds-color-primary);font-weight:600;">所在单位审核</span>
+          </li>
+          <li style="flex:1;display:flex;align-items:center;gap:8px;">
+            <span style="width:24px;height:24px;border-radius:4px;background:var(--ds-color-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px;">2</span>
+            <span style="font-size:14px;color:var(--ds-color-text);">人事处审核</span>
+          </li>
+          <li style="flex:1;display:flex;align-items:center;gap:8px;">
+            <span style="width:24px;height:24px;border-radius:4px;background:var(--ds-color-bg-hover);color:var(--ds-color-text-disabled);display:inline-flex;align-items:center;justify-content:center;font-size:14px;">3</span>
+            <span style="font-size:14px;color:var(--ds-color-text-tertiary);">分管领导审批</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ds-drawer__footer">
+      <button class="ds-btn" onclick="closeDrawer()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openDrawer() {
+  document.getElementById('drawer-overlay').classList.add('is-open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('is-open');
+}
+
+function closeOnOverlay(e) {
+  if (e.target === e.currentTarget) closeDrawer();
+}
+</script>
+</body>
+</html>

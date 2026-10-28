@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>档案卡片 · 默认+悬浮动效</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px;
+    background: #F0F4F8;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .hint { font-size: 12.5px; letter-spacing: 0.5px; color: #8AA0B8; margin-bottom: 32px; }
+
+  /* 卡片网格:横向4个,共3行 */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 288px);
+    grid-template-rows: repeat(3, auto);
+    gap: 32px;
+    justify-content: center;
+  }
+
+  /* ===================== 卡片(288 × 213) ===================== */
+  .card {
+    position: relative;
+    width: 288px;
+    height: 213px;
+    overflow: visible;   /* 允许纸张飞出卡片外,不被裁切 */
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card:hover {
+    transform: translateY(-16px);
+  }
+
+  /* ===================== 图层 ===================== */
+  .layer {
+    position: absolute;
+    border: 0;
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+               opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* L0 最底层:矩形 957 */
+  .layer.back {
+    left: 16px;
+    top: 50px;
+    z-index: 0;
+    transform-origin: bottom center;
+  }
+  .card:hover .layer.back {
+    transform: translate(-12px, -20px) rotate(-4deg);  /* 调小角度,向中间聚拢 */
+  }
+
+  /* L1 第三层:矩形 956 */
+  .layer.mid {
+    left: 27px;
+    top: 38px;
+    z-index: 1;
+  }
+  .card:hover .layer.mid {
+    transform: translate(12px, -12px) rotate(4deg);  /* 调小角度,向中间聚拢 */
+  }
+
+  /* L2 第二层:组件 13 */
+  .layer.front-default {
+    position: absolute;
+    left: 32px;
+    top: 23px;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+               transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .layer.front-hover {
+    position: absolute;
+    left: 32px;
+    top: 23px;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+               transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* hover切换+位移 */
+  .card:hover .layer.front-default {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  .card:hover .layer.front-hover {
+    opacity: 1;
+    transform: translateY(-20px);
+  }
+
+  /* L3 最前(最高):文件夹封面 */
+  .folder-wrapper {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 287px;
+    height: 158px;
+    z-index: 3;
+  }
+  /* 默认封面 */
+  .layer.folder-default {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: block;
+    border: 0;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* 悬浮封面 */
+  .layer.folder-hover {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: block;
+    border: 0;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* hover切换 */
+  .card:hover .layer.folder-default {
+    opacity: 0;
+  }
+  .card:hover .layer.folder-hover {
+    opacity: 1;
+  }
+
+  /* ===================== 文字层 ===================== */
+  .copy {
+    position: absolute;
+    left: 18px;
+    top: 70px;  /* 整体下移12px */
+    z-index: 10;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #1E53E5;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .desc {
+    margin: 5px 0 0;
+    font-size: 13.5px;
+    line-height: 20px;
+    color: #567ADF;
+    max-width: 230px;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* hover:文字变白 */
+  .card:hover .title { color: #FFFFFF; }
+  .card:hover .desc { color: rgba(255,255,255,0.9); }
+
+  /* ===================== Footer ===================== */
+  .divider {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 172px;  /* 跟着footer往下挪 */
+    height: 0;
+    border-top: 1px dashed rgba(255, 255, 255, 0.6);
+    z-index: 10;
+    transition: border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card:hover .divider {
+    border-top-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .footer {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 182px;  /* 再往下挪 */
+    z-index: 10;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .count {
+    font-size: 14px;
+    line-height: 22px;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .count .num {
+    color: #3167FF;
+    font-weight: 600;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .count .unit {
+    color: #FFFFFF;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* hover:数字变白,文字变白 */
+  .card:hover .count .num { color: #FFFFFF; }
+  .card:hover .count .unit { color: rgba(255,255,255,0.95); }
+
+  .more {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #3167FF;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+               gap 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .more .arrow {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card:hover .more {
+    color: #FFFFFF;
+    gap: 6px;
+  }
+  .card:hover .more .arrow {
+    transform: translateX(2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="hint">鼠标悬浮查看动效 · 移开平滑恢复</div>
+
+  <div class="grid">
+    <!-- 第1行 -->
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">基本信息</h3>
+        <p class="desc">个人基础信息、任职资格与基本档案</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">12</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">教学档案</h3>
+        <p class="desc">课程资料、教学成果与学生评教</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">8</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">科研档案</h3>
+        <p class="desc">课题项目、论文专利与获奖记录</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">15</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">培训档案</h3>
+        <p class="desc">进修课程、企业实践与专业证书</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">6</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <!-- 第2行 -->
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">职称评审</h3>
+        <p class="desc">职称申报材料与评审记录</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">9</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">绩效考核</h3>
+        <p class="desc">年度考核结果与绩效记录</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">4</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">荣誉奖励</h3>
+        <p class="desc">获奖证书与荣誉称号</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">18</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">社会服务</h3>
+        <p class="desc">社会兼职与公益服务记录</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">7</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <!-- 第3行 -->
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">学历学位</h3>
+        <p class="desc">学历证书与学位证明</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">3</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">资格证书</h3>
+        <p class="desc">职业资格与技能证书</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">11</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">工作经历</h3>
+        <p class="desc">工作履历与岗位变动记录</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">5</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="layer back"  src="矩形 957.png" alt="" />
+      <img class="layer mid"   src="透明_矩形 956.png" alt="" />
+      <img class="layer front-default" src="组件 13.png"  alt="" />
+      <img class="layer front-hover" src="组件 13.png"  alt="" />
+      <div class="folder-wrapper">
+        <img class="layer folder-default" src="透明_联集 6.png" alt="文件夹封面-默认" />
+        <img class="layer folder-hover" src="联集 7.png" alt="文件夹封面-悬浮" />
+      </div>
+      <div class="copy">
+        <h3 class="title">其他档案</h3>
+        <p class="desc">其他相关材料与证明文件</p>
+      </div>
+      <div class="divider"></div>
+      <div class="footer">
+        <span class="count"><span class="num">20</span> <span class="unit">份资料</span></span>
+        <span class="more">查看详情 <span class="arrow">›</span></span>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

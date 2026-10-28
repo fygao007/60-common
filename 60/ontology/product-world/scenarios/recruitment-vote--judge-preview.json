@@ -1,0 +1,83 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--judge-preview",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" },
+      { "id": "judge", "name": "评委" }
+    ],
+    "goals": [
+      "在管理员视角预览评委实际投票界面，核对选项与交互口径",
+      "提示未完成表决的对象数，避免评委漏投"
+    ],
+    "painPoints": [
+      "原系统管理员无法预览评委端界面，配置与体验脱节"
+    ],
+    "openQuestions": [
+      "评委是否允许在提交前撤销已表态对象，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "评委端预览",
+    "actorRefs": ["vote-admin", "judge"],
+    "preconditions": [
+      "投票项目已开启投票且评委账号已发放"
+    ],
+    "mainFlow": [
+      "从投票执行相关入口在独立窗口打开评委端预览",
+      "对每位评审对象选择同意、不同意或弃权",
+      "通过顶部计数确认已表决与待表决人数",
+      "填写投票意见后提交投票"
+    ],
+    "exceptions": [
+      "存在未表决对象时提交给出提示并阻止",
+      "投票意见为选填，可跳过"
+    ]
+  },
+  "page": {
+    "title": "评委端预览",
+    "templateId": "display-board",
+    "menuRef": "recruitment.vote:judge-preview",
+    "fieldRefs": [
+      "StaffBasicInformation.xm",
+      "Business.vote.proposedPosition",
+      "Business.vote.voteOpinion"
+    ],
+    "components": [
+      "DSAuditOpinionModal",
+      "DSButton",
+      "DSRadioGroup",
+      "DSTag"
+    ],
+    "demoPath": "demos/vote/judge-preview/judge-preview.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内",
+      "展示形态与常规业务页差异较大，采用 fallback 策略用原始组件组装"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「展示端」分组下「评委端预览」处于高亮态",
+      "每位对象提供同意 / 不同意 / 弃权三选一",
+      "顶部计数随表决进度实时更新",
+      "未完成表决时提交被阻止并给出提示",
+      "投票意见通过设计系统意见弹窗填写"
+    ]
+  }
+}

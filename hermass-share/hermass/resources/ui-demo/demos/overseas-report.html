@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>出国境报备 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">出国境报备</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">境</span>出国(境)报备</h1>
+        <div class="ap-actions"><button class="ap-btn primary" type="button">+ 发起报备申请</button></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>报备信息填写</h2></div>
+        <div class="ap-panel-body">
+          <div class="ap-form-grid">
+            <div class="ap-field"><label><span class="req">*</span>事由类型</label><select><option>因公出访</option><option>因私出境</option><option>学术交流/会议</option><option>访学研修</option></select></div>
+            <div class="ap-field"><label><span class="req">*</span>目的地国家/地区</label><input type="text" placeholder="如：新加坡" /></div>
+            <div class="ap-field"><label><span class="req">*</span>出境时间</label><input type="text" placeholder="2026-07-10" /></div>
+            <div class="ap-field"><label><span class="req">*</span>预计返境时间</label><input type="text" placeholder="2026-07-20" /></div>
+            <div class="ap-field"><label>同行人员</label><input type="text" placeholder="如有同行教职工请填写姓名及单位" /></div>
+            <div class="ap-field"><label>经费来源</label><select><option>因公经费</option><option>个人自费</option><option>合作单位资助</option></select></div>
+            <div class="ap-field full"><label><span class="req">*</span>事由说明</label><textarea placeholder="请说明出国(境)目的、行程安排及主要活动内容"></textarea></div>
+            <div class="ap-field full"><label>附件材料</label>
+              <span class="ap-upload">⬆ 上传邀请函、批件、护照及签证页扫描件</span>
+            </div>
+          </div>
+          <div class="ap-form-actions">
+            <button class="ap-btn" type="button">存为草稿</button>
+            <button class="ap-btn primary" type="button">提交报备</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>审批进度</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-timeline">
+              <div class="ap-tl-item done"><span class="ap-tl-dot">✓</span><div class="ap-tl-body"><h4>本人提交</h4><p>2026-05-05</p></div></div>
+              <div class="ap-tl-item done"><span class="ap-tl-dot">✓</span><div class="ap-tl-body"><h4>系所审核</h4><p>已通过 · 2026-05-07</p></div></div>
+              <div class="ap-tl-item current"><span class="ap-tl-dot">3</span><div class="ap-tl-body"><h4>学院审批</h4><p>处理中 · 智能制造学院 党政联席会</p></div></div>
+              <div class="ap-tl-item"><span class="ap-tl-dot">4</span><div class="ap-tl-body"><h4>外事处/人事处备案</h4><p>等待中</p></div></div>
+            </div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>提醒事项</h2></div>
+          <div class="ap-panel-body">
+            <p style="margin:0 0 12px;color:var(--ap-text);font-size:14px;line-height:24px">· 因公出访须在出发前 15 个工作日提交报备申请；</p>
+            <p style="margin:0 0 12px;color:var(--ap-text);font-size:14px;line-height:24px">· 因私出境累计不超过本年度规定天数，超期需另行说明；</p>
+            <p style="margin:0 0 12px;color:var(--ap-text);font-size:14px;line-height:24px">· 行程发生变更需在24小时内提交变更说明；</p>
+            <p style="margin:0;color:var(--ap-text);font-size:14px;line-height:24px">· 返境后请于5个工作日内提交销假及行程总结。</p>
+          </div>
+        </section>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>历史报备记录</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>事由类型</th><th>目的地</th><th>出境时间</th><th>返境时间</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>学术交流/会议</td><td>日本 · 东京</td><td>2025-11-03</td><td>2025-11-09</td><td><span class="ap-tag green">已销假</span></td><td class="link">查看详情</td></tr>
+              <tr><td>因私出境</td><td>泰国 · 曼谷</td><td>2025-02-08</td><td>2025-02-15</td><td><span class="ap-tag green">已销假</span></td><td class="link">查看详情</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'overseas-report', versionLabel:'出国境报备', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'overseas-report',label:'出国境报备',closable:true}]
+});
+</script>
+</body>
+</html>

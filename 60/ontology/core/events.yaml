@@ -1,0 +1,47 @@
+ontology: szpu-hr
+version: 0.1.0
+eventEnvelope:
+  required: [eventId, eventType, occurredAt, effectiveAt, actor, sourceSystem]
+  fields:
+    - { id: eventId, type: string }
+    - { id: eventType, type: concept }
+    - { id: occurredAt, type: datetime, description: 系统记录时间 }
+    - { id: effectiveAt, type: datetime, description: 业务生效时间 }
+    - { id: actor, type: reference, description: 发起人或执行主体 }
+    - { id: sourceSystem, type: string }
+    - { id: sourceRecordId, type: string }
+    - { id: evidenceDocumentIds, type: reference-list, target: Document }
+eventTypes:
+  - { id: CandidateRegistered, label: 候选人注册, subject: Candidate }
+  - { id: ApplicationSubmitted, label: 应聘申请提交, subject: Application }
+  - { id: ApplicationReviewed, label: 应聘申请审核, subject: Application }
+  - { id: CandidateSelected, label: 候选人拟录用, subject: Candidate }
+  - { id: OnboardingInitiated, label: 发起进校报到, subject: OnboardingCase }
+  - { id: OnboardingDeferred, label: 延期报到, subject: OnboardingCase }
+  - { id: OnboardingWaived, label: 放弃入职, subject: OnboardingCase }
+  - { id: OnboardingCompleted, label: 完成进校报到, subject: OnboardingCase }
+  - { id: PersonCreated, label: 建立人员主数据, subject: Person }
+  - { id: EmployeeNumberAssigned, label: 分配工号, subject: Person }
+  - { id: AssignmentStarted, label: 任职开始, subject: EmploymentAssignment }
+  - { id: AssignmentChanged, label: 任职变更, subject: EmploymentAssignment }
+  - { id: AssignmentEnded, label: 任职结束, subject: EmploymentAssignment }
+  - { id: ContractSigned, label: 合同签订, subject: Contract }
+  - { id: ContractRenewed, label: 合同续签, subject: Contract }
+  - { id: ContractTerminated, label: 合同终止, subject: Contract }
+  - { id: PortfolioSubmitted, label: 教学档案已提交, subject: PortfolioSubmission }
+  - { id: PortfolioReviewStarted, label: 教学档案开始审核, subject: PortfolioSubmission }
+  - { id: PortfolioApproved, label: 教学档案审核通过, subject: PortfolioSubmission }
+  - { id: PortfolioReturned, label: 教学档案退回修改, subject: PortfolioSubmission }
+  - { id: PortfolioArchived, label: 教学档案已归档, subject: CoursePortfolio }
+
+stateDerivation:
+  - target: Person.employmentStatus
+    derivedFrom: [OnboardingCompleted, AssignmentStarted, AssignmentEnded]
+  - target: EmploymentAssignment.assignmentStatus
+    derivedFrom: [AssignmentStarted, AssignmentChanged, AssignmentEnded]
+  - target: Contract.contractStatus
+    derivedFrom: [ContractSigned, ContractRenewed, ContractTerminated]
+  - target: PortfolioSubmission.status
+    derivedFrom: [PortfolioSubmitted, PortfolioReviewStarted, PortfolioApproved, PortfolioReturned]
+  - target: CoursePortfolio.archiveStatus
+    derivedFrom: [PortfolioSubmitted, PortfolioApproved, PortfolioReturned, PortfolioArchived]

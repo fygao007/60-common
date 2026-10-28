@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>政策文件/资料详情 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+body{margin:0}
+.pd-body { padding:22px 2px 6px; color:var(--ap-text); font-size:15px; line-height:30px; }
+.pd-body p { margin:0 0 14px; }
+.pd-attach { display:flex; align-items:center; gap:12px; margin-top:6px; padding:14px 16px; border:1px solid var(--ap-line); border-radius:8px; background:#fafcff; }
+.pd-attach .ico { flex:none; width:38px; height:38px; display:grid; place-items:center; border-radius:8px; background:#eaf1ff; color:var(--ap-blue); font-size:16px; font-weight:700; }
+.pd-attach .info { flex:auto; min-width:0; }
+.pd-attach .info h4 { margin:0 0 4px; font-size:14px; font-weight:600; color:var(--ap-ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pd-attach .info p { margin:0; font-size:12px; color:var(--ap-muted); }
+.pd-empty { padding:60px 20px; text-align:center; color:var(--ap-muted); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur" id="pdCrumbCur">政策文件详情</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge" id="pdBadge">策</span><span id="pdTitle">详情</span></h1>
+        <div class="ap-actions" id="pdActions"></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>详情内容</h2></div>
+        <div class="ap-panel-body" id="pdBody"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'policy-detail', versionLabel:'政策/资料详情', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'policy-detail',label:'政策/资料详情',closable:true}]
+});
+</script>
+<script>
+(function () {
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // 政策文件详情数据（与首页"政策文件"列表对应）
+  var POLICIES = {
+    p1: { title: '中共深圳职业技术大学委员会关于印发《深职大教职工职业发展三年行动计划（2026-2028年）》的通知', pinned: true,
+      meta: [{ label: '发布部门', value: '党委组织部' }, { label: '发布时间', value: '2026-09-12 11:23:08' }, { label: '文号', value: '深职党〔2026〕18号' }, { label: '浏览量', value: '2398' }],
+      body: [
+        '为深入贯彻落实学校人才强校战略，进一步畅通教职工职业发展通道、激发干事创业活力，经党委会审议通过，现将《深职大教职工职业发展三年行动计划（2026-2028年）》印发给你们，请认真贯彻执行。',
+        '本计划聚焦教学能力提升、科研创新支持、职业技能认证、海外研修交流、青年人才培养等五大专项行动，明确了2026至2028年的阶段性目标与配套保障措施。',
+        '各学院、各部门要结合本单位实际，制定具体实施方案，确保各项行动落地见效，并于每年底向党委组织部报送实施情况总结。'
+      ] },
+    p2: { title: '深圳职业技术大学绩效工资核算实施细则（试行）', pinned: false,
+      meta: [{ label: '发布部门', value: '人事处' }, { label: '发布时间', value: '2026-09-12 11:23:08' }, { label: '适用范围', value: '全体在编教职工' }, { label: '浏览量', value: '531' }],
+      body: [
+        '根据学校绩效工资改革总体方案，结合各学院（部门）工作实际，特制定本细则，明确绩效工资的核算口径、分配方式与发放周期。',
+        '绩效工资由基础性绩效与奖励性绩效两部分构成，其中奖励性绩效与教学工作量、科研业绩、社会服务及考核结果挂钩，按学年度统一核算发放。',
+        '本细则自发布之日起试行一年，试行期满后将根据实施效果适时修订完善。'
+      ] },
+    p3: { title: '【劳资福利】教职工带薪休假与考勤管理制度', pinned: false,
+      meta: [{ label: '发布部门', value: '人事处劳资科' }, { label: '发布时间', value: '2026-09-12 11:23:08' }, { label: '适用范围', value: '全体在编教职工' }, { label: '浏览量', value: '64' }],
+      body: [
+        '为规范教职工请假及考勤管理，保障教职工合法休假权益，结合国家有关法律法规及学校实际情况，制定本制度。',
+        '本制度对年休假、病假、事假、婚丧假、产假/陪产假等各类假期的申请条件、审批流程及考勤记录方式作出统一规定，相关申请均需通过"智慧人事一体化服务系统"线上办理。',
+        '本制度自印发之日起施行，原有相关规定与本制度不一致的，以本制度为准。'
+      ] }
+  };
+
+  // 资料下载详情数据（与首页"资料下载"列表对应）
+  var MATERIALS = {
+    d1: { title: '2026年度职称评审申报材料模板.docx', ext: 'DOCX',
+      meta: [{ label: '发布部门', value: '人事处职称科' }, { label: '更新时间', value: '2026-08-20 10:12:09' }, { label: '文件格式', value: 'DOCX' }, { label: '下载量', value: '1206' }],
+      body: [
+        '本模板适用于2026年度职称评审材料填报，包含个人信息表、业绩成果汇总表、同行评议意见表等附件。',
+        '请按要求逐项填写完整信息，并加盖所在学院公章后，于规定时间内通过系统提交至人事处职称科审核。'
+      ] },
+    d2: { title: '教职工因公出国（境）报备材料清单.xlsx', ext: 'XLSX',
+      meta: [{ label: '发布部门', value: '国际合作与交流处' }, { label: '更新时间', value: '2026-07-02 09:05:33' }, { label: '文件格式', value: 'XLSX' }, { label: '下载量', value: '842' }],
+      body: [
+        '本清单列明因公出国（境）报备所需提交的材料目录及格式要求，包含邀请函（及翻译件）、行程安排表、经费来源说明、单位意见等项。',
+        '请按清单逐项准备齐全后，加盖单位意见并通过系统提交报备申请，避免因材料不全导致审批延误或退回。'
+      ] },
+    d3: { title: '新教师入职培训手册.pdf', ext: 'PDF',
+      meta: [{ label: '发布部门', value: '党委教师工作部' }, { label: '更新时间', value: '2026-03-15 14:30:02' }, { label: '文件格式', value: 'PDF' }, { label: '下载量', value: '2031' }],
+      body: [
+        '本手册面向新入职教师，系统介绍学校基本情况、规章制度、教学要求、考核机制及福利待遇等内容，帮助新教师尽快熟悉环境、明确发展路径。',
+        '建议新入职教师在岗前培训期间认真阅读本手册，如有疑问可联系党委教师工作部咨询。'
+      ] }
+  };
+
+  function getQuery(name) {
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+
+  var type = getQuery('type') === 'material' ? 'material' : 'policy';
+  var id = getQuery('id');
+  var dataset = type === 'material' ? MATERIALS : POLICIES;
+  var item = dataset[id];
+
+  var crumbCur = document.getElementById('pdCrumbCur');
+  var badge = document.getElementById('pdBadge');
+  var titleEl = document.getElementById('pdTitle');
+  var actionsEl = document.getElementById('pdActions');
+  var bodyEl = document.getElementById('pdBody');
+
+  crumbCur.textContent = type === 'material' ? '资料详情' : '政策文件详情';
+  badge.textContent = type === 'material' ? '料' : '策';
+
+  if (!item) {
+    titleEl.textContent = '内容不存在或已被删除';
+    bodyEl.innerHTML = '<div class="pd-empty">未找到对应的' + (type === 'material' ? '资料' : '政策文件') + '内容，请返回首页重新查看。</div>';
+  } else {
+    titleEl.innerHTML = escapeHtml(item.title) + (item.pinned ? ' <span class="ap-tag blue" style="margin-left:6px">置顶</span>' : '');
+
+    if (type === 'material') {
+      actionsEl.innerHTML = '<button class="ap-btn primary" type="button">下载文件</button>';
+    }
+
+    var attachHtml = type === 'material'
+      ? '<div class="pd-attach"><span class="ico">' + escapeHtml(item.ext || '文件') + '</span>' +
+          '<div class="info"><h4>' + escapeHtml(item.title) + '</h4><p>点击右上角"下载文件"获取本资料</p></div></div>'
+      : '';
+
+    bodyEl.innerHTML =
+      '<div class="ap-info-grid">' + item.meta.map(function (m) {
+        return '<div class="ap-info-item"><p>' + escapeHtml(m.label) + '</p><h4>' + escapeHtml(m.value) + '</h4></div>';
+      }).join('') + '</div>' +
+      '<div class="pd-body">' + item.body.map(function (p) { return '<p>' + escapeHtml(p) + '</p>'; }).join('') + '</div>' +
+      attachHtml;
+  }
+})();
+</script>
+</body>
+</html>

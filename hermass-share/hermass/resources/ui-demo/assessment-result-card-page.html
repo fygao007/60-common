@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>考核结果查看</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --brand-blue: #1f63f2;
+      --brand-blue-deep: #1557e8;
+      --brand-blue-soft: #eff6ff;
+      --line: #dce3ef;
+      --line-soft: #edf1f6;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      min-height: 100vh;
+      color: var(--text);
+      background: #f5f7fb;
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .page {
+      min-height: 100vh;
+      background: #f5f7fb;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      height: 64px;
+      color: #fff;
+      background: var(--brand-blue);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      width: 254px;
+      padding: 0 24px;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 32px;
+      white-space: nowrap;
+    }
+
+    .top-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      gap: 10px;
+      margin-right: 20px;
+      padding: 0 22px;
+      color: #fff;
+      background: rgba(255, 255, 255, .18);
+      border: 1px solid rgba(255, 255, 255, .32);
+      border-radius: 2px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 26px;
+    }
+
+    .top-button.secondary {
+      min-width: 220px;
+      background: rgba(255, 255, 255, .1);
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .grid-icon {
+      display: grid;
+      grid-template-columns: repeat(2, 7px);
+      grid-template-rows: repeat(2, 7px);
+      gap: 3px;
+      width: 17px;
+      height: 17px;
+    }
+
+    .grid-icon span { background: #fff; }
+
+    .caret {
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 8px solid #fff;
+    }
+
+    .switch-icon {
+      position: relative;
+      width: 18px;
+      height: 18px;
+    }
+
+    .switch-icon::before,
+    .switch-icon::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #fff;
+      border-radius: 999px;
+    }
+
+    .switch-icon::before {
+      top: 4px;
+      box-shadow: 8px -3px 0 -1px #fff;
+    }
+
+    .switch-icon::after {
+      bottom: 4px;
+      box-shadow: -8px 3px 0 -1px #fff;
+    }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 64px);
+    }
+
+    .sidebar {
+      width: 74px;
+      flex: none;
+      padding-top: 64px;
+      background: #fff;
+      box-shadow: inset -1px 0 0 #edf0f5;
+    }
+
+    .side-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      color: #35516f;
+      font-size: 17px;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .side-item.active {
+      color: var(--brand-blue);
+      background: #eaf4ff;
+      box-shadow: inset 3px 0 0 var(--brand-blue);
+    }
+
+    .content-wrap {
+      flex: 1;
+      min-width: 0;
+      padding: 0 0 56px;
+      background: #f5f7fb;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      height: 45px;
+      padding-left: 26px;
+      color: #1f2937;
+      background: #f7f7f8;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .workspace {
+      margin: 0 0 0 26px;
+      min-height: 692px;
+      padding: 26px 30px 48px;
+      background: #fff;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 13px;
+    }
+
+    .page-title {
+      margin: 0;
+      color: #111827;
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 34px;
+      letter-spacing: 0;
+    }
+
+    .batch {
+      display: inline-flex;
+      align-items: center;
+      height: 33px;
+      padding: 0 8px;
+      color: #4b5563;
+      background: #f9fbff;
+      border: 1px solid #9ec5ff;
+      font-size: 16px;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .change-link {
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      height: 42px;
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      min-width: 92px;
+      height: 42px;
+      padding: 0 18px;
+      color: #fff;
+      background: var(--brand-blue);
+      border: 1px solid var(--brand-blue);
+      border-radius: 3px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 40px;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 300px));
+      gap: 20px 20px;
+      max-width: 1260px;
+    }
+
+    .college-card {
+      position: relative;
+      display: flex;
+      min-height: 145px;
+      padding: 23px 20px 52px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+
+    .college-card:hover,
+    .college-card.featured {
+      border-color: #b9cdf4;
+      box-shadow: 0 8px 22px rgba(31, 99, 242, .12);
+      transform: translateY(-1px);
+    }
+
+    .college-card.featured::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: 2;
+      border: 5px solid #ff3333;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .college-name {
+      min-width: 0;
+      margin: 0;
+      color: #4b5563;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 30px;
+      letter-spacing: 0;
+    }
+
+    .view-action {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 40px;
+      padding: 0 10px 0 18px;
+      color: #fff;
+      background: linear-gradient(90deg, #4d7ef6 0%, #356ef4 100%);
+      border: 0;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .college-card:not(.featured) .view-action {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity .16s ease, transform .16s ease;
+    }
+
+    .college-card:not(.featured):hover .view-action {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1280px) {
+      body { min-width: 1024px; }
+      .cards { grid-template-columns: repeat(3, minmax(220px, 300px)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page ds-scope">
+    <header class="topbar">
+      <div class="brand">综合考核管理平台</div>
+      <button class="top-button" type="button">
+        <span class="grid-icon" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        部门考核
+        <span class="caret" aria-hidden="true"></span>
+      </button>
+      <button class="top-button secondary" type="button">
+        考核平台管理员组
+        <span class="switch-icon" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="侧边导航">
+        <div class="side-item">管理</div>
+        <div class="side-item">监控</div>
+        <div class="side-item">开发</div>
+        <div class="side-item">开发</div>
+        <div class="side-item active">监控</div>
+      </aside>
+
+      <main class="content-wrap">
+        <div class="breadcrumb">考核结果查看</div>
+        <section class="workspace" aria-label="考核结果查看">
+          <div class="title-row">
+            <h1 class="page-title">考核结果查看</h1>
+            <span class="batch">科研与社会服务子项考核</span>
+            <a class="change-link" href="#">切换批次</a>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="结果视图">
+            <button class="tab" type="button" role="tab" aria-selected="true">汇总表</button>
+          </div>
+
+          <div class="cards">
+            <article class="college-card featured">
+              <h2 class="college-name">国际经济贸易学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">工商管理学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">人文学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">艺术设计学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">数学技术与工程学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">象山影视学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">会计学院(财富管理学院)</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+            <article class="college-card">
+              <h2 class="college-name">金融与信息学院</h2>
+              <button class="view-action" type="button">结果查看</button>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

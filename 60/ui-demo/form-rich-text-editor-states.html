@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>富文本组件状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/RichTextEditor/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .rich-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: var(--ds-color-white); }
+    .rich-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .rich-content { display: grid; gap: 24px; width: min(1120px, 100%); }
+    .rich-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .rich-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .rich-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .rich-title span { position: relative; z-index: 1; }
+    .rich-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .rich-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .rich-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .rich-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .rich-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .rich-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .rich-card { min-width: 0; padding: 16px; border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .rich-card h3 { margin: 0 0 12px; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .rich-row { display: grid; grid-template-columns: 108px minmax(0, 720px); gap: 16px; align-items: start; padding: 16px; border-top: 1px solid var(--ds-color-border-secondary); }
+    .rich-label { height: 32px; display: flex; align-items: center; justify-content: flex-end; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 20px; text-align: right; }
+    .rich-message { margin-top: 4px; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .rich-message.is-error { color: var(--ds-color-danger); }
+    @media (max-width: 1100px) {
+      .rich-grid { grid-template-columns: 1fr; }
+      .rich-row { grid-template-columns: 1fr; }
+      .rich-label { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="rich-page">
+    <section class="rich-stage">
+      <div class="rich-content">
+        <header class="rich-head">
+          <div>
+            <h1 class="rich-title"><span>富文本组件</span></h1>
+            <p class="rich-desc">基于 MasterGo 富文本设计稿生成 DSRichTextEditor，覆盖工具栏、编辑区、计数、禁用和错误状态。</p>
+          </div>
+        </header>
+
+        <section class="rich-section">
+          <div class="rich-section-head">
+            <h2 class="rich-section-title">基础状态</h2>
+            <span class="rich-section-meta">Default / Filled / Disabled / Error</span>
+          </div>
+          <div class="rich-grid">
+            <article class="rich-card">
+              <h3>默认</h3>
+              <div class="ds-richtext js-richtext" data-max="5000">
+                <div class="ds-richtext__toolbar" role="toolbar" aria-label="富文本工具栏"></div>
+                <div class="ds-richtext__editor" contenteditable="true" data-placeholder="请输入正文内容"></div>
+                <div class="ds-richtext__footer"><span class="ds-richtext__hint">支持基础文字、列表、引用、链接和图片内容</span><span class="ds-richtext__counter">0/5000</span></div>
+              </div>
+            </article>
+            <article class="rich-card">
+              <h3>已输入</h3>
+              <div class="ds-richtext js-richtext" data-max="5000">
+                <div class="ds-richtext__toolbar" role="toolbar" aria-label="富文本工具栏"></div>
+                <div class="ds-richtext__editor" contenteditable="true" data-placeholder="请输入正文内容"><h2>招生材料说明</h2><p>请按要求上传材料，并确认内容准确。</p><ul><li>身份证明</li><li>成绩单</li></ul></div>
+                <div class="ds-richtext__footer"><span class="ds-richtext__hint">支持基础文字、列表、引用、链接和图片内容</span><span class="ds-richtext__counter">0/5000</span></div>
+              </div>
+            </article>
+            <article class="rich-card">
+              <h3>禁用</h3>
+              <div class="ds-richtext js-richtext is-disabled" data-max="5000">
+                <div class="ds-richtext__toolbar" role="toolbar" aria-label="富文本工具栏"></div>
+                <div class="ds-richtext__editor" contenteditable="false" data-placeholder="请输入正文内容"><p>该字段已归档，不可编辑。</p></div>
+                <div class="ds-richtext__footer"><span class="ds-richtext__hint">已禁用，不可编辑</span><span class="ds-richtext__counter">0/5000</span></div>
+              </div>
+            </article>
+            <article class="rich-card">
+              <h3>错误</h3>
+              <div class="ds-richtext js-richtext is-error" data-max="5000">
+                <div class="ds-richtext__toolbar" role="toolbar" aria-label="富文本工具栏"></div>
+                <div class="ds-richtext__editor" contenteditable="true" data-placeholder="请输入正文内容"></div>
+                <div class="ds-richtext__footer"><span class="ds-richtext__hint">支持基础文字、列表、引用、链接和图片内容</span><span class="ds-richtext__counter">0/5000</span></div>
+              </div>
+              <p class="rich-message is-error">正文内容不能为空。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="rich-section">
+          <div class="rich-section-head">
+            <h2 class="rich-section-title">表单行示例</h2>
+            <span class="rich-section-meta">Form Field</span>
+          </div>
+          <div class="rich-row">
+            <span class="rich-label">正文内容</span>
+            <div>
+              <div class="ds-richtext js-richtext" data-max="5000">
+                <div class="ds-richtext__toolbar" role="toolbar" aria-label="富文本工具栏"></div>
+                <div class="ds-richtext__editor" contenteditable="true" data-placeholder="请输入正文内容"><p>用于演示组件库里的富文本编辑区域和常见工具栏。</p></div>
+                <div class="ds-richtext__footer"><span class="ds-richtext__hint">支持基础文字、列表、引用、链接和图片内容</span><span class="ds-richtext__counter">0/5000</span></div>
+              </div>
+              <p class="rich-message">工具栏按钮可直接作用于当前编辑区。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const richTextTools = [
+    ['undo', 'arrow-go-back-line', '撤销', 'undo'],
+    ['redo', 'arrow-go-forward-line', '重做', 'redo'],
+    ['heading1', 'heading-1', '一级标题', 'formatBlock', 'h1'],
+    ['heading2', 'heading-2', '二级标题', 'formatBlock', 'h2'],
+    ['bold', 'bold', '加粗', 'bold'],
+    ['italic', 'italic', '斜体', 'italic'],
+    ['underline', 'underline', '下划线', 'underline'],
+    ['strike', 'strikethrough', '删除线', 'strikeThrough'],
+    ['ordered', 'list-ordered', '有序列表', 'insertOrderedList'],
+    ['unordered', 'list-unordered', '无序列表', 'insertUnorderedList'],
+    ['quote', 'double-quotes-r', '引用', 'formatBlock', 'blockquote'],
+    ['code', 'code-s-slash-line', '代码', 'formatBlock', 'pre'],
+    ['link', 'link-s', '链接', 'createLink', '#'],
+    ['image', 'image-2-line', '图片', 'insertImage', '']
+  ];
+
+  function updateRichTextCounter(root) {
+    const editor = root.querySelector('.ds-richtext__editor');
+    const counter = root.querySelector('.ds-richtext__counter');
+    const max = root.dataset.max || '5000';
+    counter.textContent = `${editor.textContent.trim().length}/${max}`;
+  }
+
+  function initRichText(root) {
+    const toolbar = root.querySelector('.ds-richtext__toolbar');
+    const editor = root.querySelector('.ds-richtext__editor');
+    richTextTools.forEach(([key, icon, label, command, value]) => {
+      const button = document.createElement('button');
+      button.className = 'ds-richtext__tool';
+      button.type = 'button';
+      button.title = label;
+      button.setAttribute('aria-label', label);
+      button.dataset.icon = icon;
+      button.disabled = root.classList.contains('is-disabled');
+      button.addEventListener('click', () => {
+        if (root.classList.contains('is-disabled')) return;
+        editor.focus();
+        document.execCommand(command, false, value);
+        updateRichTextCounter(root);
+      });
+      toolbar.appendChild(button);
+    });
+    editor.addEventListener('input', () => updateRichTextCounter(root));
+    updateRichTextCounter(root);
+  }
+
+  document.querySelectorAll('.js-richtext').forEach(initRichText);
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

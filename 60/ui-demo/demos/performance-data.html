@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>业绩数据登记 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">业绩数据登记</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">绩</span>业绩数据登记</h1>
+        <div class="ap-actions"><button class="ap-btn primary" type="button">+ 新增业绩条目</button></div>
+      </div>
+
+      <div class="ap-stat-row">
+        <div class="ap-stat"><p>本年度已登记条目</p><h3>9 <small>条</small></h3></div>
+        <div class="ap-stat accent"><p>待审核</p><h3>2 <small>条</small></h3></div>
+        <div class="ap-stat"><p>已通过</p><h3>6 <small>条</small></h3></div>
+        <div class="ap-stat"><p>退回需修改</p><h3>1 <small>条</small></h3></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>新增业绩条目</h2></div>
+        <div class="ap-panel-body">
+          <div class="ap-form-grid">
+            <div class="ap-field"><label><span class="req">*</span>业绩类别</label><select><option>教学成果</option><option>科研项目</option><option>论文/专利/著作</option><option>竞赛指导/获奖</option><option>社会服务/横向课题</option></select></div>
+            <div class="ap-field"><label><span class="req">*</span>完成时间</label><input type="text" placeholder="2026-05" /></div>
+            <div class="ap-field full"><label><span class="req">*</span>业绩名称</label><input type="text" placeholder="如：《智能产线协同控制关键技术研究》获市级科技进步奖二等奖" /></div>
+            <div class="ap-field"><label>本人排名/角色</label><input type="text" placeholder="如：第一完成人、项目负责人" /></div>
+            <div class="ap-field"><label>认定级别</label><select><option>国家级</option><option>省部级</option><option>市级</option><option>校级</option></select></div>
+            <div class="ap-field full"><label>佐证材料</label>
+              <span class="ap-upload">⬆ 上传证书、立项通知、刊物封面及目录等扫描件</span>
+            </div>
+          </div>
+          <div class="ap-form-actions">
+            <button class="ap-btn" type="button">存为草稿</button>
+            <button class="ap-btn primary" type="button">提交登记</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>已登记业绩列表</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>业绩类别</th><th>业绩名称</th><th>完成时间</th><th>认定级别</th><th>审核状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>科研项目</td><td>智能产线协同控制关键技术研究（市级科技进步奖二等奖）</td><td>2026-03</td><td>市级</td><td><span class="ap-tag green">已通过</span></td><td class="link">查看</td></tr>
+              <tr><td>竞赛指导/获奖</td><td>指导学生获全国职业院校技能大赛二等奖</td><td>2025-11</td><td>国家级</td><td><span class="ap-tag green">已通过</span></td><td class="link">查看</td></tr>
+              <tr><td>论文/专利/著作</td><td>一种智能装备远程运维方法（发明专利）</td><td>2025-09</td><td>—</td><td><span class="ap-tag blue">审核中</span></td><td class="link">查看</td></tr>
+              <tr><td>教学成果</td><td>《机电一体化技术》课程获评校级精品在线课程</td><td>2025-06</td><td>校级</td><td><span class="ap-tag orange">已退回</span></td><td class="link">修改重提</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'performance-data', versionLabel:'业绩数据登记', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'performance-data',label:'业绩数据登记',closable:true}]
+});
+</script>
+</body>
+</html>

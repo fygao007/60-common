@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>弹窗组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Modal/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+    }
+
+    button { font: inherit; }
+    [hidden] { display: none !important; }
+
+    .modal-page {
+      width: min(1180px, 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .page-head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 24px;
+      line-height: 34px;
+    }
+
+    .page-head p {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .demo-section {
+      margin-top: 16px;
+      padding: 20px;
+      background: var(--ds-color-bg-container);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+    }
+
+    .demo-section h2 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .section-desc {
+      margin: 6px 0 16px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .trigger-grid,
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .trigger-card,
+    .rule-card {
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+    }
+
+    .trigger-card h3,
+    .rule-card strong {
+      display: block;
+      margin: 0 0 4px;
+      color: var(--ds-color-text-heading);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .trigger-card p,
+    .rule-card span {
+      display: block;
+      min-height: 40px;
+      margin: 0 0 16px;
+      color: var(--ds-color-text-secondary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .rule-card span {
+      min-height: 0;
+      margin: 0;
+    }
+
+    .size-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+    }
+
+    .size-table th,
+    .size-table td {
+      padding: 11px 16px;
+      border-right: 1px solid var(--ds-color-border-secondary);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+      font-size: 13px;
+      line-height: 20px;
+      text-align: left;
+    }
+
+    .size-table th {
+      color: var(--ds-color-text-secondary);
+      background: #fafafa;
+      font-weight: 500;
+    }
+
+    .size-table th:last-child,
+    .size-table td:last-child { border-right: 0; }
+    .size-table tr:last-child td { border-bottom: 0; }
+
+    .ds-modal-preview[hidden] { display: none; }
+
+    .config-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .config-notice {
+      display: flex;
+      min-height: 40px;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      color: #333fff;
+      background: #ebecff;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .config-notice img {
+      width: 20px;
+      height: 20px;
+      flex: none;
+    }
+
+    .config-notice span { color: var(--ds-color-text); }
+    .config-notice strong { color: var(--ds-color-primary); }
+
+    .config-notice + .config-tip { margin-top: -8px; }
+
+    .config-tip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      padding: 12px 16px;
+      color: var(--ds-color-text-secondary);
+      background: #fafafa;
+      border-radius: 4px;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .config-tip span {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .config-tip span::before {
+      width: 5px;
+      height: 5px;
+      margin-top: 8px;
+      flex: none;
+      background: #9697a3;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .config-form,
+    .long-form {
+      display: grid;
+      gap: 20px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1fr);
+      align-items: center;
+      gap: 16px;
+    }
+
+    .field-row label {
+      color: var(--ds-color-text-secondary);
+      font-size: 14px;
+      line-height: 20px;
+      text-align: right;
+    }
+
+    .mock-select,
+    .mock-input {
+      display: flex;
+      width: 100%;
+      min-width: 0;
+      height: 32px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      color: var(--ds-color-text-tertiary);
+      background: #fff;
+      border: 1px solid var(--ds-color-border);
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: left;
+    }
+
+    .mock-select:hover,
+    .mock-input:hover { border-color: var(--ds-color-border-hover); }
+
+    .mock-select:focus-visible,
+    .mock-input:focus-visible {
+      border-color: var(--ds-color-primary);
+      box-shadow: 0 0 0 2px var(--ds-color-focus-ring-strong);
+      outline: 0;
+    }
+
+    .mock-select img {
+      width: 14px;
+      height: 14px;
+    }
+
+    .confirm-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 4px 0 16px;
+    }
+
+    .confirm-icon {
+      display: inline-grid;
+      width: 24px;
+      height: 24px;
+      flex: none;
+      place-items: center;
+      color: #faad14;
+      background: #fff5cc;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .confirm-content h4 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .confirm-content p {
+      margin: 4px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .long-form {
+      padding-bottom: 4px;
+    }
+
+    .ds-modal__close img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .ds-modal__body {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .ds-modal__footer .ds-button { min-width: 60px; }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      z-index: calc(var(--ds-z-modal) + 1);
+      min-width: 220px;
+      padding: 10px 16px;
+      color: #168a66;
+      background: #f0fff8;
+      border: 1px solid #b7ebd0;
+      border-radius: 6px;
+      box-shadow: var(--ds-shadow-md);
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+      transform: translateX(-50%);
+    }
+
+    @media (max-width: 760px) {
+      .modal-page { padding: 12px; }
+      .trigger-grid,
+      .rule-grid { grid-template-columns: 1fr; }
+      .size-table { display: block; overflow-x: auto; }
+      .field-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .field-row label { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="modal-page ds-scope">
+    <header class="page-head">
+      <h1>弹窗组件</h1>
+      <p>DSModal：统一配置、确认和编辑表单弹窗的尺寸、结构、关闭约束、焦点管理与提交状态。</p>
+    </header>
+
+    <section class="demo-section">
+      <h2>交互示例</h2>
+      <p class="section-desc">三个入口分别覆盖 MasterGo 集中配置稿、小型确认框和正文滚动。打开后可测试遮罩、Escape 和 Tab 焦点循环。</p>
+      <div class="trigger-grid">
+        <article class="trigger-card">
+          <h3>集中配置弹窗</h3>
+          <p>中型 600px，内容自适应高度；结构与本次 MasterGo 规范一致。</p>
+          <button class="ds-button ds-button--primary ds-button--default-size" type="button" data-open-modal="config">打开示例</button>
+        </article>
+        <article class="trigger-card">
+          <h3>操作确认弹窗</h3>
+          <p>小型 480px，危险操作期间禁止遮罩和 Escape 误关闭。</p>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button" data-open-modal="confirm">打开示例</button>
+        </article>
+        <article class="trigger-card">
+          <h3>长表单弹窗</h3>
+          <p>中型 600px、固定最大高度；标题和底栏固定，仅正文滚动。</p>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button" data-open-modal="long">打开示例</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="demo-section">
+      <h2>尺寸规则</h2>
+      <p class="section-desc">宽度使用预设，高度由内容决定；只有需要固定工作区的长表单才显式传入高度。</p>
+      <table class="size-table">
+        <thead><tr><th>规格</th><th>宽度</th><th>适用场景</th><th>高度规则</th></tr></thead>
+        <tbody>
+          <tr><td>small</td><td>480px</td><td>确认、警告、短反馈</td><td>内容自适应</td></tr>
+          <tr><td>medium</td><td>600px</td><td>默认配置、短表单</td><td>内容自适应；本稿示例 484px</td></tr>
+          <tr><td>large</td><td>800px</td><td>复杂表单、表格或对照内容</td><td>最大高度为视口减 48px</td></tr>
+          <tr><td>wide</td><td>900px</td><td>双列短表单</td><td>编辑模板示例 480px，窄屏自动单列</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="demo-section">
+      <h2>交互规则</h2>
+      <p class="section-desc">以下规则已固化到 DSModal，而不是交给每个业务页面重复实现。</p>
+      <div class="rule-grid">
+        <article class="rule-card"><strong>关闭</strong><span>关闭图标、取消、遮罩和 Escape 统一触发 onCancel；提交中全部锁定。</span></article>
+        <article class="rule-card"><strong>焦点</strong><span>打开后焦点进入弹窗，Tab 在弹窗内循环，关闭后返回原触发按钮。</span></article>
+        <article class="rule-card"><strong>滚动</strong><span>弹窗打开时锁定页面滚动；超高内容只滚动正文，标题和底栏保持可见。</span></article>
+      </div>
+    </section>
+  </main>
+
+  <div class="ds-modal__overlay ds-modal-preview" id="modalOverlay" role="presentation" hidden>
+    <section
+      class="ds-modal ds-modal--medium"
+      id="demoModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="demoModalTitle"
+      tabindex="-1"
+    >
+      <header class="ds-modal__header">
+        <div class="ds-modal__heading"><h3 id="demoModalTitle">批量配置</h3></div>
+        <button class="ds-modal__close" id="closeModal" type="button" aria-label="关闭弹窗">
+          <img src="../assets/modal-icons/close.svg" alt="" />
+        </button>
+      </header>
+      <div class="ds-modal__body" id="modalBody"></div>
+      <footer class="ds-modal__footer">
+        <button class="ds-button ds-button--default ds-button--default-size" id="cancelModal" type="button">取消</button>
+        <button class="ds-button ds-button--primary ds-button--default-size" id="submitModal" type="button">确定</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden>配置已保存</div>
+
+  <template id="configTemplate">
+    <div class="config-stack">
+      <div class="config-notice"><img src="../assets/modal-icons/info.svg" alt="" /><span>已选数据【JAVA基础入门、基础入门、JAVA基础入门、...】共 <strong>50</strong> 条</span></div>
+      <div class="config-tip">
+        <span>填写需要设置学期的校区</span>
+        <span>未填写校区的学期不进行更新</span>
+      </div>
+      <div class="config-form">
+        <div class="field-row"><label>第一学期</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+        <div class="field-row"><label>第二学期</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+        <div class="field-row"><label>第三学期</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+        <div class="field-row"><label>第四学期</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+        <div class="field-row"><label>第五学期</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      </div>
+    </div>
+  </template>
+
+  <template id="confirmTemplate">
+    <div class="confirm-content">
+      <span class="confirm-icon" aria-hidden="true">!</span>
+      <div>
+        <h4>确定停用所选配置吗？</h4>
+        <p>停用后相关业务将无法继续使用该配置，但历史数据不会被删除。</p>
+      </div>
+    </div>
+  </template>
+
+  <template id="longTemplate">
+    <div class="long-form">
+      <div class="field-row"><label>方案名称</label><input class="mock-input" value="2026 年度教学评价方案" /></div>
+      <div class="field-row"><label>业务类型</label><button class="mock-select" type="button"><span>教学评价</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      <div class="field-row"><label>适用单位</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      <div class="field-row"><label>开始日期</label><input class="mock-input" value="2026-06-15" /></div>
+      <div class="field-row"><label>结束日期</label><input class="mock-input" value="2026-06-30" /></div>
+      <div class="field-row"><label>评价对象</label><button class="mock-select" type="button"><span>专任教师</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      <div class="field-row"><label>评价方式</label><button class="mock-select" type="button"><span>线上评价</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      <div class="field-row"><label>结果公开</label><button class="mock-select" type="button"><span>仅本人可见</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      <div class="field-row"><label>通知方式</label><button class="mock-select" type="button"><span>站内信、短信</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+      <div class="field-row"><label>归档目录</label><button class="mock-select" type="button"><span>请选择</span><img src="../assets/modal-icons/chevron-down.svg" alt="" /></button></div>
+    </div>
+  </template>
+
+  <script>
+    const overlay = document.getElementById('modalOverlay');
+    const modal = document.getElementById('demoModal');
+    const title = document.getElementById('demoModalTitle');
+    const body = document.getElementById('modalBody');
+    const closeButton = document.getElementById('closeModal');
+    const cancelButton = document.getElementById('cancelModal');
+    const submitButton = document.getElementById('submitModal');
+    const toast = document.getElementById('toast');
+    let activeMode = 'config';
+    let lastFocused = null;
+    let loading = false;
+
+    const modeConfig = {
+      config: { title: '批量设置校区', template: 'configTemplate', width: 600, height: 484, okText: '确定', danger: false, maskClosable: true },
+      confirm: { title: '停用确认', template: 'confirmTemplate', width: 480, height: '', okText: '停用', danger: true, maskClosable: false },
+      long: { title: '编辑评价方案', template: 'longTemplate', width: 600, height: 560, okText: '保存', danger: false, maskClosable: true }
+    };
+
+    function focusableElements() {
+      return [...modal.querySelectorAll('button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+        .filter((element) => element.offsetParent !== null);
+    }
+
+    function openModal(mode) {
+      const config = modeConfig[mode];
+      activeMode = mode;
+      lastFocused = document.activeElement;
+      title.textContent = config.title;
+      body.replaceChildren(document.getElementById(config.template).content.cloneNode(true));
+      modal.style.width = `${config.width}px`;
+      modal.style.height = config.height ? `${config.height}px` : '';
+      modal.className = `ds-modal ds-modal--${config.width === 480 ? 'small' : 'medium'}`;
+      submitButton.textContent = config.okText;
+      submitButton.classList.toggle('ds-button--danger', config.danger);
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => (focusableElements()[0] || modal).focus());
+    }
+
+    function closeModal() {
+      if (loading) return;
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+    }
+
+    function setLoading(value) {
+      loading = value;
+      closeButton.disabled = value;
+      cancelButton.disabled = value;
+      submitButton.disabled = value;
+      submitButton.classList.toggle('ds-button--loading', value);
+      submitButton.innerHTML = value
+        ? '<span class="ds-button__spinner" aria-hidden="true"></span><span class="ds-button__label">提交中</span>'
+        : modeConfig[activeMode].okText;
+    }
+
+    document.querySelectorAll('[data-open-modal]').forEach((button) => {
+      button.addEventListener('click', () => openModal(button.dataset.openModal));
+    });
+
+    closeButton.addEventListener('click', closeModal);
+    cancelButton.addEventListener('click', closeModal);
+    overlay.addEventListener('mousedown', (event) => {
+      if (event.target === overlay && modeConfig[activeMode].maskClosable) closeModal();
+    });
+
+    submitButton.addEventListener('click', () => {
+      setLoading(true);
+      window.setTimeout(() => {
+        setLoading(false);
+        closeModal();
+        toast.textContent = activeMode === 'confirm' ? '配置已停用' : '配置已保存';
+        toast.hidden = false;
+        window.setTimeout(() => { toast.hidden = true; }, 1800);
+      }, 800);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (overlay.hidden) return;
+      if (event.key === 'Escape' && modeConfig[activeMode].maskClosable && !loading) {
+        event.preventDefault();
+        closeModal();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const elements = focusableElements();
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (!first) {
+        event.preventDefault();
+        modal.focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  </script>
+</body>
+</html>

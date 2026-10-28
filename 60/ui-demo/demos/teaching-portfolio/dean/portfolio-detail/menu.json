@@ -1,0 +1,33 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "dean",
+    "label": "二级学院"
+  },
+  "menu": {
+    "key": "portfolio-detail",
+    "label": "教师档案袋详情",
+    "group": "教学档案管理",
+    "defaultFeature": "portfolio-detail"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-dean-portfolio-detail",
+      "label": "教师档案袋详情（二级学院）",
+      "type": "react-business-page",
+      "html": "portfolio-detail.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../l-dash/l-dash.html",
+          "../p-board/p-board.html"
+        ]
+      }
+    }
+  ]
+}

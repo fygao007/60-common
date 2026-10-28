@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智慧人事 · 招聘经办作战室 · 2026 春招</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShellV2/app-shell-v2.css" />
+  <style>
+    body { margin: 0; }
+
+    .hr-home-frame {
+      --hr-blue: #2457d6;
+      --hr-blue-dark: #173b9b;
+      --hr-cyan: #168fb3;
+      --hr-green: #168a5b;
+      --hr-amber: #b96716;
+      --hr-red: #c73a32;
+      --hr-purple: #7157c8;
+      --hr-ink: #172033;
+      --hr-text: #4b5565;
+      --hr-muted: #7a8496;
+      --hr-line: #e5eaf2;
+      --hr-card: #fff;
+      --hr-page: #f4f7fb;
+    }
+
+    .hr-home-frame .frame2-content-shell,
+    .hr-home-frame .frame2-content { min-height: 0; background: var(--hr-page); }
+    .hr-home-frame .frame2-content { padding: 0; overflow: hidden; }
+
+    .hr-home {
+      height: 100%;
+      overflow: auto;
+      overflow-x: hidden;
+      color: var(--hr-ink);
+      background: linear-gradient(180deg, rgba(36, 87, 214, .06) 0, rgba(244, 247, 251, 0) 220px), var(--hr-page);
+    }
+
+    .hr-home button, .hr-home input { font: inherit; }
+
+    .hr-wrap {
+      width: min(1480px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 16px 0 24px;
+    }
+
+    /* ===== Hero（紧凑、信息密度高） ===== */
+    .hero-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(360px, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .hero-greet {
+      padding: 16px 18px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--hr-blue-dark) 0%, var(--hr-blue) 100%);
+      border-radius: 8px;
+    }
+
+    .hero-greet .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .hero-greet h1 {
+      margin: 10px 0 4px;
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    .hero-greet p {
+      margin: 0;
+      color: rgba(255,255,255,.84);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .hero-stats div {
+      padding: 8px 10px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 7px;
+    }
+
+    .hero-stats strong { display: block; color: #fff; font-size: 18px; line-height: 22px; }
+    .hero-stats span { display: block; margin-top: 1px; color: rgba(255,255,255,.78); font-size: 12px; line-height: 18px; }
+
+    /* 业务期倒计时 */
+    .countdown-box {
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .countdown-box h2 {
+      margin: 0 0 4px;
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    .countdown-box > p {
+      margin: 0 0 12px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .countdown-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .countdown-item {
+      padding: 9px 10px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-left: 3px solid var(--hr-blue);
+      border-radius: 6px;
+    }
+
+    .countdown-item.urgent { border-left-color: var(--hr-red); background: #fff5f4; }
+    .countdown-item.warn { border-left-color: var(--hr-amber); background: #fff8f0; }
+    .countdown-item.done { border-left-color: var(--hr-green); background: #f1f9f4; }
+
+    .countdown-item label {
+      display: block;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .countdown-item strong {
+      display: inline-block;
+      margin-top: 2px;
+      color: var(--hr-ink);
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .countdown-item strong em {
+      margin-left: 2px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .countdown-item.urgent strong { color: var(--hr-red); }
+    .countdown-item.warn strong { color: var(--hr-amber); }
+    .countdown-item.done strong { color: var(--hr-green); }
+
+    .countdown-item span {
+      display: block;
+      margin-top: 2px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    /* ===== Panel ===== */
+    .panel {
+      margin-bottom: 14px;
+      background: #fff;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px 6px;
+    }
+
+    .panel-title h2 { margin: 0; font-size: 16px; line-height: 24px; }
+    .panel-title p { margin: 2px 0 0; color: var(--hr-muted); font-size: 12px; line-height: 18px; }
+    .panel-body { padding: 0 16px 16px; }
+    .panel-head-actions { display: inline-flex; gap: 8px; flex: none; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 30px;
+      padding: 0 12px;
+      color: var(--hr-blue-dark);
+      background: #fff;
+      border: 1px solid #cfd9e8;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .btn.primary { color: #fff; background: var(--hr-blue); border-color: var(--hr-blue); }
+    .btn.danger { color: var(--hr-red); border-color: #f1cfca; background: #fff5f4; }
+    .btn.sm { height: 26px; min-width: 56px; padding: 0 10px; font-size: 12px; }
+
+    /* ===== 我的待办（作战表） ===== */
+    .todo-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px 12px;
+      border-bottom: 1px dashed var(--hr-line);
+    }
+
+    .todo-tab {
+      height: 26px;
+      padding: 0 10px;
+      color: #536171;
+      background: #f4f7fa;
+      border: 1px solid #e2e8ee;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .todo-tab.active {
+      color: #fff;
+      background: var(--hr-blue);
+      border-color: var(--hr-blue);
+    }
+
+    .todo-tab b {
+      margin-left: 4px;
+      padding: 0 6px;
+      color: var(--hr-blue-dark);
+      background: #eaf2ff;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .todo-tab.active b { color: var(--hr-blue); background: #fff; }
+
+    .todo-filter {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .todo-search {
+      display: inline-flex;
+      align-items: center;
+      width: 240px;
+      height: 28px;
+      padding: 0 8px;
+      background: #f4f7fa;
+      border: 1px solid #e2e8ee;
+      border-radius: 6px;
+    }
+
+    .todo-search input {
+      flex: 1;
+      min-width: 0;
+      height: 26px;
+      padding: 0 4px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-size: 12px;
+    }
+
+    .todo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .todo-row {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1.8fr) minmax(110px, .7fr) minmax(120px, .6fr) minmax(170px, auto);
+      align-items: center;
+      gap: 12px;
+      padding: 10px 4px;
+      border-bottom: 1px solid var(--hr-line);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .todo-row:last-child { border-bottom: 0; }
+
+    .todo-check {
+      width: 16px;
+      height: 16px;
+      margin: 0 auto;
+      border: 1.5px solid #cfd9e8;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .todo-main h3 { margin: 0; font-size: 14px; line-height: 20px; }
+    .todo-main .sub { margin-top: 2px; color: var(--hr-muted); font-size: 12px; line-height: 18px; }
+    .todo-main .sub b { color: var(--hr-text); font-weight: 600; }
+
+    .todo-due {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--hr-text);
+      font-size: 12px;
+      line-height: 18px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .todo-due .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--hr-blue);
+      flex: none;
+    }
+    .todo-due.red { color: var(--hr-red); }
+    .todo-due.red .dot { background: var(--hr-red); }
+    .todo-due.orange { color: var(--hr-amber); }
+    .todo-due.orange .dot { background: var(--hr-amber); }
+
+    .pill {
+      align-self: start;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+
+    .pill.red { color: var(--hr-red); background: #fff0ee; }
+    .pill.orange { color: var(--hr-amber); background: #fff3e6; }
+    .pill.blue { color: var(--hr-blue-dark); background: #eaf2ff; }
+    .pill.green { color: var(--hr-green); background: #eaf7f0; }
+    .pill.purple { color: var(--hr-purple); background: #f1efff; }
+    .pill.cyan { color: var(--hr-cyan); background: #e6f5fa; }
+    .pill.grey { color: var(--hr-text); background: #eef1f6; }
+
+    .todo-actions { display: inline-flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+
+    /* ===== 快捷入口 ===== */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .quick {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 78px;
+      padding: 10px;
+      color: var(--hr-ink);
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .quick:hover { background: #eef3ff; border-color: #cdd9f5; }
+
+    .quick .ico {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      color: var(--hr-blue);
+      background: #eaf2ff;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .quick .ico.amber { color: var(--hr-amber); background: #fff3e6; }
+    .quick .ico.green { color: var(--hr-green); background: #eaf7f0; }
+    .quick .ico.purple { color: var(--hr-purple); background: #f1efff; }
+
+    .quick .badge {
+      margin-top: 2px;
+      padding: 0 6px;
+      color: var(--hr-red);
+      background: #fff0ee;
+      border-radius: 999px;
+      font-size: 11px;
+      line-height: 16px;
+    }
+
+    /* ===== 两栏：经手批次 + 等我/我等 ===== */
+    .col-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .batch-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .batch-card {
+      padding: 12px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .batch-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .batch-head h3 { margin: 0; font-size: 14px; line-height: 20px; }
+    .batch-meta { color: var(--hr-muted); font-size: 12px; line-height: 18px; }
+
+    .batch-progress {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0 6px;
+    }
+
+    .batch-bar {
+      height: 6px;
+      overflow: hidden;
+      background: #e8edf4;
+      border-radius: 999px;
+    }
+
+    .batch-bar i {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--hr-blue), var(--hr-cyan));
+    }
+
+    .batch-bar.warn i { background: linear-gradient(90deg, var(--hr-amber), #e7a651); }
+
+    .batch-progress span {
+      color: var(--hr-text);
+      font-size: 12px;
+      line-height: 18px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .batch-stage {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .batch-stage .my {
+      color: var(--hr-text);
+    }
+
+    .batch-stage .my b { color: var(--hr-ink); font-weight: 600; }
+    .batch-stage .my em { color: var(--hr-blue-dark); font-style: normal; font-weight: 600; }
+
+    /* 等我 / 我等 标签页 */
+    .wait-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .wait-tab {
+      height: 28px;
+      padding: 0 12px;
+      color: #536171;
+      background: #f4f7fa;
+      border: 1px solid #e2e8ee;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .wait-tab.active {
+      color: #fff;
+      background: var(--hr-blue);
+      border-color: var(--hr-blue);
+    }
+
+    .wait-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .wait-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px 10px;
+      padding: 10px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .wait-row h3 { margin: 0; font-size: 13px; line-height: 20px; }
+    .wait-row p { margin: 2px 0 0; color: var(--hr-muted); font-size: 12px; line-height: 18px; }
+
+    .wait-row .meta {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+      color: var(--hr-text);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .wait-row .meta b { color: var(--hr-blue-dark); font-weight: 600; }
+    .wait-row .meta .sep { color: var(--hr-muted); }
+
+    /* ===== 模板 / AI ===== */
+    .tools-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .tool-card { padding: 14px; background: #fff; border: 1px solid var(--hr-line); border-radius: 8px; }
+
+    .tool-card h2 { margin: 0 0 4px; font-size: 15px; line-height: 22px; }
+    .tool-card > p { margin: 0 0 12px; color: var(--hr-muted); font-size: 12px; line-height: 18px; }
+
+    .template-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .template-item {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 6px;
+    }
+
+    .template-item .ico {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      color: #fff;
+      background: var(--hr-blue);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .template-item h3 { margin: 0; font-size: 13px; line-height: 20px; }
+    .template-item p { margin: 0; color: var(--hr-muted); font-size: 12px; line-height: 18px; }
+
+    .ai-box {
+      background: linear-gradient(135deg, #effaf5 0%, #e6f5fa 100%);
+      border-color: #cfeadd;
+    }
+
+    .ai-box h2 { color: #123f47; }
+    .ai-box > p { color: #42606a; }
+
+    .ai-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px;
+      background: #fff;
+      border: 1px solid #c8ded5;
+      border-radius: 7px;
+    }
+
+    .ai-input input {
+      flex: 1;
+      min-width: 0;
+      height: 30px;
+      padding: 0 8px;
+      border: 0;
+      outline: 0;
+    }
+
+    .ai-quick {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .ai-quick button {
+      height: 26px;
+      padding: 0 10px;
+      color: #164650;
+      background: #fff;
+      border: 1px solid #c8ded5;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .footer {
+      margin-top: 14px;
+      padding: 4px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+      text-align: center;
+    }
+
+    @media (max-width: 1320px) {
+      .quick-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .col-2 { grid-template-columns: 1fr; }
+      .todo-row { grid-template-columns: 24px minmax(0, 1.6fr) minmax(100px, .6fr) minmax(100px, .6fr); }
+      .todo-actions { grid-column: 1 / -1; justify-content: flex-start; }
+    }
+
+    @media (max-width: 980px) {
+      .hero-bar { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .countdown-list { grid-template-columns: 1fr; }
+      .tools-row { grid-template-columns: 1fr; }
+      .template-list { grid-template-columns: 1fr; }
+      .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .todo-row {
+        grid-template-columns: 24px minmax(0, 1fr) auto;
+        row-gap: 6px;
+      }
+      .todo-due { grid-column: 2; }
+      .todo-row .pill { grid-column: 3; }
+      .todo-actions { grid-column: 1 / -1; }
+      .todo-toolbar { flex-wrap: wrap; }
+      .todo-search { width: 100%; order: 99; }
+    }
+
+    @media (max-width: 680px) {
+      .hr-wrap { width: calc(100% - 20px); }
+      .hero-stats { grid-template-columns: 1fr; }
+      .quick-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage hr-home-frame ds-scope">
+  <main class="hr-home">
+    <div class="hr-wrap">
+
+      <!-- ============ Hero ============ -->
+      <section class="hero-bar" aria-label="经办员工作台头图">
+        <div class="hero-greet">
+          <span class="eyebrow">2026 春招 · 我的作战室 · 今日 03-07 周五</span>
+          <h1>王老师，下午好。今天你有 18 件事要办，最紧 3 件已置顶。</h1>
+          <p>今日新进 12 · 已办 7 · 本周累计经手 64 · 平均处理时长 1.8 小时</p>
+          <div class="hero-stats">
+            <div><strong>18</strong><span>我的待办</span></div>
+            <div><strong>9</strong><span>等我反馈</span></div>
+            <div><strong>6</strong><span>我等他人</span></div>
+          </div>
+        </div>
+
+        <div class="countdown-box" aria-label="业务期倒计时">
+          <h2>春招业务期 · 关键节点倒计时</h2>
+          <p>红色表示已临门，决定今天你最先做什么。</p>
+          <div class="countdown-list">
+            <div class="countdown-item urgent">
+              <label>报名截止</label>
+              <strong>3<em>天</em></strong>
+              <span>03-10 24:00 后系统自动关闭</span>
+            </div>
+            <div class="countdown-item warn">
+              <label>资格初审截止</label>
+              <strong>9<em>天</em></strong>
+              <span>积压 23 份 · 影响笔试启动</span>
+            </div>
+            <div class="countdown-item">
+              <label>笔试开考</label>
+              <strong>21<em>天</em></strong>
+              <span>03-28 · 待出考场与监考</span>
+            </div>
+            <div class="countdown-item">
+              <label>面试组织</label>
+              <strong>32<em>天</em></strong>
+              <span>04-08 · 待抽专家 18 场</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 我的待办（作战表） ============ -->
+      <section class="panel" aria-label="我的待办">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2>我的待办 · 按紧急度自动排序</h2>
+            <p>每条带来源批次、截止时间和一键动作。点完即灭。</p>
+          </div>
+          <div class="panel-head-actions">
+            <button class="btn" type="button">仅看今日</button>
+            <button class="btn primary" type="button">批量办理</button>
+          </div>
+        </div>
+
+        <div class="todo-toolbar">
+          <button class="todo-tab active" type="button">全部 <b>18</b></button>
+          <button class="todo-tab" type="button">资格审核 <b>9</b></button>
+          <button class="todo-tab" type="button">专家抽取 <b>3</b></button>
+          <button class="todo-tab" type="button">材料补正 <b>4</b></button>
+          <button class="todo-tab" type="button">报到衔接 <b>2</b></button>
+          <div class="todo-filter">
+            <span class="todo-search">
+              <input placeholder="搜候选人 / 岗位 / 批次" />
+            </span>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="todo-list">
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>2026 春招（教学岗）· 资格初审积压 23 份</h3>
+                <div class="sub">来源批次：<b>2026 春招公开招聘 · 教学岗</b> · AI 已按疑点分三类</div>
+              </div>
+              <div class="todo-due red"><span class="dot"></span>剩 1 天 · 03-08 18:00</div>
+              <span class="pill red">最高优先</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">进入审核</button>
+                <button class="btn sm" type="button">分派</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>面试专家抽取 · 智能制造学院 6 场</h3>
+                <div class="sub">来源批次：<b>2026 春招公开招聘 · 科研岗</b> · 需按 1:5 比例抽取</div>
+              </div>
+              <div class="todo-due red"><span class="dot"></span>剩 1 天 · 今日 17:00</div>
+              <span class="pill red">最高优先</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">开始抽取</button>
+                <button class="btn sm" type="button">查看规则</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>李 ** · A 类特聘 · offer 函生成</h3>
+                <div class="sub">来源：<b>高层次人才引进</b> · 待处长签批后通过电子签发送</div>
+              </div>
+              <div class="todo-due orange"><span class="dot"></span>剩 2 天 · 03-09</div>
+              <span class="pill orange">高</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">生成 offer</button>
+                <button class="btn sm" type="button">附条件</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>陈 ** · B 类领军 · 配偶随调材料补正</h3>
+                <div class="sub">候选人提交身份证明缺页，已发短信提示，等待回传</div>
+              </div>
+              <div class="todo-due orange"><span class="dot"></span>剩 2 天 · 03-09</div>
+              <span class="pill orange">高</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">催办</button>
+                <button class="btn sm" type="button">查看材料</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>笔试考场安排 · 5 个考点 96 间教室</h3>
+                <div class="sub">来源批次：<b>2026 春招 · 笔试组织</b> · 需对接保卫处和教务处</div>
+              </div>
+              <div class="todo-due"><span class="dot"></span>剩 5 天 · 03-12</div>
+              <span class="pill blue">中</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">编排考场</button>
+                <button class="btn sm" type="button">协同对接</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>报名不足岗位 6 个 · 公告延期申请</h3>
+                <div class="sub">人工智能 3 / 建筑工程 2 / 商学院 1 · 草拟公告并送审</div>
+              </div>
+              <div class="todo-due"><span class="dot"></span>剩 3 天 · 03-10</div>
+              <span class="pill blue">中</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">起草公告</button>
+                <button class="btn sm" type="button">沟通学院</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>周 ** · 档案转入跟进</h3>
+                <div class="sub">原单位档案室确认中 · 已联系 2 次</div>
+              </div>
+              <div class="todo-due"><span class="dot"></span>剩 7 天 · 03-14</div>
+              <span class="pill grey">常规</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">再次催办</button>
+                <button class="btn sm" type="button">查看记录</button>
+              </div>
+            </div>
+
+            <div class="todo-row">
+              <span class="todo-check" role="checkbox" aria-checked="false"></span>
+              <div class="todo-main">
+                <h3>本周招聘进展周报</h3>
+                <div class="sub">汇总 5 个在办批次进度 · AI 已生成草稿</div>
+              </div>
+              <div class="todo-due"><span class="dot"></span>剩 0 天 · 今日 18:00</div>
+              <span class="pill blue">中</span>
+              <div class="todo-actions">
+                <button class="btn primary sm" type="button">校对发送</button>
+                <button class="btn sm" type="button">看 AI 草稿</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 快捷入口 ============ -->
+      <section class="panel" aria-label="快捷入口">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2>春招常用入口</h2>
+            <p>按你最近 30 天的使用频次排序。可在右上"自定义"调整。</p>
+          </div>
+          <div class="panel-head-actions">
+            <button class="btn" type="button">自定义</button>
+          </div>
+        </div>
+        <div class="panel-body quick-grid">
+          <button class="quick" type="button">
+            <span class="ico">岗</span><span>新建岗位</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico">审</span><span>资格审核</span><span class="badge">9 待办</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico amber">专</span><span>抽取面试专家</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico">公</span><span>发起公示</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico green">O</span><span>生成 offer</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico">到</span><span>录入报到</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico purple">查</span><span>候选人查询</span>
+          </button>
+          <button class="quick" type="button">
+            <span class="ico amber">报</span><span>生成进展周报</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ 经手批次 + 等我/我等 ============ -->
+      <section class="col-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h2>我经手的春招批次</h2>
+              <p>每个批次标明"我负责的部分"和当前节点。</p>
+            </div>
+            <div class="panel-head-actions">
+              <button class="btn" type="button">全部批次</button>
+            </div>
+          </div>
+          <div class="panel-body batch-list">
+            <article class="batch-card">
+              <div class="batch-head">
+                <h3>2026 春招公开招聘（教学岗）</h3>
+                <span class="pill orange">资格初审中</span>
+              </div>
+              <div class="batch-meta">岗位 96 · 报名 786 · 二级单位 24 个 · 我经手 12 学院</div>
+              <div class="batch-progress">
+                <div class="batch-bar warn"><i style="width:46%"></i></div>
+                <span>46%</span>
+              </div>
+              <div class="batch-stage">
+                <span class="my">我负责：<b>资格初审 9 学院</b> · 当前 <em>23 份待复核</em></span>
+                <span>
+                  <button class="btn primary sm" type="button">进入审核</button>
+                </span>
+              </div>
+            </article>
+
+            <article class="batch-card">
+              <div class="batch-head">
+                <h3>2026 春招公开招聘（科研岗）</h3>
+                <span class="pill blue">笔面试中</span>
+              </div>
+              <div class="batch-meta">岗位 41 · 报名 312 · 待面试 96 人</div>
+              <div class="batch-progress">
+                <div class="batch-bar"><i style="width:62%"></i></div>
+                <span>62%</span>
+              </div>
+              <div class="batch-stage">
+                <span class="my">我负责：<b>专家抽取与场次编排</b> · 今日 <em>14:00 抽取 6 场</em></span>
+                <span>
+                  <button class="btn primary sm" type="button">开始抽取</button>
+                </span>
+              </div>
+            </article>
+
+            <article class="batch-card">
+              <div class="batch-head">
+                <h3>2026 第一批高层次人才引进</h3>
+                <span class="pill purple">offer 谈判</span>
+              </div>
+              <div class="batch-meta">候选 27 人 · 已签 14 · 谈判中 9 · 我经手 5 人</div>
+              <div class="batch-progress">
+                <div class="batch-bar"><i style="width:78%"></i></div>
+                <span>78%</span>
+              </div>
+              <div class="batch-stage">
+                <span class="my">我负责：<b>李 ** 等 5 人的 offer / 报到衔接</b> · 待 <em>处长签批 1 人</em></span>
+                <span>
+                  <button class="btn primary sm" type="button">生成 offer</button>
+                </span>
+              </div>
+            </article>
+
+            <article class="batch-card">
+              <div class="batch-head">
+                <h3>2026 博士后招收（春季批）</h3>
+                <span class="pill green">合作导师匹配</span>
+              </div>
+              <div class="batch-meta">岗位 18 · 报名 96 · 待匹配 42 人</div>
+              <div class="batch-progress">
+                <div class="batch-bar"><i style="width:34%"></i></div>
+                <span>34%</span>
+              </div>
+              <div class="batch-stage">
+                <span class="my">我负责：<b>导师沟通与匹配</b> · 已发出 <em>42 份意向函</em></span>
+                <span>
+                  <button class="btn primary sm" type="button">跟进意向</button>
+                </span>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h2>等我反馈 / 我等他人</h2>
+              <p>把卡在外部的事和卡在我这的事分开看。</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="wait-tabs">
+              <button class="wait-tab active" type="button">等我反馈 · 9</button>
+              <button class="wait-tab" type="button">我等他人 · 6</button>
+            </div>
+            <div class="wait-list">
+              <article class="wait-row">
+                <div>
+                  <h3>电信学院询问：是否可放宽专业方向？</h3>
+                  <p>反馈是否同意将"通信工程"放宽至"电子信息类"。</p>
+                </div>
+                <span class="pill red">紧急</span>
+                <div class="meta">
+                  <span>来源：<b>电信学院 王老师</b></span>
+                  <span class="sep">·</span>
+                  <span>已等 6 小时</span>
+                </div>
+              </article>
+              <article class="wait-row">
+                <div>
+                  <h3>候选人 #2476 询问报名截止后能否补传材料</h3>
+                  <p>缺失"学位认证书"，已邮件回复需 03-10 前补齐。</p>
+                </div>
+                <span class="pill orange">高</span>
+                <div class="meta">
+                  <span>来源：<b>候选人在线咨询</b></span>
+                  <span class="sep">·</span>
+                  <span>已等 3 小时</span>
+                </div>
+              </article>
+              <article class="wait-row">
+                <div>
+                  <h3>商学院反馈：拟取消 1 个岗位</h3>
+                  <p>因专业调整，建议撤销岗位编号 SZ2026-118。</p>
+                </div>
+                <span class="pill orange">高</span>
+                <div class="meta">
+                  <span>来源：<b>商学院 周院长</b></span>
+                  <span class="sep">·</span>
+                  <span>已等 1 天</span>
+                </div>
+              </article>
+              <article class="wait-row">
+                <div>
+                  <h3>处长批示：春招公告 v3 调整意见</h3>
+                  <p>三处口径调整需在公告中体现。</p>
+                </div>
+                <span class="pill blue">中</span>
+                <div class="meta">
+                  <span>来源：<b>张处长</b></span>
+                  <span class="sep">·</span>
+                  <span>已等 半天</span>
+                </div>
+              </article>
+              <article class="wait-row">
+                <div>
+                  <h3>建筑学院申请：扩大公告渠道</h3>
+                  <p>申请在行业协会和校友会渠道再投放。</p>
+                </div>
+                <span class="pill grey">常规</span>
+                <div class="meta">
+                  <span>来源：<b>建筑工程学院</b></span>
+                  <span class="sep">·</span>
+                  <span>已等 2 天</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 模板 + AI ============ -->
+      <section class="tools-row">
+        <div class="tool-card">
+          <h2>春招常用模板</h2>
+          <p>每个模板已预填本批字段，下载即用，也可直接复制链接。</p>
+          <div class="template-list">
+            <div class="template-item">
+              <span class="ico">公</span>
+              <div>
+                <h3>招聘公告（教学岗 / 科研岗）</h3>
+                <p>v3 · 2026-02-15 更新</p>
+              </div>
+              <button class="btn sm" type="button">下载</button>
+            </div>
+            <div class="template-item">
+              <span class="ico">表</span>
+              <div>
+                <h3>报名审核结果通知</h3>
+                <p>支持批量发送 · 含拒因模板</p>
+              </div>
+              <button class="btn sm" type="button">下载</button>
+            </div>
+            <div class="template-item">
+              <span class="ico">O</span>
+              <div>
+                <h3>offer 函（A/B/C 类）</h3>
+                <p>已对接电子签 · 支持安家费分期条款</p>
+              </div>
+              <button class="btn sm" type="button">下载</button>
+            </div>
+            <div class="template-item">
+              <span class="ico">补</span>
+              <div>
+                <h3>材料补正通知</h3>
+                <p>支持短信 / 邮件 / 公众号三通道</p>
+              </div>
+              <button class="btn sm" type="button">下载</button>
+            </div>
+            <div class="template-item">
+              <span class="ico">报</span>
+              <div>
+                <h3>报到通知 + 入职清单</h3>
+                <p>含部门、工号、合同、社保接续</p>
+              </div>
+              <button class="btn sm" type="button">下载</button>
+            </div>
+            <div class="template-item">
+              <span class="ico">议</span>
+              <div>
+                <h3>评议会会议材料</h3>
+                <p>A 类候选人评议专用</p>
+              </div>
+              <button class="btn sm" type="button">下载</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-card ai-box">
+          <h2>AI 助手 · 干活模式</h2>
+          <p>不是聊天框，是帮你把材料、清单、回信、台账一键生成。</p>
+          <label class="ai-input">
+            <input placeholder="例如：把 23 份初审疑点按类型汇成处长简报" />
+            <button class="btn primary" type="button">生成</button>
+          </label>
+          <div class="ai-quick">
+            <button type="button">生成今日工作小结</button>
+            <button type="button">给候选人写补材料邮件</button>
+            <button type="button">整理本周专家抽取台账</button>
+            <button type="button">起草延期公告</button>
+            <button type="button">把待报到 12 人按学院分组</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">© 2026 深圳职业技术大学人事处 · 智慧人事一体化服务系统 · 招聘经办作战室 · 春招版</div>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js"></script>
+<script>
+  WiseAppShellV2.init({
+    activeApp: 'process',
+    activeFeature: 'recruit-todo',
+    systemName: '智慧人事一体化服务系统',
+    versionLabel: '招聘经办 · 春招',
+    userName: '王老师 · 招聘办经办',
+    frameworkAssetBase: './assets',
+    logoSrc: './assets/szpu-logo-red.png',
+    topTools: [
+      { key: 'search', label: '搜索', icon: './assets/top-search.svg' },
+      { key: 'skin', label: '换肤', icon: './assets/top-skin.svg' },
+      { key: 'language', label: '语言', icon: './assets/top-language.svg' }
+    ],
+    appGroups: [
+      { key: 'home', label: '首页' },
+      { key: 'process', label: '春招办理', apps: [
+        { key: 'recruit', label: '招聘进校' },
+        { key: 'review', label: '资格审核' },
+        { key: 'expert', label: '专家抽取' },
+        { key: 'offer', label: 'offer 与报到' }
+      ] },
+      { key: 'info', label: '信息查询', apps: [
+        { key: 'staff', label: '人员信息' },
+        { key: 'candidate', label: '候选人库' }
+      ] },
+      { key: 'tools', label: '工具与模板' },
+      { key: 'ai', label: '智慧助手' }
+    ],
+    secondaryNav: {
+      items: [
+        { key: 'today', label: '我的作战室', icon: 'home', children: [
+          { key: 'recruit-todo', label: '我的待办' },
+          { key: 'batches', label: '经手批次' },
+          { key: 'wait', label: '等我 / 我等' }
+        ] },
+        { key: 'do', label: '业务办理', icon: 'workflow', children: [
+          { key: 'job', label: '岗位发布' },
+          { key: 'review', label: '资格审核' },
+          { key: 'expert', label: '专家抽取' },
+          { key: 'exam', label: '考场编排' },
+          { key: 'offer', label: 'offer 生成' },
+          { key: 'onboard', label: '报到登记' }
+        ] },
+        { key: 'tools', label: '工具', icon: 'database', children: [
+          { key: 'template', label: '模板库' },
+          { key: 'ai', label: 'AI 助手' },
+          { key: 'history', label: '我的历史' }
+        ] }
+      ]
+    },
+    tabs: [
+      { key: 'recruit-todo', label: '我的待办', closable: false },
+      { key: 'batches', label: '经手批次' }
+    ]
+  });
+</script>
+</body>
+</html>

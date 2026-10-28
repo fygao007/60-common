@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>开关状态</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    .fis-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: #fff; }
+    .fis-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: #fff; }
+    .fis-content { display: flex; flex-direction: column; gap: 24px; width: 693px; }
+    .fis-title { color: #000; font-size: 14px; font-weight: 600; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-rows { display: grid; grid-template-columns: 133px 560px; row-gap: 20px; }
+    .fis-state { align-self: start; padding-top: 5px; color: #505266; font-size: 14px; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-field { display: flex; align-items: flex-start; gap: 16px; }
+    .fis-field-label { flex: none; display: flex; align-items: center; justify-content: flex-end; width: 94px; height: 32px; color: #505266; font-size: 14px; line-height: 20px; text-align: right; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-field-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+    .fis-switch-wrap { display: flex; align-items: center; padding: 6px 0; }
+    .fis-switch { display: inline-flex; align-items: center; gap: 4px; padding: 2px 2px 2px 6px; background: #333FFF; border-radius: 16px; cursor: pointer; }
+    .fis-switch-text { color: #FFFFFF; font-size: 12px; line-height: 12px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-switch-knob { display: inline-flex; width: 16px; height: 16px; }
+    .fis-switch-knob svg { width: 100%; height: 100%; display: block; }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="fis-page">
+    <section class="fis-stage">
+      <div class="fis-content">
+        <span class="fis-title">状态</span>
+        <div class="fis-rows">
+          <div class="fis-state">开启态</div>
+          <div class="fis-field">
+            <span class="fis-field-label">标题名称</span>
+            <div class="fis-field-body">
+              <div class="fis-switch-wrap">
+                <div class="fis-switch" role="switch" aria-checked="true">
+                  <span class="fis-switch-text">是</span>
+                  <span class="fis-switch-knob" data-wise-icon="switchKnob"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

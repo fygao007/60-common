@@ -1,0 +1,40 @@
+@import '../tokens.css';
+
+.ds-audit-template {
+  display: grid;
+  /* 页面根容器普遍是 display:grid + min-height:100%，会把本模板拉伸到确定高度。
+     此时 grid 的 auto 行在 align-content: normal(=stretch) 下会平分剩余高度，
+     把 header / 说明条 / 筛选区 / 表格一起撑高（实测 header 53→118、
+     说明条 40→105、筛选 96→161、表格 213→278），页面出现大片空白。
+     对齐 RegularListTemplate 的行为（flex 列 + 子项 flex:none，不参与拉伸），
+     行高一律按内容分配，剩余高度留在模板底部。 */
+  align-content: start;
+  gap: var(--ds-space-4);
+}
+
+.ds-audit-template__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 边界说明条：与 RegularListTemplate 的 notice 视觉一致，用于声明本期未启用的能力。 */
+.ds-audit-template__notice {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: 9px var(--ds-space-4);
+  background: var(--ds-color-border-primary-weak);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-md);
+  line-height: 22px;
+}
+
+.ds-audit-template__info-icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='8.4' stroke='%233167ff' stroke-width='1.3'/%3E%3Cpath d='M10 9v5.2' stroke='%233167ff' stroke-width='1.5' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='6.3' r='1.05' fill='%233167ff'/%3E%3C/svg%3E") center / 20px 20px no-repeat;
+}

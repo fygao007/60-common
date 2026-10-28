@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教学档案管理</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+    .ds-page { padding: 0; }
+    .page-content { flex: 1; padding: 12px 16px 12px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { color: #fff; background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); }
+
+    /* 搜索区域 */
+    .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 0 12px; }
+    .filter-item { display: flex; align-items: center; gap: 8px; }
+    .filter-item label { color: #505266; font-size: 14px; white-space: nowrap; }
+    .filter-item input[type="text"] { height: 28px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; width: 200px; }
+    .filter-item input:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .filter-item select { height: 28px; padding: 0 24px 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; min-width: 140px; }
+
+    /* Table */
+    .basic-table-wrap { position: relative; overflow: auto; background: #fff; border: 1px solid #eeeef0; }
+    .basic-table { width: 100%; border-collapse: separate; border-spacing: 0; color: #000; font-size: 14px; line-height: 22px; }
+    .basic-table th, .basic-table td { height: 46px; padding: 0 12px; background: #fff; border-bottom: 1px solid #eeeef0; white-space: nowrap; overflow: hidden; text-align: left; text-overflow: ellipsis; }
+    .basic-table th { position: sticky; top: 0; z-index: 5; height: 40px; background: #fafafa; font-weight: 600; }
+    .basic-table th + th, .basic-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+    .basic-table tbody tr:hover td { background: #f6f6f7; }
+    .basic-table tbody tr:last-child td { border-bottom: none; }
+    .col-index { width: 46px; text-align: center; }
+    .col-actions { width: 80px; text-align: center; }
+    .text-action { padding: 0; color: #3167ff; background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .text-action:hover { color: var(--ds-color-primary-hover); }
+
+    .basic-pagination { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #505266; background: #fff; border-top: 1px solid #eeeef0; font-size: 12px; }
+    .basic-pagination .page-spacer { flex: 1; }
+
+    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #20b486; color: #fff; padding: 10px 24px; border-radius: 6px; font-size: 14px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+  </style>
+</head>
+<body>
+<div class="ds-scope ds-page">
+  <div class="page-content">
+    <!-- 搜索区域 -->
+    <section class="filter-bar" aria-label="查询条件">
+      <div class="filter-item">
+        <label>关键词</label>
+        <input type="text" id="filterKeyword" placeholder="请输入姓名/职工号/拼音" />
+      </div>
+      <div class="filter-item">
+        <label>所在单位</label>
+        <select id="filterUnit">
+          <option value="">全部单位</option>
+          <option>电子信息工程系</option>
+        </select>
+      </div>
+      <button class="btn" type="button" onclick="resetFilter()">重置</button>
+      <button class="btn primary" type="button" onclick="queryList()">查询</button>
+    </section>
+
+    <!-- 表格 -->
+    <section class="basic-table-wrap">
+      <table class="basic-table" aria-label="教学档案管理列表">
+        <thead>
+          <tr>
+            <th class="col-index">序号</th>
+            <th style="width:110px">姓名</th>
+            <th style="width:130px">职工号</th>
+            <th style="width:180px">所在单位</th>
+            <th style="width:100px">职称</th>
+            <th style="width:140px">最近更新时间</th>
+            <th class="col-actions">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </section>
+    <div class="basic-pagination">
+      <span class="page-spacer"></span>
+      <span id="pageInfo">共 0 条记录</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var TEACHER_ROWS = [
+  { id: 't-01', name: '金晓智', pinyin: 'JXZ', code: 'T20210315', unit: '电子信息工程系', major: '电子信息工程', title: '副教授', filled: 9, total: 9, updatedAt: '2026-06-24' },
+  { id: 't-02', name: '王芳', pinyin: 'WF', code: 'T20190472', unit: '电子信息工程系', major: '电子信息工程', title: '教授', filled: 8, total: 9, updatedAt: '2026-06-22' },
+  { id: 't-03', name: '张磊', pinyin: 'ZL', code: 'T20200819', unit: '电子信息工程系', major: '电子信息工程', title: '副教授', filled: 7, total: 9, updatedAt: '2026-06-20' },
+  { id: 't-04', name: '刘洋', pinyin: 'LY', code: 'T20211203', unit: '电子信息工程系', major: '电子信息工程', title: '讲师', filled: 9, total: 9, updatedAt: '2026-06-19' },
+  { id: 't-05', name: '陈晨', pinyin: 'CC', code: 'T20220714', unit: '电子信息工程系', major: '电子信息工程', title: '讲师', filled: 6, total: 9, updatedAt: '2026-06-15' },
+  { id: 't-06', name: '赵敏', pinyin: 'ZM', code: 'T20230528', unit: '电子信息工程系', major: '电子信息工程', title: '讲师', filled: 5, total: 9, updatedAt: '2026-06-12' },
+  { id: 't-07', name: '孙颖', pinyin: 'SY', code: 'T20230901', unit: '电子信息工程系', major: '电子信息工程', title: '助理教授', filled: 4, total: 9, updatedAt: '2026-06-08' },
+  { id: 't-08', name: '周强', pinyin: 'ZQ', code: 'T20180317', unit: '电子信息工程系', major: '电子信息工程', title: '教授', filled: 8, total: 9, updatedAt: '2026-06-05' },
+  { id: 't-09', name: '吴蔚', pinyin: 'WW', code: 'T20170625', unit: '电子信息工程系', major: '电子信息工程', title: '教授', filled: 9, total: 9, updatedAt: '2026-05-30' },
+  { id: 't-10', name: '郑昊', pinyin: 'ZH', code: 'T20221019', unit: '电子信息工程系', major: '电子信息工程', title: '副教授', filled: 7, total: 9, updatedAt: '2026-05-28' }
+];
+
+var applied = { keyword: '', unit: '' };
+var toastTimer = null;
+
+function notify(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.style.display = 'none'; }, 1600);
+}
+
+function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+
+function getFiltered() {
+  var kw = applied.keyword.trim().toLowerCase();
+  var unit = applied.unit;
+  return TEACHER_ROWS.filter(function(row) {
+    var matchKeyword = !kw || [row.name, row.code, row.pinyin].some(function(v){ return v.toLowerCase().indexOf(kw) >= 0; });
+    var matchUnit = !unit || row.unit === unit;
+    return matchKeyword && matchUnit;
+  }).sort(function(a, b) { return a.updatedAt < b.updatedAt ? 1 : -1; });
+}
+
+function render() {
+  var rows = getFiltered();
+  var body = '';
+  rows.forEach(function(r, i) {
+    body += '<tr>' +
+      '<td class="col-index">' + (i + 1) + '</td>' +
+      '<td><b>' + esc(r.name) + '</b></td>' +
+      '<td>' + esc(r.code) + '</td>' +
+      '<td>' + esc(r.unit) + '</td>' +
+      '<td>' + esc(r.title) + '</td>' +
+      '<td>' + esc(r.updatedAt) + '</td>' +
+      '<td class="col-actions"><button class="text-action" type="button" onclick="goDetail(\'' + r.code + '\')">详情</button></td>' +
+      '</tr>';
+  });
+  if (!rows.length) body = '<tr><td colspan="7" style="text-align:center;color:#737585;padding:32px 0">暂无数据</td></tr>';
+  document.getElementById('tableBody').innerHTML = body;
+  document.getElementById('pageInfo').textContent = '共 ' + rows.length + ' 条记录';
+}
+
+function queryList() {
+  applied.keyword = document.getElementById('filterKeyword').value;
+  applied.unit = document.getElementById('filterUnit').value;
+  notify('已按当前条件查询');
+  render();
+}
+
+function resetFilter() {
+  document.getElementById('filterKeyword').value = '';
+  document.getElementById('filterUnit').value = '';
+  applied = { keyword: '', unit: '' };
+  notify('筛选条件已重置');
+  render();
+}
+
+function goDetail(code) {
+  window.location.href = '../portfolio-detail/portfolio-detail.html?teacher=' + code;
+}
+
+render();
+</script>
+</body>
+</html>

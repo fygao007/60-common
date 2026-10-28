@@ -1,0 +1,712 @@
+{
+  "$schema": "./field-dictionary-bindings.schema.json",
+  "library": "szpu-hr-basic-information",
+  "version": "1.0.0",
+  "sources": [
+    {
+      "file": "基本信息确认字段.xlsx",
+      "sheet": "教职工基本信息表 及顺序",
+      "role": "field-definition"
+    },
+    {
+      "file": "V1.0.0_20260610_1501__rsmodelpubZxbz.sql",
+      "role": "dictionary-values"
+    }
+  ],
+  "bindingCount": 77,
+  "bindings": [
+    {
+      "fieldId": "StaffBasicInformation.xbdm",
+      "sourceCode": "XBDM",
+      "label": "性别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.csddm",
+      "sourceCode": "CSDDM",
+      "label": "出生地",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "AdministrativeDivision"
+    },
+    {
+      "fieldId": "StaffBasicInformation.jgdm",
+      "sourceCode": "JGDM",
+      "label": "籍贯",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "AdministrativeDivision"
+    },
+    {
+      "fieldId": "StaffBasicInformation.gjdqdm",
+      "sourceCode": "GJDQDM",
+      "label": "国家地区",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GJDQ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.mzdm",
+      "sourceCode": "MZDM",
+      "label": "民族",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.MZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zjlx",
+      "sourceCode": "ZJLX",
+      "label": "证件类型",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFZJLX",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.gatqdm",
+      "sourceCode": "GATQDM",
+      "label": "港澳台侨",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GATQW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.jkzkdm",
+      "sourceCode": "JKZKDM",
+      "label": "健康状况",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.JKZK",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.hyzkdm",
+      "sourceCode": "HYZKDM",
+      "label": "婚姻状况",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.HYZK",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.hkxz",
+      "sourceCode": "HKXZ",
+      "label": "户口性质",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.HKXZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.xyjg",
+      "sourceCode": "XYJG",
+      "label": "学缘结构",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XYJG",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfcylk",
+      "sourceCode": "SFCYLK",
+      "label": "是否持有绿卡",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.lkgb",
+      "sourceCode": "LKGB",
+      "label": "绿卡国别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GJDQ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfbxby",
+      "sourceCode": "SFBXBY",
+      "label": "是否本校毕业",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.hwjl",
+      "sourceCode": "HWJL",
+      "label": "海外经历",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.HWJL",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.szdwdm",
+      "sourceCode": "SZDWDM",
+      "label": "所在单位",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "Organization"
+    },
+    {
+      "fieldId": "StaffBasicInformation.bzlbdm",
+      "sourceCode": "BZLBDM",
+      "label": "编制类别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.BZLX",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.htqdqk",
+      "sourceCode": "HTQDQK",
+      "label": "合同签订情况",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.HTQDQK",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.jzglbdm",
+      "sourceCode": "JZGLBDM",
+      "label": "教职工类别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.JZGLB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.prlbdm",
+      "sourceCode": "PRLBDM",
+      "label": "聘任类别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.PRQK",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.yrfsdm",
+      "sourceCode": "YRFSDM",
+      "label": "用人方式",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.YRFS",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.grsfdm",
+      "sourceCode": "GRSFDM",
+      "label": "个人身份",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GRSF",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.dqztdm",
+      "sourceCode": "DQZTDM",
+      "label": "当前状态",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.JZGDQZT",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.jslx",
+      "sourceCode": "JSLX",
+      "label": "教师类型",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.JSLX",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.fhgwyqdsxzy",
+      "sourceCode": "FHGWYQDSXZY",
+      "label": "符合岗位要求的所学专业",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZY",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.jzglydm",
+      "sourceCode": "JZGLYDM",
+      "label": "教职工来源",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.JZGLY",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zzmmdm",
+      "sourceCode": "ZZMMDM",
+      "label": "政治面貌",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZZMM",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.dedpdm",
+      "sourceCode": "DEDPDM",
+      "label": "第二党派",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZZMM",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zgxldm",
+      "sourceCode": "ZGXLDM",
+      "label": "最高学历",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XL",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zgxwdm",
+      "sourceCode": "ZGXWDM",
+      "label": "最高学位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zyjszwdm",
+      "sourceCode": "ZYJSZWDM",
+      "label": "专业技术职务",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZYJSZW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zyjszwjbdm",
+      "sourceCode": "ZYJSZWJBDM",
+      "label": "专业技术职务级别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GBZWJB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.przyjszwdm",
+      "sourceCode": "PRZYJSZWDM",
+      "label": "现聘专业技术职务",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZYJSZW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.przyjszwjbdm",
+      "sourceCode": "PRZYJSZWJBDM",
+      "label": "聘任专业技术职务级别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GBZWJB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zygwdm",
+      "sourceCode": "ZYGWDM",
+      "label": "主要岗位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZYGW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.xpgwdm",
+      "sourceCode": "XPGWDM",
+      "label": "校内岗位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XPGW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.glgw",
+      "sourceCode": "GLGW",
+      "label": "是否管理岗位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zyjsgw",
+      "sourceCode": "ZYJSGW",
+      "label": "是否专技岗位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.gqgw",
+      "sourceCode": "GQGW",
+      "label": "是否工勤岗位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zyjsgwlbdm",
+      "sourceCode": "ZYJSGWLBDM",
+      "label": "专业技术岗位类别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GWLB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zyjsgwlbdjdm",
+      "sourceCode": "ZYJSGWLBDJDM",
+      "label": "专业技术岗位等级",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GWDJ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.glgwdjdm",
+      "sourceCode": "GLGWDJDM",
+      "label": "管理岗位等级",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GWDJ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.gqgwdjdm",
+      "sourceCode": "GQGWDJDM",
+      "label": "工勤岗位等级",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GWDJ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfsjt",
+      "sourceCode": "SFSJT",
+      "label": "是否双肩挑",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sjtszdwdm",
+      "sourceCode": "SJTSZDWDM",
+      "label": "双肩挑所在单位",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "Organization"
+    },
+    {
+      "fieldId": "StaffBasicInformation.fdylbdm",
+      "sourceCode": "FDYLBDM",
+      "label": "辅导员类别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.FDYLB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.grjsgzdm",
+      "sourceCode": "GRJSGZDM",
+      "label": "工人技术工种",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.grjsdjdm",
+      "sourceCode": "GRJSDJDM",
+      "label": "工人技术等级",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.dzzwjbdm",
+      "sourceCode": "DZZWJBDM",
+      "label": "党政职务级别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.GBZWJB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.xklbdm",
+      "sourceCode": "XKLBDM",
+      "label": "学科类别",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "Discipline"
+    },
+    {
+      "fieldId": "StaffBasicInformation.yjxkdm",
+      "sourceCode": "YJXKDM",
+      "label": "一级学科",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "Discipline"
+    },
+    {
+      "fieldId": "StaffBasicInformation.ejxkdm",
+      "sourceCode": "EJXKDM",
+      "label": "二级学科",
+      "status": "external-master-data",
+      "dictionaryId": null,
+      "bindingType": "reference",
+      "target": "Discipline"
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfzzcsxlzxgz",
+      "sourceCode": "SFZZCSXLZXGZ",
+      "label": "是否专职从事心理咨询工作",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfcyxlzxzgzs",
+      "sourceCode": "SFCYXLZXZGZS",
+      "label": "是否持有心理咨询资格证书",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfjbzyjndjzs",
+      "sourceCode": "SFJBZYJNDJZS",
+      "label": "是否具备职业技能等级证书",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.jsjsp",
+      "sourceCode": "JSJSP",
+      "label": "计算机水平",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.yysp",
+      "sourceCode": "YYSP",
+      "label": "英语水平",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfssxjs",
+      "sourceCode": "SFSSXJS",
+      "label": "是否双师型教师",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.qygzsc",
+      "sourceCode": "QYGZSC",
+      "label": "企业工作(实践)时长",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.QYGZSC",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.ssrdjb",
+      "sourceCode": "SSRDJB",
+      "label": "双师认定级别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SSRDJB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.dslbdm",
+      "sourceCode": "DSLBDM",
+      "label": "导师类别",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.DSLB",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zxtfgzlbdm",
+      "sourceCode": "ZXTFGZLBDM",
+      "label": "执行统发工资类别",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zxtfgzjbdm",
+      "sourceCode": "ZXTFGZJBDM",
+      "label": "执行统发工资级别",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zxxjgzjbdm",
+      "sourceCode": "ZXXJGZJBDM",
+      "label": "薪级",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XJGZBZMX",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zxjcxjxlbdm",
+      "sourceCode": "ZXJCXJXLBDM",
+      "label": "执行基础性绩效类别",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zxjcxjxjbdm",
+      "sourceCode": "ZXJCXJXJBDM",
+      "label": "执行基础性绩效级别",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.xxdm",
+      "sourceCode": "XXDM",
+      "label": "血型",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XX",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfwbkssk",
+      "sourceCode": "SFWBKSSK",
+      "label": "是否为本科生上课",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.dyxldm",
+      "sourceCode": "DYXLDM",
+      "label": "第一学历",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XL",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.dyxwdm",
+      "sourceCode": "DYXWDM",
+      "label": "第一学位",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.XW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfzz",
+      "sourceCode": "SFZZ",
+      "label": "在职状态",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.zcdm",
+      "sourceCode": "ZCDM",
+      "label": "职称",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.ZYJSZW",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.rszzzt",
+      "sourceCode": "RSZZZT",
+      "label": "人事在职状态",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.qyzt",
+      "sourceCode": "QYZT",
+      "label": "启用状态",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.gydj",
+      "sourceCode": "GYDJ",
+      "label": "雇员等级",
+      "status": "review-required",
+      "dictionaryId": null,
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfdyy",
+      "sourceCode": "SFDYY",
+      "label": "是否调研员",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    },
+    {
+      "fieldId": "StaffBasicInformation.sfcyry",
+      "sourceCode": "SFCYRY",
+      "label": "是否产业人员",
+      "status": "bound",
+      "dictionaryId": "RS.ZXBZ.SFBZ",
+      "bindingType": "concept",
+      "target": null
+    }
+  ]
+}

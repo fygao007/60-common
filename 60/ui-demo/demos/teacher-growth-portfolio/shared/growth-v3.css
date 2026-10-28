@@ -1,0 +1,12 @@
+/* 教师成长档案袋共享样式 - 灰底消除 */
+.gf-views {
+  background: transparent !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}.gf-page{
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 8px;
+}.gf-shell{
+  border-radius: 0 !important;
+}

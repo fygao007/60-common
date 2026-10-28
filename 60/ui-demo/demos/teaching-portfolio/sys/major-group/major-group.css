@@ -1,0 +1,67 @@
+@import '../../../../framework/react-page-host.css';
+
+#app {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: auto;
+}.sys-admin-page{
+  display: grid;
+  min-height: 100%;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-3);
+  border-radius: 8px;
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-container);
+  align-content: start;
+}/* portfolio-compact.css 通过 .ds-scope :is(.sys-admin-page,...) 强制 padding:0，
+   本页需要 12px 内边距，用更高特异性的声明覆盖（属性选择器 [data-ds-business-page]
+   把特异性提到 (0,3,0)，不依赖加载顺序）。 */
+.ds-scope .sys-admin-page--major-group[data-ds-business-page]{
+  padding: var(--ds-space-3);
+}.sys-admin-page--major-group{
+  min-height: 100%;
+}
+
+/* Portal 下拉层高于弹窗本体，避免被滚动区或底部操作栏遮挡。 */
+.ds-select__dropdown[id^='ds-select-portal-'] {
+  z-index: calc(var(--ds-z-modal) + 1);
+}
+
+.sys-admin-major-group-list-table,
+.sys-admin-major-list-table {
+  min-width: 0;
+}
+
+.sys-admin-maintainers-field .ds-select__trigger {
+  min-height: 72px;
+  align-items: flex-start;
+  padding-block: 10px;
+}
+
+.sys-admin-maintainers-field .ds-select__tags {
+  align-content: flex-start;
+}
+
+.sys-admin-status {
+  position: fixed;
+  right: var(--ds-space-5);
+  bottom: var(--ds-space-5);
+  z-index: var(--ds-z-message);
+  max-width: 360px;
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border: 1px solid var(--ds-color-success-border);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-color-text);
+  background: var(--ds-color-success-light);
+  box-shadow: var(--ds-shadow-sm);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.sys-admin-muted {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}

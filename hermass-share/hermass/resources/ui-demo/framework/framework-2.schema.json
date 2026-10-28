@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wisedu.local/schema/framework-2-page.schema.json",
+  "title": "框架2业务页面配置",
+  "description": "顶部框架、角色和应用分组由 framework-2.staff-preset.js 提供，业务页面不可覆盖。",
+  "type": "object",
+  "required": ["activeFeature", "tabs"],
+  "additionalProperties": false,
+  "properties": {
+    "root": { "type": "string", "default": ".frame2-stage" },
+    "activeFeature": { "type": "string" },
+    "activeApp": {
+      "type": "string",
+      "description": "通常省略。框架会根据 activeFeature 自动识别角色和应用。"
+    },
+    "roleName": {
+      "type": "string",
+      "description": "仅当 activeFeature 不属于公共预设时使用，且必须是预设角色。"
+    },
+    "userName": { "type": "string" },
+    "versionLabel": { "type": "string" },
+    "pinHomeTab": { "type": "boolean", "default": true },
+    "hideSidebar": {
+      "oneOf": [
+        { "type": "boolean" },
+        { "const": "auto" }
+      ],
+      "default": "auto"
+    },
+    "workspaceVariant": {
+      "type": "string",
+      "enum": ["canvas", "card"],
+      "default": "canvas",
+      "description": "canvas 用于首页等沉浸式画布；card 用于日程、待办等无左侧菜单的全宽白色工作区。"
+    },
+    "emptyContent": { "type": "boolean" },
+    "appMenus": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "$ref": "#/$defs/menuItem" }
+      }
+    },
+    "secondaryNav": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/menuItem" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "tabs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/tab" }
+    }
+  },
+  "$defs": {
+    "menuItem": {
+      "type": "object",
+      "required": ["key", "label"],
+      "properties": {
+        "key": { "type": "string" },
+        "label": { "type": "string" },
+        "icon": { "type": "string" },
+        "expanded": { "type": "boolean" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/menuItem" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "tab": {
+      "type": "object",
+      "required": ["key", "label"],
+      "properties": {
+        "key": { "type": "string" },
+        "label": { "type": "string" },
+        "href": { "type": "string" },
+        "icon": { "type": "string" },
+        "wiseIcon": { "type": "string" },
+        "closable": { "type": "boolean", "default": true }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>缺省页组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/EmptyState/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+    }
+
+    button { font: inherit; }
+
+    .empty-page {
+      width: min(1200px, 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .empty-head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 24px;
+      line-height: 34px;
+    }
+
+    .empty-head p {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .empty-section {
+      margin-top: 16px;
+      padding: 20px;
+      background: var(--ds-color-bg-container);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+    }
+
+    .empty-section h2 {
+      margin: 0 0 6px;
+      color: var(--ds-color-black);
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .section-desc {
+      margin: 0 0 16px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .preset-card {
+      display: grid;
+      min-height: 174px;
+      place-items: center;
+      padding: 12px;
+      background: #fafafc;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+    }
+
+    .preset-card .ds-empty-state {
+      min-height: 0;
+      padding: 0;
+    }
+
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .scenario-list,
+    .guide-switcher {
+      display: flex;
+      gap: 8px;
+    }
+
+    .scenario-list {
+      flex-direction: column;
+    }
+
+    .scenario-button {
+      height: 36px;
+      padding: 0 12px;
+      color: var(--ds-color-text);
+      background: #fff;
+      border: 1px solid var(--ds-color-border);
+      border-radius: 4px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .scenario-button:hover,
+    .scenario-button.is-active {
+      color: var(--ds-color-primary);
+      background: var(--ds-color-primary-light);
+      border-color: var(--ds-color-border-hover);
+    }
+
+    .live-stage,
+    .guide-stage {
+      min-height: 330px;
+      padding: 20px;
+      background: #fafafc;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+    }
+
+    .live-stage {
+      display: grid;
+      place-items: center;
+    }
+
+    .live-stage .ds-empty-state {
+      width: 100%;
+      min-height: 288px;
+    }
+
+    .guide-switcher {
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .guide-stage {
+      overflow-x: auto;
+    }
+
+    .guide-stage .ds-empty-guide {
+      min-width: max-content;
+      padding: 18px;
+    }
+
+    .guide-stage .ds-empty-guide__card.is-complete {
+      border-color: var(--ds-color-success);
+      box-shadow: 0 0 0 2px var(--ds-color-success-border);
+    }
+
+    .guide-stage .ds-empty-guide__card.is-complete::after {
+      content: "已完成";
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      color: var(--ds-color-success);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .rule-card {
+      padding: 14px;
+      background: #fafafc;
+      border-radius: 6px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .rule-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ds-color-text);
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 20;
+      padding: 10px 16px;
+      color: #fff;
+      background: rgba(31, 41, 55, 0.92);
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 22px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: 160ms ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .demo-layout { grid-template-columns: 1fr; }
+      .scenario-list { flex-flow: row wrap; }
+      .rule-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 540px) {
+      .empty-page { padding: 12px; }
+      .preset-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="empty-page ds-scope">
+    <header class="empty-head">
+      <h1>缺省页组件</h1>
+      <p>DSEmptyState / DSEmptyGuide：统一基础缺省图片、恢复操作和高级步骤引导。</p>
+    </header>
+
+    <section class="empty-section">
+      <h2>基础缺省图</h2>
+      <p class="section-desc">图片固定 100 × 100，图片与文字间距 8px；基础态默认只展示一行语义文案。</p>
+      <div class="preset-grid" id="presetGrid"></div>
+    </section>
+
+    <section class="empty-section">
+      <h2>恢复操作逻辑</h2>
+      <p class="section-desc">仅在用户能立即恢复当前状态时展示操作。切换场景后点击操作，观察状态变化。</p>
+      <div class="demo-layout">
+        <div class="scenario-list" id="scenarioList"></div>
+        <div class="live-stage" id="liveStage" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="empty-section">
+      <h2>高级空状态引导</h2>
+      <p class="section-desc">支持指定操作、多个步骤、推荐方案和底部跳过入口；业务状态由外部受控。</p>
+      <div class="guide-switcher" id="guideSwitcher"></div>
+      <div class="guide-stage" id="guideStage"></div>
+    </section>
+
+    <section class="empty-section">
+      <h2>使用规则</h2>
+      <div class="rule-grid">
+        <div class="rule-card"><strong>先匹配原因</strong>区分无数据、无结果、无权限、网络异常、维护中和加载失败，禁止统一使用“暂无数据”。</div>
+        <div class="rule-card"><strong>操作必须可恢复</strong>搜索提供清除筛选，异常提供重试；纯提示状态不放无效按钮。</div>
+        <div class="rule-card"><strong>高级引导受控</strong>步骤完成、跳过和加载状态由业务传入，组件只负责展示和触发回调。</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const assetBase = '../packages/design-system/src/EmptyState/assets/'
+    const presets = [
+      { type: 'data', title: '暂无数据', image: 'no-data.svg', action: '新建' },
+      { type: 'todo', title: '暂无待办', image: 'no-todo.svg' },
+      { type: 'permission', title: '暂无权限', image: 'no-permission.svg', action: '申请权限' },
+      { type: 'network', title: '网络异常', image: 'network-error.svg', action: '重新加载' },
+      { type: 'message', title: '暂无消息', image: 'no-message.svg' },
+      { type: 'search', title: '暂无搜索结果', image: 'no-search.svg', action: '清除筛选' },
+      { type: 'maintenance', title: '维护中', image: 'maintenance.svg' },
+      { type: 'load-failed', title: '加载失败', image: 'load-failed.svg', action: '重新加载' },
+    ]
+
+    const guideModes = {
+      single: {
+        label: '指定操作',
+        title: '还未设置编排规则',
+        description: '完成下方操作后即可继续配置',
+        skipText: '跳过，直接在线编辑',
+        steps: [{ key: 'create', title: '创建编排规则', action: '新增', icon: 'action-add.svg' }],
+      },
+      steps: {
+        label: '步骤操作',
+        title: '导入已有配置',
+        description: '按步骤导出模板、填写数据并重新导入',
+        skipText: '跳过，稍后处理',
+        steps: [
+          { key: 'export', title: '导出模板', action: '导出', icon: 'action-export.svg' },
+          { key: 'edit', title: '填写模板内容', action: '查看说明', icon: 'action-reference.svg' },
+          { key: 'import', title: '导入配置', action: '导入', icon: 'action-import.svg' },
+        ],
+      },
+      methods: {
+        label: '组合方案',
+        title: '选择内容创建方式',
+        description: '推荐引用已有方案，也可以从空白内容开始',
+        skipText: '跳过，直接进入页面',
+        steps: [
+          { key: 'reference', title: '引用已有方案', action: '引用', icon: 'action-reference.svg', recommended: true },
+          { key: 'create', title: '从空白开始', action: '新增', icon: 'action-add.svg' },
+        ],
+      },
+    }
+
+    let activeType = 'network'
+    let activeGuide = 'steps'
+    const completedGuideSteps = new Set()
+    let toastTimer
+
+    const escapeHtml = (value) => String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;')
+
+    function emptyMarkup(preset, options = {}) {
+      const action = options.action ?? preset.action
+      const description = options.description || ''
+      return `
+        <section class="ds-empty-state ${options.contained ? 'ds-empty-state--contained' : ''}" aria-label="${escapeHtml(preset.title)}">
+          <img class="ds-empty-state__image" src="${assetBase}${preset.image}" alt="">
+          <div class="ds-empty-state__content">
+            <div class="ds-empty-state__title">${escapeHtml(options.title || preset.title)}</div>
+            ${description ? `<p class="ds-empty-state__description">${escapeHtml(description)}</p>` : ''}
+            ${action ? `<button class="ds-button ds-button--link ds-button--small ds-empty-state__action" type="button" data-empty-action>${escapeHtml(action)}</button>` : ''}
+          </div>
+        </section>
+      `
+    }
+
+    function showToast(message) {
+      const toast = document.querySelector('#toast')
+      toast.textContent = message
+      toast.classList.add('is-visible')
+      clearTimeout(toastTimer)
+      toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 1800)
+    }
+
+    function renderPresets() {
+      document.querySelector('#presetGrid').innerHTML = presets
+        .map((preset) => `<article class="preset-card">${emptyMarkup(preset)}</article>`)
+        .join('')
+    }
+
+    function renderScenarios() {
+      document.querySelector('#scenarioList').innerHTML = presets
+        .map((preset) => `
+          <button class="scenario-button ${preset.type === activeType ? 'is-active' : ''}" type="button" data-type="${preset.type}">
+            ${preset.title}
+          </button>
+        `)
+        .join('')
+
+      document.querySelectorAll('[data-type]').forEach((button) => {
+        button.addEventListener('click', () => {
+          activeType = button.dataset.type
+          renderScenarios()
+          renderLiveState()
+        })
+      })
+    }
+
+    function renderLiveState() {
+      const preset = presets.find((item) => item.type === activeType)
+      const stage = document.querySelector('#liveStage')
+      const descriptions = {
+        permission: '当前账号没有查看该内容的权限',
+        network: '请检查网络连接后重新加载',
+        search: '未找到符合当前筛选条件的内容',
+        maintenance: '系统正在维护，请稍后再试',
+        'load-failed': '内容加载失败，请重新加载',
+      }
+      stage.innerHTML = emptyMarkup(preset, { description: descriptions[preset.type], contained: true })
+
+      const action = stage.querySelector('[data-empty-action]')
+      if (!action) return
+      action.addEventListener('click', () => handleEmptyAction(preset, action))
+    }
+
+    function handleEmptyAction(preset, button) {
+      if (preset.type === 'network' || preset.type === 'load-failed') {
+        button.disabled = true
+        button.textContent = '加载中...'
+        setTimeout(() => {
+          activeType = 'data'
+          renderScenarios()
+          renderLiveState()
+          showToast('加载成功，当前暂无数据')
+        }, 650)
+        return
+      }
+
+      if (preset.type === 'search') {
+        activeType = 'data'
+        renderScenarios()
+        renderLiveState()
+        showToast('已清除筛选条件')
+        return
+      }
+
+      showToast(preset.type === 'permission' ? '权限申请已提交' : '已触发新建操作')
+    }
+
+    function renderGuideSwitcher() {
+      document.querySelector('#guideSwitcher').innerHTML = Object.entries(guideModes)
+        .map(([key, mode]) => `
+          <button class="scenario-button ${key === activeGuide ? 'is-active' : ''}" type="button" data-guide="${key}">
+            ${mode.label}
+          </button>
+        `)
+        .join('')
+
+      document.querySelectorAll('[data-guide]').forEach((button) => {
+        button.addEventListener('click', () => {
+          activeGuide = button.dataset.guide
+          completedGuideSteps.clear()
+          renderGuideSwitcher()
+          renderGuide()
+        })
+      })
+    }
+
+    function renderGuide() {
+      const mode = guideModes[activeGuide]
+      const cards = mode.steps.map((step, index) => `
+        <div class="ds-empty-guide__step-wrap">
+          <article class="ds-empty-guide__card ${completedGuideSteps.has(step.key) ? 'is-complete' : ''}">
+            ${step.recommended ? '<span class="ds-empty-guide__recommended">推荐</span>' : ''}
+            <img class="ds-empty-guide__image" src="${assetBase}guide.svg" alt="">
+            <div class="ds-empty-guide__card-content">
+              ${mode.steps.length > 1 ? `<span class="ds-empty-guide__step">Step ${index + 1}</span>` : ''}
+              <strong>${step.title}</strong>
+              <button class="ds-button ds-button--default ds-button--small" type="button" data-step="${step.key}">
+                <span class="ds-button__icon"><img class="ds-empty-guide__action-icon" src="${assetBase}${step.icon}" alt=""></span>
+                <span class="ds-button__label">${completedGuideSteps.has(step.key) ? '已完成' : step.action}</span>
+              </button>
+            </div>
+          </article>
+          ${index < mode.steps.length - 1 ? '<span class="ds-empty-guide__connector" aria-hidden="true">→</span>' : ''}
+        </div>
+      `).join('')
+
+      document.querySelector('#guideStage').innerHTML = `
+        <section class="ds-empty-guide" aria-label="${mode.title}">
+          <header class="ds-empty-guide__header"><h3>${mode.title}</h3><p>${mode.description}</p></header>
+          <div class="ds-empty-guide__steps">${cards}</div>
+          <button class="ds-button ds-button--link ds-button--small ds-empty-guide__skip" type="button" data-skip>
+            <span class="ds-button__label">${mode.skipText}</span>
+            <span class="ds-button__icon"><img src="${assetBase}arrow-right.svg" alt=""></span>
+          </button>
+        </section>
+      `
+
+      document.querySelectorAll('[data-step]').forEach((button) => {
+        button.addEventListener('click', () => {
+          completedGuideSteps.add(button.dataset.step)
+          renderGuide()
+          showToast(`已完成：${button.closest('.ds-empty-guide__card').querySelector('strong').textContent}`)
+        })
+      })
+      document.querySelector('[data-skip]').addEventListener('click', () => showToast('已跳过引导，进入在线编辑'))
+    }
+
+    renderPresets()
+    renderScenarios()
+    renderLiveState()
+    renderGuideSwitcher()
+    renderGuide()
+  </script>
+</body>
+</html>

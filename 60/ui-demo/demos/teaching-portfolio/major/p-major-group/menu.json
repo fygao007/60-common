@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "p-major-group",
+    "label": "专业群看板",
+    "group": "专业群看板",
+    "defaultFeature": "p-major-group"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-p-major-group",
+      "label": "专业群看板（专业群带头人）",
+      "type": "react-business-page",
+      "html": "p-major-group.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../p-review/p-review.html",
+          "../t-overview/t-overview.html",
+          "../t-home/t-home.html",
+          "../a-integration/a-integration.html"
+        ]
+      }
+    }
+  ]
+}

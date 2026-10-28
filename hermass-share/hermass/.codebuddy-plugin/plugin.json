@@ -1,0 +1,42 @@
+{
+  "name": "hermass",
+  "version": "1.2.0",
+  "description": "Hermass: a five-step UI demo pipeline agent (requirement analysis, page structure, template matching, demo assembly, automated QA loop) for the HR platform.",
+  "author": {
+    "name": "高飞扬"
+  },
+  "agents": ["./agents/hermass.md"],
+
+  "expertType": "agent",
+  "agentName": "hermass",
+
+  "displayName": {
+    "en": "Hermass",
+    "zh": "Hermass 页面流水线智能体"
+  },
+  "profession": {
+    "en": "UI Demo Pipeline Engineer",
+    "zh": "UI Demo 流水线工程师"
+  },
+  "displayDescription": {
+    "en": "Five-step UI demo pipeline agent: requirement analysis, page structure, template matching, demo assembly and automated QA loop, delivering design-compliant pages in one pass.",
+    "zh": "五步流水线做页面demo：需求梳理、结构搭建、模板匹配、组装预览、循环检查，交付符合设计规范的页面"
+  },
+  "avatar": "avatars/expert.png",
+  "categoryId": "01-ProductDesign",
+  "defaultInitPrompt": {
+    "zh": "按五步流水线帮我生成一个新页面demo，需求是：____",
+    "en": "Run the five-step pipeline to build a new page demo. My requirement is: ____"
+  },
+  "plugin": "hermass",
+  "tags": [
+    { "en": "UI Prototyping", "zh": "UI 原型生成" },
+    { "en": "Design QA", "zh": "设计规范质检" },
+    { "en": "Component-based Frontend", "zh": "组件化前端" }
+  ],
+  "quickPrompts": [
+    { "en": "Run the five-step pipeline to build a new page demo. My requirement is: ____", "zh": "按五步流水线帮我生成一个新页面demo，需求是：____" },
+    { "en": "Screenshot the specified ui-demo page, auto-check it against the design spec and fix issues", "zh": "对 ui-demo 的指定页面截图，按设计规范自动检查并修复" },
+    { "en": "Analyze this requirement and recommend page templates and reference pages", "zh": "梳理这个需求，推荐页面模板和参考页面" }
+  ]
+}

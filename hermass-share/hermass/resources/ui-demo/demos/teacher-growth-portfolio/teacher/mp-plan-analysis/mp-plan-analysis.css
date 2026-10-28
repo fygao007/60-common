@@ -1,0 +1,320 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 发展规划分析：文档 + 规则 + 数据范围 → 报表。
+   使用 dashboard 模板与标准卡片，仅保留业务区域布局。 */
+
+.mpa2-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 12px 24px;
+  box-sizing: border-box;
+  min-height: 100%;
+  overflow: auto;
+  background: var(--ds-color-bg);
+}
+
+.mpa2-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.mpa2-hint {
+  color: var(--ds-color-text-tertiary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mpa2-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 1 · 文档 */
+.mpa2-doc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.mpa2-doc-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mpa2-doc-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mpa2-doc-samples {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mpa2-doc-note {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--ds-color-border);
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* 2 · 规则 */
+.mpa2-rules {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+/* 选择控件最小宽度 160px，规则区域不足时内部滚动。 */
+.mpa2-rule {
+  min-width: 1040px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px 160px 168px 120px 136px;
+  gap: 6px 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ds-color-border);
+}
+
+.mpa2-target {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mpa2-unit {
+  flex: none;
+  color: var(--ds-color-text-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.mpa2-rule--head {
+  padding: 0 0 6px;
+  color: var(--ds-color-text-secondary);
+  font-size: 12px;
+}
+
+.mpa2-rule:last-child {
+  border-bottom: 0;
+}
+
+.mpa2-scope {
+  color: var(--ds-color-text-secondary);
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mpa2-rule-clause {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  min-width: 0;
+}
+
+.mpa2-rule-clause__label {
+  flex: none;
+  color: var(--ds-color-text-tertiary);
+}
+
+.mpa2-rule-clause__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ds-color-text-secondary);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mpa2-rule-clause__empty {
+  flex: 1 1 auto;
+  color: var(--ds-color-text-tertiary);
+}
+
+.mpa2-rule-clause__from {
+  flex: none;
+  color: var(--ds-color-text-tertiary);
+}
+
+/* 3 · 数据范围 */
+.mpa2-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  align-items: start;
+}
+
+.mpa2-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mpa2-field__label {
+  color: var(--ds-color-text-secondary);
+  font-size: 12px;
+}
+
+.mpa2-field--note {
+  gap: 4px;
+  grid-column: 1 / -1;
+}
+
+.mpa2-generate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  grid-column: 1 / -1;
+  gap: 6px;
+}
+
+/* 4 · 报表 */
+.mpa2-report-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mpa2-caliber {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 2px solid var(--ds-color-border);
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.mpa2-report-foot {
+  margin: 0;
+  color: var(--ds-color-text-tertiary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.mpa2-cell-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mpa2-cell-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mpa2-cell-sub {
+  color: var(--ds-color-text-tertiary);
+  font-size: 12px;
+}
+
+.mpa2-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 口径明细 */
+.mpa2-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mpa2-drawer-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.mpa2-drawer-label {
+  flex: none;
+  width: 84px;
+  color: var(--ds-color-text-secondary);
+}
+
+.mpa2-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mpa2-drawer-section h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ds-color-text-heading);
+}
+
+.mpa2-drawer-text {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.mpa2-drawer-quote {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 2px solid var(--ds-color-border);
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.mpa2-person-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mpa2-person-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ds-color-text);
+}
+
+.mpa2-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  max-width: 560px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  background: var(--ds-color-text-heading);
+  color: var(--ds-color-bg-container);
+  font-size: 13px;
+  line-height: 1.5;
+  z-index: 20;
+}

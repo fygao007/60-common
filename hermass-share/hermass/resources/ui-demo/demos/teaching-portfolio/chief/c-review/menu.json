@@ -1,0 +1,29 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "chief",
+    "label": "专业主任"
+  },
+  "menu": {
+    "key": "c-review",
+    "label": "教学档案审核",
+    "group": "教学档案审核",
+    "defaultFeature": "c-review"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-chief-c-review",
+      "label": "教学档案审核（专业主任）",
+      "type": "static-prototype-menu",
+      "html": "c-review.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ]
+      }
+    }
+  ]
+}

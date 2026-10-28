@@ -1,0 +1,921 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "inventoryId": "rsjxdad-current-tables",
+  "application": "rsjxdad",
+  "label": "教学档案袋应用现有物理表结构",
+  "authority": "system-export",
+  "capturedAt": "2026-08-18",
+  "sourceDocuments": [
+    "11-现有表结构一览.csv",
+    "11-现有表结构一览.md"
+  ],
+  "statement": "本文件是现网代码已落地 PO 模型的原样快照，不是本体标准模型。列名为物理列名；语义归属以 ontology/mappings/rsjxdad-table-mappings.yaml 的映射结论为准，不得直接作为字段定义引用。",
+  "tableCount": 19,
+  "commonFields": [
+    {
+      "column": "id",
+      "label": "主键"
+    },
+    {
+      "column": "create_by",
+      "label": "创建人"
+    },
+    {
+      "column": "create_time",
+      "label": "创建时间"
+    },
+    {
+      "column": "update_by",
+      "label": "修改人"
+    },
+    {
+      "column": "update_time",
+      "label": "修改时间"
+    },
+    {
+      "column": "deleted_flag",
+      "label": "逻辑删除"
+    },
+    {
+      "column": "tenant_id",
+      "label": "租户"
+    }
+  ],
+  "commonFieldsNote": "平台 BaseDataModel 自动附加，所有业务表均有，下方 tables 中不再重复列出。",
+  "tables": [
+    {
+      "table": "T_RS_JXDAD_DAB",
+      "label": "档案表",
+      "group": "档案树",
+      "purpose": "档案分组与叶子表构成的档案树配置，叶子通过 bmc 指向真实业务表。",
+      "columns": [
+        {
+          "column": "glzd",
+          "label": "过滤字段",
+          "note": "列表过滤用哪个字段"
+        },
+        {
+          "column": "zssx",
+          "label": "展示顺序",
+          "note": "asc正序/desc倒序",
+          "codeList": {
+            "values": {
+              "asc": "正序",
+              "desc": "倒序"
+            }
+          }
+        },
+        {
+          "column": "wjdx",
+          "label": "文件大小",
+          "note": "附件大小限制"
+        },
+        {
+          "column": "wjlx",
+          "label": "文件类型",
+          "note": "附件类型限制"
+        },
+        {
+          "column": "lx",
+          "label": "类型",
+          "note": "group组 / table表",
+          "codeList": {
+            "values": {
+              "group": "组节点",
+              "table": "叶子表"
+            }
+          }
+        },
+        {
+          "column": "mc",
+          "label": "名称",
+          "note": "树节点显示名"
+        },
+        {
+          "column": "sfsy",
+          "label": "是否使用",
+          "note": "1启用",
+          "codeList": {
+            "values": {
+              "1": "启用",
+              "0": "停用"
+            }
+          }
+        },
+        {
+          "column": "px",
+          "label": "排序"
+        },
+        {
+          "column": "ls",
+          "label": "隶属",
+          "note": "父节点ID"
+        },
+        {
+          "column": "cc",
+          "label": "层次",
+          "note": "如1表示一级"
+        },
+        {
+          "column": "xrmb",
+          "label": "渲染模板",
+          "note": "1导航 / 2教学卡片 / 3时间轴",
+          "codeList": {
+            "dictionary": "JXDAD-XRMB",
+            "values": {
+              "1": "导航",
+              "2": "教学卡片",
+              "3": "时间轴"
+            },
+            "defect": "字典中存在第二套文案（博士/硕士/本科），需产品确认后只保留一套。"
+          }
+        },
+        {
+          "column": "bmc",
+          "label": "表名称",
+          "note": "叶子对应的物理表名"
+        },
+        {
+          "column": "zslx",
+          "label": "展示类型",
+          "note": "1表格 2表单 3卡片 4时间轴 5大文本 6文件",
+          "codeList": {
+            "dictionary": "JXDAD-ZSLX",
+            "values": {
+              "1": "表格",
+              "2": "表单",
+              "3": "卡片",
+              "4": "时间轴",
+              "5": "大文本",
+              "6": "文件"
+            }
+          }
+        },
+        {
+          "column": "nrsm",
+          "label": "内容说明"
+        },
+        {
+          "column": "sjly",
+          "label": "数据来源"
+        },
+        {
+          "column": "sjly_url",
+          "label": "数据来源系统地址"
+        },
+        {
+          "column": "ms",
+          "label": "描述"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_DAZD",
+      "label": "档案字段",
+      "group": "档案树",
+      "purpose": "某张档案表要展示哪些字段及其排序。",
+      "columns": [
+        {
+          "column": "dabid",
+          "label": "档案表ID",
+          "note": "指向DAB"
+        },
+        {
+          "column": "zdid",
+          "label": "字段ID",
+          "note": "业务表字段名"
+        },
+        {
+          "column": "zdmc",
+          "label": "字段名称",
+          "note": "展示名"
+        },
+        {
+          "column": "sfzs",
+          "label": "是否展示",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        },
+        {
+          "column": "zdsx",
+          "label": "字段属性",
+          "note": "重要字段/辅助信息/内容字段",
+          "codeList": {
+            "values": {
+              "重要字段": "重要字段",
+              "辅助信息": "辅助信息",
+              "内容字段": "内容字段"
+            }
+          }
+        },
+        {
+          "column": "px",
+          "label": "排序"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_PC",
+      "label": "批次",
+      "group": "批次",
+      "purpose": "考核批次：发布范围、考核学期、审批流程、打分配置与状态。",
+      "columns": [
+        {
+          "column": "pcmc",
+          "label": "批次名称"
+        },
+        {
+          "column": "fbfw",
+          "label": "发布范围",
+          "note": "全校/学院/专业等"
+        },
+        {
+          "column": "zdxy",
+          "label": "指定学院"
+        },
+        {
+          "column": "zdzy",
+          "label": "指定专业",
+          "note": "批次范围配置；人身上专业在JZGZY"
+        },
+        {
+          "column": "gltj",
+          "label": "过滤条件",
+          "note": "长文本"
+        },
+        {
+          "column": "khxq",
+          "label": "考核学期",
+          "note": "另有多学期表PCXNXQ"
+        },
+        {
+          "column": "tjkssj",
+          "label": "提交开始时间"
+        },
+        {
+          "column": "tjjzsj",
+          "label": "提交截止时间"
+        },
+        {
+          "column": "lc",
+          "label": "流程",
+          "note": "飞龙流程KEY"
+        },
+        {
+          "column": "pfmf",
+          "label": "评分满分",
+          "note": "打分上限"
+        },
+        {
+          "column": "dfhj",
+          "label": "打分环节",
+          "note": "流程节点KEY"
+        },
+        {
+          "column": "zt",
+          "label": "状态",
+          "note": "1待发布 2已发布 3已结束",
+          "codeList": {
+            "dictionary": "JXDAD-PC-ZT",
+            "values": {
+              "1": "待发布",
+              "2": "已发布",
+              "3": "已结束"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_PCXNXQ",
+      "label": "批次学年学期",
+      "group": "批次",
+      "purpose": "一个批次挂多个学年学期。",
+      "columns": [
+        {
+          "column": "pcid",
+          "label": "批次ID"
+        },
+        {
+          "column": "xnxqdm",
+          "label": "学年学期代码"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_PCDAB",
+      "label": "批次档案表",
+      "group": "批次",
+      "purpose": "早期「批次显示哪些档案表」配置，当前缺批次 ID。",
+      "columns": [
+        {
+          "column": "dabid",
+          "label": "档案表ID",
+          "note": "当前模型无pcid"
+        },
+        {
+          "column": "sfxs",
+          "label": "是否显示",
+          "note": "批次圈表实际走权限表",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_GRZB",
+      "label": "个人主表",
+      "group": "批次",
+      "purpose": "个人主表：lx=1 为活档案，lx=2 为某批次提交单（含审核状态与得分）。",
+      "columns": [
+        {
+          "column": "lx",
+          "label": "类型",
+          "note": "1活档案 2提交单",
+          "codeList": {
+            "values": {
+              "1": "个人活档案",
+              "2": "某批次的提交信息"
+            }
+          }
+        },
+        {
+          "column": "jzgbh",
+          "label": "教职工编号"
+        },
+        {
+          "column": "zgh",
+          "label": "职工号"
+        },
+        {
+          "column": "pcid",
+          "label": "批次",
+          "note": "lx=2时必有"
+        },
+        {
+          "column": "shzt",
+          "label": "审核状态",
+          "note": "0草稿 -1退回 节点码 99通过",
+          "codeList": {
+            "dictionary": "sysApprovalStatus",
+            "values": {
+              "0": "草稿（可提交）",
+              "-1": "退回（可再提交）",
+              "99": "通过"
+            },
+            "note": "其余取值为流程节点码，表示审批中，以流程配置为准。"
+          }
+        },
+        {
+          "column": "pfzt",
+          "label": "评分状态",
+          "note": "一期暂不用"
+        },
+        {
+          "column": "df",
+          "label": "得分",
+          "note": "打分环节通过时写入"
+        },
+        {
+          "column": "py",
+          "label": "评语"
+        },
+        {
+          "column": "dfr",
+          "label": "打分人职工号"
+        },
+        {
+          "column": "dfsj",
+          "label": "打分时间"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_TXDWB",
+      "label": "填写大文本",
+      "group": "填写",
+      "purpose": "教师填写的长文本；pcid 为空是活数据，有值是该批次存档。",
+      "columns": [
+        {
+          "column": "zbid",
+          "label": "主表ID"
+        },
+        {
+          "column": "xqdm",
+          "label": "学期"
+        },
+        {
+          "column": "kcdm",
+          "label": "课程代码"
+        },
+        {
+          "column": "jzgbh",
+          "label": "教职工编号"
+        },
+        {
+          "column": "zgh",
+          "label": "职工号"
+        },
+        {
+          "column": "dabid",
+          "label": "档案表ID"
+        },
+        {
+          "column": "txnr",
+          "label": "填写内容",
+          "note": "长文本"
+        },
+        {
+          "column": "pcid",
+          "label": "批次ID",
+          "note": "空=活数据 有值=存档"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_TXFJ",
+      "label": "填写附件",
+      "group": "填写",
+      "purpose": "教师上传的附件；同样用 pcid 区分活数据与存档。",
+      "columns": [
+        {
+          "column": "zbid",
+          "label": "主表ID"
+        },
+        {
+          "column": "xqdm",
+          "label": "学期"
+        },
+        {
+          "column": "kcdm",
+          "label": "课程代码"
+        },
+        {
+          "column": "jzgbh",
+          "label": "教职工编号"
+        },
+        {
+          "column": "zgh",
+          "label": "职工号"
+        },
+        {
+          "column": "dabid",
+          "label": "档案表ID"
+        },
+        {
+          "column": "fj",
+          "label": "附件"
+        },
+        {
+          "column": "pcid",
+          "label": "批次ID",
+          "note": "空=活数据 有值=存档"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_LN",
+      "label": "档案袋理念",
+      "group": "填写",
+      "purpose": "档案袋理念：教育初心与育人理念。",
+      "columns": [
+        {
+          "column": "jzgbh",
+          "label": "教职工编号"
+        },
+        {
+          "column": "lnbt",
+          "label": "理念标题"
+        },
+        {
+          "column": "lnnr",
+          "label": "理念内容"
+        },
+        {
+          "column": "bb",
+          "label": "版本"
+        },
+        {
+          "column": "lx",
+          "label": "类型",
+          "note": "1教育初心 2育人理念",
+          "codeList": {
+            "dictionary": "JXDAD-DADLNLX",
+            "values": {
+              "1": "教育初心",
+              "2": "育人理念"
+            }
+          }
+        },
+        {
+          "column": "lnbh",
+          "label": "理念编号",
+          "note": "无pcid 默认不进批次存档"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_KCXX",
+      "label": "课程信息",
+      "group": "课程",
+      "purpose": "课程信息，混合了课程主数据与开课班次属性。",
+      "columns": [
+        {
+          "column": "dm",
+          "label": "代码"
+        },
+        {
+          "column": "mc",
+          "label": "名称"
+        },
+        {
+          "column": "xsxq",
+          "label": "学年学期"
+        },
+        {
+          "column": "kch",
+          "label": "课程号"
+        },
+        {
+          "column": "kcm",
+          "label": "课程名"
+        },
+        {
+          "column": "kxh",
+          "label": "课序号"
+        },
+        {
+          "column": "cddw",
+          "label": "承担单位"
+        },
+        {
+          "column": "skxs",
+          "label": "授课形式"
+        },
+        {
+          "column": "kclb",
+          "label": "课程类别"
+        },
+        {
+          "column": "kcxz",
+          "label": "课程性质"
+        },
+        {
+          "column": "skbj",
+          "label": "授课班级"
+        },
+        {
+          "column": "xf",
+          "label": "学分"
+        },
+        {
+          "column": "xs",
+          "label": "学时"
+        },
+        {
+          "column": "xkrs",
+          "label": "选课人数"
+        },
+        {
+          "column": "kslx",
+          "label": "考试类型"
+        },
+        {
+          "column": "fj",
+          "label": "附件",
+          "note": "无pcid/jzgbh"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_JZGKC",
+      "label": "教职工课程",
+      "group": "课程",
+      "purpose": "教职工与课程的关联。",
+      "columns": [
+        {
+          "column": "jzgbh",
+          "label": "教职工编号"
+        },
+        {
+          "column": "kcxxid",
+          "label": "课程信息ID",
+          "note": "指向KCXX"
+        },
+        {
+          "column": "kcdm",
+          "label": "课程代码"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JZG_JXSS",
+      "label": "教学实施",
+      "group": "课程",
+      "purpose": "按周次与日期记录的上课明细，表名前缀在教职工域而非 JXDAD。",
+      "columns": [
+        {
+          "column": "kcdm",
+          "label": "课程代码",
+          "note": "表名前缀非JXDAD"
+        },
+        {
+          "column": "xqdm",
+          "label": "学期代码"
+        },
+        {
+          "column": "jzgbh",
+          "label": "教职工编号"
+        },
+        {
+          "column": "zc",
+          "label": "周次"
+        },
+        {
+          "column": "xq",
+          "label": "星期"
+        },
+        {
+          "column": "xs",
+          "label": "学时"
+        },
+        {
+          "column": "jxlx",
+          "label": "教学类型"
+        },
+        {
+          "column": "jxfs",
+          "label": "教学方式"
+        },
+        {
+          "column": "sknr",
+          "label": "上课内容"
+        },
+        {
+          "column": "skdd",
+          "label": "上课地点"
+        },
+        {
+          "column": "xxhjxgj",
+          "label": "信息化教学工具"
+        },
+        {
+          "column": "kczy",
+          "label": "课程资源"
+        },
+        {
+          "column": "jxsb",
+          "label": "教学随笔"
+        },
+        {
+          "column": "kcsz",
+          "label": "课程思政"
+        },
+        {
+          "column": "skrq",
+          "label": "上课日期",
+          "note": "无pcid"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_XNXQ",
+      "label": "学年学期",
+      "group": "学期",
+      "purpose": "学年学期主数据，含起止时间。",
+      "columns": [
+        {
+          "column": "dm",
+          "label": "代码"
+        },
+        {
+          "column": "mc",
+          "label": "名称"
+        },
+        {
+          "column": "kssj",
+          "label": "开始时间"
+        },
+        {
+          "column": "jssj",
+          "label": "结束时间"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_ZYQ",
+      "label": "专业群",
+      "group": "组织",
+      "purpose": "专业群主数据。",
+      "columns": [
+        {
+          "column": "zyqmc",
+          "label": "专业群名称"
+        },
+        {
+          "column": "zyqdm",
+          "label": "专业群代码"
+        },
+        {
+          "column": "szdwdm",
+          "label": "所属学院"
+        },
+        {
+          "column": "zyqfzr",
+          "label": "专业群负责人"
+        },
+        {
+          "column": "bhzy",
+          "label": "包含专业"
+        },
+        {
+          "column": "zt",
+          "label": "状态"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_ZY",
+      "label": "专业",
+      "group": "组织",
+      "purpose": "专业主数据，无专业名称字段。",
+      "columns": [
+        {
+          "column": "szdwdm",
+          "label": "所属学院"
+        },
+        {
+          "column": "zydm",
+          "label": "专业代码",
+          "note": "无专业名称字段"
+        },
+        {
+          "column": "zyfzr",
+          "label": "专业负责人"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_ZYQZY",
+      "label": "专业群专业",
+      "group": "组织",
+      "purpose": "专业群与专业的关联。",
+      "columns": [
+        {
+          "column": "zyqid",
+          "label": "专业群ID"
+        },
+        {
+          "column": "zydm",
+          "label": "专业代码"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_JZGZY",
+      "label": "教职工专业",
+      "group": "组织",
+      "purpose": "教职工与专业的关联，一人可多专业，用于批次发布圈人。",
+      "columns": [
+        {
+          "column": "jzgbh",
+          "label": "教职工编号",
+          "note": "一人可多专业"
+        },
+        {
+          "column": "zgh",
+          "label": "职工号"
+        },
+        {
+          "column": "zydm",
+          "label": "专业代码"
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_YHZBQX",
+      "label": "用户组表权限",
+      "group": "权限",
+      "purpose": "角色对某档案表能否新增或删除，可按批次覆盖。",
+      "columns": [
+        {
+          "column": "app_code",
+          "label": "所属应用"
+        },
+        {
+          "column": "role_id",
+          "label": "角色ID"
+        },
+        {
+          "column": "dabid",
+          "label": "档案表ID"
+        },
+        {
+          "column": "sfxz",
+          "label": "是否允许新增",
+          "note": "1是0否",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        },
+        {
+          "column": "pcid",
+          "label": "批次ID",
+          "note": "空=默认 有值=该批次"
+        },
+        {
+          "column": "sfsc",
+          "label": "是否允许删除",
+          "note": "1是0否",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": "T_RS_JXDAD_YHZZDQX",
+      "label": "用户组字段权限",
+      "group": "权限",
+      "purpose": "角色对某字段的查看、修改、必填控制，可按批次覆盖。",
+      "columns": [
+        {
+          "column": "app_code",
+          "label": "应用编码"
+        },
+        {
+          "column": "role_id",
+          "label": "角色ID"
+        },
+        {
+          "column": "lx",
+          "label": "类型",
+          "note": "dab默认 / pc批次",
+          "codeList": {
+            "values": {
+              "dab": "档案树默认权限",
+              "pc": "某批次覆盖权限"
+            }
+          }
+        },
+        {
+          "column": "dabid",
+          "label": "档案表ID"
+        },
+        {
+          "column": "pcid",
+          "label": "批次ID"
+        },
+        {
+          "column": "zdid",
+          "label": "字段编码"
+        },
+        {
+          "column": "sfck",
+          "label": "是否查看",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        },
+        {
+          "column": "sfxg",
+          "label": "是否修改",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        },
+        {
+          "column": "sfbt",
+          "label": "是否必填",
+          "note": "提交校验读批次侧必填",
+          "codeList": {
+            "values": {
+              "1": "是",
+              "0": "否"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

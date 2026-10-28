@@ -1,0 +1,214 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 评估指标配置：DSTree 左树 + DSRegularListTemplate 右表，只写页面专属样式 */
+
+.sei-page {
+  display: grid;
+  grid-template-columns: 288px minmax(0, 1fr);
+  gap: var(--ds-space-3);
+  width: 100%;
+  min-height: 100%;
+  color: var(--ds-color-text-heading);
+}
+
+.sei-page h2 {
+  margin: 0;
+}
+
+/* —— 左侧指标体系树 —— */
+
+.sei-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: calc(100vh - 76px);
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border-tertiary);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-shadow-xs);
+}
+
+.sei-sidebar__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+}
+
+.sei-sidebar__title {
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.sei-sidebar__search {
+  padding: 10px 12px 6px;
+}
+
+.sei-sidebar__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: 0 12px 8px;
+}
+
+.sei-sidebar__spacer {
+  flex: 1;
+}
+
+.sei-sidebar__tree {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 6px 10px;
+}
+
+.sei-sidebar__note {
+  margin: 0;
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--ds-color-border-secondary);
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+/* —— 右侧列表区 —— */
+
+.sei-main {
+  display: flex;
+  min-width: 0;
+}
+
+.sei-main__template {
+  flex: 1;
+  min-height: 0;
+}
+
+.sei-crumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-secondary);
+}
+
+.sei-crumb__path {
+  max-width: 720px;
+  overflow: hidden;
+  color: var(--ds-color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sei-crumb__sep {
+  color: var(--ds-color-text-tertiary);
+}
+
+/* —— 单元内容 —— */
+
+.sei-name-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sei-name-cell__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sei-obs-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sei-obs-cell__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sei-obs-cell__meta {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+}
+
+.sei-muted {
+  color: var(--ds-color-text-tertiary);
+}
+
+/* —— 弹窗内的观测点只读块 —— */
+
+.sei-obs-list {
+  display: grid;
+  gap: var(--ds-space-2);
+  width: 100%;
+}
+
+.sei-obs-item {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  background: var(--ds-color-bg-page);
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-md);
+}
+
+.sei-obs-item__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-space-1);
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+}
+
+.sei-obs-item__text {
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+  word-break: break-word;
+}
+
+.sei-obs-item__more {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+}
+
+.sei-confirm-text {
+  margin: 0;
+  color: var(--ds-color-text);
+  line-height: var(--ds-line-height-md);
+}
+
+.sei-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  z-index: 20;
+  max-width: 560px;
+  padding: 10px 16px;
+  transform: translateX(-50%);
+  color: var(--ds-color-bg-container);
+  background: var(--ds-color-text-heading);
+  border-radius: var(--ds-radius-sm);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-md);
+}
+
+@media (max-width: 1180px) {
+  .sei-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sei-sidebar {
+    max-height: 360px;
+  }
+}

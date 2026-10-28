@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核日志组件</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AuditLog/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .page-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .page-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .page-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .section {
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
+    }
+
+    .card {
+      min-height: 220px;
+      padding: 0;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .card.is-full {
+      grid-column: 1 / -1;
+    }
+
+    .card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .caption {
+      margin: 0;
+      padding: 12px 16px 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card,
+      .card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="page">
+    <header class="head">
+      <div>
+        <h1 class="page-title"><span>审核日志组件</span></h1>
+        <p class="page-desc">按时间轴展示每个审核节点的操作记录，支持 提交、通过、退回、不通过、会签 等多种操作类型。</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">教材申请审核日志（图一示例：含退回 / 重新提交 / 不通过完整体）</h2>
+        <span class="section-meta">Vertical / 提交 → 退回 → 重新提交 → 通过 → 不通过</span>
+      </div>
+      <div class="grid">
+        <article class="card is-full">
+          <section class="ds-audit-log" aria-label="审核日志">
+            <ol class="ds-audit-log__list">
+              <li class="ds-audit-log__item ds-audit-log__item--primary">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__line"></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">个人提交</span>
+                    <span class="ds-audit-log__stage">教材申请</span>
+                    <span class="ds-audit-log__status is-primary">提交</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">提交人：张质系</span>
+                  </div>
+                </div>
+              </li>
+
+              <li class="ds-audit-log__item ds-audit-log__item--warning">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__line"></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">院系秘书审核</span>
+                    <span class="ds-audit-log__status is-warning">退回</span>
+                    <span class="ds-audit-log__extra">2人会签</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">审核人：张质系</span>
+                  </div>
+                  <div class="ds-audit-log__remark">退回原因：缺少指导博士生经验</div>
+                </div>
+              </li>
+
+              <li class="ds-audit-log__item ds-audit-log__item--primary">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__line"></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">教材申请</span>
+                    <span class="ds-audit-log__status is-primary">重新提交</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">提交人：张质系</span>
+                  </div>
+                </div>
+              </li>
+
+              <li class="ds-audit-log__item ds-audit-log__item--success">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__line"></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">院系秘书审核</span>
+                    <span class="ds-audit-log__status is-success">通过</span>
+                    <span class="ds-audit-log__extra">2人会签</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">审核人：张质系</span>
+                  </div>
+                </div>
+              </li>
+
+              <li class="ds-audit-log__item ds-audit-log__item--danger is-last">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">科研处办理</span>
+                    <span class="ds-audit-log__status is-danger">不通过</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">办理人：张质系</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">不同状态片段</h2>
+        <span class="section-meta">仅通过 / 仅退回 / 待审核</span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <p class="caption">提交 + 通过</p>
+          <section class="ds-audit-log">
+            <ol class="ds-audit-log__list">
+              <li class="ds-audit-log__item ds-audit-log__item--primary">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__line"></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">个人提交</span>
+                    <span class="ds-audit-log__status is-primary">提交</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">提交人：张质系</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-log__item ds-audit-log__item--success is-last">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">院系秘书审核</span>
+                    <span class="ds-audit-log__status is-success">通过</span>
+                    <span class="ds-audit-log__extra">2人会签</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">审核人：张质系</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+
+        <article class="card">
+          <p class="caption">退回 + 退回原因</p>
+          <section class="ds-audit-log">
+            <ol class="ds-audit-log__list">
+              <li class="ds-audit-log__item ds-audit-log__item--warning is-last">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">院系领导审核</span>
+                    <span class="ds-audit-log__status is-warning">退回</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：2025.11.10 14:09:30</span>
+                    <span class="ds-audit-log__meta-item">审核人：李院长</span>
+                  </div>
+                  <div class="ds-audit-log__remark">退回原因：附件材料缺少指导博士生经验证明</div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+
+        <article class="card">
+          <p class="caption">待审核（最新节点）</p>
+          <section class="ds-audit-log">
+            <ol class="ds-audit-log__list">
+              <li class="ds-audit-log__item is-last">
+                <div class="ds-audit-log__dot"><span class="ds-audit-log__dot-inner"></span></div>
+                <div class="ds-audit-log__panel">
+                  <div class="ds-audit-log__head">
+                    <span class="ds-audit-log__stage">人事处审核</span>
+                    <span class="ds-audit-log__status">待审核</span>
+                  </div>
+                  <div class="ds-audit-log__meta">
+                    <span class="ds-audit-log__meta-item">提交时间：—</span>
+                    <span class="ds-audit-log__meta-item">审核人：—</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

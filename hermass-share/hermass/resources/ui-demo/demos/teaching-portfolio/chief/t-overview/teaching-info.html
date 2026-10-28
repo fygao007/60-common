@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教学信息</title>
+  <link rel="stylesheet" href="../../../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../../../assets/base.css" />
+  <link rel="stylesheet" href="../../../../assets/theme.css" />
+  <link rel="stylesheet" href="../../../../packages/design-system/src/Upload/index.css" />
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+
+    .ti-page { height: 100%; min-height: 0; background: var(--ds-color-bg-container); }
+    .ti-content-card { width: 100%; height: calc(100vh - 92px); min-height: 0; overflow: hidden; background: var(--ds-color-bg-container); }
+
+    /* 顶部返回头 */
+    .ti-top-header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .ti-back-btn { display: inline-flex; align-items: center; gap: 4px; color: #000; font-size: 14px; cursor: pointer; background: none; border: none; padding: 0; }
+    .ti-back-btn:hover { color: var(--ds-color-primary); }
+    .ti-back-btn svg { width: 20px; height: 20px; }
+    .ti-header-divider { width: 1px; height: 20px; background: #eeeef0; }
+    .ti-header-title { margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+
+    /* 布局 */
+    .ti-layout { display: grid; grid-template-columns: 360px minmax(0, 1fr); height: calc(100vh - 144px); min-height: 0; overflow: hidden; }
+
+    /* 左侧课程栏 */
+    .ti-course-pane { min-width: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 12px 32px 16px; border-right: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-bg-container); }
+    .ti-filter-head { margin-bottom: 12px; }
+    .ti-semester-select { width: 100%; height: 32px; padding: 0 10px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; background: #fff; color: #000; cursor: pointer; }
+    .ti-semester-select:focus { outline: none; border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px var(--ds-color-focus-ring); }
+
+    .ti-search-box { display: flex; margin-bottom: 18px; }
+    .ti-search-input { flex: 1; min-width: 0; height: 32px; padding: 0 10px; border: 1px solid #dcdce0; border-radius: 4px 0 0 4px; font-size: 14px; }
+    .ti-search-input:focus { outline: none; border-color: var(--ds-color-primary); }
+    .ti-search-btn { flex: none; width: 40px; height: 32px; margin-left: -1px; border: 1px solid #dcdce0; border-radius: 0 4px 4px 0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #505266; }
+    .ti-search-btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+
+    .ti-course-list { display: grid; gap: 12px; }
+    .ti-empty-state { padding: 32px 16px; color: var(--ds-color-text-tertiary); font-size: 14px; text-align: center; border: 1px dashed var(--ds-color-border); border-radius: 4px; }
+
+    /* 课程卡片 */
+    .ti-course-card { display: grid; gap: 14px; padding: 18px; color: #000; text-decoration: none; border: 2px solid var(--ds-color-border); border-radius: 8px; background: var(--ds-color-bg-container); cursor: pointer; }
+    .ti-course-card.is-active { border-color: var(--ds-color-primary); background: linear-gradient(180deg, var(--ds-color-primary-light), var(--ds-color-bg-container)); }
+    .ti-course-card:not(.is-active) { gap: 16px; }
+    .ti-course-card h2 { margin: 0; color: #000; font-size: 16px; font-weight: 600; line-height: 1.5; }
+    .ti-course-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ti-course-tags span { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; color: var(--ds-color-text-secondary); font-size: 14px; background: var(--ds-color-bg-subtle); border-radius: 4px; }
+    .ti-course-fields { display: grid; gap: 14px; margin: 6px 0 0; }
+    .ti-course-fields div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 18px; align-items: center; }
+    .ti-course-fields dt { color: var(--ds-color-text-secondary); font-size: 14px; }
+    .ti-course-fields dd { margin: 0; color: #000; font-size: 14px; }
+
+    /* 右侧详情区 */
+    .ti-detail-pane { display: flex; min-width: 0; min-height: 0; flex-direction: column; background: var(--ds-color-bg-container); }
+    .ti-tabs-wrap { flex: none; min-width: 0; padding: 8px 24px 8px 12px; overflow-x: auto; scrollbar-width: none; }
+    .ti-tabs-wrap::-webkit-scrollbar { display: none; }
+    .ti-tab-segments { display: flex; width: max-content; height: 32px; gap: 2px; padding: 2px; background: var(--ds-color-bg-subtle); border-radius: 6px; }
+    .ti-tab-segment { min-width: auto; height: 28px; padding: 3px 12px; color: var(--ds-color-text-secondary); background: transparent; border: 0; border-radius: 4px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+    .ti-tab-segment:hover { color: #000; background: var(--ds-color-bg-container); }
+    .ti-tab-segment.is-active { color: var(--ds-color-primary); background: var(--ds-color-bg-container); }
+
+    .ti-tab-body { display: grid; gap: 22px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 8px 16px 40px 12px; align-content: start; }
+
+    /* 分区 */
+    .ti-section { display: grid; gap: 12px; min-width: 0; }
+    .ti-section-head { display: flex; align-items: center; gap: 16px; min-width: 0; min-height: 44px; padding: 0 16px; background: linear-gradient(90deg, var(--ds-color-primary-light), var(--ds-color-bg-container)); border-radius: 4px; }
+    .ti-section-head h3 { margin: 0 auto 0 0; color: #000; font-size: 16px; font-weight: 600; }
+    .ti-source-note { display: inline-flex; align-items: center; margin-left: auto; color: var(--ds-color-text-secondary); font-size: 13px; white-space: nowrap; }
+    .ti-source-note strong { color: #000; font-weight: 600; }
+
+    /* 只读表单 - 表格式 */
+    .info-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #eeeef0; background: #fff; table-layout: fixed; }
+    .info-table th, .info-table td { height: 36px; padding: 0 12px; border-bottom: 1px solid #eeeef0; border-left: 1px solid #eeeef0; font-size: 13px; line-height: 20px; }
+    .info-table th:first-child, .info-table td:first-child { border-left: none; }
+    .info-table th { background: #fafafa; color: #505266; font-weight: 400; text-align: right; white-space: nowrap; width: 140px; }
+    .info-table td { color: #000; }
+    .info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 文本展示框 */
+    .ti-display-box { min-height: 84px; padding: 16px; color: #000; font-size: 14px; line-height: 1.75; border: 1px solid var(--ds-color-border-secondary); border-radius: 2px; background: var(--ds-color-bg-subtle); }
+    .ti-display-box--compact { min-height: 42px; }
+    .ti-display-box--large { min-height: 220px; }
+
+    /* 上传区（ds-upload 规范组件） */
+    .ti-upload-section { display: block; }
+    .ds-upload__button-description { font-size: 12px; color: var(--ds-color-text-tertiary); }
+    .ti-upload-box, .ti-file-card { display: grid; place-items: center; width: 148px; height: 96px; color: var(--ds-color-text-secondary); font-size: 13px; border: 1px dashed var(--ds-color-border); border-radius: 8px; background: var(--ds-color-bg-container); text-align: center; cursor: pointer; }
+    .ti-upload-box:hover { border-color: var(--ds-color-primary); }
+    .ti-upload-link { color: var(--ds-color-primary); }
+    .ti-file-card { border-style: solid; background: var(--ds-color-bg-subtle); cursor: default; display: flex; flex-direction: column; gap: 4px; }
+    .ti-file-icon { color: #fa5151; font-weight: 600; }
+
+    /* 基本信息二级分组 */
+    .ti-base-group { padding: 0; }
+    .ti-base-group + .ti-base-group { margin-top: 16px; }
+    .ti-base-group__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .ti-base-group__title { position: relative; padding-left: 10px; color: #000; font-size: 14px; font-weight: 500; }
+    .ti-base-group__title::before { content: ""; position: absolute; top: 50%; left: 0; width: 3px; height: 14px; border-radius: 2px; background: var(--ds-color-primary); transform: translateY(-50%); }
+    .ti-base-group__body { padding: 16px; color: #000; font-size: 14px; line-height: 1.75; border: 1px solid var(--ds-color-border-secondary); border-radius: 2px; background: var(--ds-color-bg-subtle); }
+
+    /* 教学计划卡片 */
+    .ti-plan-list { display: grid; gap: 12px; }
+    .ti-plan-card { border: 1px solid var(--ds-color-border-secondary); border-radius: 8px; background: var(--ds-color-bg-container); overflow: hidden; }
+    .ti-plan-card__head { display: flex; align-items: center; gap: 8px; padding: 10px 14px; cursor: pointer; user-select: none; }
+    .ti-plan-card__head:hover { background: var(--ds-color-bg-subtle); }
+    .ti-plan-grid-4--compact { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .ti-plan-grid-4--compact > span { display: flex; gap: 2px; color: #000; font-size: 14px; overflow: hidden; white-space: nowrap; }
+    .ti-plan-grid-4__name { flex: none; color: var(--ds-color-text-secondary); }
+    .ti-plan-card__arrow { display: inline-block; font-size: 10px; color: var(--ds-color-text-secondary); }
+    .ti-plan-card__body { padding: 4px 14px 14px; }
+    .ti-plan-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin: 0; }
+    .ti-plan-fields > div { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .ti-plan-fields > div.ti-full-width { grid-column: 1 / -1; }
+    .ti-plan-fields dt { margin: 0; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 1.6; }
+    .ti-plan-fields dd { margin: 0; color: #000; font-size: 14px; line-height: 1.6; }
+    .ti-plan-card__actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+
+    /* 按钮 */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { background: var(--ds-color-primary-hover); }
+    .btn.sm { height: 28px; font-size: 13px; padding: 0 12px; min-width: auto; }
+
+    /* 弹窗 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 640px; max-width: 90vw; max-height: 90vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+    .modal__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eeeef0; flex-shrink: 0; }
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+    .modal__close { width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+    .modal__close:hover { background: #f5f5f5; }
+    .modal__body { flex: 1; overflow-y: auto; padding: 20px; }
+    .modal__footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; border-top: 1px solid #eeeef0; flex-shrink: 0; }
+
+    /* 表单 */
+    .form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .form-field__label { font-size: 14px; color: #000; font-weight: 500; }
+    .form-field input, .form-field textarea, .form-field select { padding: 8px 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; }
+    .form-field input:focus, .form-field textarea:focus, .form-field select:focus { outline: none; border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px var(--ds-color-focus-ring); }
+    .form-field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+    .ti-modal-sync-info { margin-bottom: 20px; padding: 12px 14px; font-size: 13px; color: var(--ds-color-text-secondary); background: var(--ds-color-bg-subtle); border-radius: 4px; }
+    .ti-modal-sync-info span + span::before { content: "·"; margin: 0 8px; color: var(--ds-color-text-tertiary); }
+    .form-field select { height: 36px; background: #fff; cursor: pointer; }
+
+    /* 响应式 */
+    @media (max-width: 1100px) {
+      .ti-layout { grid-template-columns: 320px minmax(0, 1fr); }
+      .ti-course-pane { padding-inline: 18px 14px; }
+    }
+    @media (max-width: 860px) {
+      .ti-content-card { height: auto; min-height: calc(100vh - 92px); }
+      .ti-layout { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      .ti-course-pane, .ti-tab-body { overflow: visible; }
+      .ti-course-pane { border-right: 0; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    }
+  </style>
+</head>
+<body>
+  <div class="ds-scope ti-page" id="app">
+    <div class="ti-content-card">
+      <!-- 顶部返回头 -->
+      <div class="ti-top-header">
+        <button class="ti-back-btn" id="backBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+        <div class="ti-header-divider"></div>
+        <h1 class="ti-header-title">教育教学信息</h1>
+      </div>
+
+      <div class="ti-layout">
+        <!-- 左侧课程列表 -->
+        <aside class="ti-course-pane" aria-label="授课课程">
+          <div class="ti-filter-head">
+            <select class="ti-semester-select" id="semesterSelect"></select>
+          </div>
+          <div class="ti-search-box">
+            <input class="ti-search-input" id="searchInput" type="text" placeholder="搜索课程名称" />
+            <button class="ti-search-btn" type="button" aria-label="搜索">
+              <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/><path d="M10 10L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+          <div class="ti-course-list" id="courseList">
+            <!-- JS渲染 -->
+          </div>
+        </aside>
+
+        <!-- 右侧详情区 -->
+        <section class="ti-detail-pane" aria-label="教学信息详情">
+          <div class="ti-tabs-wrap">
+            <div class="ti-tab-segments" id="tabSegments">
+              <!-- JS渲染 -->
+            </div>
+          </div>
+          <div class="ti-tab-body" id="tabBody">
+            <!-- JS渲染 -->
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- 文本编辑弹窗 -->
+  <div class="modal-overlay" id="textModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title" id="textModalTitle">编辑</h3>
+        <button class="modal__close" id="textModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <div class="form-field">
+          <label class="form-field__label" id="textModalFieldLabel">内容</label>
+          <textarea id="textModalTextarea" rows="8" placeholder="请输入内容"></textarea>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn" id="textModalCancel" type="button">取消</button>
+        <button class="btn primary" id="textModalOk" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 教学实施编辑弹窗 -->
+  <div class="modal-overlay" id="planModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title" id="planModalTitle">编辑教学实施</h3>
+        <button class="modal__close" id="planModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <div class="ti-modal-sync-info" id="planModalSyncInfo"></div>
+        <div class="form-field">
+          <label class="form-field__label">教学类型</label>
+          <select id="planTeachingType">
+            <option value="">请选择</option>
+            <option>理论讲授</option>
+            <option>实践操作</option>
+            <option>实验教学</option>
+            <option>课堂讨论</option>
+            <option>项目指导</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">教学方式</label>
+          <select id="planTeachingMethod">
+            <option value="">请选择</option>
+            <option>课堂讲授</option>
+            <option>实验指导</option>
+            <option>案例教学</option>
+            <option>翻转课堂</option>
+            <option>分组讨论</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">上课内容</label>
+          <textarea id="planContent" rows="3" placeholder="请输入本次课的核心内容"></textarea>
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">上课地点</label>
+          <input type="text" id="planLocation" placeholder="请输入" />
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">信息化教学工具</label>
+          <select id="planTools">
+            <option value="">请选择</option>
+            <option>多媒体课件</option>
+            <option>在线编程平台</option>
+            <option>IDE开发环境</option>
+            <option>教学视频</option>
+            <option>实物模型</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">课程资源</label>
+          <input type="text" id="planResources" placeholder="多个资源用英文逗号分隔" />
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">教学随笔</label>
+          <textarea id="planReflection" rows="4" placeholder="请输入课后反思/随笔"></textarea>
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">课程思政</label>
+          <textarea id="planIdeology" rows="3" placeholder="请输入课程思政内容"></textarea>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn" id="planModalCancel" type="button">取消</button>
+        <button class="btn primary" id="planModalOk" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 审核页只读模式：URL 带 ?mode=readonly 时隐藏编辑按钮与返回头返回上级改为不可用
+    const IS_READONLY = new URLSearchParams(window.location.search).get('mode') === 'readonly';
+    if (IS_READONLY) {
+      const style = document.createElement('style');
+      style.textContent = '.btn[data-edit-basic],.btn[data-edit-plan],.btn[data-edit-section],#addPlanBtn{display:none!important}.ti-top-header{display:none!important}.ti-content-card{height:100vh}';
+      document.head.appendChild(style);
+    }
+
+    // ===== 学期选项 =====
+    function generateSemesterOptions() {
+      const options = [];
+      const currentYear = new Date().getFullYear();
+      const month = new Date().getMonth() + 1;
+      const isFall = month >= 9 || month <= 1;
+      const defaultValue = isFall ? (currentYear + '-' + (currentYear + 1) + '-fall') : ((currentYear - 1) + '-' + currentYear + '-spring');
+      for (let yearOffset = 0; yearOffset < 5; yearOffset++) {
+        const year = currentYear - yearOffset;
+        options.push({ value: year + '-' + (year + 1) + '-fall', label: year + '-' + (year + 1) + '学年 秋季学期' });
+        options.push({ value: (year - 1) + '-' + year + '-spring', label: (year - 1) + '-' + year + '学年 春季学期' });
+      }
+      return { options, defaultValue };
+    }
+
+    const SEMESTER = generateSemesterOptions();
+
+    // ===== 课程数据 =====
+    const BASE_COURSES = [
+      { id: 'data-structure', name: '数据结构与算法', tags: ['汽车智能技术', '88学时', '6学分'], code: 'CS20260101', sequence: '01', owner: '汽车智能技术学院', teachingForm: '线下授课', category: '专业核心课', nature: '必修', className: '202406', credits: 6, hours: 88, students: 19, examType: '闭卷考试', teachingMode: '讲授+实践', status: '进行中' },
+      { id: 'auto-engineering', name: '汽车工程', tags: ['汽车工程', '64学时', '6学分'], code: 'AE20260203', sequence: '02', owner: '汽车工程学院', teachingForm: '线下授课', category: '专业基础课', nature: '选修', className: '202405', credits: 6, hours: 64, students: 36, examType: '开卷考试', teachingMode: '讲授', status: '进行中' },
+      { id: 'auto-structure', name: '汽车结构讲解', tags: ['汽车工程', '64学时', '6学分'], code: 'AE20260312', sequence: '03', owner: '汽车工程学院', teachingForm: '线下授课', category: '专业基础课', nature: '必修', className: '202404', credits: 6, hours: 64, students: 42, examType: '课程论文', teachingMode: '讲授+实验', status: '已开课' },
+      { id: 'new-energy', name: '新能源汽车技术', tags: ['新能源汽车工程技术', '72学时', '5学分'], code: 'NE20260408', sequence: '04', owner: '新能源汽车学院', teachingForm: '混合式教学', category: '专业核心课', nature: '必修', className: '202403', credits: 5, hours: 72, students: 38, examType: '项目考核', teachingMode: '讲授+项目', status: '进行中' },
+      { id: 'intelligent-connected', name: '智能网联汽车基础', tags: ['智能网联汽车技术', '48学时', '3学分'], code: 'IC20260516', sequence: '05', owner: '智能网联学院', teachingForm: '线下授课', category: '专业拓展课', nature: '选修', className: '202402', credits: 3, hours: 48, students: 31, examType: '闭卷考试', teachingMode: '讲授', status: '已开课' },
+    ];
+
+    const COURSES_BY_SEMESTER = {
+      '2026-2027-fall': BASE_COURSES,
+      '2026-2027-spring': BASE_COURSES.slice(0, 4).map((c, i) => ({ ...c, id: c.id + '-spring', className: '20250' + (i + 1), status: i < 2 ? '已结课' : '进行中' })),
+      '2025-2026-fall': BASE_COURSES.slice(0, 3).map((c, i) => ({ ...c, id: '2025fall-' + c.id, className: '20240' + (i + 1), status: '已归档' })),
+    };
+
+    const TEACHING_PLANS_BY_COURSE = {
+      'data-structure': [
+        { id: 'plan-1', date: '2026-09-02', week: '第1周', weekday: '周一', hours: 2, teachingType: '理论讲授', teachingMethod: '课堂讲授', content: '课程导入：数据结构概述、算法复杂度分析基础', location: '教学楼A301', tools: '多媒体课件、在线编程平台', resources: [], reflection: '', ideology: '' },
+        { id: 'plan-2', date: '2026-09-05', week: '第1周', weekday: '周四', hours: 2, teachingType: '实践操作', teachingMethod: '实验指导', content: '线性表基础：顺序表与链表的实现', location: '实验楼B201', tools: 'IDE、代码调试工具', resources: ['实验指导书.pdf'], reflection: '学生链表指针操作理解较慢，下次需增加图示讲解', ideology: '培养严谨的编程习惯和代码质量意识' },
+        { id: 'plan-3', date: '2026-09-09', week: '第2周', weekday: '周一', hours: 2, teachingType: '理论讲授', teachingMethod: '课堂讲授', content: '栈与队列：概念、实现与应用场景', location: '教学楼A301', tools: '多媒体课件', resources: [], reflection: '', ideology: '' },
+      ],
+      'auto-engineering': [{ id: 'ae-1', date: '2026-09-03', week: '第1周', weekday: '周二', hours: 2, teachingType: '理论讲授', teachingMethod: '课堂讲授', content: '汽车工程概论：汽车发展史与基本构造', location: '教学楼C102', tools: '多媒体课件、实物模型', resources: [], reflection: '', ideology: '' }],
+    };
+
+    const DEFAULT_TEACHING_PLANS = [{ id: 'default-1', date: '2026-09-01', week: '第1周', weekday: '周一', hours: 2, teachingType: '', teachingMethod: '', content: '', location: '', tools: '', resources: [], reflection: '', ideology: '' }];
+
+    const TABS = [
+      { key: 'courseInfo', label: '课程信息' },
+      { key: 'design', label: '课程设计与实施' },
+      { key: 'ideology', label: '课程思政' },
+      { key: 'care', label: '教师关爱学生情况' },
+      { key: 'effect', label: '教学效果' },
+      { key: 'evaluation', label: '教学评价' },
+      { key: 'reflection', label: '课程反思' },
+      { key: 'summary', label: '课程总结' },
+      { key: 'materials', label: '课程资料' },
+    ];
+
+    // ===== 状态 =====
+    let selectedSemester = SEMESTER.defaultValue;
+    let searchQuery = '';
+    let courseContentData = {}; // { [courseId-design]: { teachingPlans, basicInfo }, [courseId-tabKey]: { [sectionKey]: text } }
+    let selectedCourseId = null;
+    let activeTab = 'courseInfo';
+    let editingSection = null; // { tabKey, key, title }
+    let editingText = '';
+    let editingPlan = null;
+    let editingPlanIsNew = false;
+
+    // ===== DOM =====
+    const semesterSelect = document.getElementById('semesterSelect');
+    const searchInput = document.getElementById('searchInput');
+    const courseList = document.getElementById('courseList');
+    const tabSegments = document.getElementById('tabSegments');
+    const tabBody = document.getElementById('tabBody');
+    const backBtn = document.getElementById('backBtn');
+
+    const textModal = document.getElementById('textModal');
+    const textModalTitle = document.getElementById('textModalTitle');
+    const textModalFieldLabel = document.getElementById('textModalFieldLabel');
+    const textModalTextarea = document.getElementById('textModalTextarea');
+    const textModalClose = document.getElementById('textModalClose');
+    const textModalCancel = document.getElementById('textModalCancel');
+    const textModalOk = document.getElementById('textModalOk');
+
+    const planModal = document.getElementById('planModal');
+    const planModalTitle = document.getElementById('planModalTitle');
+    const planModalSyncInfo = document.getElementById('planModalSyncInfo');
+    const planModalClose = document.getElementById('planModalClose');
+    const planModalCancel = document.getElementById('planModalCancel');
+    const planModalOk = document.getElementById('planModalOk');
+
+
+    // ===== 学期选项 =====
+    function initSemesterOptions() {
+      semesterSelect.innerHTML = SEMESTER.options.map(o => '<option value="' + o.value + '">' + o.label + '</option>').join('');
+      semesterSelect.value = selectedSemester;
+    }
+
+    semesterSelect.addEventListener('change', () => {
+      selectedSemester = semesterSelect.value;
+      searchQuery = '';
+      searchInput.value = '';
+      const nextCourses = getCourses();
+      selectedCourseId = nextCourses[0] ? nextCourses[0].id : null;
+      renderCourseList();
+      renderTabBody();
+    });
+
+    // ===== 数据获取 =====
+    function getCourses() {
+      return COURSES_BY_SEMESTER[selectedSemester] || BASE_COURSES;
+    }
+
+    function getFilteredCourses() {
+      const courses = getCourses();
+      if (!searchQuery.trim()) return courses;
+      return courses.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+
+    function getSelectedCourse() {
+      const filtered = getFilteredCourses();
+      return filtered.find(c => c.id === selectedCourseId) || filtered[0] || BASE_COURSES[0];
+    }
+
+    // ===== 渲染课程列表 =====
+    function renderCourseList() {
+      const filtered = getFilteredCourses();
+      if (filtered.length === 0) {
+        courseList.innerHTML = '<div class="ti-empty-state">未找到相关课程</div>';
+        return;
+      }
+      courseList.innerHTML = filtered.map(course => {
+        const isActive = course.id === selectedCourseId;
+        return '<a class="ti-course-card' + (isActive ? ' is-active' : '') + '" href="#" data-id="' + course.id + '">' +
+          '<h2>' + course.name + '</h2>' +
+          '<div class="ti-course-tags">' + course.tags.map(t => '<span>' + t + '</span>').join('') + '</div>' +
+          (isActive
+            ? '<dl class="ti-course-fields">' +
+                '<div><dt>课程号</dt><dd>' + course.code + '</dd></div>' +
+                '<div><dt>承担单位</dt><dd>' + course.owner + '</dd></div>' +
+                '<div><dt>课程性质</dt><dd>' + course.nature + '</dd></div>' +
+              '</dl>'
+            : '') +
+        '</a>';
+      }).join('');
+    }
+
+    courseList.addEventListener('click', (e) => {
+      const card = e.target.closest('.ti-course-card');
+      if (!card) return;
+      e.preventDefault();
+      selectedCourseId = card.dataset.id;
+      renderCourseList();
+      renderTabBody();
+    });
+
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      const filtered = getFilteredCourses();
+      if (filtered.length > 0 && !filtered.some(c => c.id === selectedCourseId)) {
+        selectedCourseId = filtered[0].id;
+      }
+      renderCourseList();
+      renderTabBody();
+    });
+
+    // ===== Tab =====
+    function renderTabs() {
+      tabSegments.innerHTML = TABS.map(tab => {
+        const isActive = tab.key === activeTab;
+        return '<button class="ti-tab-segment' + (isActive ? ' is-active' : '') + '" data-tab="' + tab.key + '" type="button">' + tab.label + '</button>';
+      }).join('');
+    }
+
+    tabSegments.addEventListener('click', (e) => {
+      const btn = e.target.closest('.ti-tab-segment');
+      if (!btn) return;
+      activeTab = btn.dataset.tab;
+      renderTabs();
+      renderTabBody();
+    });
+
+    // ===== 内容文本构建 =====
+    function buildSectionText(section, course) {
+      const stored = courseContentData[course.id + '-' + section.tabKey] && courseContentData[course.id + '-' + section.tabKey][section.key];
+      if (stored) return stored;
+      const courseName = course.name;
+      const textMap = {
+        goal: '通过' + courseName + '学习，学生能够理解课程关键概念，掌握常用方法与操作流程，能够在真实或仿真的任务场景中完成问题分析、方案设计、结果验证和反思优化。',
+        'student-help': '本学期针对学习困难学生建立辅导清单，安排课后答疑、作业反馈和阶段性跟踪，重点帮助学生补齐基础概念和实践步骤。',
+        'student-case': '针对实践能力较强但表达薄弱的学生，采用"操作展示 + 复盘说明"的方式进行个性化指导，帮助其提升项目汇报和文档表达能力。',
+        'student-evaluation': '学生评价总体良好，认为课程案例贴近专业应用，课堂任务清晰，建议继续增加真实项目素材和课堂练习讲评。',
+        'supervisor-evaluation': '督导评价认为课程目标明确，教学组织有序，互动充分，建议进一步完善过程性评价证据链。',
+        'peer-evaluation': '同行评价认为课程内容与专业能力培养匹配，项目任务设计较完整，可继续强化跨课程资源共享。',
+        'teaching-reflection': '本轮教学中，学生对任务背景理解较快，但在方案比较和结果表达方面仍有不足。后续将增加示例讲评和分层任务。',
+        optimization: '下一轮课程将优化课前导学材料，增加课堂即时检测，完善小组任务分工和评价规则，提高学习过程可见性。',
+        'course-summary': courseName + '已完成本阶段教学任务，课程资料、课堂记录、学生作业和教学反思已归档。整体达成度较好，后续继续围绕项目案例和评价方式优化。',
+        'ideology-content': '结合' + courseName + '的严谨性与工程规范，融入工匠精神、职业道德与安全规范意识，引导学生在方案设计与实现中养成精益求精、诚信协作的职业素养，实现价值塑造与知识传授、能力培养的有机统一。',
+      };
+      return textMap[section.key] || (courseName + '围绕课程目标完成教学设计、课堂实施和过程材料归档。');
+    }
+
+    // ===== Tab 内容渲染 =====
+    function renderTabBody() {
+      const course = getSelectedCourse();
+      if (!course) {
+        tabBody.innerHTML = '';
+        return;
+      }
+
+      if (activeTab === 'courseInfo') {
+        tabBody.innerHTML = renderCourseInfoPanel(course);
+      } else if (activeTab === 'design') {
+        tabBody.innerHTML = renderDesignTab(course);
+        bindDesignTabEvents(course);
+      } else if (activeTab === 'materials') {
+        tabBody.innerHTML = renderMaterialsPanel();
+      } else {
+        tabBody.innerHTML = renderOtherTab(activeTab, course);
+      }
+    }
+
+    function readOnlyFormHTML(fields) {
+      const rows = [];
+      let pair = [];
+      fields.forEach(f => {
+        if (f.full) {
+          if (pair.length) { rows.push(pair); pair = []; }
+          rows.push([f]);
+        } else {
+          pair.push(f);
+          if (pair.length === 2) { rows.push(pair); pair = []; }
+        }
+      });
+      if (pair.length) rows.push(pair);
+
+      return '<table class="info-table"><tbody>' +
+        rows.map(row =>
+          '<tr>' + row.map(f =>
+            '<th>' + f.label + '</th><td' + (row.length === 1 ? ' colspan="3"' : '') + '>' + f.value + '</td>'
+          ).join('') + '</tr>'
+        ).join('') +
+      '</tbody></table>';
+    }
+
+    function renderCourseInfoPanel(course) {
+      return '<section class="ti-section">' +
+        '<div class="ti-section-head"><h3>课程信息</h3><span class="ti-source-note">数据来源于<strong>教务系统</strong></span></div>' +
+        readOnlyFormHTML([
+          { label: '课程号', value: course.code },
+          { label: '课程名', value: course.name },
+          { label: '课序号', value: course.sequence },
+          { label: '承担单位', value: course.owner },
+          { label: '授课形式', value: course.teachingForm },
+          { label: '课程类别', value: course.category },
+          { label: '课程性质', value: course.nature },
+          { label: '授课班级', value: course.className },
+          { label: '学分', value: course.credits },
+          { label: '学时', value: course.hours },
+          { label: '选课人数', value: course.students },
+          { label: '考试类型', value: course.examType },
+          { label: '教学方式', value: course.teachingMode, full: true },
+          { label: '附件', value: '-', full: true },
+        ]) +
+      '</section>';
+    }
+
+    function renderDesignTab(course) {
+      const courseKey = course.id + '-design';
+      const stored = courseContentData[courseKey] || {};
+      const plans = stored.teachingPlans || TEACHING_PLANS_BY_COURSE[course.id] || DEFAULT_TEACHING_PLANS;
+      const basicTexts = stored.basicInfo || {
+        way: '采用"项目驱动 + 理论实践一体化"的教学方式，以真实工程任务为主线，结合课堂讲授、分组研讨、上机实操与过程评价，讲练结合、边学边做。',
+        goal: '通过本课程学习，学生能够理解数据结构与算法的核心概念，掌握常用数据结构的实现方法，能够分析和设计基本算法，具备解决实际问题的编程能力。',
+        plan: '以数据结构核心知识为主轴，按"线性结构—受限结构—非线性结构—经典算法"组织教学，每周理论 2 课时 + 实践 2 课时，穿插阶段测评与综合项目实战。',
+        analysis: '学生基础差异较明显，部分学生具备较强动手能力，但理论迁移和规范表达仍需强化。课程采用分层任务、过程反馈和案例演示提升参与度。',
+        innovation: '围绕在线精品课程建设和产教融合要求，引入企业真实任务、课堂即时反馈和学习数据分析，持续优化教学活动设计与评价方式。',
+      };
+
+      const basicGroups = [
+        { field: 'way', title: '教学方式' },
+        { field: 'goal', title: '教学目标' },
+        { field: 'plan', title: '教学实施' },
+        { field: 'analysis', title: '学情分析' },
+      ];
+
+      let html = '<section class="ti-section"><div class="ti-section-head"><h3>基本信息</h3></div>';
+      basicGroups.forEach(g => {
+        html += '<div class="ti-base-group">' +
+          '<div class="ti-base-group__head"><span class="ti-base-group__title">' + g.title + '</span><button class="btn sm" data-edit-basic="' + g.field + '" data-edit-title="' + g.title + '" type="button">编辑</button></div>' +
+          '<div class="ti-base-group__body">' + basicTexts[g.field] + '</div>' +
+        '</div>';
+      });
+      html += '</section>';
+
+      // 教学实施
+      html += '<section class="ti-section"><div class="ti-section-head"><h3>教学实施</h3><button class="btn sm" id="addPlanBtn" type="button" style="margin-left:auto;">新增</button></div><div class="ti-plan-list">';
+      plans.forEach(plan => {
+        const isFilled = plan.content && plan.content.trim().length > 0;
+        html += renderPlanCard(plan, isFilled);
+      });
+      html += '</div></section>';
+
+      // 教学改革与创新
+      html += '<section class="ti-section"><div class="ti-section-head"><h3>教学改革与创新</h3><button class="btn sm" data-edit-basic="innovation" data-edit-title="教学改革与创新" type="button" style="margin-left:auto;">编辑</button></div>' +
+        '<div class="ti-display-box ti-display-box--large"><span>' + basicTexts.innovation + '</span></div></section>';
+
+      // 附件
+      html += '<section class="ti-section"><div class="ti-section-head"><h3>附件</h3><button class="btn sm" type="button" style="margin-left:auto;">编辑</button></div>' +
+        '<section class="ds-upload ds-upload--button ds-upload--text"><div class="ds-upload__button-wrap"><input class="ds-upload__input" type="file" /><label class="ds-upload__button"><span>上传附件</span></label></div><div class="ds-upload__text-list"></div></section></section>';
+
+      return html;
+    }
+
+    function renderPlanCard(plan, isFilled) {
+      const expanded = !isFilled;
+      const bodyHTML =
+        '<dl class="ti-plan-fields">' +
+          '<div><dt>教学类型</dt><dd>' + (plan.teachingType || '-') + '</dd></div>' +
+          '<div><dt>教学方式</dt><dd>' + (plan.teachingMethod || '-') + '</dd></div>' +
+          '<div class="ti-full-width"><dt>上课内容</dt><dd>' + (plan.content || '-') + '</dd></div>' +
+          '<div><dt>上课地点</dt><dd>' + (plan.location || '-') + '</dd></div>' +
+          '<div><dt>信息化教学工具</dt><dd>' + (plan.tools || '-') + '</dd></div>' +
+          '<div class="ti-full-width"><dt>课程资源</dt><dd>' + (plan.resources && plan.resources.length > 0 ? plan.resources.join(', ') : '-') + '</dd></div>' +
+          '<div class="ti-full-width"><dt>教学随笔</dt><dd>' + (plan.reflection || '-') + '</dd></div>' +
+          '<div class="ti-full-width"><dt>课程思政</dt><dd>' + (plan.ideology || '-') + '</dd></div>' +
+        '</dl>' +
+        '<div class="ti-plan-card__actions"><button class="btn sm" data-edit-plan="' + plan.id + '" type="button">编辑</button></div>';
+
+      return '<article class="ti-plan-card" data-plan-id="' + plan.id + '">' +
+        '<header class="ti-plan-card__head">' +
+          '<div class="ti-plan-grid-4--compact">' +
+            '<span><span class="ti-plan-grid-4__name">上课日期：</span>' + plan.date + '</span>' +
+            '<span><span class="ti-plan-grid-4__name">周次：</span>' + plan.week + '</span>' +
+            '<span><span class="ti-plan-grid-4__name">星期：</span>' + plan.weekday + '</span>' +
+            '<span><span class="ti-plan-grid-4__name">学时：</span>' + plan.hours + '</span>' +
+          '</div>' +
+          '<button class="ti-plan-card__toggle btn sm" type="button"><span class="ti-plan-card__arrow">' + (expanded ? '▼' : '▶') + '</span></button>' +
+        '</header>' +
+        '<div class="ti-plan-card__body" style="' + (expanded ? '' : 'display:none;') + '">' + bodyHTML + '</div>' +
+      '</article>';
+    }
+
+    function bindDesignTabEvents(course) {
+      // 基本信息/创新编辑
+      tabBody.querySelectorAll('[data-edit-basic]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const field = btn.dataset.editBasic;
+          const title = btn.dataset.editTitle;
+          const courseKey = course.id + '-design';
+          const basicTexts = (courseContentData[courseKey] && courseContentData[courseKey].basicInfo) || {};
+          const defaults = {
+            way: '采用"项目驱动 + 理论实践一体化"的教学方式，以真实工程任务为主线，结合课堂讲授、分组研讨、上机实操与过程评价，讲练结合、边学边做。',
+            goal: '通过本课程学习，学生能够理解数据结构与算法的核心概念，掌握常用数据结构的实现方法，能够分析和设计基本算法，具备解决实际问题的编程能力。',
+            plan: '以数据结构核心知识为主轴，按"线性结构—受限结构—非线性结构—经典算法"组织教学，每周理论 2 课时 + 实践 2 课时，穿插阶段测评与综合项目实战。',
+            analysis: '学生基础差异较明显，部分学生具备较强动手能力，但理论迁移和规范表达仍需强化。课程采用分层任务、过程反馈和案例演示提升参与度。',
+            innovation: '围绕在线精品课程建设和产教融合要求，引入企业真实任务、课堂即时反馈和学习数据分析，持续优化教学活动设计与评价方式。',
+          };
+          editingSection = { type: 'basic', courseId: course.id, field, title };
+          editingText = basicTexts[field] || defaults[field] || '';
+          openTextModal(title);
+        });
+      });
+
+      // 新增计划
+      const addBtn = tabBody.querySelector('#addPlanBtn');
+      if (addBtn) {
+        addBtn.addEventListener('click', () => {
+          editingPlan = { id: 'plan-' + Date.now(), date: '待补充', week: '-', weekday: '-', hours: 2, teachingType: '', teachingMethod: '', content: '', location: '', tools: '', resources: [], reflection: '', ideology: '' };
+          editingPlanIsNew = true;
+          openPlanModal();
+        });
+      }
+
+      // 编辑计划
+      tabBody.querySelectorAll('[data-edit-plan]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const planId = btn.dataset.editPlan;
+          const courseKey = getSelectedCourse().id + '-design';
+          const plans = (courseContentData[courseKey] && courseContentData[courseKey].teachingPlans) || TEACHING_PLANS_BY_COURSE[getSelectedCourse().id] || DEFAULT_TEACHING_PLANS;
+          editingPlan = plans.find(p => p.id === planId);
+          editingPlanIsNew = false;
+          if (editingPlan) openPlanModal();
+        });
+      });
+
+      // 展开/收起
+      tabBody.querySelectorAll('.ti-plan-card__head').forEach(head => {
+        head.addEventListener('click', () => {
+          const body = head.parentElement.querySelector('.ti-plan-card__body');
+          const arrow = head.querySelector('.ti-plan-card__arrow');
+          if (body.style.display === 'none') {
+            body.style.display = '';
+            arrow.textContent = '▼';
+          } else {
+            body.style.display = 'none';
+            arrow.textContent = '▶';
+          }
+        });
+      });
+    }
+
+    function renderOtherTab(tabKey, course) {
+      const sectionDefs = {
+        ideology: [
+          { key: 'ideology-element', title: '思政元素', kind: 'dict', editable: false },
+          { key: 'ideology-content', title: '思政教学内容', kind: 'text', large: true, editable: true },
+        ],
+        care: [
+          { key: 'goal', title: '课程目标', source: '教务系统', kind: 'text', large: true, editable: false },
+          { key: 'student-help', title: '辅导学生', kind: 'text', large: true, editable: true },
+          { key: 'student-case', title: '个性化案例', kind: 'text', large: true, editable: true },
+        ],
+        effect: [
+          { key: 'teaching-info', title: '教学信息', source: '教务系统', kind: 'metrics', editable: false },
+          { key: 'representative-homework', title: '学生代表性作业', kind: 'upload', editable: false },
+        ],
+        evaluation: [
+          { key: 'student-evaluation', title: '学生评价', source: '教务系统', kind: 'text', large: true, editable: false },
+          { key: 'supervisor-evaluation', title: '督导评价', source: '教务系统', kind: 'text', large: true, editable: false },
+          { key: 'peer-evaluation', title: '同行评价', source: '教务系统', kind: 'text', large: true, editable: false },
+        ],
+        reflection: [
+          { key: 'teaching-reflection', title: '教学反思', kind: 'text', large: true, editable: true },
+          { key: 'optimization', title: '优化措施', kind: 'text', large: true, editable: true },
+        ],
+        summary: [
+          { key: 'course-summary', title: '课程总结', kind: 'text', large: true, editable: true },
+          { key: 'summary-file', title: '课程总结附件', kind: 'files', editable: false },
+        ],
+      };
+
+      const sections = sectionDefs[tabKey] || [];
+      let html = '';
+      sections.forEach(section => {
+        html += '<section class="ti-section"><div class="ti-section-head"><h3>' + section.title + '</h3>' +
+          (section.source ? '<span class="ti-source-note">数据来源于<strong>' + section.source + '</strong></span>' : '') +
+          (section.editable ? '<button class="btn sm" data-edit-section="' + section.key + '" data-edit-title="' + section.title + '" type="button" style="margin-left:auto;">编辑</button>' : '') +
+        '</div>';
+
+        if (section.kind === 'text') {
+          html += '<div class="ti-display-box' + (section.large ? ' ti-display-box--large' : '') + '"><span>' + buildSectionText({ ...section, tabKey }, course) + '</span></div>';
+        } else if (section.kind === 'dict') {
+          html += '<div class="ti-display-box"><span>工匠精神、职业道德、创新精神、劳动精神、安全规范意识</span></div>';
+        } else if (section.kind === 'metrics') {
+          html += readOnlyFormHTML([
+            { label: '上课率', value: course.id === 'data-structure' ? '98%' : '96%' },
+            { label: '平均成绩', value: course.id === 'data-structure' ? '--' : '86.5' },
+          ]);
+        } else if (section.kind === 'upload' || section.kind === 'files') {
+          html += '<section class="ds-upload ds-upload--button ds-upload--text"><div class="ds-upload__button-wrap"><input class="ds-upload__input" type="file" /><label class="ds-upload__button"><span>上传附件</span></label></div><div class="ds-upload__text-list"></div></section>';
+        }
+        html += '</section>';
+      });
+
+      // 绑定编辑事件
+      setTimeout(() => {
+        tabBody.querySelectorAll('[data-edit-section]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.editSection;
+            const title = btn.dataset.editTitle;
+            const section = sections.find(s => s.key === key);
+            editingSection = { type: 'section', courseId: course.id, tabKey, key, title };
+            editingText = buildSectionText({ ...section, tabKey }, course);
+            openTextModal(title);
+          });
+        });
+      }, 0);
+
+      return html;
+    }
+
+    function renderMaterialsPanel() {
+      return '<section class="ti-section"><div class="ti-section-head"><h3>课程资料</h3></div>' +
+        '<section class="ds-upload ds-upload--button ds-upload--text"><div class="ds-upload__button-wrap"><input class="ds-upload__input" type="file" /><label class="ds-upload__button"><span>上传附件</span></label></div><div class="ds-upload__text-list"></div></section></section>';
+    }
+
+    // ===== 文本编辑弹窗 =====
+    let textSaveCallback = null;
+
+    function openTextModal(title) {
+      textModalTitle.textContent = '编辑' + title;
+      textModalFieldLabel.textContent = title;
+      textModalTextarea.value = editingText;
+      textModal.classList.add('is-open');
+    }
+
+    textModalClose.addEventListener('click', () => textModal.classList.remove('is-open'));
+    textModalCancel.addEventListener('click', () => textModal.classList.remove('is-open'));
+
+    textModalOk.addEventListener('click', () => {
+      const newText = textModalTextarea.value;
+      if (!editingSection) return;
+
+      if (editingSection.type === 'basic') {
+        const courseKey = editingSection.courseId + '-design';
+        if (!courseContentData[courseKey]) courseContentData[courseKey] = {};
+        if (!courseContentData[courseKey].basicInfo) courseContentData[courseKey].basicInfo = {};
+        courseContentData[courseKey].basicInfo[editingSection.field] = newText;
+      } else if (editingSection.type === 'section') {
+        const contentKey = editingSection.courseId + '-' + editingSection.tabKey;
+        if (!courseContentData[contentKey]) courseContentData[contentKey] = {};
+        courseContentData[contentKey][editingSection.key] = newText;
+      }
+
+      textModal.classList.remove('is-open');
+      renderTabBody();
+    });
+
+    // ===== 教学实施编辑弹窗 =====
+    function openPlanModal() {
+      planModalTitle.textContent = editingPlanIsNew ? '新增教学实施' : ('编辑教学实施 - ' + (editingPlan.date || ''));
+      planModalSyncInfo.innerHTML = '<span>' + (editingPlan.date || '-') + '</span><span>' + (editingPlan.week || '-') + '</span><span>' + (editingPlan.weekday || '-') + '</span><span>' + (editingPlan.hours || 0) + '学时</span>';
+      document.getElementById('planTeachingType').value = editingPlan.teachingType || '';
+      document.getElementById('planTeachingMethod').value = editingPlan.teachingMethod || '';
+      document.getElementById('planContent').value = editingPlan.content || '';
+      document.getElementById('planLocation').value = editingPlan.location || '';
+      document.getElementById('planTools').value = editingPlan.tools || '';
+      document.getElementById('planResources').value = (editingPlan.resources || []).join(', ');
+      document.getElementById('planReflection').value = editingPlan.reflection || '';
+      document.getElementById('planIdeology').value = editingPlan.ideology || '';
+      planModal.classList.add('is-open');
+    }
+
+    planModalClose.addEventListener('click', () => planModal.classList.remove('is-open'));
+    planModalCancel.addEventListener('click', () => planModal.classList.remove('is-open'));
+
+    planModalOk.addEventListener('click', () => {
+      if (!editingPlan) return;
+      editingPlan.teachingType = document.getElementById('planTeachingType').value;
+      editingPlan.teachingMethod = document.getElementById('planTeachingMethod').value;
+      editingPlan.content = document.getElementById('planContent').value;
+      editingPlan.location = document.getElementById('planLocation').value;
+      editingPlan.tools = document.getElementById('planTools').value;
+      editingPlan.resources = document.getElementById('planResources').value ? document.getElementById('planResources').value.split(',').map(s => s.trim()).filter(Boolean) : [];
+      editingPlan.reflection = document.getElementById('planReflection').value;
+      editingPlan.ideology = document.getElementById('planIdeology').value;
+
+      const course = getSelectedCourse();
+      const courseKey = course.id + '-design';
+      if (!courseContentData[courseKey]) courseContentData[courseKey] = {};
+      if (!courseContentData[courseKey].teachingPlans) {
+        courseContentData[courseKey].teachingPlans = (TEACHING_PLANS_BY_COURSE[course.id] || DEFAULT_TEACHING_PLANS).map(p => ({ ...p }));
+      }
+      const plans = courseContentData[courseKey].teachingPlans;
+      const exists = plans.some(p => p.id === editingPlan.id);
+      if (exists) {
+        const idx = plans.findIndex(p => p.id === editingPlan.id);
+        plans[idx] = editingPlan;
+      } else {
+        plans.unshift(editingPlan);
+      }
+
+      planModal.classList.remove('is-open');
+      renderTabBody();
+    });
+
+    // ===== 初始化 =====
+    initSemesterOptions();
+    const initialCourses = getCourses();
+    selectedCourseId = initialCourses[0] ? initialCourses[0].id : null;
+    selectedCourseId = getFilteredCourses()[0] ? getFilteredCourses()[0].id : selectedCourseId;
+    renderCourseList();
+    renderTabs();
+    renderTabBody();
+  </script>
+</body>
+</html>

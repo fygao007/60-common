@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>场景模板索引</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../framework/theme.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: #fff;
+      font-family: var(--ds-font-family);
+    }
+
+    .scenario-page {
+      min-height: 100%;
+      min-width: 0;
+      padding: 16px 16px 80px;
+      background: #fff;
+    }
+
+    .scenario-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .scenario-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .scenario-title::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      left: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .scenario-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .scenario-desc {
+      margin: 6px 0 0;
+      color: #737585;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .scenario-back {
+      display: inline-flex;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+    }
+
+    .summary-card span {
+      display: block;
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-top: 4px;
+      color: #000;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+    }
+
+    .scene-section {
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+    }
+
+    .scene-section-head {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .scene-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .scene-section-count {
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .scene-card {
+      display: flex;
+      min-height: 174px;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .scene-card:nth-child(2n) { border-right: 0; }
+
+    .scene-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .scene-number {
+      display: inline-grid;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      place-items: center;
+      color: #333fff;
+      background: #f5f5ff;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .scene-name {
+      margin: 0;
+      color: #000;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .scene-copy {
+      margin: 2px 0 0;
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      height: 22px;
+      align-items: center;
+      padding: 0 8px;
+      color: #505266;
+      background: #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .tag.is-danger {
+      color: #fa5151;
+      background: #fff1f0;
+    }
+
+    .scene-source {
+      color: #737585;
+      font-family: var(--ds-font-family-code);
+      font-size: 11px;
+      line-height: 18px;
+      overflow-wrap: anywhere;
+    }
+
+    .scene-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .scene-link {
+      display: inline-flex;
+      height: 28px;
+      align-items: center;
+      padding: 0 10px;
+      color: #333fff;
+      background: #f5f5ff;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .scene-link.is-primary {
+      color: #fff;
+      background: #333fff;
+    }
+
+    .usage-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .usage-table th,
+    .usage-table td {
+      height: 42px;
+      padding: 10px 12px;
+      text-align: left;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .usage-table th {
+      color: #000;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .usage-table th:last-child,
+    .usage-table td:last-child {
+      border-right: 0;
+    }
+
+    @media (max-width: 900px) {
+      .scenario-page {
+        padding: 16px 12px 48px;
+      }
+
+      .scenario-head { flex-direction: column; }
+      .summary-grid,
+      .scene-grid { grid-template-columns: 1fr; }
+      .scene-card,
+      .scene-card:nth-child(2n) { border-right: 0; }
+      .scene-section.is-table { overflow-x: auto; }
+      .usage-table { min-width: 720px; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="scenario-page">
+    <header class="scenario-head">
+      <div>
+        <h1 class="scenario-title"><span>场景模板</span></h1>
+        <p class="scenario-desc">生成业务 HTML 时优先按场景复用组件、状态、尺寸、间距与交互，仅替换业务数据和文案。</p>
+      </div>
+      <a class="scenario-back" href="../components/component-library-index.html">返回功能索引</a>
+    </header>
+
+    <section class="summary-grid" aria-label="场景模板统计">
+      <article class="summary-card"><span>场景模板</span><strong>20</strong></article>
+      <article class="summary-card"><span>已覆盖状态</span><strong>15</strong></article>
+      <article class="summary-card"><span>MasterGo 来源</span><strong>11</strong></article>
+      <article class="summary-card"><span>生成策略</span><strong>优先复用</strong></article>
+    </section>
+
+    <section class="scene-section">
+      <div class="scene-section-head">
+        <h2 class="scene-section-title">页面与浮层场景</h2>
+        <span class="scene-section-count">20 个模板</span>
+      </div>
+      <div class="scene-grid">
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">01</span>
+            <div>
+              <h3 class="scene-name">上标签页左树右表格</h3>
+              <p class="scene-copy">顶部标签页、左侧目录树与右侧查询表格；树节点和页签可联动筛选、工具栏、表格和分页。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">顶部页签</span><span class="tag">左树右表</span><span class="tag">树搜索</span><span class="tag">分页</span></div>
+          <div class="scene-source">mastergo://getd2c/200884015180678-3700-162728</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./card-list-page.html">交互预览</a>
+            <a class="scene-link" href="./szd-tree-table-page.html">结构参考</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">02</span>
+            <div>
+              <h3 class="scene-name">分组表单表格页</h3>
+              <p class="scene-copy">主表单、分组说明、明细表格、补充表单和单主提交操作。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">表单</span><span class="tag">分组</span><span class="tag">表格</span><span class="tag">明细维护</span></div>
+          <div class="scene-source">mastergo://getd2c/195991886967017-36-015282</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./form-table-page.html">交互预览</a>
+            <a class="scene-link" href="../packages/design-system/docs/form-table-page.md">查看规范</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">03</span>
+            <div>
+              <h3 class="scene-name">无数据表格页</h3>
+              <p class="scene-copy">筛选区、工具栏、完整表头、居中空状态和底部分页。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">空数据</span><span class="tag">表格</span><span class="tag">分页</span></div>
+          <div class="scene-source">mastergo://getd2c/195991886967017-2-016401</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="../../.mastergo/195991886967017-2-016401/195991886967017-2-016401.html">预览原稿</a>
+            <a class="scene-link" href="../packages/design-system/docs/no-data-table-page.md">查看规范</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">04</span>
+            <div>
+              <h3 class="scene-name">右侧表单抽屉</h3>
+              <p class="scene-copy">900px 宽抽屉、双列表单、文本域和固定底栏操作。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">打开</span><span class="tag">禁用字段</span><span class="tag">字数统计</span></div>
+          <div class="scene-source">mastergo://getd2c/195991886967017-2-003917</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./drawer-page.html">交互预览</a>
+            <a class="scene-link" href="../packages/design-system/docs/drawer.md">查看规范</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">05</span>
+            <div>
+              <h3 class="scene-name">普通表单弹窗</h3>
+              <p class="scene-copy">480 / 600 / 800px 宽度预设，覆盖集中配置、操作确认和长表单。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">内容自适应</span><span class="tag">焦点循环</span><span class="tag">提交加载</span></div>
+          <div class="scene-source">mastergo://getd2c/139272150501659-4316-81924</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="../components/modal-components.html">交互预览</a>
+            <a class="scene-link" href="../packages/design-system/docs/modal.md">查看规范</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">06</span>
+            <div>
+              <h3 class="scene-name">删除场景弹窗</h3>
+              <p class="scene-copy">二次确认、删除成功和后端拒绝删除的失败结果态。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag is-danger">危险操作</span><span class="tag">删除成功</span><span class="tag">删除失败</span></div>
+          <div class="scene-source">mastergo://getd2c/195991886967017-2-003863</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./delete-modal-page.html">交互预览</a>
+            <a class="scene-link" href="../packages/design-system/docs/delete-modal.md">查看规范</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">07</span>
+            <div>
+              <h3 class="scene-name">编辑弹层模板</h3>
+              <p class="scene-copy">600px 单列、1200px 大尺寸、900px 宽尺寸与双列弹窗，以及 600px 带分组抽屉。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">单列</span><span class="tag">大尺寸</span><span class="tag">宽尺寸</span><span class="tag">双列</span><span class="tag">分组抽屉</span></div>
+          <div class="scene-source">MasterGo · 200884015180678 / 195991886967017-11-91955 / 11-92097 / 11-92271</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="../components/edit-overlay-templates.html">交互预览</a>
+            <a class="scene-link" href="../packages/design-system/docs/edit-overlay-templates.md">查看规范</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">08</span>
+            <div>
+              <h3 class="scene-name">审核评分页</h3>
+              <p class="scene-copy">批次切换、汇总指标、提交名单表格，详情视图内只读材料、评分表单、退回与上下条导航。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">批次</span><span class="tag">列表转详情</span><span class="tag">评分</span><span class="tag">上下条</span></div>
+          <div class="scene-source">提炼自 demos/teaching-portfolio 的 dean/r-review 与 chief/c-review</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./audit-review-page.html">交互预览</a>
+            <a class="scene-link" href="../demos/teaching-portfolio/chief/c-review/c-review.html">参考实现</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">09</span>
+            <div>
+              <h3 class="scene-name">统计看板页</h3>
+              <p class="scene-copy">学期与范围筛选联动，指标卡行、SVG 趋势折线、环节达成进度和完成率排名表格。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">指标卡</span><span class="tag">趋势图</span><span class="tag">进度条</span><span class="tag">排名表</span></div>
+          <div class="scene-source">提炼自 demos/teaching-portfolio 的 hr/hr-statistics 与 dean/l-dash</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./stats-dashboard-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">10</span>
+            <div>
+              <h3 class="scene-name">首页工作台</h3>
+              <p class="scene-copy">身份问候条、数据概览、待办列表带状态与去处理入口、快捷入口网格和通知公告。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">待办</span><span class="tag">快捷入口</span><span class="tag">概览</span><span class="tag">通知</span></div>
+          <div class="scene-source">提炼自 demos/teaching-portfolio 的 teacher/t-home 与 hr/hr-home</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./workbench-home-page.html">交互预览</a>
+            <a class="scene-link" href="../demos/teaching-portfolio/major/t-home/t-home.html">参考实现</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">11</span>
+            <div>
+              <h3 class="scene-name">树形配置页</h3>
+              <p class="scene-copy">300px 左侧目录树与右侧配置工作区零间隙分栏，节点切换联动字段表格与开关状态。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">左树右表</span><span class="tag">节点联动</span><span class="tag">字段配置</span></div>
+          <div class="scene-source">提炼自 demos/teaching-portfolio 的 sys/sys-accounts 档案字段设置</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./tree-config-page.html">交互预览</a>
+            <a class="scene-link" href="../demos/teaching-portfolio/sys/sys-accounts/sys-accounts.html">参考实现</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">12</span>
+            <div>
+              <h3 class="scene-name">子页详情页</h3>
+              <p class="scene-copy">返回子页头、横向页签切换分类，分组只读表单展示。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">子页头</span><span class="tag">页签</span><span class="tag">只读详情</span></div>
+          <div class="scene-source">提炼自 demos/teaching-portfolio 的 dean/portfolio-detail</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./detail-page.html">交互预览</a>
+            <a class="scene-link" href="../demos/teaching-portfolio/dean/portfolio-detail/portfolio-detail.html">参考实现</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">13</span>
+            <div>
+              <h3 class="scene-name">详情页设置</h3>
+              <p class="scene-copy">以子页头和横向页签组织详情页配置，分组表单承载基础、展示和字段设置，底部固定保存操作。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">子页头</span><span class="tag">设置页签</span><span class="tag">分组表单</span><span class="tag">固定操作</span></div>
+          <div class="scene-source">深职大规范 · 详情页设置结构</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./detail-page-settings.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">14</span>
+            <div>
+              <h3 class="scene-name">详情页-居左表单编辑态</h3>
+              <p class="scene-copy">左侧单列表单配合右侧逐项说明，适合配置项多、字段提示较多的详情编辑页面。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">子页头</span><span class="tag">单列编辑</span><span class="tag">逐项提示</span><span class="tag">固定操作</span></div>
+          <div class="scene-source">mastergo://getd2c/200884015180678-3846-168382</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./detail-left-form-edit-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">15</span>
+            <div>
+              <h3 class="scene-name">表格页（上筛下表）</h3>
+              <p class="scene-copy">深职大规范基准：紧凑展开筛选在上、多按钮工具栏居中、数据表格与分页在下。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">上筛下表</span><span class="tag">紧凑筛选</span><span class="tag">多按钮工具栏</span><span class="tag">分页</span></div>
+          <div class="scene-source">深职大规范 · DSRegularListTemplate 组合基准</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./szd-standard-list-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">16</span>
+            <div>
+              <h3 class="scene-name">顶部页签表格页</h3>
+              <p class="scene-copy">顶部页签切换分类，页签下接紧凑筛选、工具栏、数据表格和分页。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">顶部页签</span><span class="tag">分类切换</span><span class="tag">紧凑筛选</span><span class="tag">分页</span></div>
+          <div class="scene-source">深职大规范 · tabVariant="section" + DSRegularListTemplate</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./szd-top-tabs-list-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">17</span>
+            <div>
+              <h3 class="scene-name">待提示表格页</h3>
+              <p class="scene-copy">顶部信息提示条说明业务规则，下接筛选、工具栏、数据表格和分页。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">提示条</span><span class="tag">说明文案</span><span class="tag">紧凑筛选</span><span class="tag">分页</span></div>
+          <div class="scene-source">深职大规范 · DSAlert + DSRegularListTemplate</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./szd-alert-list-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">18</span>
+            <div>
+              <h3 class="scene-name">左分组右表格</h3>
+              <p class="scene-copy">左侧分组标题与纵向页签导航，选中分组联动右侧筛选、工具栏、表格和分页。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">左分组右表</span><span class="tag">纵向页签</span><span class="tag">节点联动</span><span class="tag">分页</span></div>
+          <div class="scene-source">深职大规范 · DSGroupTitle + 纵向 DSTabs + DSRegularListTemplate</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./szd-group-table-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">19</span>
+            <div>
+              <h3 class="scene-name">左树右表格</h3>
+              <p class="scene-copy">左侧搜索框加 DSTree 目录树，选中节点联动右侧筛选、工具栏、表格和分页。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">左树右表</span><span class="tag">树搜索</span><span class="tag">节点联动</span><span class="tag">分页</span></div>
+          <div class="scene-source">深职大规范 · DSInput + DSTree + DSRegularListTemplate</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./szd-tree-table-page.html">交互预览</a>
+          </div>
+        </article>
+
+        <article class="scene-card">
+          <div class="scene-card-head">
+            <span class="scene-number">20</span>
+            <div>
+              <h3 class="scene-name">详情页·表格表单 + 右侧锚点</h3>
+              <p class="scene-copy">子页头、主分组、双组表单、明细表格与右侧分组锚点导航。</p>
+            </div>
+          </div>
+          <div class="tag-row"><span class="tag">子页头</span><span class="tag">表格表单</span><span class="tag">右侧锚点</span><span class="tag">分组导航</span></div>
+          <div class="scene-source">mastergo://getd2c/200884015180678-3918-136023</div>
+          <div class="scene-actions">
+            <a class="scene-link is-primary" href="./detail-table-anchor-page.html">交互预览</a>
+            <a class="scene-link" href="./200884015180678-3918-136023.html">查看原稿</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="scene-section is-table">
+      <div class="scene-section-head">
+        <h2 class="scene-section-title">生成匹配规则</h2>
+        <span class="scene-section-count">按需求关键词自动选择</span>
+      </div>
+      <table class="usage-table">
+        <thead>
+          <tr>
+            <th style="width: 180px">需求特征</th>
+            <th style="width: 180px">匹配模板</th>
+            <th>生成规则</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>顶部页签、目录树、树节点筛选表格</td><td>上标签页左树右表格</td><td>顶部使用 DSTabs，左侧使用搜索加 DSTree，右侧使用 DSRegularListTemplate 承载筛选、工具栏、表格和 DSPagination。</td></tr>
+          <tr><td>主对象维护、明细子表、分组信息</td><td>分组表单表格页</td><td>用分组承载主表单和补充说明，明细使用数据表格；新增/编辑明细进入编辑弹层模板。</td></tr>
+          <tr><td>列表为空、暂无数据</td><td>无数据表格页</td><td>保留筛选、操作、表头和分页，数据区替换为空状态。</td></tr>
+          <tr><td>新增、编辑、详情侧滑</td><td>右侧表单抽屉</td><td>优先 900px 表单抽屉；字段较少时可按内容调整宽度。</td></tr>
+          <tr><td>短流程表单、集中配置</td><td>普通表单弹窗</td><td>使用居中弹窗，标题和操作固定，内容超高时内部滚动。</td></tr>
+          <tr><td>单列编辑、双列编辑、信息分组</td><td>编辑弹层模板</td><td>字段少用 600px 单列弹窗；短字段成对使用 900px 双列弹窗；分组或富文本使用 600px 抽屉。</td></tr>
+          <tr><td>删除、不可恢复、引用校验</td><td>删除场景弹窗</td><td>先二次确认；失败必须显示具体原因并保留原数据。</td></tr>
+          <tr><td>审核、评分、批阅、逐条处理</td><td>审核评分页</td><td>列表与详情双视图；详情内只读材料在上、评分表单在下，保留退回和上一条/下一条。</td></tr>
+          <tr><td>看板、统计分析、完成率、排名</td><td>统计看板页</td><td>筛选联动指标卡、趋势图、环节进度和排名表格；图表用内嵌 SVG，不引第三方图表库。</td></tr>
+          <tr><td>首页、工作台、待办、快捷入口</td><td>首页工作台</td><td>问候条、概览、待办列表和快捷入口组合；待办状态用流程标签，操作用去处理按钮。</td></tr>
+          <tr><td>字段设置、目录树、左树右区</td><td>树形配置页</td><td>300px 左树 + 分隔线 + 白底右工作区；业务页左树必须使用 DSTree。</td></tr>
+          <tr><td>详情查看、返回上级、分类页签</td><td>子页详情页</td><td>子页头用 DSSubPageHeader，横向页签配合分组只读表单展示分类信息。</td></tr>
+          <tr><td>详情页面配置、展示与字段设置</td><td>详情页设置</td><td>子页头用 DSSubPageHeader，DSTabs 切换设置分类；每项配置使用 DSEditForm，底部集中保存。</td></tr>
+          <tr><td>配置编辑、字段提示较多、单列布局</td><td>详情页-居左表单编辑态</td><td>子页头用 DSSubPageHeader；表单整体居左，每一行由标签、设计系统字段组件和右侧说明组成。</td></tr>
+          <tr><td>普通查询列表、上筛下表</td><td>表格页（上筛下表）</td><td>紧凑筛选展开在上，工具栏与表格在下；深职大规范业务列表页的默认基准。</td></tr>
+          <tr><td>顶部页签、按页签分类查询</td><td>顶部页签表格页</td><td>页签用 tabVariant="section" 置于模板头部，下方沿用筛选、工具栏、表格和分页。</td></tr>
+          <tr><td>顶部提示、说明文案、业务规则提醒</td><td>待提示表格页</td><td>用 DSAlert 提示条承载说明文案，置于筛选区上方，其余同上筛下表。</td></tr>
+          <tr><td>分组导航、纵向页签、按组切换列表</td><td>左分组右表格</td><td>左侧 DSGroupTitle + 纵向 DSTabs，右侧整体复用列表模板，切组重载数据。</td></tr>
+          <tr><td>左树右侧列表、树节点筛选数据</td><td>左树右表格</td><td>左侧搜索 + DSTree，右侧整体复用列表模板；注意与树形配置页（右配置区）区分。</td></tr>
+          <tr><td>详情表单、明细表格、右侧锚点导航</td><td>详情页·表格表单 + 右侧锚点</td><td>子页头使用 DSSubPageHeader，表单标题使用 DSGroupTitle，右侧目录使用 DSAnchor，明细使用 DSDataTable，操作使用 DSButtonGroup。</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+  const scenarioFeatureRoutes = {
+    'component-library': '../components/component-library-index.html',
+    'scenario-templates': './scenario-templates-index.html',
+    'current-components': '../components/current-components-index.html',
+    'all-components': '../components/all-components-index.html',
+    'framework': '../framework/framework-index.html'
+  };
+
+  WiseFramework2.mount({
+    activeApp: 'component-library',
+    activeFeature: 'scenario-templates',
+    versionLabel: '组件库',
+    appMenus: {
+      'component-library': [
+        {
+          key: 'design-assets',
+          label: '设计资源',
+          icon: 'home',
+          children: [
+            { key: 'component-library', label: '功能索引' },
+            { key: 'scenario-templates', label: '场景模板' },
+            { key: 'current-components', label: '当前组件' },
+            { key: 'all-components', label: 'Ant目录' },
+            { key: 'framework', label: '框架' }
+          ]
+        }
+      ]
+    },
+    tabs: [
+      { key: 'component-library', label: '功能索引', href: '../components/component-library-index.html', closable: false },
+      { key: 'scenario-templates', label: '场景模板', href: './scenario-templates-index.html', closable: true }
+    ],
+    onFeatureChange(feature) {
+      const target = scenarioFeatureRoutes[feature];
+      if (target) window.location.href = target;
+    }
+  });
+</script>
+</body>
+</html>

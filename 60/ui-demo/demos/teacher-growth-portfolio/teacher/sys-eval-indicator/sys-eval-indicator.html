@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>深圳职业技术大学 · 教师成长档案袋平台（系统管理员 · 评估指标配置）</title>
+  <link rel="stylesheet" href="../../../../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../../../../framework/theme.css" />
+  <link rel="stylesheet" href="../../../../assets/bundles/pages/sys-eval-indicator.bundle.css?v=20261010-eval2" />
+</head>
+<body>
+  <div class="frame2-stage ds-scope" data-ds-page="react" data-generated-page-contract="v1" data-page-template="regular-list">
+    <div id="app"></div>
+  </div>
+
+  <script src="../../../../assets/icon-registry.js"></script>
+  <script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.5"></script>
+  <script src="../../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+  <script src="../../../../framework/framework-2.js?v=2.2.4"></script>
+  <script src="../../../../framework/menu-registry.js"></script>
+  <script src="../../menus/management-menu.js?v=20261011-menu"></script>
+  <script>
+    var menu = WiseMenuRegistry.get('teacher-growth-portfolio.management');
+    WiseFramework2.mount({
+      root: '.frame2-stage', activeApp: menu.appId, activeFeature: 'sys-eval-indicator',
+      versionLabel: '深圳职业技术大学 · 教师成长档案袋平台',
+      userName: '平台管理员 · 教师成长档案袋平台',
+      workspaceVariant: 'canvas', pinHomeTab: true,
+      appMenus: { 'teacher-growth-portfolio': menu.items }, featureRoutes: menu.routes,
+      tabs: [{ key: 'home', label: '首页', closable: false }, { key: 'sys-eval-indicator', label: '评估指标配置', closable: true }],
+      onFeatureChange: function (key) { var href = WiseMenuRegistry.route('teacher-growth-portfolio.management:' + key); if (href) window.location.href = href; }
+    });
+  </script>
+  <script defer src="../../../../assets/bundles/pages/sys-eval-indicator.bundle.js?v=20261010-eval2"></script>
+</body>
+</html>

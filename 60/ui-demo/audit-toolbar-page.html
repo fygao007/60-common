@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核工具栏 DSAuditToolbar</title>
+  <link rel="stylesheet" href="packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="packages/design-system/src/AuditToolbar/index.css" />
+  <style>
+    body { margin: 0; background: var(--ds-color-bg-page); font-family: var(--ds-font-family); color: var(--ds-color-text); }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .page-header p { margin: 0; color: var(--ds-color-text-tertiary); font-size: 14px; }
+
+    .demo-section { margin-bottom: 32px; }
+    .demo-section__title { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .demo-section__desc { margin: 0 0 16px; font-size: 13px; color: var(--ds-color-text-tertiary); }
+    .demo-card { background: var(--ds-color-white); border: 1px solid var(--ds-color-border-secondary); border-radius: 8px; overflow: hidden; }
+
+    /* Button */
+    .ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .ds-btn:hover:not(:disabled) { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .ds-btn:disabled { color: var(--ds-color-text-disabled); background: var(--ds-color-bg-disabled); cursor: not-allowed; border-color: var(--ds-color-border-disabled); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>审核工具栏 DSAuditToolbar</h1>
+    <p>审核列表页头部工具栏，展示标题、记录数与批量操作按钮</p>
+  </header>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">基础用法</h2>
+    <p class="demo-section__desc">默认操作按钮：导出、批量通过、批量退回。未勾选时批量按钮禁用。</p>
+    <div class="demo-card">
+      <div class="ds-audit-toolbar" id="toolbar1">
+        <div class="ds-audit-toolbar__title">
+          <strong>审核列表</strong>
+          <span>共 24 条记录</span>
+        </div>
+        <div class="ds-audit-toolbar__actions">
+          <button class="ds-btn" onclick="alert('导出')">导出</button>
+          <button class="ds-btn" disabled>批量通过</button>
+          <button class="ds-btn" disabled>批量退回</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">有勾选记录</h2>
+    <p class="demo-section__desc">选中记录后，批量按钮变为可点击，并显示已选数量。</p>
+    <div class="demo-card">
+      <div class="ds-audit-toolbar">
+        <div class="ds-audit-toolbar__title">
+          <strong>审核列表</strong>
+          <span>共 24 条记录，已选 3 条</span>
+        </div>
+        <div class="ds-audit-toolbar__actions">
+          <button class="ds-btn" onclick="alert('导出')">导出</button>
+          <button class="ds-btn" onclick="alert('批量通过')">批量通过</button>
+          <button class="ds-btn" onclick="alert('批量退回')">批量退回</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">自定义操作</h2>
+    <p class="demo-section__desc">可传入自定义 actions 替换默认按钮。</p>
+    <div class="demo-card">
+      <div class="ds-audit-toolbar">
+        <div class="ds-audit-toolbar__title">
+          <strong>审核中心</strong>
+          <span>共 156 条记录，已选 8 条</span>
+        </div>
+        <div class="ds-audit-toolbar__actions">
+          <button class="ds-btn">导入</button>
+          <button class="ds-btn">下载模板</button>
+          <button class="ds-btn">分配给</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">无操作按钮</h2>
+    <p class="demo-section__desc">仅展示标题与统计信息。</p>
+    <div class="demo-card">
+      <div class="ds-audit-toolbar">
+        <div class="ds-audit-toolbar__title">
+          <strong>审核归档</strong>
+          <span>共 1680 条记录</span>
+        </div>
+        <div class="ds-audit-toolbar__actions"></div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

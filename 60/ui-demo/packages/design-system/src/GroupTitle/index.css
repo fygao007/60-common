@@ -1,0 +1,47 @@
+@import '../tokens.css';
+
+.ds-group-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  width: 100%;
+  height: 38px;
+  min-width: 0;
+  padding: 8px 16px;
+  color: var(--ds-color-black);
+  background: var(--ds-color-group-title-bg);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ds-group-title__main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: var(--ds-space-1);
+}
+
+.ds-group-title__leading,
+.ds-group-title__extra {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.ds-group-title__text {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-group-title__extra {
+  gap: var(--ds-space-2);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}

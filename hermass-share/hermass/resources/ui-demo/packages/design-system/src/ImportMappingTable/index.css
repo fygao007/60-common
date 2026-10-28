@@ -1,0 +1,33 @@
+@import '../tokens.css';
+
+.ds-import-mapping-table {
+  overflow: auto;
+  margin: 0 var(--ds-card-padding) var(--ds-space-4);
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-import-mapping-table table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.ds-import-mapping-table th,
+.ds-import-mapping-table td {
+  height: var(--ds-table-row-height);
+  padding: 0 var(--ds-space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+}
+
+.ds-import-mapping-table th {
+  color: var(--ds-color-text-secondary);
+  font-weight: var(--ds-font-weight-semibold);
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-import-mapping-table tr:last-child td {
+  border-bottom: 0;
+}

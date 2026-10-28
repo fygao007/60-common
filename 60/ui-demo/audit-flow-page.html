@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核流程组件</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AuditFlow/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .page {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .page-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .page-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .page-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .section {
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
+    }
+
+    .card {
+      min-height: 180px;
+      padding: 0;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .card.is-full {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card,
+      .card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="page">
+    <header class="head">
+      <div>
+        <h1 class="page-title"><span>审核流程组件</span></h1>
+        <p class="page-desc">用于详情页展示审核走向，覆盖 个人提交 → 院系秘书审核 → 院系领导审核 → 人事处（或科研处）办理 的链路。</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">审核中</h2>
+        <span class="section-meta">当前节点：院系领导审核</span>
+      </div>
+      <div class="grid">
+        <article class="card is-full">
+          <section class="ds-audit-flow" aria-label="审核流程">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">张质系</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">王秘书</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-process">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">3</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">审核中</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">李院长</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-wait">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">4</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">人事处审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">—</span>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">纵向布局</h2>
+        <span class="section-meta">Direction: Vertical / 适合详情页右侧侧栏</span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <section class="ds-audit-flow ds-audit-flow--vertical" aria-label="审核流程-纵向-审核中">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">张质系 · 2025.11.10 14:09</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">王秘书 · 2人会签</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-process">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">3</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">审核中</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">李院长 · 待处理</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-wait">
+                <div class="ds-audit-flow__icon">4</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">人事处审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">—</span>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+
+        <article class="card">
+          <section class="ds-audit-flow ds-audit-flow--vertical" aria-label="审核流程-纵向-被退回">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">张质系</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-error">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">!</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">已退回</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">王秘书 · 缺少指导博士生经验</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-rejected-after">
+                <div class="ds-audit-flow__connector" aria-hidden="true"></div>
+                <div class="ds-audit-flow__icon">↩</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">—</span>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-rejected-after">
+                <div class="ds-audit-flow__icon">↩</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">人事处审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                  <span class="ds-audit-flow__assignee">—</span>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-title">不同节点状态</h2>
+        <span class="section-meta">Finish / Process / Error / Reject / Disabled</span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <section class="ds-audit-flow" aria-label="全部通过">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">人事处审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+
+        <article class="card">
+          <section class="ds-audit-flow" aria-label="被退回">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-error">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">!</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">已退回</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-rejected-after">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">↩</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-rejected-after">
+                <div class="ds-audit-flow__icon">↩</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">人事处审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+
+        <article class="card">
+          <section class="ds-audit-flow" aria-label="不通过">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-finish">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">✓</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">已通过</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-reject">
+                <div class="ds-audit-flow__icon">×</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">科研处办理</strong>
+                    <span class="ds-audit-flow__tag is-danger">不通过</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+
+        <article class="card">
+          <section class="ds-audit-flow" aria-label="未开始">
+            <ol class="ds-audit-flow__track">
+              <li class="ds-audit-flow__node is-process">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">1</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">个人提交</strong>
+                    <span class="ds-audit-flow__tag">审核中</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-wait">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">2</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系秘书审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-wait">
+                <div class="ds-audit-flow__connector"></div>
+                <div class="ds-audit-flow__icon">3</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">院系领导审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                </div>
+              </li>
+              <li class="ds-audit-flow__node is-wait">
+                <div class="ds-audit-flow__icon">4</div>
+                <div class="ds-audit-flow__body">
+                  <div class="ds-audit-flow__title-row">
+                    <strong class="ds-audit-flow__name">人事处审核</strong>
+                    <span class="ds-audit-flow__tag">未开始</span>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

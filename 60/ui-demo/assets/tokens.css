@@ -1,0 +1,203 @@
+:root,
+:host {
+  /* Font / 字体 */
+  --ds-font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Microsoft YaHei', Arial, sans-serif;
+  --ds-font-family-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+  /* Brand / 品牌色：蓝色主题色体系 */
+  --ds-blue-1: #f0f6ff;
+  --ds-blue-2: #d4e5ff;
+  --ds-blue-3: #abcaff;
+  --ds-blue-4: #82acff;
+  --ds-blue-5: #598bff;
+  --ds-blue-6: #3167ff;
+  --ds-blue-7: #1e4ad9;
+  --ds-blue-8: #1031b3;
+  --ds-blue-9: #061c8c;
+  --ds-blue-10: #031066;
+
+  --ds-color-primary: #3167ff;
+  --ds-color-primary-hover: #1e4ad9;
+  --ds-color-primary-active: #1031b3;
+  --ds-color-primary-disabled: #abcaff;
+  --ds-color-primary-light: #f0f6ff;
+  --ds-color-primary-lighter: #fbfdff;
+  --ds-color-primary-selected: #f0f6ff;
+  --ds-color-primary-weak: #d4e5ff;
+  --ds-color-primary-rgb: 49, 103, 255;
+
+  /* Functional / 功能色 */
+  --ds-color-success: #20b486;
+  --ds-color-success-hover: #2fb8a6;
+  --ds-color-success-active: #168a66;
+  --ds-color-success-light: #e9f8ef;
+  --ds-color-success-rgb: 32, 180, 134;
+
+  --ds-color-warning: #ff994a;
+  --ds-color-warning-text: #b26a00;
+  --ds-color-warning-hover: #ffb36f;
+  --ds-color-warning-active: #e78915;
+  --ds-color-warning-light: #fff7e6;
+  --ds-color-warning-border: #ffd591;
+
+  --ds-color-danger: #fa5151;
+  --ds-color-danger-hover: #ff5555;
+  --ds-color-danger-active: #d9363e;
+  --ds-color-danger-light: #fff1f0;
+
+  --ds-color-info: #3167ff;
+  --ds-color-info-light: #f0f6ff;
+  --ds-color-info-gradient-start: #82acff;
+  --ds-color-info-gradient-end-rgb: 89, 139, 255;
+
+  /* Neutral / 中性色 */
+  --ds-color-black: #000000;
+  --ds-color-white: #ffffff;
+  --ds-color-text: #1f2937;
+  --ds-color-text-heading: #1f2937;
+  --ds-color-text-secondary: #4b5563;
+  --ds-color-text-tertiary: #737585;
+  --ds-color-text-placeholder: #9ca3af;
+  --ds-color-text-disabled: #c9cdd4;
+  --ds-color-text-inverse: #ffffff;
+  --ds-color-text-strong: #1031b3;
+  --ds-color-text-disabled-strong: #b9bac2;
+  --ds-color-text-rgb: 0, 0, 0;
+  --ds-color-white-rgb: 255, 255, 255;
+
+  --ds-color-bg: #ffffff;
+  --ds-color-bg-page: #f0f6ff;
+  --ds-color-bg-container: #ffffff;
+  --ds-color-bg-hover: #f6f6f7;
+  --ds-color-bg-active: #f0f6ff;
+  --ds-color-bg-disabled: #f2f3f5;
+  --ds-color-bg-subtle: #fafafa;
+  --ds-color-bg-soft: #f5f7fb;
+  --ds-color-bg-soft-hover: #f7f8fa;
+  --ds-color-bg-info: #f0f6ff;
+  --ds-color-bg-child: #fbfcff;
+  --ds-color-bg-mask: rgba(0, 0, 0, 0.45);
+  --ds-color-bg-mask-light: rgba(0, 0, 0, 0.28);
+
+  --ds-color-border: #dcdce0;
+  --ds-color-border-secondary: #eeeef0;
+  --ds-color-border-tertiary: #edf0f5;
+  --ds-color-border-hover: #333fff;
+  --ds-color-border-disabled: #e5e6eb;
+  --ds-color-border-weak: #f6f6f7;
+  --ds-color-border-primary-weak: #ebecff;
+  --ds-color-border-rgb: 238, 238, 240;
+
+  /* Component color aliases / 组件色别名 */
+  --ds-color-focus-ring: rgba(var(--ds-color-primary-rgb), 0.12);
+  --ds-color-focus-ring-strong: rgba(var(--ds-color-primary-rgb), 0.18);
+  --ds-color-hover-mask: rgba(var(--ds-color-text-rgb), 0.04);
+  --ds-color-hover-mask-strong: rgba(var(--ds-color-text-rgb), 0.06);
+  --ds-color-divider-alpha: rgba(var(--ds-color-border-rgb), 0.72);
+  --ds-color-divider-alpha-soft: rgba(var(--ds-color-border-rgb), 0.65);
+  --ds-color-primary-tint: rgba(var(--ds-color-primary-rgb), 0.08);
+  --ds-color-primary-tint-strong: rgba(var(--ds-color-primary-rgb), 0.10);
+  --ds-color-success-border: rgba(var(--ds-color-success-rgb), 0.24);
+  --ds-color-ai-gradient: linear-gradient(90deg, #598bff 0%, #3167ff 52%, #1031b3 100%);
+  --ds-color-nav-bg: linear-gradient(180deg, #3167ff 0%, #1e4ad9 55%, #1031b3 100%);
+  --ds-color-nav-panel-bg: linear-gradient(270deg, #f0f6ff 5%, #d4e5ff 100%);
+  --ds-color-steps-bg: linear-gradient(0deg, rgba(var(--ds-color-primary-rgb), 0.04) 0%, rgba(var(--ds-color-primary-rgb), 0.04) 100%), var(--ds-color-white);
+  --ds-color-table-group-bg: linear-gradient(90deg, #fbfdff 0%, #f0f6ff 100%);
+  --ds-color-group-title-bg: linear-gradient(90deg, #f0f6ff 0%, rgba(245, 245, 255, 0.1) 100%);
+  --ds-color-info-gradient: linear-gradient(90deg, var(--ds-color-info-gradient-start) 0%, rgba(var(--ds-color-info-gradient-end-rgb), 0.7) 100%);
+  --ds-color-avatar-bg: #ffdcc8;
+  --ds-color-scrollbar-thumb: #c9cdd4;
+  --ds-color-scrollbar-thumb-hover: #a9aeb8;
+
+  /* RGB alpha scale / RGB(A) 叠色透明度 */
+  --ds-alpha-0: 0;
+  --ds-alpha-5: 0.05;
+  --ds-alpha-10: 0.1;
+  --ds-alpha-20: 0.2;
+  --ds-alpha-30: 0.3;
+  --ds-alpha-40: 0.4;
+  --ds-alpha-50: 0.5;
+  --ds-alpha-60: 0.6;
+  --ds-alpha-70: 0.7;
+  --ds-alpha-80: 0.8;
+  --ds-alpha-90: 0.9;
+  --ds-alpha-100: 1;
+
+  /* Typography / 字号行高：桌面端默认 14px，最小 12px；行高 = 字号 + 8px */
+  --ds-font-size-xs: 12px;
+  --ds-font-size-sm: 13px;
+  --ds-font-size-md: 14px;
+  --ds-font-size-lg: 16px;
+  --ds-font-size-xl: 18px;
+  --ds-font-size-title: 20px;
+  --ds-font-size-headline: 24px;
+
+  --ds-line-height-xs: 20px;
+  --ds-line-height-sm: 21px;
+  --ds-line-height-md: 22px;
+  --ds-line-height-lg: 24px;
+  --ds-line-height-xl: 26px;
+  --ds-line-height-title: 28px;
+  --ds-line-height-headline: 32px;
+
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+
+  /* Spacing / 间距：4px 基准递增 */
+  --ds-space-0: 0;
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+
+  /* Size / 控件尺寸 */
+  --ds-control-height-sm: 24px;
+  --ds-control-height-md: 32px;
+  --ds-control-height-lg: 36px;
+  --ds-control-height-xl: 40px;
+  --ds-table-row-height: 46px;
+  --ds-table-header-height: 40px;
+  --ds-nav-width-collapsed: 80px;
+  --ds-nav-width: 200px;
+  --ds-topbar-height: 48px;
+  --ds-page-padding: 24px;
+  --ds-card-padding: 24px;
+  --ds-filter-card-height: 124px;
+
+  /* Radius / 圆角 */
+  --ds-radius-none: 0;
+  --ds-radius-xs: 2px;
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 6px;
+  --ds-radius-lg: 8px;
+  --ds-radius-xl: 12px;
+  --ds-radius-2xl: 12px;
+  --ds-radius-pill: 999px;
+
+  /* Shadow / 阴影 */
+  --ds-shadow-none: none;
+  --ds-shadow-xs: 0 1px 2px rgba(var(--ds-color-text-rgb), 0.06);
+  --ds-shadow-sm: 0 4px 12px rgba(var(--ds-color-text-rgb), 0.06);
+  --ds-shadow-md: 0 8px 24px rgba(var(--ds-color-text-rgb), 0.10);
+  --ds-shadow-lg: 0 12px 32px rgba(var(--ds-color-text-rgb), 0.14);
+
+  /* Motion / 动效 */
+  --ds-motion-duration-fast: 120ms;
+  --ds-motion-duration: 160ms;
+  --ds-motion-duration-slow: 240ms;
+  --ds-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Z-index / 层级 */
+  --ds-z-dropdown: 1000;
+  --ds-z-sticky: 1020;
+  --ds-z-drawer: 1100;
+  --ds-z-modal: 1200;
+  --ds-z-message: 1300;
+}

@@ -1,0 +1,175 @@
+@import '../tokens.css';
+
+.ds-tree {
+  width: 100%;
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-tree__group {
+  display: grid;
+  gap: var(--ds-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-tree__row {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding-left: var(--ds-tree-indent);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ds-tree__row:hover {
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-tree__node.is-selected > .ds-tree__row {
+  background: #e5ecff;
+}
+
+.ds-tree__node.is-drop-target > .ds-tree__row {
+  box-shadow: inset 0 -2px 0 var(--ds-color-primary);
+}
+
+.ds-tree__toggle,
+.ds-tree__spacer {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 32px;
+}
+
+.ds-tree__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  color: var(--ds-color-text-secondary);
+  background: transparent;
+  cursor: pointer;
+}
+
+.ds-tree__toggle svg {
+  width: 16px;
+  height: 16px;
+  transform: rotate(-90deg);
+  transition: transform var(--ds-motion-duration) ease;
+}
+
+.ds-tree__toggle.is-expanded img {
+  transform: rotate(0deg);
+}
+
+.ds-tree__toggle:focus-visible,
+.ds-tree__label:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ds-color-focus-ring-strong);
+}
+
+.ds-tree__label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 var(--ds-space-3) 0 0;
+  border: 0;
+  color: var(--ds-color-text);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ds-tree__node.is-selected > .ds-tree__row .ds-tree__label {
+  color: var(--ds-color-primary);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-tree__node.is-disabled {
+  opacity: var(--ds-alpha-40);
+}
+
+.ds-tree__title {
+  overflow: hidden;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-tree__required {
+  flex: none;
+  padding: 0 var(--ds-space-2);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-color-danger);
+  background: var(--ds-color-danger-light);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-lg);
+}
+
+.ds-tree__count {
+  flex: none;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ds-tree__actions {
+  display: none;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-1);
+  padding-right: var(--ds-space-2);
+}
+
+.ds-tree__row:hover .ds-tree__actions,
+.ds-tree__node.is-selected > .ds-tree__row .ds-tree__actions,
+.ds-tree__actions:focus-within {
+  display: inline-flex;
+}
+
+.ds-tree__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 var(--ds-space-1);
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-color-primary);
+  background: transparent;
+  font: inherit;
+  font-size: var(--ds-font-size-xs);
+  cursor: pointer;
+}
+
+.ds-tree__action:hover {
+  background: var(--ds-color-primary-light);
+}
+
+.ds-tree__action.is-danger {
+  color: var(--ds-color-danger);
+}
+
+.ds-tree__action.is-danger:hover {
+  background: var(--ds-color-danger-light);
+}
+
+.ds-tree__drag {
+  cursor: grab;
+}
+
+.ds-tree__drag:active {
+  cursor: grabbing;
+}
+
+.ds-tree__drag img {
+  width: 16px;
+  height: 16px;
+}

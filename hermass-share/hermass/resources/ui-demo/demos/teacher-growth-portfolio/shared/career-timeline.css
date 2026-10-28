@@ -1,0 +1,143 @@
+/* 人才履历图 · 共享样式(禁 ds- 选择器、禁 hex,统一 token) */
+.ct-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 维度着色 token 映射 —— 用 DS 既有色令,CSS var 不解析动态值,所以用预设类 */
+.ct-dim-ethics .ct-dot { background: var(--ds-color-danger); }
+.ct-dim-teaching .ct-dot { background: var(--ds-color-primary); }
+.ct-dim-research .ct-dot { background: var(--ds-color-success); }
+.ct-dim-development .ct-dot { background: var(--ds-color-warning); }
+.ct-dim-contribution .ct-dot { background: var(--ds-color-info, var(--ds-color-primary)); }
+
+/* —— 横向时间轴 —— */
+.ct-timeline {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  padding: 24px 16px 12px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.ct-spine {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 32px;
+  height: 2px;
+  background: var(--ds-color-border-secondary);
+  z-index: 0;
+}
+
+.ct-node {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 124px;
+  z-index: 1;
+}
+
+.ct-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--ds-radius-full, 999px);
+  border: 3px solid var(--ds-color-bg-container);
+  box-shadow: 0 0 0 1px var(--ds-color-border-secondary);
+  margin-bottom: 8px;
+  transition: transform 0.15s ease;
+}
+
+.ct-node:hover .ct-dot,
+.ct-node.is-active .ct-dot {
+  transform: scale(1.3);
+}.ct-node__card{
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--ds-color-border-tertiary);
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.ct-node.is-active .ct-node__card{
+  border-color: var(--ds-color-primary);
+  box-shadow: 0 2px 8px var(--ds-color-overlay, rgba(0, 0, 0, 0.08));
+}
+
+.ct-node__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ct-node__date {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-text-secondary);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ct-node__title {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-primary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.ct-node__dim {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-text-tertiary);
+}
+
+/* —— 佐证面板 —— */
+.ct-evidence {
+  padding: 12px 16px;
+  background: var(--ds-color-bg-page);
+  border: 1px solid var(--ds-color-border-tertiary);
+  border-radius: var(--ds-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ct-evidence__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ct-evidence__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-secondary);
+}
+
+.ct-evidence__label {
+  color: var(--ds-color-text-tertiary);
+  min-width: 60px;
+}
+
+/* —— AI 成长叙事 —— */
+.ct-narrative {
+  padding: 12px 16px;
+  border-left: 3px solid var(--ds-color-primary);
+  background: var(--ds-color-bg-page);
+  border-radius: var(--ds-radius-md);
+}
+
+.ct-narrative__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ct-narrative__note {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-text-tertiary);
+}

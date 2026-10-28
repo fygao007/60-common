@@ -1,0 +1,1447 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>图表配置能力</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+    .chart-designer-page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .cd-layout { flex: 1; display: flex; overflow: hidden; }
+
+    /* ═══ 左栏 ═══ */
+    .cd-left-panel { width: 240px; border-right: 1px solid #eeeef0; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+    .cd-panel-header { padding: 12px 16px; font-size: 14px; font-weight: 600; color: #000; border-bottom: 1px solid #eeeef0; display: flex; align-items: center; justify-content: space-between; }
+    .cd-container-list { border-bottom: 1px solid #eeeef0; max-height: 200px; overflow: auto; }
+    .cd-container-list__header { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; font-size: 12px; color: #737585; }
+    .cd-container-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; cursor: pointer; }
+    .cd-container-item:hover { background: #f6f6f7; }
+    .cd-container-item.active { background: #e8f0ff; }
+    .cd-container-item__title { flex: 1; font-size: 13px; color: #000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cd-container-item.active .cd-container-item__title { color: var(--ds-color-primary); }
+    .cd-container-item__count { font-size: 12px; color: #737585; }
+    .cd-container-item__del { border: 0; background: transparent; color: #737585; cursor: pointer; font-size: 14px; padding: 0 4px; }
+    .cd-container-item__del:hover { color: #F53F3F; }
+    .cd-type-list { flex: 1; overflow: auto; padding: 8px; }
+    .cd-type-group__title { font-size: 12px; color: #737585; padding: 8px 8px 4px; }
+    .cd-type-card { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid transparent; border-radius: 6px; cursor: grab; }
+    .cd-type-card:hover { border-color: var(--ds-color-primary); background: #f6f9ff; }
+    .cd-type-card__thumb { width: 40px; height: 40px; color: var(--ds-color-primary); flex: none; display: flex; align-items: center; justify-content: center; }
+    .cd-type-card__thumb svg { width: 100%; height: 100%; }
+    .cd-type-card__name { font-size: 13px; color: #000; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 28px; min-width: 60px; padding: 0 12px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { color: #fff; background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn.sm { height: 24px; padding: 0 10px; font-size: 12px; min-width: auto; }
+
+    /* ═══ 中栏 ═══ */
+    .cd-canvas-section { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .cd-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid #eeeef0; }
+    .cd-toolbar__title { font-size: 15px; font-weight: 600; color: #000; }
+    .cd-canvas-body { flex: 1; overflow: auto; padding: 16px; background: #f7f8fa; }
+    .cd-canvas-toolbar__count { font-size: 12px; color: #737585; margin-left: 12px; }
+    .cd-canvas-empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #bcbecd; }
+    .cd-canvas-empty__icon { font-size: 40px; }
+    .cd-canvas-empty__text { font-size: 13px; }
+
+    .cd-dashboard-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    .cd-chart-wrapper { position: relative; background: #fff; border: 1px solid #eeeef0; border-radius: 8px; padding: 12px; cursor: pointer; min-width: 0; }
+    .cd-chart-wrapper.selected { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .cd-chart-wrapper__delete { position: absolute; top: -8px; right: -8px; width: 18px; height: 18px; border-radius: 50%; background: #F53F3F; color: #fff; border: 0; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5; }
+
+    .cd-chart-card__title { font-size: 13px; font-weight: 600; color: #000; margin-bottom: 8px; }
+    .cd-chart-card__body { min-height: 120px; }
+    .cd-chart-card__body svg { width: 100%; height: auto; display: block; }
+    .cd-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 8px; }
+    .cd-legend__item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #505266; }
+    .cd-legend__dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* 档案信息卡 */
+    .cd-profile-card { display: flex; gap: 12px; }
+    .cd-profile-card__photo { width: 64px; height: 80px; border-radius: 6px; background: #e8e9ee; object-fit: cover; flex: none; }
+    .cd-profile-card__name { font-size: 15px; font-weight: 600; color: #000; margin-bottom: 6px; }
+    .cd-profile-card__field { display: flex; gap: 8px; font-size: 12px; line-height: 20px; }
+    .cd-profile-card__field dt { color: #737585; flex: none; }
+    .cd-profile-card__field dd { margin: 0; color: #000; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* 统计卡 */
+    .cd-stat-card { display: flex; align-items: center; gap: 10px; border-radius: 8px; padding: 14px; height: 100%; box-sizing: border-box; }
+    .cd-stat-card__icon-before { flex: none; }
+    .cd-stat-card__icon-before svg { width: 22px; height: 22px; }
+    .cd-stat-card__icon-corner svg { width: 26px; height: 26px; opacity: 0.5; }
+    .cd-stat-card__body { flex: 1; min-width: 0; }
+    .cd-stat-card__label { font-size: 13px; }
+    .cd-stat-card__value-row { display: flex; align-items: baseline; gap: 4px; }
+    .cd-stat-card__value { font-size: 26px; font-weight: 600; }
+    .cd-stat-card__unit { font-size: 12px; }
+    .cd-stat-card__compare { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+
+    /* 条形占比 */
+    .cd-segbar-stats { display: flex; gap: 8px; margin-bottom: 10px; }
+    .cd-segbar-stat { padding: 6px 12px; border-radius: 6px; background: #f6f6f7; }
+    .cd-segbar-stat__value { font-size: 16px; font-weight: 600; color: #000; }
+    .cd-segbar-stat__label { font-size: 11px; color: #737585; }
+    .cd-segbar-track { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #e8e9ee; }
+    .cd-segbar-seg { height: 100%; }
+
+    /* 横向柱状 / 排名 */
+    .cd-barrow { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+    .cd-barrow__name { width: 64px; font-size: 12px; color: #505266; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cd-barrow__track { flex: 1; height: 10px; border-radius: 5px; background: #f0f0f2; overflow: hidden; }
+    .cd-barrow__fill { height: 100%; border-radius: 5px; }
+    .cd-barrow__value { width: 42px; text-align: right; font-size: 12px; color: #000; flex: none; }
+    .cd-rankrow { display: flex; align-items: center; gap: 8px; margin: 7px 0; }
+    .cd-rankrow__badge { width: 18px; height: 18px; border-radius: 4px; background: #e8e9ee; color: #737585; font-size: 11px; display: flex; align-items: center; justify-content: center; flex: none; }
+    .cd-rankrow__badge.top1 { background: #F53F3F; color: #fff; }
+    .cd-rankrow__badge.top2 { background: #FF7D00; color: #fff; }
+    .cd-rankrow__badge.top3 { background: #FFC00E; color: #fff; }
+
+    /* 容器 */
+    .cd-container { border: 1px solid #eeeef0; border-radius: 8px; background: #fff; margin-bottom: 16px; }
+    .cd-container__header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #eeeef0; cursor: pointer; }
+    .cd-container__title { font-size: 14px; font-weight: 600; color: #000; }
+    .cd-container__toggle { border: 0; background: transparent; color: #737585; cursor: pointer; padding: 2px 6px; }
+    .cd-container__tabs { display: flex; gap: 0; padding: 0 14px; border-bottom: 1px solid #eeeef0; }
+    .cd-container__tab { padding: 8px 14px; font-size: 13px; color: #505266; cursor: pointer; border-bottom: 2px solid transparent; }
+    .cd-container__tab.active { color: var(--ds-color-primary); font-weight: 500; border-bottom-color: var(--ds-color-primary); }
+    .cd-container__body { padding: 12px; min-height: 60px; }
+    .cd-container__empty { padding: 16px; text-align: center; color: #bcbecd; font-size: 13px; border: 1px dashed #dcdce0; border-radius: 6px; }
+    .cd-top-charts { margin-bottom: 16px; }
+
+    /* ═══ 右栏 ═══ */
+    .cd-right-panel { width: 300px; border-left: 1px solid #eeeef0; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+    .cd-right-panel .cd-panel-header button.close { border: 0; background: transparent; color: #737585; cursor: pointer; font-size: 16px; padding: 0 4px; }
+    .cd-right-panel .cd-panel-header button.close:hover { color: #F53F3F; }
+    .cd-right-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #bcbecd; }
+    .cd-right-empty__icon { font-size: 32px; }
+    .cd-right-empty__text { font-size: 13px; }
+    .cd-tabs-bar { display: flex; border-bottom: 1px solid #eeeef0; }
+    .cd-tabs-bar__tab { flex: 1; text-align: center; padding: 8px 0; font-size: 13px; color: #505266; cursor: pointer; border-bottom: 2px solid transparent; background: none; border-top: 0; border-left: 0; border-right: 0; }
+    .cd-tabs-bar__tab.active { color: var(--ds-color-primary); font-weight: 500; border-bottom-color: var(--ds-color-primary); }
+    .cd-property-body { flex: 1; overflow: auto; padding: 12px; }
+    .cd-field-group { border: 1px solid #eeeef0; border-radius: 6px; margin-bottom: 10px; }
+    .cd-field-group__header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; font-size: 13px; font-weight: 600; color: #000; cursor: pointer; background: #fafafa; }
+    .cd-field-group__arrow { color: #737585; font-size: 11px; }
+    .cd-field-group__body { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .cd-field { display: flex; flex-direction: column; gap: 4px; }
+    .cd-field__label { font-size: 12px; color: #505266; }
+    .cd-field input[type="text"], .cd-field input[type="number"], .cd-field select, .cd-field textarea { height: 28px; padding: 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 13px; color: #000; outline: none; box-sizing: border-box; width: 100%; font-family: inherit; }
+    .cd-field textarea { height: auto; padding: 8px; line-height: 1.5; resize: vertical; }
+    .cd-field input:focus, .cd-field select:focus, .cd-field textarea:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .cd-field input[readonly] { background: #f6f6f7; color: #737585; }
+    .cd-field-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cd-field-error { font-size: 12px; color: #F53F3F; }
+    .cd-field-hint { font-size: 11px; color: #b3b5c3; }
+    .cd-switch-row { display: flex; align-items: center; justify-content: space-between; }
+    .cd-switch-row__label { font-size: 12px; color: #505266; }
+    .cd-switch { width: 34px; height: 18px; border-radius: 9px; background: #bcbecd; position: relative; cursor: pointer; transition: background 0.2s; flex: none; }
+    .cd-switch.is-on { background: var(--ds-color-primary); }
+    .cd-switch::after { content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: transform 0.2s; }
+    .cd-switch.is-on::after { transform: translateX(16px); }
+    .cd-series-editor__header { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #505266; }
+    .cd-filter-item { border: 1px solid #eeeef0; border-radius: 6px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .cd-filter-item__row { display: flex; gap: 6px; align-items: center; }
+    .cd-filter-item__row input[type="text"] { flex: 1; height: 26px; padding: 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 12px; outline: none; box-sizing: border-box; min-width: 0; }
+    .cd-icon-btn { border: 0; background: transparent; color: #737585; cursor: pointer; font-size: 14px; padding: 2px 6px; flex: none; }
+    .cd-icon-btn:hover { color: #F53F3F; }
+    .cd-type-badge { margin-top: auto; padding: 8px 10px; font-size: 11px; color: #737585; background: #fafafa; border-top: 1px solid #eeeef0; }
+
+    /* toast & modal */
+    .cd-message { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: #20b486; color: #fff; padding: 8px 20px; border-radius: 6px; font-size: 13px; z-index: 9999; display: none; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .cd-export-modal { width: 680px; max-width: 90vw; background: #fff; border-radius: 8px; display: flex; flex-direction: column; max-height: 80vh; }
+    .cd-export-modal__header { padding: 14px 20px; border-bottom: 1px solid #eeeef0; font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .cd-export-modal__body { padding: 16px 20px; overflow: auto; }
+    .cd-export-modal__desc { font-size: 13px; color: #505266; margin: 0 0 10px; }
+    .cd-export-modal__desc code { background: #f6f6f7; padding: 1px 4px; border-radius: 3px; }
+    .cd-export-modal__code { background: #f7f8fa; border: 1px solid #eeeef0; border-radius: 6px; padding: 12px; font-size: 12px; line-height: 1.5; overflow: auto; max-height: 320px; }
+    .cd-export-modal__footer { display: flex; justify-content: flex-end; gap: 12px; padding: 12px 20px; border-top: 1px solid #eeeef0; }
+  </style>
+</head>
+<body>
+<div class="ds-scope ds-page chart-designer-page">
+  <div class="cd-layout">
+    <aside class="cd-left-panel" id="leftPanel"></aside>
+    <div class="cd-canvas-section">
+      <div class="cd-toolbar">
+        <span class="cd-toolbar__title">图表设计器</span>
+        <button class="btn primary" type="button" id="exportBtn" onclick="openExport()">导出配置</button>
+      </div>
+      <div class="cd-canvas-body" id="canvasBody" ondragover="canvasDragOver(event)" ondrop="dropTypeOnCanvas(event)" onclick="selectNone()"></div>
+    </div>
+    <aside class="cd-right-panel" id="rightPanel" onclick="event.stopPropagation()"></aside>
+  </div>
+</div>
+
+<div class="cd-message" id="toast"></div>
+
+<div class="modal-overlay" id="exportModal">
+  <div class="cd-export-modal">
+    <div class="cd-export-modal__header"><span>导出图表配置</span><button class="cd-icon-btn" type="button" onclick="closeExport()">×</button></div>
+    <div class="cd-export-modal__body">
+      <p class="cd-export-modal__desc">导出的 <code>containers</code> 数组可直接用于业务页面。</p>
+      <pre class="cd-export-modal__code" id="exportCode"></pre>
+    </div>
+    <div class="cd-export-modal__footer">
+      <button class="btn" type="button" onclick="downloadJson()">下载文件</button>
+      <button class="btn primary" type="button" onclick="copyJson()">复制 JSON</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════ 常量 ═══════════════ */
+var CHART_TYPE_META = [
+  { type: 'profileCard', name: '档案信息卡', group: '统计卡', size: 'medium', desc: '照片+姓名+基本信息的档案卡' },
+  { type: 'basicInfo', name: '统计卡片', group: '统计卡', size: 'small', desc: '单个彩色统计卡片，支持图标与对比分析' },
+  { type: 'segmentBar', name: '条形占比图', group: '统计卡', size: 'full', desc: '分段占比统计' },
+  { type: 'donut', name: '环形图', group: '占比类', size: 'small', desc: '分类占比，环心显示总数' },
+  { type: 'donutCallout', name: '引导线环形图', group: '占比类', size: 'wide', desc: '带引导线标签的占比' },
+  { type: 'pie', name: '饼状图', group: '占比类', size: 'small', desc: '实心分类占比' },
+  { type: 'pieCallout', name: '引导线扇形图', group: '占比类', size: 'wide', desc: '实心饼图+短引导线标签' },
+  { type: 'progressRing', name: '进度环', group: '占比类', size: 'mini', desc: '完成度展示' },
+  { type: 'barHorizontal', name: '横向柱状图', group: '对比类', size: 'small', desc: '横向对比' },
+  { type: 'barVertical', name: '竖向柱状图', group: '对比类', size: 'medium', desc: '纵向对比' },
+  { type: 'rankBar', name: '排名柱状图', group: '对比类', size: 'medium', desc: 'TOP 排名对比，带名次' },
+  { type: 'line', name: '折线图', group: '趋势类', size: 'medium', desc: '趋势分析' },
+  { type: 'areaLine', name: '面积折线图', group: '趋势类', size: 'wide', desc: '重点趋势展示' },
+  { type: 'radar', name: '雷达图', group: '画像类', size: 'medium', desc: '多维度画像' }
+];
+
+var SIZE_OPTIONS = ['mini', 'small', 'medium', 'wide', 'full'];
+var SIZE_SPAN = { mini: 1, small: 2, medium: 3, wide: 4, full: 6 };
+var SPAN_TO_SIZE = { 1: 'mini', 2: 'small', 3: 'medium', 4: 'wide', 5: 'wide', 6: 'full' };
+var GRID_COLUMNS = 6;
+var CHART_SIZE_LIMITS = {
+  profileCard: { min: 2 }, basicInfo: { min: 3 }, segmentBar: { min: 4 },
+  donut: { min: 2 }, donutCallout: { min: 3 }, pie: { min: 2 }, pieCallout: { min: 3 },
+  progressRing: { min: 1 }, barHorizontal: { min: 2 }, barVertical: { min: 2 },
+  rankBar: { min: 3 }, line: { min: 3 }, areaLine: { min: 3 }, radar: { min: 3 }
+};
+var STAT_COLOR_OPTIONS = ['purple', 'cyan', 'blue', 'green', 'deepPurple', 'pink', 'orange'];
+var STAT_ICON_OPTIONS = ['project', 'award', 'person', 'chart', 'book', 'money', 'time'];
+var STAT_ICON_POSITIONS = [{ label: '标题前', value: 'before-title' }, { label: '卡片右下', value: 'bottom-right' }];
+var SEGMENT_STATUS_OPTIONS = ['excellent', 'good', 'attention', 'risk'];
+var SEGMENT_STATUS_COLOR = { excellent: '#00B42A', good: '#1677FF', attention: '#FF7D00', risk: '#F53F3F' };
+var FILTER_TYPE_OPTIONS = [{ label: '选择字段', value: 'select' }, { label: '时间筛选', value: 'time' }];
+var FILTER_TIME_GRAINS = ['按年', '按学期', '按月', '按日'];
+var PALETTE = ['#3B82F6', '#00B42A', '#FF7D00', '#F53F3F', '#722ED1', '#14C0FF', '#F77EB9', '#25467A'];
+
+var THUMBS = {
+  profileCard: '<svg viewBox="0 0 40 40" fill="none"><circle cx="12" cy="12" r="6" fill="currentColor" opacity="0.7"/><rect x="4" y="22" width="16" height="3" rx="1.5" fill="currentColor" opacity="0.5"/><rect x="4" y="27" width="12" height="2" rx="1" fill="currentColor" opacity="0.3"/><rect x="22" y="6" width="14" height="28" rx="2" fill="currentColor" opacity="0.15"/><rect x="24" y="10" width="10" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="24" y="14" width="8" height="2" rx="1" fill="currentColor" opacity="0.3"/><rect x="24" y="18" width="10" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="24" y="22" width="6" height="2" rx="1" fill="currentColor" opacity="0.3"/></svg>',
+  basicInfo: '<svg viewBox="0 0 40 40" fill="none"><rect x="4" y="8" width="14" height="10" rx="2" fill="currentColor" opacity="0.8"/><rect x="22" y="8" width="14" height="10" rx="2" fill="currentColor" opacity="0.5"/><rect x="4" y="22" width="14" height="10" rx="2" fill="currentColor" opacity="0.6"/><rect x="22" y="22" width="14" height="10" rx="2" fill="currentColor" opacity="0.4"/></svg>',
+  segmentBar: '<svg viewBox="0 0 40 40" fill="none"><rect x="4" y="14" width="22" height="6" rx="2" fill="currentColor" opacity="0.8"/><rect x="26" y="14" width="6" height="6" rx="2" fill="currentColor" opacity="0.6"/><rect x="32" y="14" width="4" height="6" rx="2" fill="currentColor" opacity="0.4"/><rect x="4" y="24" width="32" height="3" rx="1.5" fill="currentColor" opacity="0.2"/></svg>',
+  donut: '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="6" stroke-dasharray="44 88"/><circle cx="20" cy="20" r="6" fill="currentColor"/></svg>',
+  donutCallout: '<svg viewBox="0 0 40 40" fill="none"><circle cx="18" cy="22" r="12" stroke="currentColor" stroke-width="5" stroke-dasharray="30 45"/><line x1="26" y1="14" x2="34" y2="8" stroke="currentColor" stroke-width="1.5"/></svg>',
+  pie: '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="0.5"/><path d="M20,20 L20,6 A14,14 0 0,1 33,20 Z" fill="currentColor" opacity="0.7"/><path d="M20,20 L33,20 A14,14 0 0,1 25,33 Z" fill="currentColor" opacity="0.4"/></svg>',
+  pieCallout: '<svg viewBox="0 0 40 40" fill="none"><circle cx="16" cy="22" r="11" fill="currentColor" opacity="0.25"/><path d="M16,22 L16,11 A11,11 0 0,1 26.67,19.28 Z" fill="currentColor" opacity="0.7"/><path d="M16,22 L26.67,19.28 A11,11 0 0,1 22.52,31.46 Z" fill="currentColor" opacity="0.45"/><line x1="26" y1="17" x2="34" y2="11" stroke="currentColor" stroke-width="1.2"/><line x1="25" y1="29" x2="33" y2="30" stroke="currentColor" stroke-width="1.2"/></svg>',
+  progressRing: '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="6" opacity="0.2"/><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="6" stroke-dasharray="66 88" transform="rotate(-90 20 20)"/></svg>',
+  barHorizontal: '<svg viewBox="0 0 40 40" fill="none"><rect x="4" y="8" width="24" height="6" rx="3" fill="currentColor"/><rect x="4" y="17" width="32" height="6" rx="3" fill="currentColor" opacity="0.7"/><rect x="4" y="26" width="16" height="6" rx="3" fill="currentColor" opacity="0.4"/></svg>',
+  barVertical: '<svg viewBox="0 0 40 40" fill="none"><rect x="6" y="20" width="6" height="16" rx="3" fill="currentColor"/><rect x="17" y="14" width="6" height="22" rx="3" fill="currentColor" opacity="0.7"/><rect x="28" y="24" width="6" height="12" rx="3" fill="currentColor" opacity="0.4"/></svg>',
+  rankBar: '<svg viewBox="0 0 40 40" fill="none"><rect x="8" y="7" width="26" height="5" rx="2.5" fill="currentColor" opacity="0.4"/><rect x="8" y="15" width="22" height="5" rx="2.5" fill="currentColor" opacity="0.6"/><rect x="8" y="23" width="18" height="5" rx="2.5" fill="currentColor" opacity="0.8"/><rect x="8" y="31" width="13" height="5" rx="2.5" fill="currentColor"/></svg>',
+  line: '<svg viewBox="0 0 40 40" fill="none"><polyline points="6,30 14,20 22,24 30,10 36,14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="30" r="2" fill="currentColor"/><circle cx="22" cy="24" r="2" fill="currentColor"/><circle cx="36" cy="14" r="2" fill="currentColor"/></svg>',
+  areaLine: '<svg viewBox="0 0 40 40" fill="none"><polygon points="6,30 14,20 22,24 30,10 36,14 36,36 6,36" fill="currentColor" opacity="0.2"/><polyline points="6,30 14,20 22,24 30,10 36,14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  radar: '<svg viewBox="0 0 40 40" fill="none"><polygon points="20,6 32,14 28,30 12,30 8,14" stroke="currentColor" stroke-width="0.8" opacity="0.3"/><polygon points="20,11 28,16 25,26 15,26 12,16" fill="currentColor" opacity="0.3" stroke="currentColor" stroke-width="1.5"/></svg>'
+};
+
+var STAT_COLOR_SCHEMES = {
+  purple: { bg: '#EBEDFF', text: '#060C77' }, cyan: { bg: '#E9FAFB', text: '#0F4A68' },
+  blue: { bg: '#EBF2FF', text: '#0F2C67' }, green: { bg: '#F1FDF8', text: '#083A25' },
+  deepPurple: { bg: '#EEEBFF', text: '#1A0F67' }, pink: { bg: '#FFF0F7', text: '#470A27' },
+  orange: { bg: '#FFF7EB', text: '#67450F' }
+};
+
+var STAT_ICONS = {
+  project: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="10" height="10" rx="2"/><path d="M5 7h4M7 5v4"/></svg>',
+  award: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="5" r="3"/><path d="M5 8l-1 4 3-2 3 2-1-4"/></svg>',
+  person: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="4" r="2.5"/><path d="M3 12c0-2.5 2-4 4-4s4 1.5 4 4"/></svg>',
+  chart: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11V6M7 11V4M11 11V8"/></svg>',
+  book: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h10v9H2z"/><path d="M7 3v9M2 6h5"/></svg>',
+  money: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5"/><path d="M7 4v6M5 6h4M5 8h4"/></svg>',
+  time: '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 2"/></svg>'
+};
+
+var uid = 0;
+function genId(prefix) { uid++; return prefix + '-' + Date.now().toString(36) + '-' + uid; }
+
+/* ═══════════════ 默认数据 ═══════════════ */
+function createDefaultChart(type) {
+  var meta = null;
+  CHART_TYPE_META.forEach(function(t) { if (t.type === type) meta = t; });
+  var base = { id: genId('chart'), title: meta ? meta.name : type, type: type, size: meta ? meta.size : 'medium', sql: '', enableFilter: false, filters: [], enableDrilldown: false, drilldownUrl: '' };
+  switch (type) {
+    case 'profileCard': return extend(base, { photo: '', name: '张三', fields: [
+      { id: 'f1', label: '性别', value: '男' }, { id: 'f2', label: '职工号', value: 'T2024001' },
+      { id: 'f3', label: '所在单位', value: '电子与通信工程学院' }, { id: 'f4', label: '职称', value: '副教授' }] });
+    case 'basicInfo': return extend(base, { stat: { label: '项目数', value: '120', unit: '个', compare: '环比 +12%', icon: 'project', iconPosition: 'before-title', color: 'purple' } });
+    case 'segmentBar': return extend(base, {
+      stats: [{ value: '120', label: '总数' }, { value: '89%', label: '达标率' }],
+      segments: [
+        { label: '优秀', value: 35, status: 'excellent' }, { label: '良好', value: 45, status: 'good' },
+        { label: '关注', value: 30, status: 'attention' }, { label: '风险', value: 10, status: 'risk' }],
+      statsSql: '', segmentsSql: '' });
+    case 'donut': case 'pie': return extend(base, { unit: '人', data: [{ name: '类别A', value: 40 }, { name: '类别B', value: 30 }, { name: '类别C', value: 20 }, { name: '类别D', value: 10 }] });
+    case 'donutCallout': return extend(base, { unit: '人', data: [{ name: '类别A', value: 35 }, { name: '类别B', value: 25 }, { name: '类别C', value: 20 }, { name: '类别D', value: 12 }, { name: '类别E', value: 8 }] });
+    case 'pieCallout': return extend(base, { unit: '人', data: [{ name: '类别A', value: 38 }, { name: '类别B', value: 26 }, { name: '类别C', value: 18 }, { name: '类别D', value: 12 }, { name: '类别E', value: 6 }] });
+    case 'progressRing': return extend(base, { data: [{ value: 78 }] });
+    case 'barHorizontal': return extend(base, { unit: '人', data: [{ name: '类别A', value: 45 }, { name: '类别B', value: 60 }, { name: '类别C', value: 30 }] });
+    case 'rankBar': return extend(base, { unit: '篇', data: [{ name: '张研究员', value: 28 }, { name: '李教授', value: 22 }, { name: '王副教授', value: 17 }, { name: '赵讲师', value: 12 }, { name: '钱老师', value: 9 }] });
+    case 'barVertical': case 'line': case 'areaLine': return extend(base, { unit: '项', xAxisData: ['2021', '2022', '2023', '2024', '2025'], data: [{ name: '系列A', values: [12, 18, 24, 32, 45] }] });
+    case 'radar': return extend(base, {
+      indicators: [{ name: '维度一', max: 100 }, { name: '维度二', max: 100 }, { name: '维度三', max: 100 }, { name: '维度四', max: 100 }, { name: '维度五', max: 100 }],
+      data: [{ name: '画像A', values: [80, 60, 90, 70, 85] }] });
+    default: return extend(base, { data: [] });
+  }
+}
+
+function createDefaultContainer() {
+  return { id: genId('container'), title: '分组', collapsed: false, enableFilter: false, filters: [], charts: [], layout: 'single', tabs: [], activeTabId: null };
+}
+
+function extend(base, extra) { var out = {}; for (var k in base) out[k] = base[k]; for (var k2 in extra) out[k2] = extra[k2]; return out; }
+
+function getChartSpan(chart) {
+  var limits = CHART_SIZE_LIMITS[chart.type] || { min: 1 };
+  if (typeof chart.span === 'number') return Math.max(limits.min, Math.min(GRID_COLUMNS, chart.span));
+  return Math.max(limits.min, Math.min(GRID_COLUMNS, SIZE_SPAN[chart.size] || 3));
+}
+function spanToSize(span) { return SPAN_TO_SIZE[span] || 'medium'; }
+function getActiveCharts(c) {
+  if (c.layout === 'tabs') {
+    var t = null;
+    (c.tabs || []).forEach(function(x) { if (x.id === c.activeTabId) t = x; });
+    if (!t && c.tabs && c.tabs.length) t = c.tabs[0];
+    return t ? t.charts : [];
+  }
+  return c.charts || [];
+}
+function getContainerChartCount(c) {
+  if (c.layout === 'tabs') return (c.tabs || []).reduce(function(s, t) { return s + (t.charts ? t.charts.length : 0); }, 0);
+  return (c.charts || []).length;
+}
+
+/* ═══════════════ 状态 ═══════════════ */
+var state = {
+  charts: [],
+  containers: [],
+  selectedContainerId: null,
+  selectedChartId: null,
+  dragType: null,
+  propTab: 'style',
+  dataError: '',
+  toastTimer: null
+};
+
+function notify(text) {
+  var el = document.getElementById('toast');
+  el.textContent = text;
+  el.style.display = 'block';
+  clearTimeout(state.toastTimer);
+  state.toastTimer = setTimeout(function() { el.style.display = 'none'; }, 1600);
+}
+
+function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+/* ═══════════════ 图表渲染 ═══════════════ */
+function legendHtml(data) {
+  var html = '<div class="cd-legend">';
+  data.forEach(function(d, i) {
+    html += '<span class="cd-legend__item"><span class="cd-legend__dot" style="background:' + PALETTE[i % PALETTE.length] + '"></span>' + esc(d.name) + ' ' + esc(d.value) + '</span>';
+  });
+  return html + '</div>';
+}
+
+function donutSegPath(cx, cy, r, ri, a0, a1) {
+  var large = (a1 - a0) > Math.PI ? 1 : 0;
+  var x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+  var x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+  var xi1 = cx + ri * Math.cos(a1), yi1 = cy + ri * Math.sin(a1);
+  var xi0 = cx + ri * Math.cos(a0), yi0 = cy + ri * Math.sin(a0);
+  return 'M' + x0 + ' ' + y0 + ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1 + ' ' + y1 + ' L' + xi1 + ' ' + yi1 + ' A' + ri + ' ' + ri + ' 0 ' + large + ' 0 ' + xi0 + ' ' + yi0 + ' Z';
+}
+
+function chartSvgDonut(chart) {
+  var data = chart.data || [];
+  var total = data.reduce(function(s, d) { return s + d.value; }, 0) || 1;
+  var cx = 85, cy = 85, r = 68, ri = 46, a0 = -Math.PI / 2, arcs = '';
+  data.forEach(function(d, i) {
+    var a1 = a0 + d.value / total * 2 * Math.PI;
+    arcs += '<path d="' + donutSegPath(cx, cy, r, ri, a0, a1) + '" fill="' + PALETTE[i % PALETTE.length] + '"/>';
+    a0 = a1;
+  });
+  return '<svg viewBox="0 0 170 170">' + arcs +
+    '<text x="85" y="82" text-anchor="middle" font-size="22" font-weight="600" fill="#000">' + total + esc(chart.unit || '') + '</text>' +
+    '<text x="85" y="100" text-anchor="middle" font-size="11" fill="#737585">总计</text></svg>' + legendHtml(data);
+}
+
+function chartSvgPie(chart) {
+  var data = chart.data || [];
+  var total = data.reduce(function(s, d) { return s + d.value; }, 0) || 1;
+  var cx = 85, cy = 85, r = 70, a0 = -Math.PI / 2, paths = '';
+  data.forEach(function(d, i) {
+    var a1 = a0 + d.value / total * 2 * Math.PI;
+    var x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    var x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+    var large = (a1 - a0) > Math.PI ? 1 : 0;
+    paths += '<path d="M' + cx + ' ' + cy + ' L' + x0 + ' ' + y0 + ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1 + ' ' + y1 + ' Z" fill="' + PALETTE[i % PALETTE.length] + '" stroke="#fff" stroke-width="1"/>';
+    a0 = a1;
+  });
+  return '<svg viewBox="0 0 170 170">' + paths + '</svg>' + legendHtml(data);
+}
+
+function chartSvgCallout(chart, solid) {
+  var data = chart.data || [];
+  var total = data.reduce(function(s, d) { return s + d.value; }, 0) || 1;
+  var cx = 90, cy = 85, r = 66, ri = 46, a0 = -Math.PI / 2;
+  var shapes = '', labels = '';
+  data.forEach(function(d, i) {
+    var a1 = a0 + d.value / total * 2 * Math.PI;
+    var mid = (a0 + a1) / 2;
+    if (solid) {
+      var large = (a1 - a0) > Math.PI ? 1 : 0;
+      var x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+      var x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      shapes += '<path d="M' + cx + ' ' + cy + ' L' + x0 + ' ' + y0 + ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1 + ' ' + y1 + ' Z" fill="' + PALETTE[i % PALETTE.length] + '" stroke="#fff" stroke-width="1"/>';
+    } else {
+      shapes += '<path d="' + donutSegPath(cx, cy, r, ri, a0, a1) + '" fill="' + PALETTE[i % PALETTE.length] + '"/>';
+    }
+    // 引导线
+    var lx0 = cx + (solid ? r : r + 2) * Math.cos(mid), ly0 = cy + (solid ? r : r + 2) * Math.sin(mid);
+    var lx1 = cx + (r + 14) * Math.cos(mid), ly1 = cy + (r + 14) * Math.sin(mid);
+    var side = Math.cos(mid) >= 0 ? 1 : -1;
+    var lx2 = lx1 + side * 10;
+    shapes += '<line x1="' + lx0 + '" y1="' + ly0 + '" x2="' + lx1 + '" y2="' + ly1 + '" stroke="' + PALETTE[i % PALETTE.length] + '" stroke-width="1.2"/>';
+    shapes += '<line x1="' + lx1 + '" y1="' + ly1 + '" x2="' + lx2 + '" y2="' + ly1 + '" stroke="' + PALETTE[i % PALETTE.length] + '" stroke-width="1.2"/>';
+    labels += '<text x="' + (lx2 + side * 4) + '" y="' + (ly1 + 4) + '" text-anchor="' + (side > 0 ? 'start' : 'end') + '" font-size="11" fill="#505266">' + esc(d.name) + ' ' + Math.round(d.value / total * 100) + '%</text>';
+    a0 = a1;
+  });
+  return '<svg viewBox="0 0 260 170">' + shapes + labels + '</svg>';
+}
+
+function chartSvgProgressRing(chart) {
+  var v = (chart.data && chart.data[0] && chart.data[0].value) || 0;
+  var C = 2 * Math.PI * 60;
+  var dash = v / 100 * C;
+  return '<svg viewBox="0 0 160 160">' +
+    '<circle cx="80" cy="80" r="60" fill="none" stroke="#e8e9ee" stroke-width="12"/>' +
+    '<circle cx="80" cy="80" r="60" fill="none" stroke="#3B82F6" stroke-width="12" stroke-linecap="round" stroke-dasharray="' + dash + ' ' + (C - dash) + '" transform="rotate(-90 80 80)"/>' +
+    '<text x="80" y="78" text-anchor="middle" font-size="26" font-weight="600" fill="#000">' + v + '%</text>' +
+    '<text x="80" y="98" text-anchor="middle" font-size="12" fill="#737585">完成度</text></svg>';
+}
+
+function chartSvgBarVertical(chart) {
+  var data = chart.data || [];
+  var max = 0;
+  data.forEach(function(d) { if (d.values) d.values.forEach(function(v) { if (v > max) max = v; }); });
+  max = max || 1;
+  var W = 300, H = 160, top = 16, bottom = 26, left = 8;
+  var n = chart.xAxisData ? chart.xAxisData.length : 0;
+  var slot = (W - left * 2) / (n || 1);
+  var svg = '';
+  data.forEach(function(s, si) {
+    (s.values || []).forEach(function(v, i) {
+      var bw = Math.min(22, slot / (data.length + 1));
+      var x = left + i * slot + slot / 2 - (data.length * bw) / 2 + si * bw;
+      var h = (H - top - bottom) * v / max;
+      svg += '<rect x="' + x + '" y="' + (H - bottom - h) + '" width="' + (bw - 2) + '" height="' + h + '" rx="3" fill="' + PALETTE[si % PALETTE.length] + '"/>';
+    });
+  });
+  if (chart.xAxisData) {
+    chart.xAxisData.forEach(function(label, i) {
+      svg += '<text x="' + (left + i * slot + slot / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" fill="#737585">' + esc(label) + '</text>';
+    });
+  }
+  return '<svg viewBox="0 0 300 ' + H + '">' + svg + '</svg>' + legendHtml(chart.data || []);
+}
+
+function chartSvgLine(chart, area) {
+  var W = 300, H = 160, top = 16, bottom = 26, left = 10;
+  var series = chart.data || [];
+  var n = chart.xAxisData ? chart.xAxisData.length : 0;
+  var max = 0;
+  series.forEach(function(s) { (s.values || []).forEach(function(v) { if (v > max) max = v; }); });
+  max = max || 1;
+  var px = function(i) { return left + i * ((W - left * 2) / (n > 1 ? n - 1 : 1)); };
+  var py = function(v) { return H - bottom - (H - top - bottom) * v / max; };
+  var svg = '';
+  if (chart.xAxisData) {
+    chart.xAxisData.forEach(function(label, i) {
+      svg += '<text x="' + px(i) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="#737585">' + esc(label) + '</text>';
+    });
+  }
+  series.forEach(function(s, si) {
+    var pts = '';
+    (s.values || []).forEach(function(v, i) { pts += (pts ? ' ' : '') + px(i) + ',' + py(v); });
+    if (area) {
+      var areaPts = pts + ' ' + px((s.values || []).length - 1) + ',' + (H - bottom) + ' ' + px(0) + ',' + (H - bottom);
+      svg += '<polygon points="' + areaPts + '" fill="' + PALETTE[si % PALETTE.length] + '" opacity="0.15"/>';
+    }
+    svg += '<polyline points="' + pts + '" fill="none" stroke="' + PALETTE[si % PALETTE.length] + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
+    (s.values || []).forEach(function(v, i) {
+      svg += '<circle cx="' + px(i) + '" cy="' + py(v) + '" r="2.5" fill="' + PALETTE[si % PALETTE.length] + '"/>';
+    });
+  });
+  return '<svg viewBox="0 0 300 ' + H + '">' + svg + '</svg>' + legendHtml(chart.data || []);
+}
+
+function chartSvgRadar(chart) {
+  var inds = chart.indicators || [];
+  var n = inds.length || 3;
+  var cx = 90, cy = 85, R = 60;
+  var svg = '';
+  for (var ring = 1; ring <= 3; ring++) {
+    var pts = '';
+    for (var i = 0; i < n; i++) {
+      var ang = -Math.PI / 2 + i * 2 * Math.PI / n;
+      var rr = R * ring / 3;
+      pts += (pts ? ' ' : '') + (cx + rr * Math.cos(ang)) + ',' + (cy + rr * Math.sin(ang));
+    }
+    svg += '<polygon points="' + pts + '" fill="none" stroke="#e0e1e8" stroke-width="1"/>';
+  }
+  inds.forEach(function(ind, i) {
+    var ang = -Math.PI / 2 + i * 2 * Math.PI / n;
+    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + R * Math.cos(ang)) + '" y2="' + (cy + R * Math.sin(ang)) + '" stroke="#e0e1e8" stroke-width="1"/>';
+    var lx = cx + (R + 12) * Math.cos(ang), ly = cy + (R + 12) * Math.sin(ang);
+    svg += '<text x="' + lx + '" y="' + (ly + 4) + '" text-anchor="middle" font-size="10" fill="#737585">' + esc(ind.name) + '</text>';
+  });
+  (chart.data || []).forEach(function(s, si) {
+    var pts = '';
+    (s.values || []).forEach(function(v, i) {
+      var ang = -Math.PI / 2 + i * 2 * Math.PI / n;
+      var max = inds[i] ? (inds[i].max || 100) : 100;
+      var rr = R * Math.min(1, v / max);
+      pts += (pts ? ' ' : '') + (cx + rr * Math.cos(ang)) + ',' + (cy + rr * Math.sin(ang));
+    });
+    svg += '<polygon points="' + pts + '" fill="' + PALETTE[si % PALETTE.length] + '" fill-opacity="0.25" stroke="' + PALETTE[si % PALETTE.length] + '" stroke-width="1.8"/>';
+  });
+  return '<svg viewBox="0 0 180 170">' + svg + '</svg>' + legendHtml(chart.data || []);
+}
+
+function chartHtmlBarH(chart) {
+  var data = chart.data || [];
+  var max = 0;
+  data.forEach(function(d) { if (d.value > max) max = d.value; });
+  max = max || 1;
+  var html = '';
+  data.forEach(function(d, i) {
+    html += '<div class="cd-barrow"><span class="cd-barrow__name">' + esc(d.name) + '</span>' +
+      '<span class="cd-barrow__track"><span class="cd-barrow__fill" style="width:' + Math.round(d.value / max * 100) + '%;background:' + PALETTE[i % PALETTE.length] + '"></span></span>' +
+      '<span class="cd-barrow__value">' + esc(d.value) + esc(chart.unit || '') + '</span></div>';
+  });
+  return html;
+}
+
+function chartHtmlRankBar(chart) {
+  var data = chart.data || [];
+  var sorted = data.slice().sort(function(a, b) { return b.value - a.value; });
+  var max = sorted.length ? sorted[0].value : 1;
+  var html = '';
+  sorted.forEach(function(d, i) {
+    var badgeCls = i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '';
+    html += '<div class="cd-rankrow"><span class="cd-rankrow__badge' + badgeCls + '">' + (i + 1) + '</span>' +
+      '<span class="cd-barrow__name" style="flex:1">' + esc(d.name) + '</span>' +
+      '<span class="cd-barrow__track" style="flex:1.2"><span class="cd-barrow__fill" style="width:' + Math.round(d.value / max * 100) + '%;background:' + PALETTE[0] + '"></span></span>' +
+      '<span class="cd-barrow__value">' + esc(d.value) + esc(chart.unit || '') + '</span></div>';
+  });
+  return html;
+}
+
+function renderChartContent(chart) {
+  if (chart.type === 'profileCard') {
+    var fields = '';
+    (chart.fields || []).forEach(function(f) {
+      fields += '<div class="cd-profile-card__field"><dt>' + esc(f.label) + '</dt><dd>' + esc(f.value) + '</dd></div>';
+    });
+    return '<div class="cd-profile-card">' +
+      (chart.photo ? '<img class="cd-profile-card__photo" src="' + esc(chart.photo) + '" alt=""/>' : '') +
+      '<div class="cd-profile-card__body"><div class="cd-profile-card__name">' + esc(chart.name) + '</div><dl style="margin:0">' + fields + '</dl></div></div>';
+  }
+  if (chart.type === 'basicInfo') {
+    var s = chart.stat || {};
+    var scheme = STAT_COLOR_SCHEMES[s.color] || STAT_COLOR_SCHEMES.purple;
+    var icon = s.icon ? STAT_ICONS[s.icon] : '';
+    return '<div class="cd-stat-card" style="background:' + scheme.bg + ';color:' + scheme.text + '">' +
+      (s.iconPosition === 'before-title' && icon ? '<div class="cd-stat-card__icon-before">' + icon + '</div>' : '') +
+      '<div class="cd-stat-card__body"><div class="cd-stat-card__label">' + esc(s.label || '指标') + '</div>' +
+      '<div class="cd-stat-card__value-row"><span class="cd-stat-card__value">' + esc(s.value || '0') + '</span><span class="cd-stat-card__unit">' + esc(s.unit || '') + '</span></div>' +
+      (s.compare ? '<div class="cd-stat-card__compare">' + esc(s.compare) + '</div>' : '') + '</div>' +
+      (s.iconPosition === 'bottom-right' && icon ? '<div class="cd-stat-card__icon-corner">' + icon + '</div>' : '') + '</div>';
+  }
+  if (chart.type === 'segmentBar') {
+    var stats = '';
+    (chart.stats || []).forEach(function(st) {
+      stats += '<div class="cd-segbar-stat"><div class="cd-segbar-stat__value">' + esc(st.value) + '</div><div class="cd-segbar-stat__label">' + esc(st.label) + '</div></div>';
+    });
+    var segs = chart.segments || [];
+    var total = segs.reduce(function(sum, sg) { return sum + (Number(sg.value) || 0); }, 0) || 1;
+    var track = '', legend = '';
+    segs.forEach(function(sg) {
+      var w = Math.round((Number(sg.value) || 0) / total * 100);
+      var color = SEGMENT_STATUS_COLOR[sg.status] || '#1677FF';
+      track += '<span class="cd-segbar-seg" style="width:' + w + '%;background:' + color + '"></span>';
+      legend += '<span class="cd-legend__item"><span class="cd-legend__dot" style="background:' + color + '"></span>' + esc(sg.label) + ' ' + (Number(sg.value) || 0) + '</span>';
+    });
+    return '<div class="cd-chart-card__title">' + esc(chart.title) + '</div>' +
+      '<div class="cd-segbar-stats">' + stats + '</div>' +
+      '<div class="cd-segbar-track">' + track + '</div>' +
+      '<div class="cd-legend">' + legend + '</div>';
+  }
+  var body = '';
+  switch (chart.type) {
+    case 'donut': body = chartSvgDonut(chart); break;
+    case 'donutCallout': body = chartSvgCallout(chart, false); break;
+    case 'pie': body = chartSvgPie(chart); break;
+    case 'pieCallout': body = chartSvgCallout(chart, true); break;
+    case 'progressRing': body = chartSvgProgressRing(chart); break;
+    case 'barHorizontal': body = chartHtmlBarH(chart); break;
+    case 'barVertical': body = chartSvgBarVertical(chart); break;
+    case 'rankBar': body = chartHtmlRankBar(chart); break;
+    case 'line': body = chartSvgLine(chart, false); break;
+    case 'areaLine': body = chartSvgLine(chart, true); break;
+    case 'radar': body = chartSvgRadar(chart); break;
+    default: body = '';
+  }
+  return '<div class="cd-chart-card__title">' + esc(chart.title) + '</div><div class="cd-chart-card__body">' + body + '</div>';
+}
+
+function renderChartWrapper(chart, index, containerId, tabId) {
+  var cid = containerId || '';
+  var tid = tabId || '';
+  var selected = state.selectedChartId === chart.id;
+  var html = '<div class="cd-chart-wrapper' + (selected ? ' selected' : '') + '" style="grid-column: span ' + getChartSpan(chart) + '"' +
+    ' onclick="selectChart(\'' + chart.id + '\')"' +
+    ' draggable="true"' +
+    ' ondragstart="dragSortStart(event,\'' + cid + '\',\'' + tid + '\',' + index + ')"' +
+    ' ondragover="dragOverSort(event)"' +
+    ' ondrop="dropSortChart(event,\'' + cid + '\',\'' + tid + '\',' + index + ')">';
+  if (selected) {
+    html += '<button class="cd-chart-wrapper__delete" type="button" onclick="event.stopPropagation();deleteChart(\'' + chart.id + ')">×</button>';
+  }
+  html += renderChartContent(chart);
+  html += '</div>';
+  return html;
+}
+
+/* ═══════════════ 左栏 ═══════════════ */
+function renderLeft() {
+  var html = '<div class="cd-panel-header">图表类型</div>';
+
+  // 容器列表
+  html += '<div class="cd-container-list"><div class="cd-container-list__header"><span>容器列表</span>' +
+    '<button class="btn sm" type="button" onclick="addContainer()">+ 添加容器</button></div>';
+  state.containers.forEach(function(c) {
+    html += '<div class="cd-container-item' + (state.selectedContainerId === c.id && !state.selectedChartId ? ' active' : '') + '" onclick="selectContainer(\'' + c.id + '\')">' +
+      '<span class="cd-container-item__title">' + esc(c.title || '未命名') + '</span>' +
+      '<span class="cd-container-item__count">' + getContainerChartCount(c) + ' 图</span>' +
+      '<button class="cd-container-item__del" type="button" onclick="event.stopPropagation();deleteContainer(\'' + c.id + ')">×</button></div>';
+  });
+  html += '</div>';
+
+  // 类型库
+  var groupMap = {};
+  var groupOrder = [];
+  CHART_TYPE_META.forEach(function(m) {
+    if (!groupMap[m.group]) { groupMap[m.group] = []; groupOrder.push(m.group); }
+    groupMap[m.group].push(m);
+  });
+  html += '<div class="cd-type-list">';
+  groupOrder.forEach(function(g) {
+    html += '<div class="cd-type-group__title">' + g + '</div>';
+    groupMap[g].forEach(function(meta) {
+      html += '<div class="cd-type-card" draggable="true" ondragstart="dragStartType(event,\'' + meta.type + '\')" title="' + esc(meta.desc) + '">' +
+        '<div class="cd-type-card__thumb">' + THUMBS[meta.type] + '</div>' +
+        '<div class="cd-type-card__name">' + meta.name + '</div></div>';
+    });
+  });
+  html += '</div>';
+  document.getElementById('leftPanel').innerHTML = html;
+}
+
+/* ═══════════════ 中栏 ═══════════════ */
+function renderCanvas() {
+  var totalCharts = state.charts.length + state.containers.reduce(function(s, c) { return s + getContainerChartCount(c); }, 0);
+  var el = document.getElementById('canvasBody');
+  document.getElementById('exportBtn').disabled = state.charts.length === 0 && state.containers.length === 0;
+
+  if (state.charts.length === 0 && state.containers.length === 0) {
+    el.innerHTML = '<div class="cd-canvas-toolbar__count" style="position:absolute"></div><div class="cd-canvas-empty">' +
+      '<div class="cd-canvas-empty__icon">📊</div>' +
+      '<div class="cd-canvas-empty__text">拖拽左侧图表类型到此处，或点击「+ 添加容器」</div></div>';
+    return;
+  }
+
+  var html = '<div style="margin-bottom:12px;font-size:12px;color:#737585">画布 · ' + totalCharts + ' 个图表 / ' + state.containers.length + ' 个容器</div>';
+
+  // 顶层图表
+  if (state.charts.length) {
+    html += '<div class="cd-top-charts"><div class="cd-dashboard-grid">';
+    state.charts.forEach(function(chart, i) { html += renderChartWrapper(chart, i, null, null); });
+    html += '</div></div>';
+  }
+
+  // 容器
+  state.containers.forEach(function(c) {
+    html += '<div class="cd-container">';
+    html += '<div class="cd-container__header" onclick="selectContainer(\'' + c.id + '\')">' +
+      '<span class="cd-container__title">' + esc(c.title) + '</span>' +
+      '<button class="cd-container__toggle" type="button" onclick="event.stopPropagation();toggleCollapse(\'' + c.id + ')">' + (c.collapsed ? '▸' : '▾') + '</button></div>';
+    if (!c.collapsed) {
+      if (c.layout === 'tabs' && (c.tabs || []).length) {
+        html += '<div class="cd-container__tabs">';
+        (c.tabs || []).forEach(function(t) {
+          html += '<div class="cd-container__tab' + (c.activeTabId === t.id ? ' active' : '') + '" onclick="selectTab(\'' + c.id + '\',\'' + t.id + '\')">' + esc(t.title) + '</div>';
+        });
+        html += '</div>';
+      }
+      var activeTabId = c.layout === 'tabs' ? (c.activeTabId || '') : '';
+      html += '<div class="cd-container__body"' +
+        ' ondragover="containerDragOver(event)"' +
+        ' ondrop="dropTypeOnContainer(event,\'' + c.id + '\',\'' + activeTabId + '\')">';
+      var charts = getActiveCharts(c);
+      if (!charts.length) {
+        var emptyText = c.layout === 'tabs' && !(c.tabs || []).length ? '请在右栏添加页签后拖入图表' : '拖拽左侧图表类型到此处';
+        html += '<div class="cd-container__empty">' + emptyText + '</div>';
+      } else {
+        html += '<div class="cd-dashboard-grid">';
+        charts.forEach(function(chart, i) { html += renderChartWrapper(chart, i, c.id, activeTabId); });
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+
+  el.innerHTML = html;
+}
+
+/* ═══════════════ 右栏 ═══════════════ */
+function findSelectedTarget() {
+  if (state.selectedChartId) {
+    var topChart = null;
+    state.charts.forEach(function(ch) { if (ch.id === state.selectedChartId) topChart = ch; });
+    if (topChart) return { kind: 'chart', containerId: null, chart: topChart };
+    for (var ci = 0; ci < state.containers.length; ci++) {
+      var c = state.containers[ci];
+      if (c.layout === 'tabs') {
+        for (var ti = 0; ti < (c.tabs || []).length; ti++) {
+          var t = c.tabs[ti];
+          var found = null;
+          (t.charts || []).forEach(function(ch) { if (ch.id === state.selectedChartId) found = ch; });
+          if (found) return { kind: 'chart', containerId: c.id, tabId: t.id, chart: found };
+        }
+      } else {
+        var found2 = null;
+        (c.charts || []).forEach(function(ch) { if (ch.id === state.selectedChartId) found2 = ch; });
+        if (found2) return { kind: 'chart', containerId: c.id, chart: found2 };
+      }
+    }
+  }
+  if (state.selectedContainerId) {
+    var container = null;
+    state.containers.forEach(function(c) { if (c.id === state.selectedContainerId) container = c; });
+    if (container) return { kind: 'container', container: container };
+  }
+  return null;
+}
+
+function fieldHtml(label, control) {
+  return '<div class="cd-field"><label class="cd-field__label">' + label + '</label>' + control + '</div>';
+}
+function inputHtml(value, placeholder, onchange) {
+  return '<input type="text" value="' + esc(value) + '" placeholder="' + esc(placeholder || '') + '" onchange="' + onchange + '"/>';
+}
+function selectHtml(options, value, onchange) {
+  var html = '<select onchange="' + onchange + '">';
+  options.forEach(function(o) {
+    var v = typeof o === 'string' ? o : o.value;
+    var l = typeof o === 'string' ? o : o.label;
+    html += '<option value="' + esc(v) + '"' + (v === value ? ' selected' : '') + '>' + esc(l) + '</option>';
+  });
+  return html + '</select>';
+}
+function switchRow(label, isOn, onchange) {
+  return '<div class="cd-switch-row"><span class="cd-switch-row__label">' + label + '</span>' +
+    '<span class="cd-switch' + (isOn ? ' is-on' : '') + '" onclick="' + onchange + '"></span></div>';
+}
+
+function renderRight() {
+  var target = findSelectedTarget();
+  var el = document.getElementById('rightPanel');
+
+  if (!target) {
+    el.innerHTML = '<div class="cd-panel-header">属性</div><div class="cd-right-empty">' +
+      '<div class="cd-right-empty__icon">⚙️</div><div class="cd-right-empty__text">选中容器或图表以编辑属性</div></div>';
+    return;
+  }
+
+  if (target.kind === 'container') {
+    var c = target.container;
+    var html = '<div class="cd-panel-header">容器属性</div><div class="cd-property-body">';
+
+    // 基础
+    html += '<div class="cd-field-group"><div class="cd-field-group__header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'\':\'none\'"><span>基础</span><span class="cd-field-group__arrow">▾</span></div>';
+    html += '<div class="cd-field-group__body">';
+    html += fieldHtml('标题', inputHtml(c.title, '', 'updateContainerField(\'' + c.id + '\',\'title\',this.value)'));
+    html += switchRow('多页签布局', c.layout === 'tabs', 'toggleTabLayout(\'' + c.id + '\',' + (c.layout === 'tabs' ? 'false' : 'true') + ')');
+    html += '</div></div>';
+
+    // 页签管理
+    if (c.layout === 'tabs') {
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>页签管理</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      (c.tabs || []).forEach(function(t) {
+        html += '<div class="cd-filter-item"><div class="cd-filter-item__row">' +
+          '<input type="text" value="' + esc(t.title) + '" placeholder="页签名" onchange="updateTab(\'' + c.id + '\',\'' + t.id + '\',\'title\',this.value)"/>' +
+          '<button class="cd-icon-btn" type="button" onclick="deleteTab(\'' + c.id + '\',\'' + t.id + '\')">×</button></div></div>';
+      });
+      html += '<button class="btn sm" type="button" onclick="addTab(\'' + c.id + '\')">+ 添加页签</button>';
+      html += '</div></div>';
+    }
+
+    // 筛选配置
+    html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>筛选配置</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+    html += switchRow('是否筛选', c.enableFilter, 'updateContainerField(\'' + c.id + '\',\'enableFilter\',' + (!c.enableFilter) + ')');
+    if (c.enableFilter) {
+      html += '<div class="cd-series-editor__header"><span>筛选字段</span><button class="btn sm" type="button" onclick="addContainerFilter(\'' + c.id + '\')">+ 添加筛选</button></div>';
+      (c.filters || []).forEach(function(flt) {
+        html += '<div class="cd-filter-item"><div class="cd-filter-item__row">' +
+          '<input type="text" value="' + esc(flt.field) + '" placeholder="字段名（如：学院）" onchange="updateContainerFilter(\'' + c.id + '\',\'' + flt.id + '\',\'field\',this.value)"/>' +
+          '<button class="cd-icon-btn" type="button" onclick="removeContainerFilter(\'' + c.id + '\',\'' + flt.id + '\')">×</button></div>' +
+          '<div class="cd-field-row2">' +
+          fieldHtml('类型', selectHtml(FILTER_TYPE_OPTIONS, flt.type, 'updateContainerFilter(\'' + c.id + '\',\'' + flt.id + '\',\'type\',this.value)')) +
+          (flt.type === 'time' ? fieldHtml('粒度', selectHtml(FILTER_TIME_GRAINS, flt.timeGrain || '按年', 'updateContainerFilter(\'' + c.id + '\',\'' + flt.id + '\',\'timeGrain\',this.value)')) : '') +
+          '</div></div>';
+      });
+    }
+    html += '</div></div>';
+
+    html += '<div class="cd-type-badge">容器 · ' + getContainerChartCount(c) + ' 个图表</div>';
+    html += '</div>';
+    el.innerHTML = html;
+    return;
+  }
+
+  // 图表属性
+  var chart = target.chart;
+  var cid = target.containerId || '';
+  var tid = target.tabId || '';
+  var html = '<div class="cd-panel-header"><span>图表属性</span>' +
+    '<button class="cd-icon-btn" type="button" onclick="deleteChart(\'' + chart.id + '\')">×</button></div>';
+
+  if (chart.type !== 'profileCard') {
+    html += '<div class="cd-tabs-bar">' +
+      '<button class="cd-tabs-bar__tab' + (state.propTab === 'style' ? ' active' : '') + '" type="button" onclick="setPropTab(\'style\')">图形属性</button>' +
+      '<button class="cd-tabs-bar__tab' + (state.propTab === 'data' ? ' active' : '') + '" type="button" onclick="setPropTab(\'data\')">数据设置</button></div>';
+  }
+
+  html += '<div class="cd-property-body">';
+
+  if (state.propTab === 'style') {
+    html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>基础属性</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+    html += fieldHtml('标题', inputHtml(chart.title, '', 'updateChartProp(\'title\',this.value)'));
+    html += fieldHtml('图表类型', selectHtml(CHART_TYPE_META.map(function(t) { return { label: t.name, value: t.type }; }), chart.type, 'changeChartType(this.value)'));
+    html += fieldHtml('标识ID', '<input type="text" readonly value="' + esc(chart.id) + '"/>');
+    html += fieldHtml('宽度', selectHtml(SIZE_OPTIONS.map(function(sz) { return { label: sz, value: sz }; }), spanToSize(getChartSpan(chart)), 'resizeBySize(this.value)'));
+    html += '</div></div>';
+
+    // 统计卡片
+    if (chart.type === 'basicInfo') {
+      var s = chart.stat || {};
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>统计卡片</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      html += fieldHtml('标签', inputHtml(s.label, '', 'updateStat(\'label\',this.value)'));
+      html += fieldHtml('数值', inputHtml(s.value, '', 'updateStat(\'value\',this.value)'));
+      html += '<div class="cd-field-row2">' +
+        fieldHtml('单位', inputHtml(s.unit, '', 'updateStat(\'unit\',this.value)')) +
+        fieldHtml('对比', inputHtml(s.compare, '如：环比 +12%', 'updateStat(\'compare\',this.value)')) + '</div>';
+      html += '<div class="cd-field-row2">' +
+        fieldHtml('色系', selectHtml(STAT_COLOR_OPTIONS, s.color || 'purple', 'updateStat(\'color\',this.value)')) +
+        fieldHtml('图标', selectHtml(STAT_ICON_OPTIONS, s.icon || 'project', 'updateStat(\'icon\',this.value)')) + '</div>';
+      html += fieldHtml('图标位置', selectHtml(STAT_ICON_POSITIONS, s.iconPosition || 'before-title', 'updateStat(\'iconPosition\',this.value)'));
+      html += '</div></div>';
+    }
+
+    // 条形占比
+    if (chart.type === 'segmentBar') {
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>分段数据</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      html += '<div class="cd-series-editor__header"><span>分段</span><button class="btn sm" type="button" onclick="addSegment()">添加分段</button></div>';
+      (chart.segments || []).forEach(function(seg, idx) {
+        html += '<div class="cd-filter-item"><div class="cd-filter-item__row">' +
+          '<input type="text" value="' + esc(seg.label) + '" placeholder="分段名" onchange="updateSegment(' + idx + ',\'label\',this.value)"/>' +
+          '<button class="cd-icon-btn" type="button" onclick="removeSegment(' + idx + ')">×</button></div>' +
+          '<div class="cd-field-row2">' +
+          fieldHtml('数值', '<input type="number" value="' + esc(seg.value) + '" onchange="updateSegment(' + idx + ',\'value\',Number(this.value)||0)"/>') +
+          fieldHtml('状态色', selectHtml(SEGMENT_STATUS_OPTIONS, seg.status, 'updateSegment(' + idx + ',\'status\',this.value)')) + '</div></div>';
+      });
+      html += '</div></div>';
+    }
+
+    // 通用数据配置
+    if (chart.type !== 'basicInfo' && chart.type !== 'segmentBar' && chart.type !== 'profileCard') {
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>数据配置</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      if (chart.type === 'progressRing') {
+        html += fieldHtml('完成度', '<input type="number" min="0" max="100" value="' + ((chart.data && chart.data[0] && chart.data[0].value) || 0) + '" onchange="setProgress(this.value)"/>');
+      } else {
+        if (chart.unit !== undefined) html += fieldHtml('单位', inputHtml(chart.unit, '', 'updateChartProp(\'unit\',this.value)'));
+        if (chart.xAxisData) html += fieldHtml('X轴数据', inputHtml((chart.xAxisData || []).join(', '), '', 'setXAxis(this.value)'));
+        if (chart.indicators) html += fieldHtml('维度', inputHtml((chart.indicators || []).map(function(i) { return i.name; }).join(', '), '', 'setIndicators(this.value)'));
+        html += fieldHtml('数据（JSON）', '<textarea rows="6" onchange="setDataJson(this.value)">' + esc(JSON.stringify(chart.data || [], null, 2)) + '</textarea>' +
+          (state.dataError ? '<div class="cd-field-error">' + state.dataError + '</div>' : ''));
+      }
+      html += '</div></div>';
+    }
+
+    var metaName = '';
+    CHART_TYPE_META.forEach(function(t) { if (t.type === chart.type) metaName = t.name; });
+    html += '<div class="cd-type-badge">' + metaName + ' · ' + chart.type + '</div>';
+  } else {
+    // 数据设置 tab
+    if (chart.type === 'segmentBar') {
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>数据统计来源</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      html += fieldHtml('数据统计 SQL', '<textarea rows="6" placeholder="SELECT stat_label AS label, stat_value AS value&#10;FROM kpi_summary&#10;WHERE kpi_code = :code" onchange="updateChartProp(\'statsSql\',this.value)">' + esc(chart.statsSql || '') + '</textarea><div class="cd-field-hint">取数值统计区（总数、达标率等），列：label, value</div>');
+      html += '</div></div>';
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>分段统计来源</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      html += fieldHtml('分段统计 SQL', '<textarea rows="6" placeholder="SELECT seg_label AS label, seg_value AS value, seg_status AS status&#10;FROM distribution&#10;ORDER BY seg_value DESC" onchange="updateChartProp(\'segmentsSql\',this.value)">' + esc(chart.segmentsSql || '') + '</textarea><div class="cd-field-hint">取占比分段，列：label, value, status</div>');
+      html += '</div></div>';
+    } else if (chart.type === 'basicInfo') {
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>数据来源</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      html += fieldHtml('SQL 数据来源（可选）', '<textarea rows="6" placeholder="SELECT label, value, unit, compare&#10;FROM kpi&#10;WHERE kpi_code = :code" onchange="updateChartProp(\'sql\',this.value)">' + esc(chart.sql || '') + '</textarea><div class="cd-field-hint">留空则使用图形属性中的静态值；填写则运行时覆盖</div>');
+      html += '</div></div>';
+    } else {
+      html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>数据来源</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+      html += fieldHtml('SQL 数据来源', '<textarea rows="8" placeholder="SELECT year, series_name, value&#10;FROM chart_data&#10;WHERE chart_id = :id&#10;ORDER BY year" onchange="updateChartProp(\'sql\',this.value)">' + esc(chart.sql || '') + '</textarea><div class="cd-field-hint">运行时由后端执行，图表预览使用示例数据</div>');
+      html += '</div></div>';
+    }
+
+    // 交互配置
+    html += '<div class="cd-field-group"><div class="cd-field-group__header"><span>交互配置</span><span class="cd-field-group__arrow">▾</span></div><div class="cd-field-group__body">';
+    html += switchRow('是否筛选', chart.enableFilter, 'updateChartProp(\'enableFilter\',' + (!chart.enableFilter) + ')');
+    if (chart.enableFilter) {
+      html += '<div class="cd-series-editor__header"><span>筛选字段</span><button class="btn sm" type="button" onclick="addChartFilter()">+ 添加筛选</button></div>';
+      (chart.filters || []).forEach(function(flt) {
+        html += '<div class="cd-filter-item"><div class="cd-filter-item__row">' +
+          '<input type="text" value="' + esc(flt.field) + '" placeholder="字段名（如：学院）" onchange="updateChartFilter(\'' + flt.id + '\',\'field\',this.value)"/>' +
+          '<button class="cd-icon-btn" type="button" onclick="removeChartFilter(\'' + flt.id + '\')">×</button></div>' +
+          '<div class="cd-field-row2">' +
+          fieldHtml('类型', selectHtml(FILTER_TYPE_OPTIONS, flt.type, 'updateChartFilter(\'' + flt.id + '\',\'type\',this.value)')) +
+          (flt.type === 'time' ? fieldHtml('粒度', selectHtml(FILTER_TIME_GRAINS, flt.timeGrain || '按年', 'updateChartFilter(\'' + flt.id + '\',\'timeGrain\',this.value)')) : '') +
+          '</div></div>';
+      });
+    }
+    html += switchRow('是否下钻', chart.enableDrilldown, 'updateChartProp(\'enableDrilldown\',' + (!chart.enableDrilldown) + ')');
+    if (chart.enableDrilldown) {
+      html += fieldHtml('下钻URL', inputHtml(chart.drilldownUrl, 'https://...', 'updateChartProp(\'drilldownUrl\',this.value)'));
+    }
+    html += '</div></div>';
+
+    var metaName2 = '';
+    CHART_TYPE_META.forEach(function(t) { if (t.type === chart.type) metaName2 = t.name; });
+    html += '<div class="cd-type-badge">' + metaName2 + ' · ' + chart.type + '</div>';
+  }
+
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+/* ═══════════════ 容器操作 ═══════════════ */
+function addContainer() {
+  var c = createDefaultContainer();
+  state.containers.push(c);
+  state.selectedContainerId = c.id;
+  state.selectedChartId = null;
+  notify('已添加容器');
+  render();
+}
+
+function deleteContainer(id) {
+  state.containers = state.containers.filter(function(c) { return c.id !== id; });
+  if (state.selectedContainerId === id) { state.selectedContainerId = null; state.selectedChartId = null; }
+  notify('已删除容器');
+  render();
+}
+
+function selectContainer(id) {
+  state.selectedContainerId = id;
+  state.selectedChartId = null;
+  state.dataError = '';
+  render();
+}
+
+function selectChart(id) {
+  state.selectedChartId = id;
+  state.dataError = '';
+  render();
+}
+
+function selectNone() {
+  state.selectedContainerId = null;
+  state.selectedChartId = null;
+  render();
+}
+
+function updateContainerField(id, field, value) {
+  state.containers.forEach(function(c) { if (c.id === id) c[field] = value; });
+  render();
+}
+
+function addContainerFilter(containerId) {
+  state.containers.forEach(function(c) {
+    if (c.id === containerId) c.filters = (c.filters || []).concat([{ id: genId('cf'), field: '', type: 'select', timeGrain: '按年' }]);
+  });
+  render();
+}
+
+function removeContainerFilter(containerId, filterId) {
+  state.containers.forEach(function(c) {
+    if (c.id === containerId) c.filters = (c.filters || []).filter(function(f) { return f.id !== filterId; });
+  });
+  render();
+}
+
+function updateContainerFilter(containerId, filterId, field, value) {
+  state.containers.forEach(function(c) {
+    if (c.id !== containerId) return;
+    (c.filters || []).forEach(function(f) { if (f.id === filterId) f[field] = value; });
+  });
+  render();
+}
+
+function toggleCollapse(id) {
+  state.containers.forEach(function(c) { if (c.id === id) c.collapsed = !c.collapsed; });
+  render();
+}
+
+function toggleTabLayout(containerId, enabled) {
+  state.containers.forEach(function(c) {
+    if (c.id !== containerId) return;
+    if (enabled) {
+      var t1 = { id: genId('tab'), title: '页签1', charts: c.charts || [] };
+      var t2 = { id: genId('tab'), title: '页签2', charts: [] };
+      c.layout = 'tabs'; c.tabs = [t1, t2]; c.activeTabId = t1.id; c.charts = [];
+    } else {
+      var merged = [];
+      (c.tabs || []).forEach(function(t) { merged = merged.concat(t.charts || []); });
+      c.layout = 'single'; c.tabs = []; c.activeTabId = null; c.charts = merged;
+    }
+  });
+  notify(enabled ? '已切换为多页签布局' : '已合并为单页布局');
+  render();
+}
+
+function addTab(containerId) {
+  state.containers.forEach(function(c) {
+    if (c.id !== containerId) return;
+    var tab = { id: genId('tab'), title: '页签', charts: [] };
+    c.tabs = (c.tabs || []).concat([tab]);
+    c.activeTabId = tab.id;
+  });
+  render();
+}
+
+function updateTab(containerId, tabId, field, value) {
+  state.containers.forEach(function(c) {
+    if (c.id !== containerId) return;
+    (c.tabs || []).forEach(function(t) { if (t.id === tabId) t[field] = value; });
+  });
+  render();
+}
+
+function deleteTab(containerId, tabId) {
+  state.containers.forEach(function(c) {
+    if (c.id !== containerId) return;
+    var idx = -1;
+    (c.tabs || []).forEach(function(t, i) { if (t.id === tabId) idx = i; });
+    c.tabs = (c.tabs || []).filter(function(t) { return t.id !== tabId; });
+    if (c.activeTabId === tabId) {
+      if (c.tabs.length) c.activeTabId = c.tabs[Math.min(idx, c.tabs.length - 1)].id;
+      else c.activeTabId = null;
+    }
+  });
+  render();
+}
+
+function selectTab(containerId, tabId) {
+  state.containers.forEach(function(c) { if (c.id === containerId) c.activeTabId = tabId; });
+  render();
+}
+
+/* ═══════════════ 图表操作 ═══════════════ */
+function mapCharts(containerId, tabId, transform) {
+  state.containers.forEach(function(c) {
+    if (c.id !== containerId) return;
+    if (c.layout === 'tabs') {
+      (c.tabs || []).forEach(function(t) { if (t.id === tabId) t.charts = transform(t.charts || []); });
+    } else {
+      c.charts = transform(c.charts || []);
+    }
+  });
+}
+
+function addChart(containerId, type, tabId) {
+  var chart = createDefaultChart(type);
+  if (containerId) {
+    mapCharts(containerId, tabId, function(list) { return list.concat([chart]); });
+  } else {
+    state.charts.push(chart);
+  }
+  state.selectedChartId = chart.id;
+  var name = type;
+  CHART_TYPE_META.forEach(function(t) { if (t.type === type) name = t.name; });
+  notify('已添加 ' + name);
+  render();
+}
+
+function currentTargetInfo() {
+  var target = findSelectedTarget();
+  if (!target || target.kind !== 'chart') return null;
+  return { containerId: target.containerId || null, tabId: target.tabId || null, chart: target.chart };
+}
+
+function updateChartPropHelper(field, value) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  if (info.containerId) {
+    mapCharts(info.containerId, info.tabId, function(list) {
+      return list.map(function(ch) { if (ch.id === info.chart.id) ch[field] = value; return ch; });
+    });
+  } else {
+    state.charts = state.charts.map(function(ch) { if (ch.id === info.chart.id) ch[field] = value; return ch; });
+  }
+}
+
+function updateChartProp(field, value) {
+  updateChartPropHelper(field, value);
+  render();
+}
+
+function updateStat(field, value) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  if (!info.chart.stat) info.chart.stat = {};
+  info.chart.stat[field] = value;
+  render();
+}
+
+function addSegment() {
+  var info = currentTargetInfo();
+  if (!info) return;
+  info.chart.segments = (info.chart.segments || []).concat([{ label: '新分段', value: 0, status: 'good' }]);
+  render();
+}
+
+function updateSegment(idx, field, value) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  if (info.chart.segments && info.chart.segments[idx]) info.chart.segments[idx][field] = value;
+  render();
+}
+
+function removeSegment(idx) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  info.chart.segments = (info.chart.segments || []).filter(function(_, i) { return i !== idx; });
+  render();
+}
+
+function setProgress(val) {
+  var v = Math.max(0, Math.min(100, Number(val) || 0));
+  updateChartPropHelper('data', [{ value: v }]);
+  render();
+}
+
+function setXAxis(val) {
+  updateChartPropHelper('xAxisData', val.split(/[,，]/).map(function(s) { return s.trim(); }).filter(Boolean));
+  render();
+}
+
+function setIndicators(val) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  var names = val.split(/[,，]/).map(function(s) { return s.trim(); }).filter(Boolean);
+  var oldMap = {};
+  (info.chart.indicators || []).forEach(function(i) { oldMap[i.name] = i.max; });
+  info.chart.indicators = names.map(function(name) { return { name: name, max: oldMap[name] !== undefined ? oldMap[name] : 100 }; });
+  // 维度数量变化时同步系列 values 长度
+  (info.chart.data || []).forEach(function(s) {
+    if (s.values) {
+      while (s.values.length < names.length) s.values.push(0);
+      s.values.length = names.length;
+    }
+  });
+  render();
+}
+
+function setDataJson(jsonStr) {
+  try {
+    var parsed = JSON.parse(jsonStr);
+    updateChartPropHelper('data', parsed);
+    state.dataError = '';
+  } catch (e) {
+    state.dataError = 'JSON 格式有误';
+  }
+  render();
+}
+
+function changeChartType(newType) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  var next = createDefaultChart(newType);
+  next.id = info.chart.id;
+  next.title = info.chart.title;
+  next.sql = info.chart.sql || '';
+  next.filters = info.chart.filters || [];
+  if (info.containerId) {
+    mapCharts(info.containerId, info.tabId, function(list) {
+      return list.map(function(ch) { return ch.id === info.chart.id ? next : ch; });
+    });
+  } else {
+    state.charts = state.charts.map(function(ch) { return ch.id === info.chart.id ? next : ch; });
+  }
+  state.dataError = '';
+  render();
+}
+
+function resizeBySize(size) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  info.chart.size = size;
+  info.chart.span = SIZE_SPAN[size] || 3;
+  render();
+}
+
+function deleteChart(chartId) {
+  state.containers.forEach(function(c) {
+    if (c.layout === 'tabs') {
+      (c.tabs || []).forEach(function(t) { t.charts = (t.charts || []).filter(function(ch) { return ch.id !== chartId; }); });
+    } else {
+      c.charts = (c.charts || []).filter(function(ch) { return ch.id !== chartId; });
+    }
+  });
+  state.charts = state.charts.filter(function(ch) { return ch.id !== chartId; });
+  if (state.selectedChartId === chartId) state.selectedChartId = null;
+  notify('已删除图表');
+  render();
+}
+
+function setPropTab(tab) {
+  state.propTab = tab;
+  state.dataError = '';
+  render();
+}
+
+/* 图表筛选（数据设置 tab） */
+function addChartFilter() {
+  var info = currentTargetInfo();
+  if (!info) return;
+  info.chart.filters = (info.chart.filters || []).concat([{ id: genId('flt'), field: '', type: 'select', timeGrain: '按年' }]);
+  render();
+}
+function updateChartFilter(filterId, field, value) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  (info.chart.filters || []).forEach(function(f) { if (f.id === filterId) f[field] = value; });
+  render();
+}
+function removeChartFilter(filterId) {
+  var info = currentTargetInfo();
+  if (!info) return;
+  info.chart.filters = (info.chart.filters || []).filter(function(f) { return f.id !== filterId; });
+  render();
+}
+
+/* ═══════════════ 拖拽 ═══════════════ */
+function dragStartType(e, type) {
+  state.dragType = type;
+  e.dataTransfer.setData('text/chart-type', type);
+  e.dataTransfer.effectAllowed = 'copy';
+}
+
+function hasSortDrag(e) {
+  var types = e.dataTransfer.types || [];
+  for (var i = 0; i < types.length; i++) if (types[i] === 'text/sort') return true;
+  return false;
+}
+
+function canvasDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
+}
+
+function dropTypeOnCanvas(e) {
+  e.preventDefault();
+  if (hasSortDrag(e)) return;
+  var type = e.dataTransfer.getData('text/chart-type') || state.dragType;
+  state.dragType = null;
+  if (!type) return;
+  addChart(null, type);
+}
+
+function containerDragOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.dataTransfer.dropEffect = 'copy';
+}
+
+function dropTypeOnContainer(e, containerId, tabId) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (hasSortDrag(e)) return;
+  var type = e.dataTransfer.getData('text/chart-type') || state.dragType;
+  state.dragType = null;
+  if (!type) return;
+  // tabs 布局无激活页签时不可放
+  var container = null;
+  state.containers.forEach(function(c) { if (c.id === containerId) container = c; });
+  if (container && container.layout === 'tabs' && !tabId) return;
+  addChart(containerId, type, tabId || null);
+}
+
+function dragSortStart(e, containerId, tabId, index) {
+  e.dataTransfer.setData('text/sort', JSON.stringify({ containerId: containerId || null, tabId: tabId || null, index: index }));
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function dragOverSort(e) {
+  if (!hasSortDrag(e)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function getChartsOf(c, tabId) {
+  if (c.layout === 'tabs') {
+    var out = [];
+    (c.tabs || []).forEach(function(t) { if (t.id === tabId) out = t.charts || []; });
+    return out;
+  }
+  return c.charts || [];
+}
+function setChartsOf(c, tabId, next) {
+  if (c.layout === 'tabs') {
+    (c.tabs || []).forEach(function(t) { if (t.id === tabId) t.charts = next; });
+  } else {
+    c.charts = next;
+  }
+}
+
+function dropSortChart(e, containerId, tabId, index) {
+  e.preventDefault();
+  e.stopPropagation();
+  var data = e.dataTransfer.getData('text/sort');
+  if (!data) return;
+  var from;
+  try { from = JSON.parse(data); } catch (err) { return; }
+  var to = { containerId: containerId || null, tabId: tabId || null, index: index };
+  handleSortChart(from, to);
+}
+
+function handleSortChart(from, to) {
+  if (from.containerId === to.containerId && from.tabId === to.tabId && from.index === to.index) return;
+
+  function findContainer(id) {
+    var out = null;
+    state.containers.forEach(function(c) { if (c.id === id) out = c; });
+    return out;
+  }
+
+  // 顶层之间
+  if (from.containerId === null && to.containerId === null) {
+    var next = state.charts.slice();
+    var moved = next.splice(from.index, 1)[0];
+    next.splice(to.index, 0, moved);
+    state.charts = next;
+  }
+  // 顶层 → 容器
+  else if (from.containerId === null && to.containerId) {
+    var chart = state.charts.splice(from.index, 1)[0];
+    var tc = findContainer(to.containerId);
+    if (chart && tc) {
+      var list = getChartsOf(tc, to.tabId);
+      setChartsOf(tc, to.tabId, list.concat([chart]));
+    }
+  }
+  // 容器 → 顶层
+  else if (from.containerId && to.containerId === null) {
+    var fc = findContainer(from.containerId);
+    if (fc) {
+      var src = getChartsOf(fc, from.tabId).slice();
+      picked = src.splice(from.index, 1)[0];
+      setChartsOf(fc, from.tabId, src);
+      if (picked) state.charts.splice(to.index, 0, picked);
+    }
+  }
+  // 容器之间
+  else if (from.containerId !== to.containerId) {
+    var fc2 = findContainer(from.containerId);
+    var tc2 = findContainer(to.containerId);
+    if (fc2 && tc2) {
+      var srcList = getChartsOf(fc2, from.tabId).slice();
+      var mv = srcList.splice(from.index, 1)[0];
+      setChartsOf(fc2, from.tabId, srcList);
+      var toList = getChartsOf(tc2, to.tabId).slice();
+      toList.splice(to.index, 0, mv);
+      setChartsOf(tc2, to.tabId, toList);
+    }
+  }
+  // 同容器内排序
+  else {
+    if (from.tabId !== to.tabId) return;
+    var c3 = findContainer(from.containerId);
+    if (c3) {
+      var arr = getChartsOf(c3, from.tabId).slice();
+      var m = arr.splice(from.index, 1)[0];
+      arr.splice(to.index, 0, m);
+      setChartsOf(c3, from.tabId, arr);
+    }
+  }
+
+  render();
+}
+
+/* ═══════════════ 导出 ═══════════════ */
+function getExportData() {
+  return { version: 4, charts: state.charts, containers: state.containers };
+}
+
+function openExport() {
+  document.getElementById('exportCode').textContent = JSON.stringify(getExportData(), null, 2);
+  document.getElementById('exportModal').classList.add('is-open');
+}
+
+function closeExport() {
+  document.getElementById('exportModal').classList.remove('is-open');
+}
+
+function copyJson() {
+  var text = JSON.stringify(getExportData(), null, 2);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text);
+  }
+  notify('已复制');
+}
+
+function downloadJson() {
+  var blob = new Blob([JSON.stringify(getExportData(), null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'chart-dashboard-config.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  notify('已下载');
+}
+
+/* ═══════════════ 渲染入口 ═══════════════ */
+function render() {
+  renderLeft();
+  renderCanvas();
+  renderRight();
+}
+
+render();
+</script>
+</body>
+</html>

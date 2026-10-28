@@ -1,0 +1,869 @@
+# 教职工扩展信息表字段字典
+# 自动生成 · 请勿手工编辑
+
+ontology: szpu-hr
+version: 0.4.0
+domain: staff-data
+
+description: 17 张扩展信息表，均通过「工号」与主表关联，构成人员全生命周期事实
+
+commonKeys:
+  - 工号（关联主表主键）
+  - 姓名（冗余，便于核对）
+  - 所在部门（冗余，便于核对）
+
+relationshipPattern: 主表 1 : N 扩展表
+joinKey: 工号
+
+coverageNote: 全部 17 张表工号在主表中的覆盖率均 >= 99.1%，孤儿记录最多 24 条
+
+tables:
+  - name: 工作经历
+    sourceFile: 工作经历.xlsx
+    targetEntity: WorkExperience
+    label: 工作经历
+    cardinality: 多
+    classification: internal
+    recordCount: 11281
+    personCount: 2417
+    avgPerPerson: 4.67
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 2417
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 2371
+      - name: 所在部门
+        fillRate: 0.4
+        uniqueValues: 33
+      - name: 开始日期
+        fillRate: 61.0
+        uniqueValues: 1739
+      - name: 结束日期
+        fillRate: 46.9
+        uniqueValues: 1342
+      - name: 时间（月）
+        fillRate: 0.7
+        uniqueValues: 53
+      - name: 所在单位名称
+        fillRate: 100.0
+        uniqueValues: 3333
+      - name: 单位类别
+        fillRate: 39.1
+        uniqueValues: 22
+        statisticsDimension: true
+      - name: 所在部门
+        fillRate: 0.4
+        uniqueValues: 33
+      - name: 人员身份
+        fillRate: 0.2
+        uniqueValues: 9
+        statisticsDimension: true
+      - name: 岗位
+        fillRate: 39.3
+        uniqueValues: 1603
+      - name: 从事工作内容
+        fillRate: 0.4
+        uniqueValues: 33
+      - name: 职务
+        fillRate: 60.7
+        uniqueValues: 1352
+      - name: 证明人
+        fillRate: 0.1
+        uniqueValues: 10
+      - name: 国家(地区)
+        fillRate: 0.7
+        uniqueValues: 3
+      - name: 是否博士后经历
+        fillRate: 0.7
+        uniqueValues: 2
+      - name: 是否企业经历
+        fillRate: 0.7
+        uniqueValues: 3
+      - name: 是否海外经历
+        fillRate: 0.7
+        uniqueValues: 3
+
+  - name: 学年（年度）考核 (1)
+    sourceFile: 学年（年度）考核 (1).xlsx
+    targetEntity: AnnualAssessment
+    label: 学年年度考核
+    cardinality: 多
+    classification: sensitive
+    recordCount: 20540
+    personCount: 3668
+    avgPerPerson: 5.60
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 3668
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 3583
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 76
+      - name: 考核类别
+        fillRate: 100.0
+        uniqueValues: 2
+        statisticsDimension: true
+      - name: 考核结论
+        fillRate: 100.0
+        uniqueValues: 8
+        statisticsDimension: true
+      - name: 考核学年
+        fillRate: 100.0
+        uniqueValues: 10
+        statisticsDimension: true
+      - name: 考核年份
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 考核开展时间
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 考核异常原因
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 备注
+        fillRate: 0.0
+        uniqueValues: 2
+
+  - name: 学习经历 (2)
+    sourceFile: 学习经历 (2).xlsx
+    targetEntity: EducationExperience
+    label: 学习经历
+    cardinality: 多
+    classification: internal
+    recordCount: 8196
+    personCount: 4006
+    avgPerPerson: 2.05
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 4006
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 3913
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 79
+      - name: 入学日期
+        fillRate: 53.3
+        uniqueValues: 452
+      - name: 毕业日期
+        fillRate: 53.3
+        uniqueValues: 936
+      - name: 毕业院校
+        fillRate: 95.9
+        uniqueValues: 2002
+      - name: 所学专业
+        fillRate: 89.5
+        uniqueValues: 1827
+      - name: 学制（年）
+        fillRate: 32.8
+        uniqueValues: 16
+      - name: 学历类别
+        fillRate: 1.1
+        uniqueValues: 5
+      - name: 学习形式
+        fillRate: 1.1
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 学历
+        fillRate: 97.9
+        uniqueValues: 10
+        statisticsDimension: true
+      - name: 学历授予国家或地区
+        fillRate: 1.0
+        uniqueValues: 8
+      - name: 是否最高学历
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 学位
+        fillRate: 77.2
+        uniqueValues: 5
+        statisticsDimension: true
+      - name: 学科门类
+        fillRate: 0.9
+        uniqueValues: 10
+        statisticsDimension: true
+      - name: 是否最高学位
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 学位授予日期
+        fillRate: 0.9
+        uniqueValues: 68
+      - name: 学位授予单位
+        fillRate: 0.9
+        uniqueValues: 46
+      - name: 学位授予国家
+        fillRate: 40.1
+        uniqueValues: 21
+      - name: 是否在职教育
+        fillRate: 40.8
+        uniqueValues: 3
+
+  - name: 师德考核
+    sourceFile: 师德考核.xlsx
+    targetEntity: EthicsAssessment
+    label: 师德考核
+    cardinality: 多
+    classification: sensitive
+    recordCount: 20539
+    personCount: 3668
+    avgPerPerson: 5.60
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 3668
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 3583
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 76
+      - name: 考核学年
+        fillRate: 100.0
+        uniqueValues: 10
+        statisticsDimension: true
+      - name: 考核结果
+        fillRate: 100.0
+        uniqueValues: 2
+        statisticsDimension: true
+      - name: 考核年度
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 考核开展时间
+        fillRate: 0.0
+        uniqueValues: 2
+      - name: 考核异常原因
+        fillRate: 0.0
+        uniqueValues: 1
+
+  - name: 培训信息
+    sourceFile: 培训信息.xlsx
+    targetEntity: TrainingExperience
+    label: 进修培训经历
+    cardinality: 多
+    classification: internal
+    recordCount: 5384
+    personCount: 1725
+    avgPerPerson: 3.12
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 1725
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 1721
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 66
+      - name: 培训名称
+        fillRate: 100.0
+        uniqueValues: 68
+      - name: 培训年度
+        fillRate: 100.0
+        uniqueValues: 14
+        statisticsDimension: true
+      - name: 开始日期
+        fillRate: 100.0
+        uniqueValues: 64
+      - name: 结束日期
+        fillRate: 100.0
+        uniqueValues: 68
+      - name: 培训国家
+        fillRate: 100.0
+        uniqueValues: 2
+      - name: 培训地点
+        fillRate: 100.0
+        uniqueValues: 18
+      - name: 组织单位
+        fillRate: 100.0
+        uniqueValues: 7
+      - name: 培训级别
+        fillRate: 100.0
+        uniqueValues: 3
+        statisticsDimension: true
+      - name: 培训方式
+        fillRate: 100.0
+        uniqueValues: 2
+        statisticsDimension: true
+      - name: 学时
+        fillRate: 100.0
+        uniqueValues: 24
+      - name: 天数(天)
+        fillRate: 100.0
+        uniqueValues: 18
+
+  - name: 职称资格
+    sourceFile: 职称资格.xlsx
+    targetEntity: ProfessionalTitle
+    label: 职称资格
+    cardinality: 多
+    classification: internal
+    recordCount: 4992
+    personCount: 2904
+    avgPerPerson: 1.72
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 2904
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 2849
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 68
+      - name: 职称名称
+        fillRate: 99.1
+        uniqueValues: 95
+        statisticsDimension: true
+      - name: 职称专业
+        fillRate: 0.7
+        uniqueValues: 24
+      - name: 职称等级
+        fillRate: 82.1
+        uniqueValues: 8
+        statisticsDimension: true
+      - name: 取得途径
+        fillRate: 28.8
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 取得日期
+        fillRate: 78.1
+        uniqueValues: 665
+      - name: 发证日期
+        fillRate: 0.7
+        uniqueValues: 29
+      - name: 发证单位
+        fillRate: 17.6
+        uniqueValues: 134
+      - name: 证书编号
+        fillRate: 0.7
+        uniqueValues: 34
+      - name: 评审单位
+        fillRate: 0.7
+        uniqueValues: 23
+
+  - name: 聘期考核 (1)
+    sourceFile: 聘期考核 (1).xlsx
+    targetEntity: TenureAssessment
+    label: 聘期考核
+    cardinality: 多
+    classification: sensitive
+    recordCount: 4965
+    personCount: 3088
+    avgPerPerson: 1.61
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 3088
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 3020
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 73
+      - name: 聘期开始时间
+        fillRate: 100.0
+        uniqueValues: 3
+      - name: 聘期结束时间
+        fillRate: 100.0
+        uniqueValues: 3
+      - name: 考核开展时间
+        fillRate: 100.0
+        uniqueValues: 3
+      - name: 考核结果
+        fillRate: 100.0
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 考核异常原因
+        fillRate: 0.0
+        uniqueValues: 1
+      - name: 备注
+        fillRate: 100.0
+        uniqueValues: 3
+
+  - name: 聘岗信息
+    sourceFile: 聘岗信息.xlsx
+    targetEntity: PositionAppointment
+    label: 聘岗信息
+    cardinality: 多
+    classification: internal
+    recordCount: 3424
+    personCount: 3418
+    avgPerPerson: 1.00
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 3418
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 3340
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 73
+      - name: 任（聘）状态
+        fillRate: 85.5
+        uniqueValues: 2
+        statisticsDimension: true
+      - name: 岗位类别
+        fillRate: 99.8
+        uniqueValues: 11
+        statisticsDimension: true
+      - name: 岗位等级
+        fillRate: 99.7
+        uniqueValues: 52
+        statisticsDimension: true
+      - name: 所属层级
+        fillRate: 0.1
+        uniqueValues: 3
+      - name: 开始日期
+        fillRate: 96.8
+        uniqueValues: 763
+      - name: 结束日期
+        fillRate: 0.1
+        uniqueValues: 3
+      - name: 是否主要岗位
+        fillRate: 100.0
+        uniqueValues: 2
+        statisticsDimension: true
+      - name: 备注
+        fillRate: 0.0
+        uniqueValues: 1
+
+  - name: 家庭成员及社会关系
+    sourceFile: 家庭成员及社会关系.xlsx
+    targetEntity: FamilyMember
+    label: 家庭成员
+    cardinality: 多
+    classification: restricted
+    recordCount: 2606
+    personCount: 1294
+    avgPerPerson: 2.01
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 1294
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 1280
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 63
+      - name: 家属姓名
+        fillRate: 100.0
+        uniqueValues: 2555
+      - name: 与本人的关系
+        fillRate: 100.0
+        uniqueValues: 24
+        statisticsDimension: true
+      - name: 籍贯
+        fillRate: 3.0
+        uniqueValues: 57
+      - name: 出生年月
+        fillRate: 87.8
+        uniqueValues: 2144
+      - name: 政治面貌
+        fillRate: 25.3
+        uniqueValues: 10
+      - name: 工作单位
+        fillRate: 90.1
+        uniqueValues: 1013
+      - name: 职务
+        fillRate: 7.9
+        uniqueValues: 63
+      - name: 联系电话
+        fillRate: 0.5
+        uniqueValues: 13
+      - name: 是否本校职工
+        fillRate: 5.8
+        uniqueValues: 3
+
+  - name: 政治面貌 (1)
+    sourceFile: 政治面貌 (1).xlsx
+    targetEntity: PoliticalStatus
+    label: 政治面貌
+    cardinality: 多
+    classification: sensitive
+    recordCount: 3901
+    personCount: 3845
+    avgPerPerson: 1.01
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 3845
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 3757
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 77
+      - name: 政治面貌
+        fillRate: 100.0
+        uniqueValues: 12
+        statisticsDimension: true
+      - name: 参加党派日期
+        fillRate: 34.0
+        uniqueValues: 1058
+      - name: 参加时所在单位
+        fillRate: 10.8
+        uniqueValues: 198
+      - name: 转正日期
+        fillRate: 20.0
+        uniqueValues: 619
+      - name: 当前所在组织
+        fillRate: 0.8
+        uniqueValues: 31
+      - name: 现担任组织职务
+        fillRate: 0.8
+        uniqueValues: 9
+
+  - name: 双师信息
+    sourceFile: 双师信息.xlsx
+    targetEntity: DualQualification
+    label: 双师认定
+    cardinality: 多
+    classification: internal
+    recordCount: 1142
+    personCount: 1124
+    avgPerPerson: 1.02
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 1124
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 1111
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 43
+      - name: 认定名称
+        fillRate: 99.8
+        uniqueValues: 5
+      - name: 教师类型
+        fillRate: 99.8
+        uniqueValues: 5
+        statisticsDimension: true
+      - name: 学校名称
+        fillRate: 99.7
+        uniqueValues: 2
+      - name: 认定类别
+        fillRate: 99.7
+        uniqueValues: 4
+        statisticsDimension: true
+      - name: 专业大类
+        fillRate: 100.0
+        uniqueValues: 21
+        statisticsDimension: true
+      - name: 专业大类编码
+        fillRate: 99.7
+        uniqueValues: 20
+      - name: 专业子类
+        fillRate: 99.7
+        uniqueValues: 66
+      - name: 专业子类编码
+        fillRate: 99.7
+        uniqueValues: 66
+      - name: 专业
+        fillRate: 99.7
+        uniqueValues: 196
+      - name: 专业编码
+        fillRate: 99.7
+        uniqueValues: 196
+      - name: 认定中心
+        fillRate: 0.0
+        uniqueValues: 1
+      - name: 认定年份
+        fillRate: 99.9
+        uniqueValues: 4
+        statisticsDimension: true
+      - name: 认定通过时间
+        fillRate: 0.1
+        uniqueValues: 2
+      - name: 发证单位
+        fillRate: 0.0
+        uniqueValues: 1
+      - name: 证书编号
+        fillRate: 0.0
+        uniqueValues: 1
+      - name: 有效期
+        fillRate: 0.0
+        uniqueValues: 1
+
+  - name: 教师资格证
+    sourceFile: 教师资格证.xlsx
+    targetEntity: TeacherCertificate
+    label: 教师资格证
+    cardinality: 多
+    classification: internal
+    recordCount: 1078
+    personCount: 1074
+    avgPerPerson: 1.00
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 1074
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 1070
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 55
+      - name: 教师资格证种类
+        fillRate: 100.0
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 教师资格证号码
+        fillRate: 100.0
+        uniqueValues: 1077
+      - name: 任教学科
+        fillRate: 90.9
+        uniqueValues: 209
+      - name: 发证日期
+        fillRate: 86.4
+        uniqueValues: 163
+      - name: 发证单位
+        fillRate: 1.1
+        uniqueValues: 4
+
+  - name: 进修交流
+    sourceFile: 进修交流.xlsx
+    targetEntity: ExchangeExperience
+    label: 进修交流
+    cardinality: 多
+    classification: internal
+    recordCount: 407
+    personCount: 339
+    avgPerPerson: 1.20
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 339
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 337
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 49
+      - name: 开始日期
+        fillRate: 100.0
+        uniqueValues: 321
+      - name: 结束日期
+        fillRate: 97.3
+        uniqueValues: 334
+      - name: 交流类型
+        fillRate: 1.5
+        uniqueValues: 3
+        statisticsDimension: true
+      - name: 项目名称
+        fillRate: 100.0
+        uniqueValues: 314
+      - name: 组织单位
+        fillRate: 100.0
+        uniqueValues: 127
+      - name: 交流国家
+        fillRate: 100.0
+        uniqueValues: 27
+      - name: 交流单位
+        fillRate: 100.0
+        uniqueValues: 325
+      - name: 备注
+        fillRate: 0.0
+        uniqueValues: 1
+
+  - name: 奖励情况
+    sourceFile: 奖励情况.xlsx
+    targetEntity: TeachingAchievement
+    label: 奖励情况
+    cardinality: 多
+    classification: internal
+    recordCount: 463
+    personCount: 417
+    avgPerPerson: 1.11
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 417
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 417
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 59
+      - name: 奖励名称
+        fillRate: 100.0
+        uniqueValues: 18
+      - name: 颁奖日期
+        fillRate: 3.5
+        uniqueValues: 16
+      - name: 奖励级别
+        fillRate: 3.5
+        uniqueValues: 5
+        statisticsDimension: true
+      - name: 奖励等级
+        fillRate: 3.5
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 获奖类别
+        fillRate: 3.5
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 颁奖单位
+        fillRate: 3.5
+        uniqueValues: 13
+      - name: 本人排名
+        fillRate: 3.5
+        uniqueValues: 4
+      - name: 总人数
+        fillRate: 3.5
+        uniqueValues: 10
+      - name: 是否校企合作
+        fillRate: 3.5
+        uniqueValues: 3
+      - name: 合作企业名称
+        fillRate: 0.4
+        uniqueValues: 3
+      - name: 学校是否第一完成单位
+        fillRate: 3.5
+        uniqueValues: 3
+
+  - name: 人才信息 (2)
+    sourceFile: 人才信息 (2).xlsx
+    targetEntity: TalentTitle
+    label: 人才称号
+    cardinality: 多
+    classification: internal
+    recordCount: 346
+    personCount: 268
+    avgPerPerson: 1.29
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 268
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 268
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 39
+      - name: 人才称号
+        fillRate: 100.0
+        uniqueValues: 21
+        statisticsDimension: true
+      - name: 人才称号代码
+        fillRate: 0.0
+        uniqueValues: 1
+        statisticsDimension: true
+      - name: 依托项目
+        fillRate: 0.3
+        uniqueValues: 2
+      - name: 人才级别
+        fillRate: 99.7
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 研究方向
+        fillRate: 0.3
+        uniqueValues: 2
+      - name: 批准单位
+        fillRate: 0.3
+        uniqueValues: 2
+      - name: 批准单位级别
+        fillRate: 0.3
+        uniqueValues: 2
+      - name: 入选年份
+        fillRate: 0.3
+        uniqueValues: 2
+        statisticsDimension: true
+      - name: 开始时间
+        fillRate: 0.3
+        uniqueValues: 2
+      - name: 有效期
+        fillRate: 0.3
+        uniqueValues: 2
+      - name: 结束时间
+        fillRate: 0.3
+        uniqueValues: 2
+
+  - name: 技能证书
+    sourceFile: 技能证书.xlsx
+    targetEntity: SkillCertificate
+    label: 技能证书
+    cardinality: 多
+    classification: internal
+    recordCount: 87
+    personCount: 65
+    avgPerPerson: 1.34
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 65
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 65
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 23
+      - name: 工种名称
+        fillRate: 100.0
+        uniqueValues: 30
+        statisticsDimension: true
+      - name: 技术等级
+        fillRate: 98.9
+        uniqueValues: 6
+        statisticsDimension: true
+      - name: 取得途径
+        fillRate: 100.0
+        uniqueValues: 3
+      - name: 取得时间
+        fillRate: 86.2
+        uniqueValues: 62
+      - name: 发证时间
+        fillRate: 6.9
+        uniqueValues: 7
+      - name: 发证单位
+        fillRate: 65.5
+        uniqueValues: 28
+      - name: 证书编号
+        fillRate: 6.9
+        uniqueValues: 7
+      - name: 备注
+        fillRate: 1.1
+        uniqueValues: 2
+
+  - name: 班主任经历
+    sourceFile: 班主任经历.xlsx
+    targetEntity: ClassAdvisorExperience
+    label: 班主任经历
+    cardinality: 多
+    classification: internal
+    recordCount: 6
+    personCount: 4
+    avgPerPerson: 1.50
+    fields:
+      - name: 工号
+        fillRate: 100.0
+        uniqueValues: 4
+      - name: 姓名
+        fillRate: 100.0
+        uniqueValues: 4
+      - name: 所在部门
+        fillRate: 100.0
+        uniqueValues: 2
+      - name: 开始时间
+        fillRate: 100.0
+        uniqueValues: 6
+      - name: 结束时间
+        fillRate: 100.0
+        uniqueValues: 6
+      - name: 时长（月）
+        fillRate: 100.0
+        uniqueValues: 4
+      - name: 所带班级
+        fillRate: 100.0
+        uniqueValues: 6
+      - name: 备注
+        fillRate: 0.0
+        uniqueValues: 1

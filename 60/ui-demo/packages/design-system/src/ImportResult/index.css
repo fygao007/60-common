@@ -1,0 +1,60 @@
+@import '../tokens.css';
+
+.ds-import-result {
+  display: grid;
+  justify-items: center;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-10) var(--ds-card-padding);
+  text-align: center;
+}
+
+.ds-import-result__icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  color: var(--ds-color-white);
+  background: var(--ds-color-success);
+  border-radius: var(--ds-radius-pill);
+  font-size: var(--ds-font-size-headline);
+  line-height: var(--ds-line-height-headline);
+}
+
+.ds-import-result--error .ds-import-result__icon {
+  background: var(--ds-color-danger);
+}
+
+.ds-import-result h3 {
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-title);
+  line-height: var(--ds-line-height-title);
+}
+
+.ds-import-result p {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-import-result__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-6);
+  padding: var(--ds-space-3) var(--ds-space-6);
+  background: var(--ds-color-bg-hover);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-import-result__stats span {
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-import-result__stats strong {
+  color: var(--ds-color-text-heading);
+}
+
+.ds-import-result footer {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核操作按钮 DSAuditActions</title>
+  <link rel="stylesheet" href="packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="packages/design-system/src/AuditActions/index.css" />
+  <style>
+    body { margin: 0; background: var(--ds-color-bg-page); font-family: var(--ds-font-family); color: var(--ds-color-text); }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .page-header p { margin: 0; color: var(--ds-color-text-tertiary); font-size: 14px; }
+
+    .demo-section { margin-bottom: 32px; }
+    .demo-section__title { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .demo-section__desc { margin: 0 0 16px; font-size: 13px; color: var(--ds-color-text-tertiary); }
+    .demo-card { background: var(--ds-color-white); border: 1px solid var(--ds-color-border-secondary); border-radius: 8px; padding: 24px; }
+
+    .demo-row { display: flex; align-items: center; gap: 0; padding: 12px 0; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .demo-row:last-child { border-bottom: none; }
+    .demo-row .item { flex: 1; min-width: 0; }
+
+    /* Link button */
+    .ds-link-btn { display: inline-flex; align-items: center; height: 28px; padding: 0; background: transparent; border: 0; color: var(--ds-color-primary); font-size: 14px; cursor: pointer; }
+    .ds-link-btn:hover { color: var(--ds-color-primary-hover); }
+    .ds-link-btn.danger { color: var(--ds-color-danger); }
+    .ds-link-btn.danger:hover { color: var(--ds-color-danger-hover); }
+    .ds-link-btn:disabled { color: var(--ds-color-text-disabled); cursor: not-allowed; }
+
+    /* Separator */
+    .ds-link-sep { width: 1px; height: 12px; background: var(--ds-color-border); margin: 0 8px; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>审核操作按钮 DSAuditActions</h1>
+    <p>用于审核列表行内操作（通过/不通过/退回/详情等）</p>
+  </header>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">基础用法</h2>
+    <p class="demo-section__desc">默认操作：通过、不通过、退回、详情。</p>
+    <div class="demo-card">
+      <span class="ds-audit-actions">
+        <button class="ds-link-btn" onclick="alert('通过')">通过</button>
+        <button class="ds-link-btn" onclick="alert('不通过')">不通过</button>
+        <button class="ds-link-btn danger" onclick="alert('退回')">退回</button>
+        <button class="ds-link-btn" onclick="alert('详情')">详情</button>
+      </span>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">带分隔符</h2>
+    <p class="demo-section__desc">操作之间用竖线分隔，常见于表格操作列。</p>
+    <div class="demo-card">
+      <span class="ds-audit-actions">
+        <button class="ds-link-btn" onclick="alert('通过')">通过</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn danger" onclick="alert('退回')">退回</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn" onclick="alert('详情')">详情</button>
+      </span>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">单个操作</h2>
+    <p class="demo-section__desc">只展示单个操作（如已审核状态）。</p>
+    <div class="demo-card">
+      <span class="ds-audit-actions">
+        <button class="ds-link-btn" onclick="alert('详情')">详情</button>
+      </span>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">禁用某项</h2>
+    <p class="demo-section__desc">部分操作按权限/状态禁用（如已通过的不能再退回）。</p>
+    <div class="demo-card">
+      <span class="ds-audit-actions">
+        <button class="ds-link-btn" disabled>通过</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn danger" disabled>退回</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn" onclick="alert('查看流程日志')">流程日志</button>
+      </span>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">自定义操作</h2>
+    <p class="demo-section__desc">支持业务侧自定义任意操作：</p>
+    <div class="demo-card">
+      <span class="ds-audit-actions">
+        <button class="ds-link-btn" onclick="alert('审批')">审批</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn" onclick="alert('转交')">转交</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn" onclick="alert('加签')">加签</button>
+        <span class="ds-link-sep"></span>
+        <button class="ds-link-btn" onclick="alert('打印')">打印</button>
+      </span>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">表格场景示例</h2>
+    <p class="demo-section__desc">嵌入表格行场景中（伪表格展示）。</p>
+    <div class="demo-card" style="padding:0;">
+      <div class="demo-row"><span class="item">张三 (T20210001)</span><span class="ds-audit-actions"><button class="ds-link-btn">通过</button><span class="ds-link-sep"></span><button class="ds-link-btn danger">退回</button><span class="ds-link-sep"></span><button class="ds-link-btn">详情</button></span></div>
+      <div class="demo-row"><span class="item">李四 (T20200012)</span><span class="ds-audit-actions"><button class="ds-link-btn disabled" disabled>通过</button><span class="ds-link-sep"></span><button class="ds-link-btn danger" disabled>退回</button><span class="ds-link-sep"></span><button class="ds-link-btn">详情</button></span></div>
+      <div class="demo-row"><span class="item">王五 (T20190008)</span><span class="ds-audit-actions"><button class="ds-link-btn">详情</button></span></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

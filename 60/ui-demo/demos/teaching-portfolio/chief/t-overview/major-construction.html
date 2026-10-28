@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>专业建设</title>
+  <link rel="stylesheet" href="../../../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../../../assets/base.css" />
+  <link rel="stylesheet" href="../../../../assets/theme.css" />
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+
+    .ah-page { height: 100%; min-height: 0; background: var(--ds-color-bg-container); }
+    .ah-content-card { width: 100%; height: calc(100vh - 92px); min-height: 0; overflow: hidden; background: var(--ds-color-bg-container); }
+
+    .ah-top-header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .ah-back-btn { display: inline-flex; align-items: center; gap: 4px; color: #000; font-size: 14px; cursor: pointer; background: none; border: none; padding: 0; }
+    .ah-back-btn:hover { color: var(--ds-color-primary); }
+    .ah-back-btn svg { width: 20px; height: 20px; }
+    .ah-header-divider { width: 1px; height: 20px; background: #eeeef0; }
+    .ah-header-title { margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+
+    .ah-detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 180px; height: calc(100vh - 144px); min-height: 0; overflow: hidden; }
+
+    .ah-main { display: flex; flex-direction: column; gap: 28px; overflow-y: auto; overscroll-behavior: contain; padding: 24px 24px 40px; scroll-behavior: smooth; }
+
+    .ah-anchor-panel { width: 100%; min-width: 150px; max-width: 220px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 0; background: var(--ds-color-bg-container); border-left: 1px solid var(--ds-color-border-secondary); }
+    .ah-anchor-item { display: block; padding: 8px 16px; color: #505266; font-size: 13px; text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: color 0.2s, background 0.2s; }
+    .ah-anchor-item:hover { color: var(--ds-color-primary); background: var(--ds-color-primary-light); }
+    .ah-anchor-item.is-active { color: var(--ds-color-primary); background: var(--ds-color-primary-light); border-left-color: var(--ds-color-primary); }
+
+    .ah-section { display: grid; gap: 10px; min-width: 0; scroll-margin-top: 16px; }
+    .ah-section-head { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+    .ah-section-title { margin: 0; padding-left: 8px; color: #000; font-size: 16px; font-weight: 600; line-height: 22px; border-left: 3px solid var(--ds-color-primary); }
+
+    /* 只读表单 - 表格式（6.0规范） */
+    .info-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #eeeef0; background: #fff; table-layout: fixed; }
+    .info-table th, .info-table td { padding: 10px 12px; border-bottom: 1px solid #eeeef0; border-left: 1px solid #eeeef0; font-size: 13px; line-height: 20px; }
+    .info-table th:first-child, .info-table td:first-child { border-left: none; }
+    .info-table th { background: #fafafa; color: #505266; font-weight: 400; text-align: right; white-space: nowrap; width: 140px; }
+    .info-table td { color: #000; word-break: break-all; }
+    .info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 数据表格（6.0规范） */
+    .ah-table-wrap { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; color: #000; font-size: 14px; line-height: 22px; border: 1px solid #eeeef0; background: #fff; }
+    .data-table th, .data-table td { height: 40px; padding: 0 12px; background: #fff; border-bottom: 1px solid #eeeef0; white-space: nowrap; overflow: hidden; text-align: left; text-overflow: ellipsis; }
+    .data-table th { position: sticky; top: 0; z-index: 5; background: #fafafa; font-weight: 600; }
+    .data-table th + th, .data-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+    .data-table tbody tr:hover td { background: #f6f6f7; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table .action-cell { text-align: right; position: sticky; right: 0; background: #fff; white-space: nowrap; }
+    .data-table .action-cell .text-action + .text-action::before { content: "|"; color: var(--ds-color-border); margin: 0 8px; }
+    .data-table .text-action { padding: 0; color: var(--ds-color-primary); background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .data-table .text-action:hover { color: var(--ds-color-primary-hover); }
+    .mc-large-text { padding: 16px; color: #000; font-size: 14px; line-height: 1.75; border: 1px solid var(--ds-color-border-secondary); border-radius: 2px; background: var(--ds-color-bg-subtle); white-space: pre-wrap; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { background: var(--ds-color-primary-hover); }
+    
+    /* 弹窗 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 800px; max-width: 90vw; max-height: 90vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+    .modal--sm { width: 420px; }
+    .modal__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eeeef0; flex-shrink: 0; }
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+    .modal__close { width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+    .modal__close:hover { background: #f5f5f5; }
+    .modal__body { flex: 1; overflow-y: auto; padding: 20px; }
+    .modal__footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; border-top: 1px solid #eeeef0; flex-shrink: 0; }
+
+    /* 双列表单 */
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+    .form-field { display: flex; flex-direction: column; gap: 8px; }
+    .form-field--full { grid-column: 1 / -1; }
+    .form-field__label { font-size: 14px; color: #000; font-weight: 500; }
+    .form-field input, .form-field textarea { padding: 8px 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; }
+    .form-field input:focus, .form-field textarea:focus { outline: none; border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px var(--ds-color-focus-ring); }
+    .form-field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+    @media (max-width: 1100px) { .ah-detail-layout { grid-template-columns: minmax(0, 1fr) 170px; } }
+    @media (max-width: 860px) {
+      .ah-detail-layout { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      .ah-anchor-panel { order: -1; overflow: visible; padding: 12px; border-bottom: 1px solid var(--ds-color-border-secondary); border-left: 0; max-width: none; display: flex; flex-wrap: wrap; gap: 4px; }
+      .ah-anchor-item { display: inline-block; padding: 4px 8px; border-left: none; }
+      .ah-main { overflow: visible; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) { .ah-main { padding: 16px; } .ah-readonly-form { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="ds-scope ah-page" id="app">
+    <div class="ah-content-card">
+      <div class="ah-top-header">
+        <button class="ah-back-btn" id="backBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+        <div class="ah-header-divider"></div>
+        <h1 class="ah-header-title">专业建设</h1>
+      </div>
+      <div class="ah-detail-layout">
+        <div class="ah-main" id="mainContent"></div>
+        <aside class="ah-anchor-panel" aria-label="专业建设锚点" id="anchorPanel"></aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用编辑弹窗（双列） -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title" id="editModalTitle">编辑</h3>
+        <button class="modal__close" id="editModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body"><div class="form-grid" id="editModalForm"></div></div>
+      <div class="modal__footer">
+        <button class="btn" id="editModalCancel" type="button">取消</button>
+        <button class="btn primary" id="editModalOk" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 大文本编辑弹窗 -->
+  <div class="modal-overlay" id="textModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title" id="textModalTitle">编辑</h3>
+        <button class="modal__close" id="textModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <div class="form-field form-field--full">
+          <label class="form-field__label" id="textModalLabel">内容</label>
+          <textarea id="textModalTextarea" rows="16"></textarea>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn" id="textModalCancel" type="button">取消</button>
+        <button class="btn primary" id="textModalOk" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 删除确认弹窗 -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <h3 class="modal__title">确认删除</h3>
+        <button class="modal__close" id="deleteModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body"><p style="margin:0;color:var(--ds-color-text-secondary);" id="deleteModalText"></p></div>
+      <div class="modal__footer">
+        <button class="btn" id="deleteModalCancel" type="button">取消</button>
+        <button class="btn primary" id="deleteModalOk" type="button">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== 数据 =====
+    const ANCHOR = [
+      { key: 'basic-info', title: '专业基本信息' },
+      { key: 'construction-idea', title: '专业建设理念' },
+      { key: 'team-building', title: '队伍建设' },
+      { key: 'main-results', title: '主要成果' },
+      { key: 'related-work', title: '相关工作' },
+      { key: 'construction-experience', title: '专业建设经验' },
+    ];
+
+    let basicInfoFields = [
+      { key: 'name', label: '专业名称', value: '软件技术专业' },
+      { key: 'code', label: '专业代码', value: 'SZPT-MAJOR-001' },
+      { key: 'college', label: '所属学院', value: '电子与通信工程学院' },
+      { key: 'leader', label: '专业负责人', value: '金晓智' },
+      { key: 'period', label: '建设周期', value: '2024-2027' },
+      { key: 'level', label: '专业层级', value: '省级高水平专业' },
+      { key: 'majors', label: '包含专业', value: '软件技术、人工智能技术应用、大数据技术、云计算技术应用', full: true },
+      { key: 'industry', label: '服务产业领域', value: '软件与信息服务、人工智能、大数据与云计算' },
+      { key: 'status', label: '建设状态', value: '建设中' },
+      { key: 'intro', label: '专业简介', value: '软件技术专业以软件技术为核心，整合人工智能、大数据、云计算等新兴技术领域，面向软件与信息服务产业，培养具有软件开发、数据分析、智能应用设计能力的高素质技术技能人才。专业坚持产教融合、校企合作，构建"平台+模块+方向"的课程体系，形成"基础共享、核心分立、拓展互选"的专业课程结构。', full: true, textarea: true },
+    ];
+
+    const IDEA_COLUMNS = [
+      { key: 'title', title: '建设理念标题' },
+      { key: 'content', title: '建设理念内容', full: true, textarea: true },
+      { key: 'goal', title: '建设目标' },
+      { key: 'approach', title: '建设思路', full: true, textarea: true },
+      { key: 'positioning', title: '特色定位' },
+      { key: 'service', title: '服务面向' },
+    ];
+
+    let ideaData = [
+      { id: 'idea-1', title: '产教深度融合', content: '以产业需求为导向，校企协同制定人才培养方案', goal: '建成省级产教融合示范基地', approach: '引入企业真实项目，共建实训基地', positioning: '区域软件产业服务高地', service: '深圳软件产业' },
+      { id: 'idea-2', title: '课程体系重构', content: '构建平台+模块+方向的课程体系', goal: '形成可推广的专业课程模式', approach: '基础共享、核心分立、拓展互选', positioning: '模块化课程体系', service: '职业教育改革' },
+    ];
+
+    let teamFields = [
+      { key: 'team-name', label: '团队名称', value: '软件技术专业教学团队' },
+      { key: 'team-leader', label: '团队负责人', value: '金晓智' },
+      { key: 'double-teacher-count', label: '双师型教师数量', value: '18人' },
+      { key: 'key-teacher-count', label: '骨干教师数量', value: '8人' },
+      { key: 'team-members', label: '团队成员', value: '32人（含校内外成员，含企业导师6人）', full: true },
+      { key: 'enterprise-mentor-count', label: '企业导师数量', value: '来自腾讯、华为、深信服等企业，共6人', full: true },
+      { key: 'team-measures', label: '团队建设举措', value: '实施"双师型"教师培养计划，建立企业实践轮训机制，开展教学能力提升培训，组织教师参加技能竞赛和教学比赛。', full: true, textarea: true },
+      { key: 'teacher-training', label: '师资培养情况', value: '每年安排2-3名教师到企业实践，定期开展教学研讨和课程建设培训，鼓励教师攻读博士学位和参加学术交流。', full: true, textarea: true },
+      { key: 'team-effect', label: '团队建设成效', value: '团队获评省级优秀教学团队，双师型教师占比达56%，骨干教师主持省级教改项目3项，企业导师参与课程开发12门。', full: true, textarea: true },
+    ];
+
+    const RESULT_COLUMNS = [
+      { key: 'name', title: '成果名称' },
+      { key: 'type', title: '成果类型' },
+      { key: 'level', title: '成果级别' },
+      { key: 'leader', title: '负责人' },
+      { key: 'date', title: '完成时间' },
+      { key: 'intro', title: '成果简介', full: true, textarea: true },
+      { key: 'material', title: '支撑材料' },
+    ];
+
+    let resultData = [
+      { id: 'result-1', name: '省级精品在线开放课程', type: '课程', level: '省级', leader: '金晓智', date: '2024-06', intro: '《软件工程实践》课程获评省级精品在线开放课程', material: '课程建设报告.pdf' },
+      { id: 'result-2', name: '全国职业院校技能大赛一等奖', type: '竞赛', level: '国家级', leader: '李敏', date: '2024-05', intro: '指导学生获全国职业院校技能大赛"软件测试"赛项一等奖', material: '获奖证书.pdf' },
+      { id: 'result-3', name: '省级教学成果奖二等奖', type: '成果奖', level: '省级', leader: '金晓智', date: '2023-12', intro: '"产教融合背景下软件技术专业课程体系重构与实践"获省级教学成果奖二等奖', material: '成果奖申报书.pdf' },
+    ];
+
+    let relatedWorkContent = '专业建设工作涉及多个方面：\n\n1. 课程建设：主持省级精品在线开放课程1门，校级精品课程3门，参与国家级专业教学资源库建设。\n\n2. 实训基地建设：牵头建设软件技术实训中心，引入企业真实项目，建成产教融合实训基地。\n\n3. 校企合作：与腾讯、华为等企业建立合作关系，开展订单班培养、企业导师进课堂、学生顶岗实习等合作项目。\n\n4. 教学研究：主持省级教改项目2项，发表教学改革论文5篇，参与编写教材3部。\n\n5. 社会服务：为企业提供技术咨询和培训服务，年培训企业员工200余人次。\n\n6. 学生培养：指导学生参加技能竞赛获省级以上奖项8项，毕业生就业率达98%以上。';
+
+    const EXPERIENCE_COLUMNS = [
+      { key: 'title', title: '经验标题' },
+      { key: 'type', title: '经验类型' },
+      { key: 'date', title: '总结时间' },
+      { key: 'content', title: '经验内容', full: true, textarea: true },
+      { key: 'problem', title: '存在问题', full: true, textarea: true },
+      { key: 'measure', title: '改进措施', full: true, textarea: true },
+      { key: 'value', title: '推广价值' },
+    ];
+
+    let experienceData = [
+      { id: 'exp-1', title: '产教融合实训基地建设经验', type: '基地建设', date: '2024-06', content: '引入企业真实项目，建立"项目驱动、任务导向"的实训模式，学生参与企业项目开发，提升实践能力。', problem: '企业项目更新不及时，部分项目难度过高', measure: '建立项目筛选机制，定期更新项目库，设置难度梯度', value: '可推广至其他专业' },
+      { id: 'exp-2', title: '双师型教师培养经验', type: '师资建设', date: '2024-03', content: '建立企业实践轮训机制，教师每2年到企业实践1个月，参与企业项目开发，提升实践能力。', problem: '企业实践时间不足，部分教师参与度低', measure: '延长实践时间至2个月，建立激励机制，将实践成果纳入考核', value: '适用于工科类专业' },
+    ];
+
+    // ===== DOM =====
+    const mainContent = document.getElementById('mainContent');
+    const anchorPanel = document.getElementById('anchorPanel');
+    const backBtn = document.getElementById('backBtn');
+
+    const editModal = document.getElementById('editModal');
+    const editModalTitle = document.getElementById('editModalTitle');
+    const editModalForm = document.getElementById('editModalForm');
+    const editModalClose = document.getElementById('editModalClose');
+    const editModalCancel = document.getElementById('editModalCancel');
+    const editModalOk = document.getElementById('editModalOk');
+
+    const textModal = document.getElementById('textModal');
+    const textModalTitle = document.getElementById('textModalTitle');
+    const textModalLabel = document.getElementById('textModalLabel');
+    const textModalTextarea = document.getElementById('textModalTextarea');
+    const textModalClose = document.getElementById('textModalClose');
+    const textModalCancel = document.getElementById('textModalCancel');
+    const textModalOk = document.getElementById('textModalOk');
+
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteModalText = document.getElementById('deleteModalText');
+    const deleteModalClose = document.getElementById('deleteModalClose');
+    const deleteModalCancel = document.getElementById('deleteModalCancel');
+    const deleteModalOk = document.getElementById('deleteModalOk');
+
+
+    // ===== 渲染 =====
+    function readonlyFormHTML(fields) {
+      const rows = [];
+      let pair = [];
+      fields.forEach(f => {
+        if (f.full) {
+          if (pair.length) { rows.push(pair); pair = []; }
+          rows.push([f]);
+        } else {
+          pair.push(f);
+          if (pair.length === 2) { rows.push(pair); pair = []; }
+        }
+      });
+      if (pair.length) rows.push(pair);
+
+      return '<table class="info-table"><tbody>' +
+        rows.map(r =>
+          '<tr>' + r.map(f =>
+            '<th>' + f.label + '</th><td' + (r.length === 1 ? ' colspan="3"' : '') + '>' + (f.value || '-') + '</td>'
+          ).join('') + '</tr>'
+        ).join('') +
+      '</tbody></table>';
+    }
+
+    function crudTableHTML(id, columns, data, editBtn) {
+      return '<div class="ah-table-wrap"><table class="data-table"><thead><tr>' +
+        columns.map(c => '<th>' + c.title + '</th>').join('') + '<th>操作</th>' +
+      '</tr></thead><tbody>' +
+        data.map(row =>
+          '<tr>' + columns.map(c => '<td>' + (row[c.key] || '-') + '</td>').join('') +
+          '<td class="action-cell"><button class="text-action" data-table="' + id + '" data-action="edit" data-id="' + row.id + '" type="button">编辑</button><button class="text-action" data-table="' + id + '" data-action="delete" data-id="' + row.id + '" type="button">删除</button></td></tr>'
+        ).join('') +
+      '</tbody></table></div>';
+    }
+
+    function render() {
+      mainContent.innerHTML =
+        // 1. 专业基本信息
+        '<section class="ah-section" id="basic-info" data-section-key="basic-info">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">专业基本信息</h3><button class="btn" data-open-form="basic-info" type="button">编辑</button></div>' +
+          readonlyFormHTML(basicInfoFields) +
+        '</section>' +
+        // 2. 专业建设理念
+        '<section class="ah-section" id="construction-idea" data-section-key="construction-idea">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">专业建设理念</h3><button class="btn" data-table-add="idea" type="button">新增</button></div>' +
+          crudTableHTML('idea', IDEA_COLUMNS, ideaData) +
+        '</section>' +
+        // 3. 队伍建设
+        '<section class="ah-section" id="team-building" data-section-key="team-building">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">队伍建设</h3><button class="btn" data-open-form="team" type="button">编辑</button></div>' +
+          readonlyFormHTML(teamFields) +
+        '</section>' +
+        // 4. 主要成果
+        '<section class="ah-section" id="main-results" data-section-key="main-results">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">主要成果</h3><button class="btn" data-table-add="result" type="button">新增</button></div>' +
+          crudTableHTML('result', RESULT_COLUMNS, resultData) +
+        '</section>' +
+        // 5. 相关工作
+        '<section class="ah-section" id="related-work" data-section-key="related-work">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">相关工作</h3><button class="btn" data-open-text="related-work" type="button">编辑</button></div>' +
+          '<div class="mc-large-text">' + relatedWorkContent + '</div>' +
+        '</section>' +
+        // 6. 专业建设经验
+        '<section class="ah-section" id="construction-experience" data-section-key="construction-experience">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">专业建设经验</h3><button class="btn" data-table-add="experience" type="button">新增</button></div>' +
+          crudTableHTML('experience', EXPERIENCE_COLUMNS, experienceData) +
+        '</section>';
+
+      anchorPanel.innerHTML = ANCHOR.map((s, i) =>
+        '<a class="ah-anchor-item' + (i === 0 ? ' is-active' : '') + '" href="#' + s.key + '">' + s.title + '</a>'
+      ).join('');
+      bindAnchors();
+    }
+
+    function bindAnchors() {
+      anchorPanel.querySelectorAll('.ah-anchor-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.getElementById(item.getAttribute('href').slice(1));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function updateFromScroll() {
+      const sections = Array.from(mainContent.querySelectorAll('[data-section-key]'));
+      if (!sections.length) return;
+      const mainBox = mainContent.getBoundingClientRect();
+      const scrollable = mainContent.scrollHeight > mainContent.clientHeight + 1;
+      const atBottom = scrollable && mainContent.scrollTop + mainContent.clientHeight >= mainContent.scrollHeight - 2;
+      let current = sections[0];
+      if (atBottom) {
+        current = sections[sections.length - 1];
+      } else {
+        sections.forEach(section => {
+          const sectionTop = section.getBoundingClientRect().top - mainBox.top;
+          if (sectionTop <= 64) current = section;
+        });
+      }
+      const nextKey = current && current.getAttribute('data-section-key');
+      if (nextKey) {
+        anchorPanel.querySelectorAll('.ah-anchor-item').forEach(item =>
+          item.classList.toggle('is-active', item.getAttribute('href') === '#' + nextKey)
+        );
+      }
+    }
+
+    mainContent.addEventListener('scroll', updateFromScroll, { passive: true });
+    render();
+    setTimeout(updateFromScroll, 0);
+
+    // ===== 编辑状态管理 =====
+    // 表格配置映射
+    const TABLE_CONFIG = {
+      'idea': { title: '建设理念', columns: IDEA_COLUMNS, get data() { return ideaData; }, set data(v) { ideaData = v; } },
+      'result': { title: '成果', columns: RESULT_COLUMNS, get data() { return resultData; }, set data(v) { resultData = v; } },
+      'experience': { title: '建设经验', columns: EXPERIENCE_COLUMNS, get data() { return experienceData; }, set data(v) { experienceData = v; } },
+    };
+
+    let editState = null; // { type: 'table', tableKey, item, isNew } | { type: 'form', formKey, fields } | { type: 'text', key }
+
+    mainContent.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      if (btn.dataset.openForm) {
+        const formKey = btn.dataset.openForm;
+        const fields = formKey === 'basic-info' ? basicInfoFields : teamFields;
+        editState = { type: 'form', formKey, fields: JSON.parse(JSON.stringify(fields)) };
+        openFormModal('编辑' + (formKey === 'basic-info' ? '专业基本信息' : '队伍建设'));
+      } else if (btn.dataset.openText) {
+        editState = { type: 'text', key: btn.dataset.openText };
+        textModalTitle.textContent = '编辑相关工作';
+        textModalLabel.textContent = '相关工作内容';
+        textModalTextarea.value = relatedWorkContent;
+        textModal.classList.add('is-open');
+      } else if (btn.dataset.tableAdd) {
+        const tableKey = btn.dataset.tableAdd;
+        const config = TABLE_CONFIG[tableKey];
+        const item = { id: tableKey + '-' + Date.now() };
+        config.columns.forEach(c => { item[c.key] = ''; });
+        editState = { type: 'table', tableKey, item, isNew: true };
+        openFormModal('新增' + config.title);
+      } else if (btn.dataset.table) {
+        const tableKey = btn.dataset.table;
+        const action = btn.dataset.action;
+        const id = btn.dataset.id;
+        const config = TABLE_CONFIG[tableKey];
+        const item = config.data.find(d => d.id === id);
+        if (!item) return;
+        if (action === 'edit') {
+          editState = { type: 'table', tableKey, item: { ...item }, isNew: false };
+          openFormModal('编辑' + config.title);
+        } else if (action === 'delete') {
+          editState = { type: 'delete', tableKey, id };
+          deleteModalText.textContent = '确定要删除该' + config.title + '吗？此操作不可恢复。';
+          deleteModal.classList.add('is-open');
+        }
+      }
+    });
+
+    function openFormModal(title) {
+      editModalTitle.textContent = title;
+      let fields;
+      if (editState.type === 'form') {
+        fields = editState.fields.map(f => ({ label: f.label, key: f.key, value: f.value, full: f.full, textarea: f.textarea }));
+      } else {
+        fields = TABLE_CONFIG[editState.tableKey].columns.map(c => ({ label: c.title, key: c.key, value: editState.item[c.key] || '', full: c.full, textarea: c.textarea }));
+      }
+      editModalForm.innerHTML = fields.map(f =>
+        '<div class="form-field' + (f.full ? ' form-field--full' : '') + '">' +
+          '<label class="form-field__label">' + f.label + '</label>' +
+          (f.textarea
+            ? '<textarea data-field-key="' + f.key + '" rows="4">' + (f.value || '') + '</textarea>'
+            : '<input type="text" data-field-key="' + f.key + '" value="' + (f.value || '') + '" />') +
+        '</div>'
+      ).join('');
+      editModal.classList.add('is-open');
+    }
+
+    editModalClose.addEventListener('click', () => editModal.classList.remove('is-open'));
+    editModalCancel.addEventListener('click', () => editModal.classList.remove('is-open'));
+
+    editModalOk.addEventListener('click', () => {
+      if (!editState) return;
+      const values = {};
+      editModalForm.querySelectorAll('[data-field-key]').forEach(el => { values[el.dataset.fieldKey] = el.value; });
+
+      if (editState.type === 'form') {
+        const updated = editState.fields.map(f => ({ ...f, value: values[f.key] || f.value }));
+        if (editState.formKey === 'basic-info') basicInfoFields = updated;
+        else teamFields = updated;
+      } else if (editState.type === 'table') {
+        const config = TABLE_CONFIG[editState.tableKey];
+        const item = { ...editState.item, ...values };
+        if (editState.isNew) {
+          config.data = [item, ...config.data];
+        } else {
+          config.data = config.data.map(d => d.id === item.id ? item : d);
+        }
+      }
+
+      editModal.classList.remove('is-open');
+      render();
+      setTimeout(updateFromScroll, 0);
+    });
+
+    // ===== 大文本编辑 =====
+    textModalClose.addEventListener('click', () => textModal.classList.remove('is-open'));
+    textModalCancel.addEventListener('click', () => textModal.classList.remove('is-open'));
+    textModalOk.addEventListener('click', () => {
+      if (editState && editState.type === 'text') {
+        relatedWorkContent = textModalTextarea.value;
+        textModal.classList.remove('is-open');
+        render();
+        setTimeout(updateFromScroll, 0);
+      }
+    });
+
+    // ===== 删除确认 =====
+    deleteModalClose.addEventListener('click', () => deleteModal.classList.remove('is-open'));
+    deleteModalCancel.addEventListener('click', () => deleteModal.classList.remove('is-open'));
+    deleteModalOk.addEventListener('click', () => {
+      if (editState && editState.type === 'delete') {
+        const config = TABLE_CONFIG[editState.tableKey];
+        config.data = config.data.filter(d => d.id !== editState.id);
+        deleteModal.classList.remove('is-open');
+        render();
+        setTimeout(updateFromScroll, 0);
+      }
+    });
+  </script>
+</body>
+</html>

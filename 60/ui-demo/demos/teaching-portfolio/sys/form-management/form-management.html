@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>档案字段设置</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+    .ds-page { padding: 0; }
+
+    /* Steps bar - ds-steps style */
+    .steps-bar { display: flex; align-items: flex-start; gap: 16px; padding: 12px 24px; background: #fff; border-bottom: 1px solid #eeeef0; }
+    .step-item { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
+    .step-item .step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 8px; font-size: 14px; font-weight: 400; background: #fff; border: 1px solid #dcdce0; color: #505266; }
+    .step-item .step-content { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .step-item .step-content strong { font-size: 14px; font-weight: 400; color: #505266; }
+    .step-item .step-content::after { content: ""; flex: 1; min-width: 24px; height: 1px; background: #eeeef0; }
+    .step-item:last-child .step-content::after { display: none; }
+    .step-item.done .step-num { background: #fff; border-color: var(--ds-color-primary); color: var(--ds-color-primary); }
+    .step-item.done .step-content::after { background: var(--ds-color-primary); }
+    .step-item.active .step-num { background: var(--ds-color-primary); border-color: var(--ds-color-primary); color: #fff; }
+    .step-item.active .step-content strong { color: var(--ds-color-primary); font-weight: 600; }
+
+    /* Layout */
+    .archive-wizard { display: flex; flex-direction: column; height: calc(100vh - 57px); }
+    .archive-wizard-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; padding-bottom: 56px; }
+
+    /* Step 1: Config layout */
+    .archive-config-layout { flex: 1; display: flex; overflow: hidden; }
+    .archive-config-tree { width: 260px; border-right: 1px solid #eeeef0; display: flex; flex-direction: column; }
+    .archive-config-tree-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #eeeef0; }
+    .archive-config-tree-header h3 { margin: 0; font-size: 14px; font-weight: 600; color: #000; }
+    .archive-config-tree-scroll { flex: 1; overflow: auto; padding: 8px 0; }
+
+    /* Tree node */
+    .tree-node { padding: 0 12px; }
+    .tree-node-row { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 8px; border-radius: 4px; cursor: pointer; }
+    .tree-node-row:hover { background: #f0f0f2; }
+    .tree-node-row.selected { background: #e8f0ff; }
+    .tree-node-toggle { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; color: #737585; font-size: 10px; }
+    .tree-node-toggle.is-expanded { transform: rotate(90deg); }
+    .tree-node-icon { width: 6px; height: 6px; border-radius: 50%; }
+    .tree-node-icon.enabled { background: #00B42A; }
+    .tree-node-icon.disabled { background: #bcbecd; }
+    .tree-node-title { flex: 1; font-size: 14px; color: #000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tree-node-title.is-placeholder { color: #bcbecd; }
+    .tree-node-actions { display: none; gap: 4px; }
+    .tree-node-row:hover .tree-node-actions { display: flex; }
+    .tree-node-action { font-size: 12px; color: #3167ff; cursor: pointer; }
+    .tree-node-action:hover { color: var(--ds-color-primary-hover); }
+    .tree-node-action.danger { color: #F53F3F; }
+    .tree-node-children { padding-left: 20px; }
+
+    /* Config main */
+    .archive-config-main { flex: 1; overflow: auto; padding: 16px 24px; background: #fff; }
+    .archive-config-group__header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .archive-config-group__header h3 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
+    .archive-config-placeholder-hint { font-size: 12px; color: #F53F3F; }
+
+    /* Table-style form - two columns */
+    .form-table { border: 1px solid #eeeef0; border-radius: 4px; background: #fff; }
+    .form-row { display: grid; grid-template-columns: 104px minmax(0, 1fr) 104px minmax(0, 1fr); border-bottom: 1px solid #eeeef0; }
+    .form-row:last-child { border-bottom: none; }
+    .form-row.full { grid-template-columns: 104px minmax(0, 1fr); }
+    .form-row label { padding: 10px 12px; background: #fafafa; font-size: 14px; color: #505266; text-align: right; display: flex; align-items: center; justify-content: flex-end; }
+    .form-row label .required { color: #F53F3F; margin-left: 2px; }
+    .form-row .form-cell { padding: 8px 12px; display: flex; align-items: center; }
+    .form-row input[type="text"], .form-row select { height: 28px; padding: 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; min-width: 200px; }
+    .form-row input:focus, .form-row select:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .form-row .switch-wrap { display: flex; align-items: center; gap: 8px; }
+    .form-row .switch { width: 36px; height: 20px; border-radius: 10px; background: #bcbecd; position: relative; cursor: pointer; transition: background 0.2s; }
+    .form-row .switch.is-on { background: #00B42A; }
+    .form-row .switch::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: transform 0.2s; }
+    .form-row .switch.is-on::after { transform: translateX(16px); }
+    .form-row .switch-label { font-size: 14px; color: #505266; }
+
+    /* Field config table */
+    .field-config-table { margin-top: 16px; border: 1px solid #eeeef0; border-radius: 4px; }
+    .field-config-table__header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #eeeef0; background: #fafafa; }
+    .field-config-table__title { font-size: 14px; font-weight: 600; color: #000; }
+    .field-config-table__summary { font-size: 12px; color: #737585; }
+    .field-config-table__wrap { overflow: auto; }
+    .field-config-table table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .field-config-table th, .field-config-table td { height: 40px; padding: 0 12px; text-align: left; font-size: 14px; border-bottom: 1px solid #eeeef0; }
+    .field-config-table th { background: #fafafa; font-weight: 600; color: #505266; }
+    .field-config-table td { color: #000; }
+    .field-config-table tbody tr:last-child td { border-bottom: none; }
+    .field-config-table tbody tr:hover td { background: #f6f6f7; }
+    .field-visible-header { display: flex; align-items: center; gap: 8px; }
+    .field-role-header { display: flex; align-items: center; gap: 4px; }
+    .field-role-tooltip-trigger { cursor: help; color: #737585; }
+    .field-role-tooltip-trigger:hover { color: #3167ff; }
+
+    /* Step 2: Permission layout - field-permission style */
+    .archive-permission-layout { flex: 1; display: flex; overflow: hidden; }
+    .archive-permission-sidebar { width: 200px; background: #fff; border-right: 1px solid #eeeef0; display: flex; flex-direction: column; flex-shrink: 0; }
+    .archive-permission-sidebar h3 { margin: 0; padding: 14px 16px 10px; font-size: 14px; font-weight: 600; color: #000; border-bottom: 1px solid #f0f0f0; }
+    .archive-permission-groups { flex: 1; padding: 8px 0; overflow-y: auto; list-style: none; margin: 0; }
+    .archive-permission-groups__item { padding: 10px 20px; cursor: pointer; font-size: 14px; color: #000; display: flex; align-items: center; gap: 8px; }
+    .archive-permission-groups__item:hover { background: #f0f5ff; color: var(--ds-color-primary); }
+    .archive-permission-groups__item.is-active { background: #e8f0ff; color: var(--ds-color-primary); font-weight: 600; }
+
+    .archive-permission-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .archive-permission-tabs { display: flex; gap: 0; padding: 0 16px; border-bottom: 1px solid #eeeef0; background: #fff; }
+    .archive-permission-tabs__item { padding: 12px 16px; font-size: 14px; color: #505266; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .archive-permission-tabs__item:hover { color: #000; }
+    .archive-permission-tabs__item.is-active { color: var(--ds-color-primary); font-weight: 500; border-bottom-color: var(--ds-color-primary); }
+    .archive-permission-tab-content { flex: 1; overflow-y: auto; padding: 8px; }
+
+    .archive-permission-section { margin-bottom: 12px; border-radius: 8px; border: 1px solid #eeeef0; background: #fff; overflow: hidden; }
+    .archive-permission-section__header { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; cursor: pointer; gap: 12px; background: var(--ds-color-group-title-bg); border-bottom: 1px solid transparent; }
+    .archive-permission-section__header:hover { opacity: 0.92; }
+    .archive-permission-section__header.expanded { border-bottom-color: #eeeef0; }
+    .archive-permission-section__toggle { display: flex; align-items: center; gap: 8px; background: transparent; border: 0; padding: 0; cursor: pointer; font-size: 14px; color: #000; }
+    .archive-permission-section__arrow { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; transition: transform 0.2s; }
+    .archive-permission-section__arrow.is-expanded { transform: rotate(90deg); }
+    .archive-permission-type-tag { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 2px; font-size: 12px; }
+    .archive-permission-type-tag.is-table { background: #e8f3ff; color: #1677ff; }
+    .archive-permission-type-tag.is-form { background: #fff7e6; color: #fa8c16; }
+    .archive-permission-type-tag.is-card { background: #f6ffed; color: #52c41a; }
+    .archive-permission-type-tag.is-timeline { background: #f9f0ff; color: #722ed1; }
+    .archive-permission-type-tag.is-text { background: #f5f5f5; color: #595959; }
+    .archive-permission-type-tag.is-file { background: #fff1f0; color: #f5222d; }
+    .archive-permission-section__batch { display: flex; gap: 12px; flex-wrap: wrap; margin-left: auto; }
+    .archive-permission-section__batch label { font-size: 13px; color: #666; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .archive-permission-section__batch input { width: 16px; height: 16px; accent-color: var(--ds-color-primary); }
+
+    .archive-permission-section__detail { display: none; padding: 0; }
+    .archive-permission-section__detail.show { display: block; }
+    .archive-permission-field-columns { display: flex; }
+    .archive-permission-field-column { flex: 1; }
+    .archive-permission-field-column + .archive-permission-field-column { border-left: 2px solid #eeeef0; }
+    .archive-permission-field-column__header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fafafa; font-size: 14px; color: #000; font-weight: 600; border-bottom: 1px solid #eeeef0; }
+    .archive-permission-field-column__header span:first-child { text-align: left; }
+    .archive-permission-field-column__permission-labels { display: flex; gap: 16px; }
+    .archive-permission-field-column__permission-labels span { width: 40px; text-align: center; }
+    .archive-permission-field { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; border-bottom: 1px solid #eeeef0; font-size: 13px; }
+    .archive-permission-field:last-child { border-bottom: none; }
+    .archive-permission-field:hover { background: #f6f6f7; }
+    .archive-permission-field__name { flex: 1; font-weight: 500; color: #000; }
+    .archive-permission-field__perms { display: flex; gap: 16px; }
+    .archive-permission-field__perms input { width: 16px; height: 16px; accent-color: var(--ds-color-primary); }
+
+    /* Footer - fixed bottom */
+    .archive-wizard-footer { position: fixed; bottom: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 24px; border-top: 1px solid #eeeef0; background: #fff; z-index: 100; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { color: #fff; background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); }
+
+    /* Toast */
+    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #20b486; color: #fff; padding: 10px 24px; border-radius: 6px; font-size: 14px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 400px; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .modal-header { padding: 16px 20px; border-bottom: 1px solid #eeeef0; }
+    .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
+    .modal-header.danger h3 { color: #F53F3F; }
+    .modal-body { padding: 20px; font-size: 14px; color: #505266; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 12px 20px; border-top: 1px solid #eeeef0; }
+
+    /* Tooltip */
+    .field-role-tooltip { position: fixed; background: #303140; color: #fff; padding: 12px 16px; border-radius: 6px; font-size: 12px; line-height: 1.6; z-index: 9999; max-width: 280px; }
+  </style>
+</head>
+<body>
+<div class="ds-scope ds-page">
+  <div class="archive-wizard">
+    <!-- Steps bar -->
+    <div class="steps-bar" id="stepsBar"></div>
+
+    <!-- Content -->
+    <div class="archive-wizard-content" id="wizardContent"></div>
+
+    <!-- Footer -->
+    <div class="archive-wizard-footer" id="wizardFooter"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-header danger"><h3>确认删除</h3></div>
+    <div class="modal-body" id="deleteModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn" type="button" onclick="closeDeleteModal()">取消</button>
+      <button class="btn primary" type="button" style="background:#F53F3F;border-color:#F53F3F" onclick="confirmDelete()">删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- Field role tooltip -->
+<div class="field-role-tooltip" id="fieldRoleTooltip" style="display:none">
+  重要字段：卡片标题区域显示，突出关键信息<br />
+  辅助信息：卡片右上角或次要位置显示<br />
+  内容字段：卡片正文区域显示
+</div>
+
+<script>
+// ═══════════════ 常量与初始数据 ═══════════════
+var STEPS_ITEMS = [
+  { key: 'fields', title: '设置档案字段', desc: '配置分组、表与字段结构' },
+  { key: 'permissions', title: '设置用户组权限', desc: '按用户组配置查看/编辑/必填' }
+];
+var PERMISSION_USER_GROUPS = ['导师组', '院系秘书', '专业负责人', '专业群负责人', '学校管理员', '超级管理员'];
+var DISPLAY_TYPES = ['表格', '表单', '卡片', '时间轴', '大文本', '文件'];
+var TABLE_NAME_OPTIONS = ['个人信息', '学历信息', '资格证书', '课程清单', '课程设计与实施', '课程反思', '实践经历', '教学科研成果', '培训记录', '社会服务', '任职记录', '教育工作记录'];
+var SOURCE_SYSTEM_OPTIONS = ['人事系统', '组织机构', '教务系统', '科研管理系统', '教学档案袋'];
+var PLACEHOLDER_GROUP_NAME = '未设置分组';
+var PLACEHOLDER_TABLE_NAME = '未设置表';
+
+// 初始档案结构（简化版，实际应从shared模块导入）
+var INITIAL_ARCHIVE_GROUPS = [
+  {
+    id: 'basic-info', name: '基本信息', nodeType: 'group', enabled: true,
+    children: [
+      {
+        id: 'profile-group', name: '个人信息', nodeType: 'group', enabled: true,
+        children: [
+          {
+            id: 'table-profile', displayName: '个人信息', name: 'table_profile', nodeType: 'table', displayType: '表单', sourceSystem: '人事系统', enabled: true,
+            fields: [
+              { id: 'f1', name: '姓名', key: 'name', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: true } } },
+              { id: 'f2', name: '职工号', key: 'jobNo', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f3', name: '性别', key: 'gender', type: '单选', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f4', name: '出生年月', key: 'birthDate', type: '日期', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f5', name: '职称', key: 'title', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+            ]
+          }
+        ]
+      },
+      {
+        id: 'education-group', name: '学历信息', nodeType: 'group', enabled: true,
+        children: [
+          {
+            id: 'table-education', displayName: '学历信息', name: 'table_education', nodeType: 'table', displayType: '表格', sourceSystem: '人事系统', enabled: true,
+            fields: [
+              { id: 'f6', name: '最高学历', key: 'education', type: '单选', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f7', name: '最高学位', key: 'degree', type: '单选', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f8', name: '毕业院校', key: 'school', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f9', name: '所学专业', key: 'major', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'teaching-info', name: '教学信息', nodeType: 'group', enabled: true,
+    children: [
+      {
+        id: 'courses-group', name: '课程清单', nodeType: 'group', enabled: true,
+        children: [
+          {
+            id: 'table-courses', displayName: '课程清单', name: 'table_courses', nodeType: 'table', displayType: '表格', sourceSystem: '教务系统', enabled: true,
+            fields: [
+              { id: 'f10', name: '课程名称', key: 'courseName', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: true } } },
+              { id: 'f11', name: '授课学期', key: 'semester', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f12', name: '授课班级', key: 'className', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+            ]
+          }
+        ]
+      },
+      {
+        id: 'course-design-group', name: '课程设计与实施', nodeType: 'group', enabled: true,
+        children: [
+          {
+            id: 'table-course-design', displayName: '课程设计与实施', name: 'table_course_design', nodeType: 'table', displayType: '大文本', sourceSystem: '教学档案袋', enabled: true,
+            fields: []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'enterprise-practice', name: '企业实践', nodeType: 'group', enabled: true,
+    children: [
+      {
+        id: 'practice-group', name: '实践经历', nodeType: 'group', enabled: true,
+        children: [
+          {
+            id: 'table-practice', displayName: '实践经历', name: 'table_practice', nodeType: 'table', displayType: '时间轴', sourceSystem: '教学档案袋', enabled: true,
+            fields: [
+              { id: 'f13', name: '企业名称', key: 'company', type: '单行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: true } } },
+              { id: 'f14', name: '实践时间', key: 'practiceDate', type: '日期', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f15', name: '实践内容', key: 'content', type: '多行文本', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'achievements', name: '成果与荣誉', nodeType: 'group', enabled: true,
+    children: [
+      {
+        id: 'achievements-group', name: '教学科研成果', nodeType: 'group', enabled: true,
+        children: [
+          {
+            id: 'table-achievements', displayName: '教学科研成果', name: 'table_achievements', nodeType: 'table', displayType: '卡片', sourceSystem: '科研管理系统', enabled: true,
+            fields: [
+              { id: 'f16', name: '成果名称', key: 'achievementName', type: '单行文本', cardRole: '重要字段', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: true } } },
+              { id: 'f17', name: '成果类型', key: 'type', type: '单选', cardRole: '辅助信息', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+              { id: 'f18', name: '获奖时间', key: 'awardDate', type: '日期', cardRole: '内容字段', perGroup: { '全部用户': { visible: true, view: true, edit: false, required: false } } },
+            ]
+          }
+        ]
+      }
+    ]
+  }
+];
+
+// ═══════════════ 状态管理 ═══════════════
+var state = {
+  currentStep: 0,
+  groups: JSON.parse(JSON.stringify(INITIAL_ARCHIVE_GROUPS)),
+  selectedNodeKey: 'table-profile',
+  expandedTreeKeys: ['basic-info', 'teaching-info', 'enterprise-practice', 'achievements', 'profile-group', 'education-group', 'courses-group', 'course-design-group', 'practice-group', 'achievements-group'],
+  permUserGroup: PERMISSION_USER_GROUPS[0],
+  permActiveGroupTab: 'basic-info',
+  permExpandedTables: ['table-profile', 'table-education', 'table-courses', 'table-practice', 'table-achievements'],
+  deleteTarget: null
+};
+
+var toastTimer = null;
+
+function notify(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.style.display = 'none'; }, 1800);
+}
+
+// ═══════════════ 树操作辅助函数 ═══════════════
+function findNodeById(nodes, id, path) {
+  path = path || [];
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    var nextPath = path.concat([node]);
+    if (node.id === id) return { node: node, path: nextPath };
+    if (node.children && node.children.length) {
+      var found = findNodeById(node.children, id, nextPath);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+function updateNodeById(groups, id, updater) {
+  return groups.map(function(node) {
+    if (node.id === id) return updater(node);
+    if (node.children && node.children.length) return Object.assign({}, node, { children: updateNodeById(node.children, id, updater) });
+    return node;
+  });
+}
+
+function appendChildById(groups, parentId, child) {
+  return groups.map(function(node) {
+    if (node.id === parentId) return Object.assign({}, node, { children: (node.children || []).concat([child]) });
+    if (node.children && node.children.length) return Object.assign({}, node, { children: appendChildById(node.children, parentId, child) });
+    return node;
+  });
+}
+
+// ═══════════════ 渲染函数 ═══════════════
+function renderStepsBar() {
+  var html = '';
+  STEPS_ITEMS.forEach(function(step, i) {
+    var stepClass = i === state.currentStep ? 'active' : i < state.currentStep ? 'done' : '';
+    html += '<div class="step-item ' + stepClass + '">';
+    html += '<span class="step-num">' + (i < state.currentStep ? '✓' : (i + 1)) + '</span>';
+    html += '<span class="step-content"><strong>' + step.title + '</strong></span>';
+    html += '</div>';
+  });
+  document.getElementById('stepsBar').innerHTML = html;
+}
+
+function renderTreeNode(node, level) {
+  var isExpanded = state.expandedTreeKeys.indexOf(node.id) >= 0;
+  var isSelected = state.selectedNodeKey === node.id;
+  var isGroup = node.nodeType === 'group';
+  var isPlaceholder = isGroup ? node.name === PLACEHOLDER_GROUP_NAME : node.displayName === PLACEHOLDER_TABLE_NAME;
+  var hasChildren = isGroup && node.children && node.children.length;
+  // 节点 ID 串接到 data 属性上，避免引号转义问题
+  var attr = 'data-node-id="' + esc(node.id) + '" data-node-type="' + node.nodeType + '" data-node-name="' + esc(isGroup ? node.name : node.displayName) + '"';
+
+  var html = '<div class="tree-node">';
+  html += '<div class="tree-node-row' + (isSelected ? ' selected' : '') + '" ' + attr + ' onclick="selectNode(this.dataset.nodeId)">';
+  html += '<span class="tree-node-toggle' + (hasChildren && isExpanded ? ' is-expanded' : '') + '" onclick="event.stopPropagation();toggleExpand(\'' + node.id + '\')">' + (hasChildren ? '▶' : '') + '</span>';
+  html += '<span class="tree-node-icon ' + (node.enabled ? 'enabled' : 'disabled') + '"></span>';
+  html += '<span class="tree-node-title' + (isPlaceholder ? ' is-placeholder' : '') + '">' + esc(isGroup ? node.name : node.displayName) + '</span>';
+
+  // Actions
+  html += '<span class="tree-node-actions">';
+  if (isGroup) {
+    html += '<span class="tree-node-action" onclick="event.stopPropagation();addGroup(this.closest(\'.tree-node-row\').dataset.nodeId)">新增分组</span>';
+    html += '<span class="tree-node-action" onclick="event.stopPropagation();addTable(this.closest(\'.tree-node-row\').dataset.nodeId)">添加表</span>';
+    html += '<span class="tree-node-action danger" onclick="event.stopPropagation();showDeleteModal(this.closest(\'.tree-node-row\'))">删除</span>';
+  } else if (node.displayType === '表格') {
+    html += '<span class="tree-node-action danger" onclick="event.stopPropagation();showDeleteModal(this.closest(\'.tree-node-row\'))">删除</span>';
+  }
+  html += '</span>';
+
+  html += '</div>';
+  if (hasChildren && isExpanded) {
+    html += '<div class="tree-node-children">';
+    node.children.forEach(function(child) {
+      html += renderTreeNode(child, level + 1);
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderTree() {
+  var html = '<div class="archive-config-tree-header"><h3>档案目录</h3>';
+  html += '<button class="btn primary" type="button" onclick="addGroup(null)">新增一级分组</button>';
+  html += '</div>';
+  html += '<div class="archive-config-tree-scroll">';
+  state.groups.forEach(function(node) {
+    html += renderTreeNode(node, 0);
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderGroupForm(node, isTopLevel) {
+  var html = '<div class="archive-config-group__header"><h3>' + esc(node.name || '分组设置') + '</h3>';
+  if (node.name === PLACEHOLDER_GROUP_NAME) {
+    html += '<span class="archive-config-placeholder-hint">请设置分组名称</span>';
+  }
+  html += '</div>';
+  html += '<div class="form-table">';
+  // Row 1: 分组名称 + 副标题
+  html += '<div class="form-row">';
+  html += '<label>分组名称<span class="required">*</span></label><div class="form-cell">';
+  html += '<input type="text" value="' + esc(node.name === PLACEHOLDER_GROUP_NAME ? '' : node.name || '') + '" placeholder="请输入分组名称" onchange="updateNodeField(\'name\', this.value)" />';
+  html += '</div>';
+  if (isTopLevel) {
+    html += '<label>副标题</label><div class="form-cell">';
+    html += '<input type="text" value="' + esc(node.subtitle || '') + '" placeholder="请输入副标题" onchange="updateNodeField(\'subtitle\', this.value)" />';
+    html += '</div>';
+  } else {
+    html += '<label></label><div class="form-cell"></div>';
+  }
+  html += '</div>';
+  // Row 2: 启用状态
+  html += '<div class="form-row">';
+  html += '<label>启用状态</label><div class="form-cell">';
+  html += '<div class="switch-wrap">';
+  html += '<span class="switch' + (node.enabled ? ' is-on' : '') + '" onclick="updateNodeField(\'enabled\', !state.selectedNode.enabled)"></span>';
+  html += '<span class="switch-label">' + (node.enabled ? '启用' : '停用') + '</span>';
+  html += '</div></div>';
+  html += '<label></label><div class="form-cell"></div>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+function renderTableForm(node) {
+  var html = '<div class="archive-config-group__header"><h3>' + esc(node.displayName || '表设置') + '</h3>';
+  if (node.displayName === PLACEHOLDER_TABLE_NAME) {
+    html += '<span class="archive-config-placeholder-hint">请设置表显示名称</span>';
+  }
+  html += '</div>';
+  html += '<div class="form-table">';
+
+  // Row 1: 展示类型 + 表显示名称
+  html += '<div class="form-row">';
+  html += '<label>展示类型<span class="required">*</span></label><div class="form-cell">';
+  html += '<select onchange="updateNodeField(\'displayType\', this.value)">';
+  DISPLAY_TYPES.forEach(function(t) {
+    html += '<option value="' + t + '"' + (node.displayType === t ? ' selected' : '') + '>' + t + '</option>';
+  });
+  html += '</select></div>';
+  html += '<label>表显示名称<span class="required">*</span></label><div class="form-cell">';
+  html += '<input type="text" value="' + esc(node.displayName === PLACEHOLDER_TABLE_NAME ? '' : node.displayName || '') + '" placeholder="请输入表显示名称" onchange="updateNodeField(\'displayName\', this.value)" />';
+  html += '</div>';
+  html += '</div>';
+
+  // Row 2: 设置表 & 来源系统（非文件/大文本）
+  if (node.displayType !== '文件' && node.displayType !== '大文本') {
+    html += '<div class="form-row">';
+    html += '<label>设置表</label><div class="form-cell">';
+    html += '<select onchange="updateNodeField(\'sourceTable\', this.value)">';
+    TABLE_NAME_OPTIONS.forEach(function(t) {
+      html += '<option value="' + t + '"' + (node.sourceTable === t ? ' selected' : '') + '>' + t + '</option>';
+    });
+    html += '</select></div>';
+    html += '<label>来源系统</label><div class="form-cell">';
+    html += '<select onchange="updateNodeField(\'sourceSystem\', this.value)">';
+    SOURCE_SYSTEM_OPTIONS.forEach(function(s) {
+      html += '<option value="' + s + '"' + (node.sourceSystem === s ? ' selected' : '') + '>' + s + '</option>';
+    });
+    html += '</select></div>';
+    html += '</div>';
+  }
+
+  // Row 3: 时间轴特有字段
+  if (node.displayType === '时间轴') {
+    html += '<div class="form-row">';
+    html += '<label>过滤字段</label><div class="form-cell">';
+    html += '<select onchange="updateNodeField(\'filterField\', this.value)"><option value="">请选择</option>';
+    (node.fields || []).forEach(function(f) {
+      html += '<option value="' + f.name + '"' + (node.filterField === f.name ? ' selected' : '') + '>' + f.name + '</option>';
+    });
+    html += '</select></div>';
+    html += '<label>展示顺序</label><div class="form-cell">';
+    html += '<select onchange="updateNodeField(\'displayOrder\', this.value)">';
+    ['按时间正序', '按时间倒序'].forEach(function(o) {
+      html += '<option value="' + o + '"' + (node.displayOrder === o ? ' selected' : '') + '>' + o + '</option>';
+    });
+    html += '</select></div>';
+    html += '</div>';
+  }
+
+  // Row 4: 状态（非大文本）
+  if (node.displayType !== '大文本') {
+    html += '<div class="form-row">';
+    html += '<label>状态</label><div class="form-cell">';
+    html += '<div class="switch-wrap">';
+    html += '<span class="switch' + (node.enabled ? ' is-on' : '') + '" onclick="updateNodeField(\'enabled\', !state.selectedNode.enabled)"></span>';
+    html += '<span class="switch-label">' + (node.enabled ? '启用' : '停用') + '</span>';
+    html += '</div></div>';
+    html += '<label></label><div class="form-cell"></div>';
+    html += '</div>';
+  }
+
+  // Row 5: 文件类型特有
+  if (node.displayType === '文件') {
+    html += '<div class="form-row">';
+    html += '<label>文件大小（MB）</label><div class="form-cell">';
+    html += '<input type="text" value="' + esc(node.fileSize || '') + '" placeholder="如 10" onchange="updateNodeField(\'fileSize\', this.value)" />';
+    html += '</div>';
+    html += '<label>文件类型</label><div class="form-cell">';
+    html += '<input type="text" value="' + esc(node.fileType || '') + '" placeholder="如 PDF, Word, Excel" onchange="updateNodeField(\'fileType\', this.value)" />';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  html += '</div>';
+
+  // 字段配置表（非文件/大文本）
+  if (node.displayType !== '文件' && node.displayType !== '大文本') {
+    html += renderFieldConfigTable(node);
+  }
+
+  return html;
+}
+
+function renderFieldConfigTable(node) {
+  var fields = node.fields || [];
+  var visibleCount = fields.filter(function(f) { return getFieldPerm(f, '全部用户').visible; }).length;
+  var allVisible = fields.length > 0 && visibleCount === fields.length;
+  var partlyVisible = visibleCount > 0 && visibleCount < fields.length;
+
+  var html = '<div class="field-config-table">';
+  html += '<div class="field-config-table__header">';
+  html += '<span class="field-config-table__title">字段配置</span>';
+  html += '<span class="field-config-table__summary">' + (fields.length ? '共 ' + fields.length + ' 个字段' : '暂未配置字段') + '</span>';
+  html += '</div>';
+  html += '<div class="field-config-table__wrap"><table>';
+  html += '<thead><tr>';
+  html += '<th style="width:150px">字段名称</th>';
+  html += '<th style="width:150px">字段标识</th>';
+  html += '<th style="width:96px"><span class="field-visible-header">';
+  html += '<input type="checkbox" ' + (allVisible ? 'checked' : '') + ' onchange="toggleAllFieldVisible(this.checked)" /> ';
+  html += '展示</span></th>';
+  if (node.displayType === '卡片' || node.displayType === '时间轴') {
+    html += '<th style="width:140px"><span class="field-role-header">字段属性';
+    html += '<span class="field-role-tooltip-trigger" onmouseenter="showFieldRoleTooltip(event)" onmouseleave="hideFieldRoleTooltip()">';
+    html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    html += '</span></span></th>';
+  }
+  html += '</tr></thead>';
+  html += '<tbody>';
+  fields.forEach(function(f) {
+    var perm = getFieldPerm(f, '全部用户');
+    html += '<tr>';
+    html += '<td>' + esc(f.name) + '</td>';
+    html += '<td>' + esc(f.key) + '</td>';
+    html += '<td><input type="checkbox" ' + (perm.visible ? 'checked' : '') + ' onchange="updateFieldPerm(\'' + f.id + '\', \'visible\', this.checked)" /></td>';
+    if (node.displayType === '卡片' || node.displayType === '时间轴') {
+      html += '<td><select onchange="updateFieldProperty(\'' + f.id + '\', \'cardRole\', this.value)">';
+      ['重要字段', '辅助信息', '内容字段'].forEach(function(r) {
+        html += '<option value="' + r + '"' + (f.cardRole === r ? ' selected' : '') + '>' + r + '</option>';
+      });
+      html += '</select></td>';
+    }
+    html += '</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  return html;
+}
+
+function renderConfigMain() {
+  var found = findNodeById(state.groups, state.selectedNodeKey);
+  var node = found ? found.node : null;
+  if (!node) {
+    return '<div class="archive-config-group"><div class="archive-config-group__header"><h3>请选择节点</h3></div>'
+      + '<p style="color:#737585;font-size:14px;margin:0">请在左侧树中选择分组或表进行配置，或点击「新增一级分组」开始。</p></div>';
+  }
+
+  if (node.nodeType === 'group') {
+    var isTopLevel = found.path.length === 1;
+    return renderGroupForm(node, isTopLevel);
+  } else {
+    return renderTableForm(node);
+  }
+}
+
+function renderStep1() {
+  var html = '<section class="archive-config-layout">';
+  html += '<aside class="archive-config-tree">' + renderTree() + '</aside>';
+  html += '<div class="archive-config-main">' + renderConfigMain() + '</div>';
+  html += '</section>';
+  return html;
+}
+
+function renderPermissionMatrix() {
+  var activeGroup = state.groups.find(function(g) { return g.id === state.permActiveGroupTab; }) || state.groups[0];
+
+  var html = '<section class="archive-permission-layout">';
+  // Sidebar
+  html += '<aside class="archive-permission-sidebar"><h3>用户组</h3><ul class="archive-permission-groups">';
+  PERMISSION_USER_GROUPS.forEach(function(g) {
+    html += '<li class="archive-permission-groups__item' + (g === state.permUserGroup ? ' is-active' : '') + '" onclick="setPermUserGroup(\'' + g + '\')">' + g + '</li>';
+  });
+  html += '</ul></aside>';
+
+  // Main
+  html += '<div class="archive-permission-main">';
+  // Tabs
+  html += '<div class="archive-permission-tabs">';
+  state.groups.forEach(function(g) {
+    html += '<div class="archive-permission-tabs__item' + (g.id === state.permActiveGroupTab ? ' is-active' : '') + '" onclick="setPermActiveGroupTab(\'' + g.id + '\')">' + esc(g.name) + '</div>';
+  });
+  html += '</div>';
+
+  // Content
+  html += '<div class="archive-permission-tab-content">';
+  if (activeGroup && activeGroup.children && activeGroup.children.length) {
+    html += renderPermissionNodeList(activeGroup.children);
+  } else {
+    html += '<div style="color:#737585;font-size:14px;text-align:center;padding:40px">暂无二级分组或表</div>';
+  }
+  html += '</div></div></section>';
+
+  return html;
+}
+
+function renderPermissionNodeList(nodes) {
+  var html = '';
+  nodes.forEach(function(node) {
+    if (node.nodeType === 'table') {
+      html += renderPermissionTable(node);
+    } else {
+      html += '<section class="archive-permission-subgroup" style="margin-bottom:16px">';
+      html += '<h4 style="margin:0 0 8px;font-size:14px;font-weight:600;color:#000">' + esc(node.name) + '</h4>';
+      if (node.children && node.children.length) {
+        html += '<div style="display:flex;flex-direction:column;gap:12px">';
+        html += renderPermissionNodeList(node.children);
+        html += '</div>';
+      }
+      html += '</section>';
+    }
+  });
+  return html;
+}
+
+function renderPermissionTable(table) {
+  var expanded = state.permExpandedTables.indexOf(table.id) >= 0;
+  var displayType = table.displayType || '表格';
+  var fields = table.fields || [];
+  var tablePerm = getGroupPerm(table, state.permUserGroup);
+
+  var typeTagClass = {
+    '表格': 'is-table', '表单': 'is-form', '卡片': 'is-card',
+    '时间轴': 'is-timeline', '大文本': 'is-text', '文件': 'is-file'
+  };
+
+  var html = '<div class="archive-permission-section">';
+  html += '<div class="archive-permission-section__header' + (expanded ? ' expanded' : '') + '" onclick="togglePermTable(\'' + table.id + '\')">';
+  html += '<button class="archive-permission-section__toggle" type="button">';
+  if (displayType !== '大文本') {
+    html += '<span class="archive-permission-section__arrow' + (expanded ? ' is-expanded' : '') + '">▶</span>';
+  }
+  html += '<span class="archive-permission-section__title">' + esc(table.displayName || table.name);
+  html += '<span class="archive-permission-type-tag ' + (typeTagClass[displayType] || 'is-table') + '">' + displayType + '</span>';
+  html += '</span></button>';
+  html += '<span class="archive-permission-section__batch">';
+  html += '<label><input type="checkbox" ' + (tablePerm.view ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="updateGroupPerm(\'' + table.id + '\', \'view\', this.checked)" /> 全部查看</label>';
+  html += '<label><input type="checkbox" ' + (tablePerm.edit ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="updateGroupPerm(\'' + table.id + '\', \'edit\', this.checked)" /> 全部编辑</label>';
+  html += '<label><input type="checkbox" ' + (tablePerm.required ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="updateGroupPerm(\'' + table.id + '\', \'required\', this.checked)" /> 全部必填</label>';
+  if (displayType === '表格' || displayType === '卡片') {
+    var actionPerm = getTableActionPerm(table, state.permUserGroup);
+    html += '<label><input type="checkbox" ' + (actionPerm.create ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="updateTableActionPerm(\'' + table.id + '\', \'create\', this.checked)" /> 新增</label>';
+    html += '<label><input type="checkbox" ' + (actionPerm.delete ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="updateTableActionPerm(\'' + table.id + '\', \'delete\', this.checked)" /> 删除</label>';
+  }
+  html += '</span></div>';
+
+  if (expanded && fields.length) {
+    html += '<div class="archive-permission-section__detail show">';
+    html += '<div class="archive-permission-field-columns">';
+    var half = Math.ceil(fields.length / 2);
+    var col1 = fields.slice(0, half);
+    var col2 = fields.slice(half);
+
+    [col1, col2].forEach(function(col) {
+      if (!col.length) return;
+      html += '<div class="archive-permission-field-column">';
+      html += '<div class="archive-permission-field-column__header"><span>字段名</span>';
+      html += '<span class="archive-permission-field-column__permission-labels"><span>查看</span><span>编辑</span><span>必填</span></span></div>';
+      col.forEach(function(f) {
+        var perm = getPerm(f, state.permUserGroup);
+        html += '<div class="archive-permission-field">';
+        html += '<span class="archive-permission-field__name">' + esc(f.name) + '</span>';
+        html += '<span class="archive-permission-field__perms">';
+        html += '<input type="checkbox" ' + (perm.view ? 'checked' : '') + ' onchange="updatePerm(\'' + f.id + '\', \'view\', this.checked)" />';
+        html += '<input type="checkbox" ' + (perm.edit ? 'checked' : '') + ' onchange="updatePerm(\'' + f.id + '\', \'edit\', this.checked)" />';
+        html += '<input type="checkbox" ' + (perm.required ? 'checked' : '') + ' onchange="updatePerm(\'' + f.id + '\', \'required\', this.checked)" />';
+        html += '</span></div>';
+      });
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function renderFooter() {
+  var html = '';
+  if (state.currentStep > 0) {
+    html += '<button class="btn" type="button" onclick="prevStep()">上一步</button>';
+  }
+  if (state.currentStep < STEPS_ITEMS.length - 1) {
+    html += '<button class="btn" type="button" onclick="saveStep()">保存</button>';
+    html += '<button class="btn primary" type="button" onclick="saveAndNext()">保存并下一步</button>';
+  } else {
+    html += '<button class="btn primary" type="button" onclick="saveStep()">保存</button>';
+  }
+  document.getElementById('wizardFooter').innerHTML = html;
+}
+
+function render() {
+  renderStepsBar();
+  var content = state.currentStep === 0 ? renderStep1() : renderPermissionMatrix();
+  document.getElementById('wizardContent').innerHTML = content;
+  renderFooter();
+}
+
+// ═══════════════ 事件处理 ═══════════════
+function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function(c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+
+function selectNode(id) {
+  state.selectedNodeKey = id;
+  render();
+}
+
+function toggleExpand(id) {
+  var idx = state.expandedTreeKeys.indexOf(id);
+  if (idx >= 0) {
+    state.expandedTreeKeys.splice(idx, 1);
+  } else {
+    state.expandedTreeKeys.push(id);
+  }
+  render();
+}
+
+function addGroup(parentId) {
+  var newGroup = {
+    id: 'group-' + Date.now(),
+    name: PLACEHOLDER_GROUP_NAME,
+    nodeType: 'group',
+    enabled: true,
+    children: []
+  };
+  if (parentId) {
+    state.groups = appendChildById(state.groups, parentId, newGroup);
+    if (state.expandedTreeKeys.indexOf(parentId) < 0) state.expandedTreeKeys.push(parentId);
+  } else {
+    state.groups.push(newGroup);
+  }
+  state.selectedNodeKey = newGroup.id;
+  notify('已新增分组，请在右侧设置名称');
+  render();
+}
+
+function addTable(parentId) {
+  var newTable = {
+    id: 'table-' + Date.now(),
+    name: '',
+    displayName: PLACEHOLDER_TABLE_NAME,
+    nodeType: 'table',
+    displayType: '表格',
+    sourceSystem: '教学档案袋',
+    enabled: true,
+    fields: []
+  };
+  state.groups = appendChildById(state.groups, parentId, newTable);
+  if (state.expandedTreeKeys.indexOf(parentId) < 0) state.expandedTreeKeys.push(parentId);
+  state.selectedNodeKey = newTable.id;
+  notify('已新增表，请在右侧设置名称');
+  render();
+}
+
+function updateNodeField(field, value) {
+  var found = findNodeById(state.groups, state.selectedNodeKey);
+  if (!found) return;
+  state.groups = updateNodeById(state.groups, found.node.id, function(node) {
+    var updated = Object.assign({}, node);
+    updated[field] = value;
+    return updated;
+  });
+  render();
+}
+
+function getFieldPerm(field, groupKey) {
+  var perGroup = field.perGroup || {};
+  var fallback = perGroup['全部用户'] || { visible: true, required: false, view: true, edit: false };
+  return Object.assign({}, fallback, perGroup[groupKey]);
+}
+
+function updateFieldPerm(fieldId, permKey, value) {
+  var found = findNodeById(state.groups, state.selectedNodeKey);
+  if (!found || found.node.nodeType !== 'table') return;
+  state.groups = updateNodeById(state.groups, found.node.id, function(table) {
+    return Object.assign({}, table, {
+      fields: (table.fields || []).map(function(f) {
+        if (f.id !== fieldId) return f;
+        var perGroup = Object.assign({}, f.perGroup || {});
+        var currentPerm = getFieldPerm(f, '全部用户');
+        perGroup['全部用户'] = Object.assign({}, currentPerm, { [permKey]: value });
+        return Object.assign({}, f, { perGroup: perGroup });
+      })
+    });
+  });
+  render();
+}
+
+function toggleAllFieldVisible(visible) {
+  var found = findNodeById(state.groups, state.selectedNodeKey);
+  if (!found || found.node.nodeType !== 'table') return;
+  state.groups = updateNodeById(state.groups, found.node.id, function(table) {
+    return Object.assign({}, table, {
+      fields: (table.fields || []).map(function(f) {
+        var perGroup = Object.assign({}, f.perGroup || {});
+        perGroup['全部用户'] = Object.assign({}, getFieldPerm(f, '全部用户'), { visible: visible });
+        return Object.assign({}, f, { perGroup: perGroup });
+      })
+    });
+  });
+  render();
+}
+
+function updateFieldProperty(fieldId, propKey, value) {
+  var found = findNodeById(state.groups, state.selectedNodeKey);
+  if (!found || found.node.nodeType !== 'table') return;
+  state.groups = updateNodeById(state.groups, found.node.id, function(table) {
+    return Object.assign({}, table, {
+      fields: (table.fields || []).map(function(f) {
+        if (f.id !== fieldId) return f;
+        return Object.assign({}, f, { [propKey]: value });
+      })
+    });
+  });
+  render();
+}
+
+function showFieldRoleTooltip(e) {
+  var rect = e.currentTarget.getBoundingClientRect();
+  var tooltip = document.getElementById('fieldRoleTooltip');
+  tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+  tooltip.style.top = (rect.bottom + 8) + 'px';
+  tooltip.style.transform = 'translateX(-50%)';
+  tooltip.style.display = 'block';
+}
+
+function hideFieldRoleTooltip() {
+  document.getElementById('fieldRoleTooltip').style.display = 'none';
+}
+
+function showDeleteModal(rowEl) {
+  var type = rowEl.dataset.nodeType;
+  var id = rowEl.dataset.nodeId;
+  var name = rowEl.dataset.nodeName;
+  state.deleteTarget = { type: type, id: id, name: name };
+  document.getElementById('deleteModalBody').textContent = '删除"' + name + '"后无法恢复，请确认是否继续。';
+  document.getElementById('deleteModal').classList.add('is-open');
+}
+
+function closeDeleteModal() {
+  state.deleteTarget = null;
+  document.getElementById('deleteModal').classList.remove('is-open');
+}
+
+function confirmDelete() {
+  if (!state.deleteTarget) return;
+  var target = state.deleteTarget;
+  var found = findNodeById(state.groups, target.id);
+  if (!found) {
+    closeDeleteModal();
+    return;
+  }
+
+  var parent = found.path.length > 1 ? found.path[found.path.length - 2] : null;
+  if (!parent) {
+    state.groups = state.groups.filter(function(g) { return g.id !== target.id; });
+    state.selectedNodeKey = state.groups[0] ? state.groups[0].id : '';
+  } else {
+    state.groups = updateNodeById(state.groups, parent.id, function(p) {
+      return Object.assign({}, p, {
+        children: (p.children || []).filter(function(c) { return c.id !== target.id; })
+      });
+    });
+    var nextSibling = (parent.children || []).find(function(c) { return c.id !== target.id; });
+    state.selectedNodeKey = nextSibling ? nextSibling.id : parent.id;
+  }
+
+  closeDeleteModal();
+  notify('配置项已删除');
+  render();
+}
+
+// Permission helpers
+function getPerm(field, groupKey) {
+  var perGroup = field.perGroup || {};
+  var fallback = perGroup['全部用户'] || { view: true, edit: false, required: false };
+  return perGroup[groupKey] || fallback;
+}
+
+function updatePerm(fieldId, permKey, value) {
+  // 遍历所有表，找到包含该字段的表并更新字段权限
+  function updateFieldInTables(groups) {
+    return groups.map(function(node) {
+      if (node.nodeType === 'table' && node.fields) {
+        var fieldIdx = node.fields.findIndex(function(f) { return f.id === fieldId; });
+        if (fieldIdx >= 0) {
+          var newFields = node.fields.slice();
+          var f = newFields[fieldIdx];
+          var perGroup = Object.assign({}, f.perGroup || {});
+          var currentPerm = getPerm(f, state.permUserGroup);
+          var nextPerm = Object.assign({}, currentPerm, { [permKey]: value });
+          // Cascade
+          if (permKey === 'edit' && value) nextPerm.view = true;
+          if (permKey === 'required' && value) { nextPerm.view = true; nextPerm.edit = true; }
+          perGroup[state.permUserGroup] = nextPerm;
+          newFields[fieldIdx] = Object.assign({}, f, { perGroup: perGroup });
+          return Object.assign({}, node, { fields: newFields });
+        }
+      }
+      if (node.children) {
+        return Object.assign({}, node, { children: updateFieldInTables(node.children) });
+      }
+      return node;
+    });
+  }
+  state.groups = updateFieldInTables(state.groups);
+  render();
+}
+
+function collectGroupFields(group) {
+  var fields = [];
+  function traverse(node) {
+    if (node.nodeType === 'table' && node.fields) {
+      fields.push.apply(fields, node.fields);
+    } else if (node.children) {
+      node.children.forEach(traverse);
+    }
+  }
+  traverse(group);
+  return fields;
+}
+
+function getGroupPerm(group, groupKey) {
+  var fields = collectGroupFields(group);
+  if (!fields.length) return { view: false, edit: false, required: false };
+  return {
+    view: fields.every(function(f) { return getPerm(f, groupKey).view; }),
+    edit: fields.every(function(f) { return getPerm(f, groupKey).edit; }),
+    required: fields.every(function(f) { return getPerm(f, groupKey).required; })
+  };
+}
+
+function updateGroupPerm(groupId, permKey, value) {
+  var found = findNodeById(state.groups, groupId);
+  if (!found) return;
+  var fields = collectGroupFields(found.node);
+  fields.forEach(function(f) {
+    updatePerm(f.id, permKey, value);
+  });
+}
+
+function getTableActionPerm(table, groupKey) {
+  var fallback = table.actionPermissions && table.actionPermissions['全部用户'] || { create: false, delete: false };
+  return Object.assign({}, fallback, table.actionPermissions && table.actionPermissions[groupKey]);
+}
+
+function updateTableActionPerm(tableId, permKey, value) {
+  state.groups = updateNodeById(state.groups, tableId, function(table) {
+    var actionPermissions = Object.assign({}, table.actionPermissions || {});
+    actionPermissions[state.permUserGroup] = Object.assign({}, getTableActionPerm(table, state.permUserGroup), { [permKey]: value });
+    return Object.assign({}, table, { actionPermissions: actionPermissions });
+  });
+  render();
+}
+
+function setPermUserGroup(group) {
+  state.permUserGroup = group;
+  render();
+}
+
+function setPermActiveGroupTab(id) {
+  state.permActiveGroupTab = id;
+  render();
+}
+
+function togglePermTable(id) {
+  var idx = state.permExpandedTables.indexOf(id);
+  if (idx >= 0) {
+    state.permExpandedTables.splice(idx, 1);
+  } else {
+    state.permExpandedTables.push(id);
+  }
+  render();
+}
+
+// Step navigation
+function prevStep() {
+  if (state.currentStep > 0) {
+    state.currentStep--;
+    render();
+  }
+}
+
+function saveStep() {
+  notify('已保存');
+}
+
+function saveAndNext() {
+  if (state.currentStep < STEPS_ITEMS.length - 1) {
+    notify('已保存');
+    state.currentStep++;
+    render();
+  }
+}
+
+// Initialize
+render();
+</script>
+</body>
+</html>

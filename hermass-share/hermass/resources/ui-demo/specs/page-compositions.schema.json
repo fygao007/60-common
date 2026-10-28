@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "页面复用与组合注册表",
+  "type": "object",
+  "required": ["version", "sharedPages", "pages"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "sharedPages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "module", "allowedExtensions"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^shared\\.[a-z][a-z0-9-]+$" },
+          "module": { "type": "string" },
+          "allowedExtensions": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pageId", "path", "mode"],
+        "properties": {
+          "pageId": { "type": "string" },
+          "path": { "type": "string" },
+          "mode": { "enum": ["shared", "custom", "hybrid"] },
+          "basePageRef": { "type": "string" },
+          "extensions": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

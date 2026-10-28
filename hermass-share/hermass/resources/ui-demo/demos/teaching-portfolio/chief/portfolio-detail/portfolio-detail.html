@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教学档案袋 · 教师档案详情</title>
+  <style>
+    :root { --mp-border: #eeeef0; --mp-radius: 8px; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; font-family: var(--ds-font-family); color: #1f2937; }
+    .ds-scope { min-height: 100vh; background: #fff; }
+
+    /* 标题行（二级页面：对齐 audit 详情页） */
+    .pd-header-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 24px; background: #fff;
+      border-bottom: 1px solid var(--mp-border);
+    }
+    .pd-header-row .pd-title { flex: 1; margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+    .pd-back { display: inline-flex; align-items: center; gap: 4px; color: #000; font-size: 14px; cursor: pointer; background: none; border: none; padding: 0; }
+    .pd-back:hover { color: var(--ds-color-primary); }
+    .pd-back__icon { width: 20px; height: 20px; }
+    .pd-header-divider { width: 1px; height: 20px; background: var(--mp-border); }
+    .pd-btn {
+      height: 32px; padding: 0 16px; border-radius: 6px; border: 1px solid var(--mp-border);
+      background: #fff; color: #1f2937; font-size: 13px; cursor: pointer; white-space: nowrap;
+    }
+    .pd-btn:hover { border-color: #c5c8d4; }
+    .pd-btn--primary { background: #3167ff; border-color: #3167ff; color: #fff; }
+    .pd-btn--primary:hover { background: #255ae0; border-color: #255ae0; }
+
+    /* 主体布局（对齐 teaching-info 二级页：左栏细分割线 + 右栏平铺） */
+    .pd-layout { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 0; padding: 0 24px 32px; align-items: stretch; min-height: calc(100vh - 144px); }
+    .pd-layout > .pd-card { background: #fff; border: 0; border-radius: 0; min-width: 0; min-height: 0; }
+    /* 左：课程栏 */
+    .pd-layout > .pd-card:first-child {
+      overflow-y: auto; overscroll-behavior: contain;
+      padding: 20px 12px 32px 16px;
+      border-right: 1px solid var(--mp-border);
+    }
+    /* 右：详情栏 */
+    .pd-layout > .pd-card:last-child {
+      display: flex; flex-direction: column; min-height: 0;
+      padding: 8px 0 40px 16px;
+    }
+    .pd-pane-head { display: flex; align-items: center; gap: 12px; padding: 0; margin-bottom: 12px; }
+    .pd-pane-head .pd-select { width: 100%; height: 32px; border: 1px solid #dcdce0; border-radius: 4px; padding: 0 10px; font-size: 14px; background: #fff; color: #000; cursor: pointer; }
+    .pd-pane-head .pd-select:focus { outline: none; border-color: #3167ff; }
+    .pd-search-wrap { position: relative; flex: 1; display: flex; align-items: center; }
+    .pd-search { width: 100%; height: 32px; border: 1px solid #dcdce0; border-radius: 4px; padding: 0 34px 0 10px; font-size: 14px; box-sizing: border-box; }
+    .pd-search:focus { outline: none; border-color: #3167ff; }
+    .pd-search-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #9094a6; pointer-events: none; }
+    .pd-search:focus + .pd-search-icon { color: #3167ff; }
+
+    /* 课程列表 */
+    .pd-course-list { display: grid; gap: 12px; margin-top: 6px; }
+    .pd-course-card { display: grid; gap: 14px; padding: 18px; color: #000; border: 2px solid var(--mp-border); border-radius: 8px; background: #fff; cursor: pointer; transition: border-color .15s, background .15s; }
+    .pd-course-card:hover { border-color: #c5c8d4; }
+    .pd-course-card.is-active { border-color: #3167ff; background: linear-gradient(180deg, #f0f6ff, #fff); }
+    .pd-course-card h3 { margin: 0; font-size: 16px; font-weight: 600; color: #000; line-height: 1.5; }
+    .pd-course-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pd-course-tags span { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; font-size: 14px; color: #505266; background: #f9fafb; border-radius: 4px; }
+    .pd-course-fields { margin: 6px 0 0; display: grid; gap: 14px; }
+    .pd-course-fields div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 18px; align-items: center; font-size: 14px; }
+    .pd-course-fields dt { color: #9094a6; margin: 0; }
+    .pd-course-fields dd { margin: 0; color: #1f2937; }
+
+    /* 详情区 */
+    .pd-detail { display: flex; flex-direction: column; min-height: 0; }
+    .pd-tabs { display: flex; width: max-content; max-width: 100%; gap: 2px; padding: 2px; margin-bottom: 16px; background: #f9fafb; border-radius: 6px; overflow-x: auto; scrollbar-width: none; }
+    .pd-tabs::-webkit-scrollbar { display: none; }
+    .pd-tab { height: 28px; padding: 3px 12px; font-size: 14px; color: #505266; cursor: pointer; border: 0; border-radius: 4px; background: transparent; white-space: nowrap; display: inline-flex; align-items: center; }
+    .pd-tab:hover { color: #000; background: #fff; }
+    .pd-tab.is-active { color: #3167ff; background: #fff; font-weight: 600; }
+
+    .pd-section { margin-bottom: 20px; }
+    .pd-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-bottom: 12px; padding: 0 16px; background: linear-gradient(90deg, #f0f6ff, #fff); border-radius: 4px; }
+    .pd-section-head h3 { margin: 0; font-size: 16px; font-weight: 600; color: #000; }
+
+    /* 只读表单（一行一列） */
+    .pd-form { display: grid; grid-template-columns: 1fr; gap: 0; border: 1px solid var(--mp-border); border-radius: 6px; overflow: hidden; }
+    .pd-form.full { grid-template-columns: 1fr; }
+    .pd-field { display: flex; border-bottom: 1px solid var(--mp-border); border-right: 1px solid var(--mp-border); }
+    .pd-field.full { grid-column: 1 / -1; }
+    .pd-field__label { width: 110px; flex: none; padding: 10px 12px; background: #fafbfc; font-size: 13px; border-right: 1px solid var(--mp-border); }
+    .pd-field__value { flex: 1; padding: 10px 12px; font-size: 13px; color: #1f2937; }
+
+    /* 文本展示框 */
+    .pd-box { padding: 12px 14px; background: #fafbfc; border: 1px solid var(--mp-border); border-radius: 6px; font-size: 13px; line-height: 1.7; color: #1f2937; }
+    .pd-box--lg { min-height: 80px; }
+
+    /* 教学实施卡片 */
+    .pd-plan { border: 1px solid var(--mp-border); border-radius: 6px; margin-bottom: 10px; overflow: hidden; }
+    .pd-plan__head { display: flex; align-items: center; gap: 16px; padding: 10px 14px; background: #fafbfc; cursor: pointer; font-size: 13px; }
+    .pd-plan__head b { color: #3167ff; font-variant-numeric: tabular-nums; }
+    .pd-plan__body { padding: 12px 14px; border-top: 1px solid var(--mp-border); display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+    .pd-plan__body .full { grid-column: 1 / -1; }
+    .pd-plan__body div { display: flex; gap: 8px; font-size: 13px; }
+    .pd-plan__body dt { color: #9094a6; margin: 0; }
+    .pd-plan__body dd { margin: 0; color: #1f2937; }
+
+    /* 表格 */
+    .pd-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .pd-table th, .pd-table td { border: 1px solid var(--mp-border); padding: 8px 10px; text-align: left; vertical-align: top; }
+    .pd-table th { background: #fafbfc; color: #505266; font-weight: 600; white-space: nowrap; }
+    .pd-table td { color: #1f2937; }
+
+    .pd-empty { padding: 40px; text-align: center; color: #9094a6; font-size: 14px; }
+
+    /* 抽屉 */
+    .pd-drawer-mask { position: fixed; inset: 0; background: rgba(15,23,42,.45); display: none; z-index: 100; }
+    .pd-drawer-mask.open { display: block; }
+    .pd-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: 100vw; max-width: 1100px; background: #fff; z-index: 101; display: none; flex-direction: column; }
+    .pd-drawer.open { display: flex; }
+    .pd-drawer__head { display: flex; align-items: center; gap: 12px; padding: 14px 24px; background: #fff; border-bottom: 1px solid var(--mp-border); }
+    .pd-drawer__head h2 { margin: 0; font-size: 16px; font-weight: 600; }
+    .pd-drawer__close { margin-left: auto; width: 32px; height: 32px; border: 1px solid var(--mp-border); border-radius: 6px; background: #fff; cursor: pointer; font-size: 16px; color: #505266; }
+    .pd-drawer__tabs { display: flex; gap: 4px; padding: 0 24px; background: #fff; border-bottom: 1px solid var(--mp-border); flex-wrap: wrap; }
+    .pd-drawer__body { flex: 1; overflow-y: auto; padding: 20px 24px 40px; }
+
+    .pd-archive-head { font-size: 16px; font-weight: 600; color: #1f2937; padding-left: 10px; border-left: 4px solid #3167ff; margin: 0 0 14px; }
+    .pd-archive-sub { margin-bottom: 22px; }
+    .pd-archive-sub__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .pd-archive-sub__title { font-size: 14px; font-weight: 600; color: #1f2937; padding-left: 9px; border-left: 3px solid #9db4ff; margin: 0; }
+    .pd-archive-source { font-size: 12px; color: #9094a6; }
+  </style>
+</head>
+<body>
+  <div class="ds-scope">
+    <div class="pd-header-row">
+      <button class="pd-back" type="button" onclick="goBack()">
+        <svg class="pd-back__icon" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        返回
+      </button>
+      <span class="pd-header-divider"></span>
+      <h1 class="pd-title" id="pdTitle">教师</h1>
+      <button class="pd-btn" onclick="openDrawer()">查看更多</button>
+    </div>
+
+    <div class="pd-layout">
+      <!-- 左：课程列表 -->
+      <aside class="pd-card">
+        <div class="pd-pane-head">
+          <select class="pd-select" id="semesterSel" onchange="onSemester(this.value)"></select>
+        </div>
+        <div class="pd-pane-head" style="border-top:0">
+          <div class="pd-search-wrap">
+            <input class="pd-search" id="courseSearch" placeholder="搜索课程名称" oninput="onSearch(this.value)" />
+            <svg class="pd-search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="pd-course-list" id="courseList"></div>
+      </aside>
+
+      <!-- 右：教学信息 -->
+      <section class="pd-card">
+        <div class="pd-detail">
+          <div class="pd-tabs" id="tiTabs"></div>
+          <div id="tiBody"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 查看更多 抽屉 -->
+  <div class="pd-drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
+  <div class="pd-drawer" id="drawer">
+    <div class="pd-drawer__head">
+      <h2 id="drawerTitle">教师 · 教学档案详情</h2>
+      <button class="pd-drawer__close" onclick="closeDrawer()">×</button>
+    </div>
+    <div class="pd-drawer__tabs" id="drawerTabs"></div>
+    <div class="pd-drawer__body" id="drawerBody"></div>
+  </div>
+
+  <script>
+  // ========== 教师主数据（用 code 匹配 URL 参数） ==========
+  var TEACHER_MAP = {
+    T20210315: { name: '金晓智', code: 'T20210315' },
+    T20190472: { name: '王芳', code: 'T20190472' },
+    T20200819: { name: '张磊', code: 'T20200819' },
+    T20211203: { name: '刘洋', code: 'T20211203' },
+    T20220714: { name: '陈晨', code: 'T20220714' },
+    T20230528: { name: '赵敏', code: 'T20230528' },
+    T20230901: { name: '孙颖', code: 'T20230901' },
+    T20180317: { name: '周强', code: 'T20180317' },
+    T20170625: { name: '吴蔚', code: 'T20170625' },
+    T20221019: { name: '郑昊', code: 'T20221019' },
+    T20231102: { name: '冯雪', code: 'T20231102' },
+    T20201208: { name: '褚伟', code: 'T20201208' }
+  };
+
+  // ========== 课程数据 ==========
+  var BASE_COURSES = [
+    { id: 'data-structure', name: '数据结构与算法', tags: ['汽车智能技术', '88学时', '6学分'], code: 'CS20260101', sequence: '01', owner: '汽车智能技术学院', teachingForm: '线下授课', category: '专业核心课', nature: '必修', className: '202406', credits: 6, hours: 88, students: 19, examType: '闭卷考试', teachingMode: '讲授+实践', status: '进行中' },
+    { id: 'auto-engineering', name: '汽车工程', tags: ['汽车工程', '64学时', '6学分'], code: 'AE20260203', sequence: '02', owner: '汽车工程学院', teachingForm: '线下授课', category: '专业基础课', nature: '选修', className: '202405', credits: 6, hours: 64, students: 36, examType: '开卷考试', teachingMode: '讲授', status: '进行中' },
+    { id: 'auto-structure', name: '汽车结构讲解', tags: ['汽车工程', '64学时', '6学分'], code: 'AE20260312', sequence: '03', owner: '汽车工程学院', teachingForm: '线下授课', category: '专业基础课', nature: '必修', className: '202404', credits: 6, hours: 64, students: 42, examType: '课程论文', teachingMode: '讲授+实验', status: '已开课' },
+    { id: 'new-energy', name: '新能源汽车技术', tags: ['新能源汽车工程技术', '72学时', '5学分'], code: 'NE20260408', sequence: '04', owner: '新能源汽车学院', teachingForm: '混合式教学', category: '专业核心课', nature: '必修', className: '202403', credits: 5, hours: 72, students: 38, examType: '项目考核', teachingMode: '讲授+项目', status: '进行中' },
+    { id: 'intelligent-connected', name: '智能网联汽车基础', tags: ['智能网联汽车技术', '48学时', '3学分'], code: 'IC20260516', sequence: '05', owner: '智能网联学院', teachingForm: '线下授课', category: '专业拓展课', nature: '选修', className: '202402', credits: 3, hours: 48, students: 31, examType: '闭卷考试', teachingMode: '讲授', status: '已开课' }
+  ];
+
+  function genSemesterOptions() {
+    var opts = [];
+    var y = 2026;
+    for (var i = 0; i < 5; i++) {
+      var year = y - i;
+      opts.push({ value: year + '-' + (year + 1) + '-fall', label: year + '-' + (year + 1) + '学年 秋季学期' });
+      opts.push({ value: (year - 1) + '-' + year + '-spring', label: (year - 1) + '-' + year + '学年 春季学期' });
+    }
+    return opts;
+  }
+  var SEMESTER_OPTIONS = genSemesterOptions();
+  var COURSES_BY_SEMESTER = {
+    '2026-2027-fall': BASE_COURSES,
+    '2026-2027-spring': BASE_COURSES.slice(0, 4).map(function (c, i) { return Object.assign({}, c, { id: c.id + '-spring', className: '20250' + (i + 1), status: i < 2 ? '已结课' : '进行中' }); }),
+    '2025-2026-fall': BASE_COURSES.slice(0, 3).map(function (c, i) { return Object.assign({}, c, { id: '2025fall-' + c.id, className: '20240' + (i + 1), status: '已归档' }); })
+  };
+
+  var TEACHING_PLANS = {
+    'data-structure': [
+      { date: '2026-09-02', week: '第1周', weekday: '周一', hours: 2, teachingType: '理论讲授', teachingMethod: '课堂讲授', content: '课程导入：数据结构概述、算法复杂度分析基础', location: '教学楼A301', tools: '多媒体课件、在线编程平台', resources: [], reflection: '', ideology: '' },
+      { date: '2026-09-05', week: '第1周', weekday: '周四', hours: 2, teachingType: '实践操作', teachingMethod: '实验指导', content: '线性表基础：顺序表与链表的实现', location: '实验楼B201', tools: 'IDE、代码调试工具', resources: ['实验指导书.pdf'], reflection: '学生链表指针操作理解较慢，下次需增加图示讲解', ideology: '培养严谨的编程习惯和代码质量意识' },
+      { date: '2026-09-09', week: '第2周', weekday: '周一', hours: 2, teachingType: '理论讲授', teachingMethod: '课堂讲授', content: '栈与队列：概念、实现与应用场景', location: '教学楼A301', tools: '多媒体课件', resources: [], reflection: '', ideology: '' }
+    ],
+    'auto-engineering': [
+      { date: '2026-09-03', week: '第1周', weekday: '周二', hours: 2, teachingType: '理论讲授', teachingMethod: '课堂讲授', content: '汽车工程概论：汽车发展史与基本构造', location: '教学楼C102', tools: '多媒体课件、实物模型', resources: [], reflection: '', ideology: '' }
+    ]
+  };
+
+  var DESIGN_BASE = {
+    way: '采用“项目驱动 + 理论实践一体化”的教学方式，以真实工程任务为主线，结合课堂讲授、分组研讨、上机实操与过程评价，讲练结合、边学边做。',
+    goal: '通过本课程学习，学生能够理解数据结构与算法的核心概念，掌握常用数据结构的实现方法，能够分析和设计基本算法，具备解决实际问题的编程能力。',
+    plan: '以数据结构核心知识为主轴，按“线性结构—受限结构—非线性结构—经典算法”组织教学，每周理论 2 课时 + 实践 2 课时，穿插阶段测评与综合项目实战。',
+    analysis: '学生基础差异较明显，部分学生具备较强动手能力，但理论迁移和规范表达仍需强化。课程采用分层任务、过程反馈和案例演示提升参与度。',
+    innovation: '围绕在线精品课程建设和产教融合要求，引入企业真实任务、课堂即时反馈和学习数据分析，持续优化教学活动设计与评价方式。'
+  };
+
+  function buildSectionText(key, courseName) {
+    var map = {
+      goal: '通过' + courseName + '学习，学生能够理解课程关键概念，掌握常用方法与操作流程，能够在真实或仿真的任务场景中完成问题分析、方案设计、结果验证和反思优化。',
+      'student-help': '本学期针对学习困难学生建立辅导清单，安排课后答疑、作业反馈和阶段性跟踪，重点帮助学生补齐基础概念和实践步骤。',
+      'student-case': '针对实践能力较强但表达薄弱的学生，采用“操作展示 + 复盘说明”的方式进行个性化指导，帮助其提升项目汇报和文档表达能力。',
+      'student-evaluation': '学生评价总体良好，认为课程案例贴近专业应用，课堂任务清晰，建议继续增加真实项目素材和课堂练习讲评。',
+      'supervisor-evaluation': '督导评价认为课程目标明确，教学组织有序，互动充分，建议进一步完善过程性评价证据链。',
+      'peer-evaluation': '同行评价认为课程内容与专业能力培养匹配，项目任务设计较完整，可继续强化跨课程资源共享。',
+      'teaching-reflection': '本轮教学中，学生对任务背景理解较快，但在方案比较和结果表达方面仍有不足。后续将增加示例讲评和分层任务。',
+      optimization: '下一轮课程将优化课前导学材料，增加课堂即时检测，完善小组任务分工和评价规则，提高学习过程可见性。',
+      'course-summary': courseName + '已完成本阶段教学任务，课程资料、课堂记录、学生作业和教学反思已归档。整体达成度较好，后续继续围绕项目案例和评价方式优化。',
+      'ideology-content': '结合' + courseName + '的严谨性与工程规范，融入工匠精神、职业道德与安全规范意识，引导学生在方案设计与实现中养成精益求精、诚信协作的职业素养，实现价值塑造与知识传授、能力培养的有机统一。'
+    };
+    return map[key] || (courseName + '围绕课程目标完成教学设计、课堂实施和过程材料归档。');
+  }
+
+  var TI_TABS = [
+    { key: 'courseInfo', label: '课程信息' },
+    { key: 'design', label: '课程设计与实施' },
+    { key: 'ideology', label: '课程思政' },
+    { key: 'care', label: '教师关爱学生情况' },
+    { key: 'effect', label: '教学效果' },
+    { key: 'evaluation', label: '教学评价' },
+    { key: 'reflection', label: '课程反思' },
+    { key: 'summary', label: '课程总结' },
+    { key: 'materials', label: '课程资料' }
+  ];
+
+  // ========== 状态 ==========
+  var state = {
+    teacherCode: '',
+    teacherName: '',
+    semester: '2026-2027-fall',
+    search: '',
+    selectedCourseId: 'data-structure',
+    activeTab: 'courseInfo',
+    drawerTab: 'basic-info',
+    expandedPlans: {}
+  };
+
+  function getCourses() {
+    var list = COURSES_BY_SEMESTER[state.semester] || BASE_COURSES;
+    if (!state.search.trim()) return list;
+    var q = state.search.trim().toLowerCase();
+    return list.filter(function (c) { return c.name.toLowerCase().indexOf(q) >= 0; });
+  }
+  function getSelectedCourse() {
+    var list = getCourses();
+    return list.filter(function (c) { return c.id === state.selectedCourseId; })[0] || list[0] || BASE_COURSES[0];
+  }
+
+  // ========== 渲染：标题 / 学期 ==========
+  function renderTitle() {
+    var t = TEACHER_MAP[state.teacherCode] || TEACHER_MAP[Object.keys(TEACHER_MAP)[0]];
+    document.getElementById('pdTitle').textContent = state.teacherName + ' ' + t.code;
+    document.getElementById('drawerTitle').textContent = state.teacherName + ' · 教学档案详情';
+  }
+  function renderSemester() {
+    document.getElementById('semesterSel').innerHTML = SEMESTER_OPTIONS.map(function (o) {
+      return '<option value="' + o.value + '"' + (o.value === state.semester ? ' selected' : '') + '>' + o.label + '</option>';
+    }).join('');
+  }
+
+  // ========== 渲染：课程列表 ==========
+  function renderCourseList() {
+    var list = getCourses();
+    var box = document.getElementById('courseList');
+    if (list.length === 0) { box.innerHTML = '<div class="pd-empty">未找到相关课程</div>'; return; }
+    box.innerHTML = list.map(function (c) {
+      var active = c.id === state.selectedCourseId ? ' is-active' : '';
+      var fields = active ? '<dl class="pd-course-fields"><div><dt>课程号</dt><dd>' + c.code + '</dd></div><div><dt>承担单位</dt><dd>' + c.owner + '</dd></div><div><dt>课程性质</dt><dd>' + c.nature + '</dd></div></dl>' : '';
+      return '<div class="pd-course-card' + active + '" onclick="selectCourse(\'' + c.id + '\')"><h3>' + c.name + '</h3><div class="pd-course-tags">' + c.tags.map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</div>' + fields + '</div>';
+    }).join('');
+  }
+
+  // ========== 渲染：页签 ==========
+  function renderTabs() {
+    document.getElementById('tiTabs').innerHTML = TI_TABS.map(function (t) {
+      return '<div class="pd-tab' + (t.key === state.activeTab ? ' is-active' : '') + '" onclick="setTab(\'' + t.key + '\')">' + t.label + '</div>';
+    }).join('');
+  }
+
+  // ========== 渲染：详情主体 ==========
+  function field(label, value, full) {
+    return '<div class="pd-field' + (full ? ' full' : '') + '"><div class="pd-field__label">' + label + '</div><div class="pd-field__value">' + (value || '-') + '</div></div>';
+  }
+  function renderCourseInfo(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>课程信息</h3><span class="pd-archive-source">来源：教务系统</span></div>' +
+      '<div class="pd-form">' +
+      field('课程号', c.code) + field('课程名', c.name) +
+      field('课序号', c.sequence) + field('承担单位', c.owner) +
+      field('授课形式', c.teachingForm) + field('课程类别', c.category) +
+      field('课程性质', c.nature) + field('授课班级', c.className) +
+      field('学分', c.credits) + field('学时', c.hours) +
+      field('选课人数', c.students) + field('考试类型', c.examType) +
+      field('教学方式', c.teachingMode, true) + field('附件', '-', true) +
+      '</div></div>';
+  }
+  function renderDesign(c) {
+    var baseGroups = [
+      { t: '教学方式', v: DESIGN_BASE.way },
+      { t: '教学目标', v: DESIGN_BASE.goal },
+      { t: '教学实施', v: DESIGN_BASE.plan },
+      { t: '学情分析', v: DESIGN_BASE.analysis }
+    ];
+    var baseHtml = baseGroups.map(function (g) {
+      return '<div class="pd-section"><div class="pd-section-head"><h3>' + g.t + '</h3></div><div class="pd-box">' + g.v + '</div></div>';
+    }).join('');
+    var plans = TEACHING_PLANS[c.id] || [];
+    var planHtml = plans.map(function (p, i) {
+      var open = state.expandedPlans[p.date] !== false;
+      var body = open ? '<div class="pd-plan__body">' +
+        '<div><dt>教学类型</dt><dd>' + (p.teachingType || '-') + '</dd></div>' +
+        '<div><dt>教学方式</dt><dd>' + (p.teachingMethod || '-') + '</dd></div>' +
+        '<div class="full"><dt>上课内容</dt><dd>' + (p.content || '-') + '</dd></div>' +
+        '<div><dt>上课地点</dt><dd>' + (p.location || '-') + '</dd></div>' +
+        '<div><dt>信息化教学工具</dt><dd>' + (p.tools || '-') + '</dd></div>' +
+        '<div class="full"><dt>课程资源</dt><dd>' + (p.resources.length ? p.resources.join('、') : '-') + '</dd></div>' +
+        '<div class="full"><dt>教学随笔</dt><dd>' + (p.reflection || '-') + '</dd></div>' +
+        '<div class="full"><dt>课程思政</dt><dd>' + (p.ideology || '-') + '</dd></div>' +
+        '</div>' : '';
+      return '<div class="pd-plan"><div class="pd-plan__head" onclick="togglePlan(\'' + p.date + '\')">' +
+        '<span>上课日期：<b>' + p.date + '</b></span><span>周次：' + p.week + '</span><span>星期：' + p.weekday + '</span><span>学时：<b>' + p.hours + '</b></span>' +
+        '</div>' + body + '</div>';
+    }).join('') || '<div class="pd-empty">暂无教学实施记录</div>';
+    return baseHtml +
+      '<div class="pd-section"><div class="pd-section-head"><h3>教学实施</h3></div>' + planHtml + '</div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>教学改革与创新</h3></div><div class="pd-box pd-box--lg">' + DESIGN_BASE.innovation + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>附件</h3></div><div class="pd-box">拖拽至此处，或点击上传</div></div>';
+  }
+  function renderIdeology(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>思政元素</h3></div><div class="pd-box">工匠精神、职业道德、创新精神、劳动精神、安全规范意识</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>思政教学内容</h3></div><div class="pd-box pd-box--lg">' + buildSectionText('ideology-content', c.name) + '</div></div>';
+  }
+  function renderCare(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>课程目标</h3><span class="pd-archive-source">来源：教务系统</span></div><div class="pd-box pd-box--lg">' + buildSectionText('goal', c.name) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>辅导学生</h3></div><div class="pd-box pd-box--lg">' + buildSectionText('student-help', c.name) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>个性化案例</h3></div><div class="pd-box pd-box--lg">' + buildSectionText('student-case', c.name) + '</div></div>';
+  }
+  function renderEffect(c) {
+    var rate = c.id === 'data-structure' ? '98%' : '96%';
+    var score = c.id === 'data-structure' ? '--' : '86.5';
+    return '<div class="pd-section"><div class="pd-section-head"><h3>教学信息</h3><span class="pd-archive-source">来源：教务系统</span></div><div class="pd-form">' + field('上课率', rate) + field('平均成绩', score) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>学生代表性作业</h3></div><div class="pd-box">课件.pdf（3.6KB）</div></div>';
+  }
+  function renderEvaluation(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>学生评价</h3><span class="pd-archive-source">来源：教务系统</span></div><div class="pd-box pd-box--lg">' + buildSectionText('student-evaluation', c.name) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>督导评价</h3><span class="pd-archive-source">来源：教务系统</span></div><div class="pd-box pd-box--lg">' + buildSectionText('supervisor-evaluation', c.name) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>同行评价</h3><span class="pd-archive-source">来源：教务系统</span></div><div class="pd-box pd-box--lg">' + buildSectionText('peer-evaluation', c.name) + '</div></div>';
+  }
+  function renderReflection(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>教学反思</h3></div><div class="pd-box pd-box--lg">' + buildSectionText('teaching-reflection', c.name) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>优化措施</h3></div><div class="pd-box pd-box--lg">' + buildSectionText('optimization', c.name) + '</div></div>';
+  }
+  function renderSummary(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>课程总结</h3></div><div class="pd-box pd-box--lg">' + buildSectionText('course-summary', c.name) + '</div></div>' +
+      '<div class="pd-section"><div class="pd-section-head"><h3>课程总结附件</h3></div><div class="pd-box">课件.pdf（3.6KB）</div></div>';
+  }
+  function renderMaterials(c) {
+    return '<div class="pd-section"><div class="pd-section-head"><h3>课程资料</h3></div><div class="pd-box">拖拽至此处，或点击上传附件</div></div>';
+  }
+
+  function renderBody() {
+    var c = getSelectedCourse();
+    var html = '';
+    switch (state.activeTab) {
+      case 'courseInfo': html = renderCourseInfo(c); break;
+      case 'design': html = renderDesign(c); break;
+      case 'ideology': html = renderIdeology(c); break;
+      case 'care': html = renderCare(c); break;
+      case 'effect': html = renderEffect(c); break;
+      case 'evaluation': html = renderEvaluation(c); break;
+      case 'reflection': html = renderReflection(c); break;
+      case 'summary': html = renderSummary(c); break;
+      case 'materials': html = renderMaterials(c); break;
+    }
+    document.getElementById('tiBody').innerHTML = html;
+  }
+
+  // ========== 抽屉：8 档案分组 ==========
+  var ARCHIVE_TABS = [
+    { key: 'basic-info', label: '基本信息' },
+    { key: 'teaching-info', label: '教学信息' },
+    { key: 'enterprise-practice', label: '企业实践' },
+    { key: 'achievements-honors', label: '成果与荣誉' },
+    { key: 'training', label: '进修（访学）培训' },
+    { key: 'social-service', label: '社会服务与影响力' },
+    { key: 'appointment', label: '任职情况' },
+    { key: 'other-education', label: '其他教育工作' }
+  ];
+
+  // 分组1：基本信息（表单）
+  var BASIC_INFO_GROUPS = [
+    { title: '基本信息', source: '人事系统', items: [
+      { label: '姓名', value: '金晓智' }, { label: '工号', value: 'T20210315' }, { label: '性别', value: '女' }, { label: '年龄', value: '36' },
+      { label: '出生日期', value: '1990-02-14' }, { label: '民族', value: '汉族' }, { label: '政治面貌', value: '中国共产党党员' },
+      { label: '所在单位', value: '电子与通信工程系' }, { label: '入校时间', value: '2015-09-01' }, { label: '主要岗位', value: '专业技术岗' },
+      { label: '教师类型', value: '教学科研型', full: true }
+    ] },
+    { title: '学历信息', source: '人事系统', items: [
+      { label: '最高学历', value: '研究生' }, { label: '最高学位', value: '工学硕士' },
+      { label: '毕业院校', value: '华南理工大学' }, { label: '所学专业', value: '信息与通信工程' },
+      { label: '海外学习经历', value: '2023-10 至 2024-04，英国伦敦大学学院访学', full: true }
+    ] },
+    { title: '职称信息', source: '人事系统', items: [
+      { label: '职称', value: '副教授' }, { label: '职称级别', value: '教授系列副高' }
+    ] },
+    { title: '专业领域与特长', source: '人事系统', items: [
+      { label: '专业领域', value: '主要从事人工智能与软件工程、智慧教学平台建设、职业教育数字化等领域的教学与研究。', full: true },
+      { label: '专业特长', value: '擅长课程资源体系建设、项目化教学设计与产教融合实践指导。', full: true }
+    ] },
+    { title: '教师资格与证书', source: '人事系统', items: [
+      { label: '教师资格证种类', value: '高等学校教师资格证' }, { label: '任教学科', value: '计算机科学与技术' },
+      { label: '双师等级', value: '高级' }, { label: '双师认定年份', value: '2024' },
+      { label: '技能等级证书', value: '软件设计师（中级）', full: true }
+    ] }
+  ];
+
+  var TABLE_SECTIONS = {
+    'enterprise-practice': [
+      { title: '企业实践', columns: ['企业名称', '所属行业', '实践开始时间', '实践结束时间', '实践内容'], rows: [
+        ['联科精密电子股份有限公司', '科技行业', '2025-01-01', '2025-02-01', '参与智能硬件测试流程、生产现场工艺诊断与岗位能力调研。'],
+        ['深圳云启工业互联网有限公司', '科技行业', '2024-07-01', '2024-08-30', '参与工业互联网平台项目调研，了解设备数据采集与边缘网关配置。']
+      ] }
+    ],
+    'achievements-honors': [
+      { title: '教研项目', columns: ['项目名称', '项目类型', '开始时间', '结束时间', '本人角色'], rows: [
+        ['高职数据结构课程项目化教学改革', '校级教改', '2025-03-01', '2025-12-31', '主持']
+      ] },
+      { title: '获奖', columns: ['获奖成果名称', '奖励名称', '获奖级别', '获奖日期', '颁奖单位'], rows: [
+        ['职业教育智能学习分析平台建设', '广东省教学成果奖', '省级二等奖', '2025-09-10', '广东省教育厅'],
+        ['课程画像驱动的教学改进实践', '深圳市教育教学创新奖', '市级一等奖', '2024-12-20', '深圳市教育局']
+      ] },
+      { title: '论文', columns: ['论文名称', '刊物名称', '刊物级别', '发表日期', '本人排名'], rows: [
+        ['基于学习画像的高职课程质量改进研究', '职业技术教育', '中文核心', '2025-04-12', '1/4']
+      ] }
+    ],
+    'training': [
+      { title: '培训', columns: ['培训名称', '培训级别', '培训年度', '学时', '组织单位'], rows: [
+        ['高等职业教育教学能力提升培训', '国家级', '2025', '40', '教育部']
+      ] },
+      { title: '访学', columns: ['访学机构', '国家地区', '开始日期', '结束日期', '项目名称'], rows: [
+        ['英国伦敦大学学院', '英国', '2023-10-01', '2024-04-30', '智慧教育技术应用研究']
+      ] }
+    ],
+    'social-service': [
+      { title: '技术服务', columns: ['项目名称', '合作类型', '合作级别', '合作开始日期', '合作结束日期'], rows: [
+        ['中小企业数字化转型咨询', '横向课题', '市级', '2024-05-01', '2024-12-31']
+      ] },
+      { title: '专家聘任', columns: ['任职机构名称', '任职类型', '任职级别', '入选日期'], rows: [
+        ['广东省职业教育评审专家库', '评审专家', '省级', '2024-03-01']
+      ] }
+    ],
+    'appointment': [
+      { title: '担任班主任情况', columns: ['服务名称', '服务单位', '时间', '内容'], rows: [
+        ['2024级软件技术1班班主任', '深圳职业技术大学', '2024-09 至 2025-07', '负责班级日常管理与学风建设']
+      ] },
+      { title: '指导新教师情况', columns: ['新教师名称', '指导周期', '指导开始日期', '指导结束日期'], rows: [
+        ['李敏', '一年', '2024-09-01', '2025-08-31']
+      ] }
+    ],
+    'other-education': [
+      { title: '第二课堂教学', columns: ['活动名称', '类型', '时间', '人数', '成果'], rows: [
+        ['软件技术社团指导', '社团活动', '2024-09 至 2025-06', '30', '获校级优秀社团']
+      ] },
+      { title: '毕业设计指导', columns: ['学生名称', '课题名称', '指导类型', '成果形式', '成绩'], rows: [
+        ['陈晨', '基于Vue的教务管理系统设计与实现', '毕业设计', '应用系统', '优秀']
+      ] }
+    ]
+  };
+
+  function renderFormGroup(g) {
+    var items = g.items.map(function (it) {
+      return '<div class="pd-field' + (it.full ? ' full' : '') + '"><div class="pd-field__label">' + it.label + '</div><div class="pd-field__value">' + it.value + '</div></div>';
+    }).join('');
+    return '<div class="pd-archive-sub"><div class="pd-archive-sub__head"><h4 class="pd-archive-sub__title">' + g.title + '</h4><span class="pd-archive-source">来源：' + g.source + '</span></div><div class="pd-form">' + items + '</div></div>';
+  }
+  function renderTableSection(s) {
+    var head = '<tr>' + s.columns.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr>';
+    var rows = s.rows.map(function (r) {
+      return '<tr>' + r.map(function (v) { return '<td>' + v + '</td>'; }).join('') + '</tr>';
+    }).join('');
+    return '<div class="pd-archive-sub"><div class="pd-archive-sub__head"><h4 class="pd-archive-sub__title">' + s.title + '</h4></div><table class="pd-table"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table></div>';
+  }
+
+  function renderDrawerBody() {
+    var key = state.drawerTab;
+    var html = '';
+    if (key === 'basic-info') {
+      html = BASIC_INFO_GROUPS.map(renderFormGroup).join('');
+    } else if (key === 'teaching-info') {
+      html = '<div class="pd-empty">暂无数据</div>';
+    } else {
+      html = (TABLE_SECTIONS[key] || []).map(renderTableSection).join('');
+    }
+    document.getElementById('drawerBody').innerHTML = html;
+  }
+  function renderDrawerTabs() {
+    document.getElementById('drawerTabs').innerHTML = ARCHIVE_TABS.map(function (t) {
+      return '<div class="pd-tab' + (t.key === state.drawerTab ? ' is-active' : '') + '" onclick="setDrawerTab(\'' + t.key + '\')">' + t.label + '</div>';
+    }).join('');
+  }
+
+  // ========== 交互 ==========
+  function selectCourse(id) { state.selectedCourseId = id; renderCourseList(); renderBody(); }
+  function setTab(key) { state.activeTab = key; renderTabs(); renderBody(); }
+  function onSemester(v) {
+    state.semester = v; state.search = '';
+    var list = COURSES_BY_SEMESTER[v] || BASE_COURSES;
+    state.selectedCourseId = list[0].id;
+    document.getElementById('courseSearch').value = '';
+    renderCourseList(); renderBody();
+  }
+  function onSearch(v) {
+    state.search = v;
+    var list = getCourses();
+    if (list.length) state.selectedCourseId = list[0].id;
+    renderCourseList(); renderBody();
+  }
+  function togglePlan(date) { state.expandedPlans[date] = state.expandedPlans[date] === false; renderBody(); }
+  function setDrawerTab(key) { state.drawerTab = key; renderDrawerTabs(); renderDrawerBody(); }
+  function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerMask').classList.add('open'); }
+  function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerMask').classList.remove('open'); }
+  function goBack() {  }
+
+  // ========== 初始化 ==========
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    state.teacherCode = params.get('teacher') || '';
+    var t = TEACHER_MAP[state.teacherCode] || TEACHER_MAP[Object.keys(TEACHER_MAP)[0]];
+    state.teacherName = t.name;
+    renderTitle();
+    renderSemester();
+    renderCourseList();
+    renderTabs();
+    renderBody();
+    renderDrawerTabs();
+    renderDrawerBody();
+  }
+  init();
+  </script>
+</body>
+</html>

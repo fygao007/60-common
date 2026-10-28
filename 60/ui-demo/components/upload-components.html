@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>上传组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Upload/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .upload-page { display: flex; flex: 1; min-height: 0; flex-direction: column; background: #fff; }
+    .upload-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: #fff; }
+    .upload-content { display: grid; gap: 24px; width: min(1160px, 100%); }
+    .upload-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: #000; font-size: 16px; font-weight: 600; line-height: 24px; }
+    .upload-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .upload-title span { position: relative; z-index: 1; }
+    .upload-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .upload-source { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .upload-section { border: 1px solid var(--ds-color-border-secondary); background: #fff; }
+    .upload-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .upload-section-title { margin: 0; color: #000; font-size: 14px; font-weight: 600; line-height: 22px; }
+    .upload-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .upload-demo { padding: 20px; }
+    .upload-demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .upload-demo-card { display: grid; align-content: start; gap: 12px; min-height: 220px; padding: 16px; background: #fff; border: 1px solid var(--ds-color-border-secondary); }
+    .upload-demo-card h3 { margin: 0; color: #000; font-size: 14px; font-weight: 600; line-height: 22px; }
+    .upload-demo-card p { margin: 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .upload-picture-layout { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; }
+    .upload-picture-layout .ds-upload__dragger { width: 160px; min-height: 120px; padding: 16px; font-size: 12px; line-height: 20px; }
+    .upload-picture-layout .ds-upload__dragger-icon { width: 20px; height: 20px; margin-bottom: 4px; background-size: 20px 20px; }
+    .upload-state-grid { display: grid; grid-template-columns: repeat(4, minmax(160px, 1fr)); gap: 20px; }
+    .upload-state { display: grid; gap: 8px; }
+    .upload-state > span { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .upload-state .ds-upload__dragger { width: 100%; min-height: 120px; padding: 16px; font-size: 12px; line-height: 20px; }
+    .upload-state.is-hover .ds-upload__dragger { border-color: #333fff; }
+    .upload-state.is-press .ds-upload__dragger { border-color: #2e39e5; }
+    .upload-preview { position: fixed; z-index: 1300; inset: 0; display: none; align-items: center; justify-content: center; padding: 40px; background: rgba(0,0,0,.45); }
+    .upload-preview.is-open { display: flex; }
+    .upload-preview-card { position: relative; max-width: min(760px, 90vw); max-height: 80vh; padding: 16px; background: #fff; border-radius: 8px; }
+    .upload-preview-card img { display: block; max-width: 100%; max-height: calc(80vh - 32px); object-fit: contain; }
+    .upload-preview-close { position: absolute; top: -12px; right: -12px; width: 28px; height: 28px; color: #fff; background: #333; border: 0; border-radius: 50%; cursor: pointer; }
+    @media (max-width: 900px) {
+      .upload-stage { padding: 16px; }
+      .upload-demo-grid, .upload-state-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="upload-page">
+    <section class="upload-stage">
+      <div class="upload-content">
+        <header>
+          <h1 class="upload-title"><span>上传组件</span></h1>
+          <p class="upload-desc">通过点击、拖拽或粘贴选择文件，覆盖上传进度、成功、失败、预览、下载、删除与重试。</p>
+          <span class="upload-source">设计来源：mastergo://getd2c/139272150501659-1259-36938</span>
+        </header>
+
+        <section class="upload-section">
+          <div class="upload-section-head">
+            <h2 class="upload-section-title">按钮上传与文字列表</h2>
+            <span class="upload-section-meta">选择文件 / 进度 / 预览 / 下载 / 删除</span>
+          </div>
+          <div class="upload-demo">
+            <div class="upload-demo-grid">
+              <article class="upload-demo-card">
+                <h3>基础附件上传</h3>
+                <div class="ds-upload ds-upload--button ds-upload--text js-upload" data-list-type="text">
+                  <div class="ds-upload__button-wrap">
+                    <input class="ds-upload__input js-upload-input" id="upload-text-input" type="file" multiple />
+                    <label class="ds-upload__button" for="upload-text-input">
+                      <span class="ds-upload__button-icon" aria-hidden="true"></span>
+                      <span>上传附件</span>
+                    </label>
+                    <span class="ds-upload__button-description">支持多文件上传，单个文件不超过 20MB</span>
+                  </div>
+                  <div class="ds-upload__text-list js-upload-list"></div>
+                </div>
+                <p>选择文件后进入上传中状态，进度完成后展示预览、下载和删除操作。</p>
+              </article>
+
+              <article class="upload-demo-card">
+                <h3>初始成功与失败状态</h3>
+                <div class="ds-upload ds-upload--button ds-upload--text js-upload" data-list-type="text" data-seed="mixed">
+                  <div class="ds-upload__button-wrap">
+                    <input class="ds-upload__input js-upload-input" id="upload-mixed-input" type="file" />
+                    <label class="ds-upload__button" for="upload-mixed-input">
+                      <span class="ds-upload__button-icon" aria-hidden="true"></span>
+                      <span>上传附件</span>
+                    </label>
+                  </div>
+                  <div class="ds-upload__text-list js-upload-list"></div>
+                </div>
+                <p>失败文件支持重新上传，成功文件支持操作按钮。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="upload-section">
+          <div class="upload-section-head">
+            <h2 class="upload-section-title">拖拽上传与卡片列表</h2>
+            <span class="upload-section-meta">图片 / 文件卡片 / 拖拽 / 粘贴</span>
+          </div>
+          <div class="upload-demo">
+            <div class="ds-upload ds-upload--dragger ds-upload--picture-card js-upload" data-list-type="picture" data-seed="picture">
+              <div class="upload-picture-layout">
+                <label class="ds-upload__dragger js-upload-drop" for="upload-picture-input" tabindex="0">
+                  <input class="ds-upload__input js-upload-input" id="upload-picture-input" type="file" accept="image/*,.pdf" multiple />
+                  <span class="ds-upload__dragger-icon" aria-hidden="true"></span>
+                  <span class="ds-upload__dragger-title">拖拽至此处，或点击<span>上传</span></span>
+                  <span class="ds-upload__dragger-description">支持图片和 PDF 文件</span>
+                </label>
+                <div class="ds-upload__picture-list js-upload-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="upload-section">
+          <div class="upload-section-head">
+            <h2 class="upload-section-title">拖拽区域状态</h2>
+            <span class="upload-section-meta">Default / Hover / Press / Disabled</span>
+          </div>
+          <div class="upload-demo">
+            <div class="upload-state-grid">
+              <div class="upload-state"><span>默认 Default</span><label class="ds-upload__dragger"><span class="ds-upload__dragger-icon"></span><span class="ds-upload__dragger-title">拖拽至此处，或点击<span>上传</span></span></label></div>
+              <div class="upload-state is-hover"><span>悬停 Hover</span><label class="ds-upload__dragger"><span class="ds-upload__dragger-icon"></span><span class="ds-upload__dragger-title">拖拽至此处，或点击<span>上传</span></span></label></div>
+              <div class="upload-state is-press"><span>点击 Press</span><label class="ds-upload__dragger"><span class="ds-upload__dragger-icon"></span><span class="ds-upload__dragger-title">拖拽至此处，或点击<span>上传</span></span></label></div>
+              <div class="upload-state"><span>禁用 Disabled</span><label class="ds-upload__dragger is-disabled"><span class="ds-upload__dragger-icon"></span><span class="ds-upload__dragger-title">拖拽至此处，或点击<span>上传</span></span></label></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="upload-preview js-upload-preview" role="dialog" aria-modal="true" aria-label="文件预览">
+  <div class="upload-preview-card">
+    <button class="upload-preview-close" type="button" aria-label="关闭预览">×</button>
+    <img class="js-upload-preview-image" alt="上传图片预览" />
+  </div>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  let uploadSequence = 0;
+  const preview = document.querySelector('.js-upload-preview');
+  const previewImage = document.querySelector('.js-upload-preview-image');
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[char]));
+  }
+
+  function formatSize(size) {
+    if (!Number.isFinite(size)) return '';
+    if (size < 1024) return `${size}B`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(size < 10240 ? 1 : 0)}KB`;
+    return `${(size / 1024 / 1024).toFixed(1)}MB`;
+  }
+
+  function createFile(file, status = 'uploading') {
+    return {
+      uid: `upload-${Date.now()}-${uploadSequence++}`,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      status,
+      percent: status === 'done' ? 100 : 8,
+      url: file.url || (file instanceof File ? URL.createObjectURL(file) : '')
+    };
+  }
+
+  function textItem(file) {
+    const progress = file.status === 'uploading'
+      ? `<span class="ds-upload__progress"><span style="width:${file.percent}%"></span></span>`
+      : '';
+    const error = file.status === 'error'
+      ? `<span class="ds-upload__error">上传失败，请重新上传</span>`
+      : '';
+    const action = file.status === 'error'
+      ? `<button class="ds-upload__retry" type="button" data-retry="${file.uid}">重新上传</button>`
+      : `<span class="ds-upload__actions">
+          <button class="ds-upload__action ds-upload__action--preview" type="button" data-preview="${file.uid}" aria-label="预览${escapeHtml(file.name)}"></button>
+          <button class="ds-upload__action ds-upload__action--download" type="button" data-download="${file.uid}" aria-label="下载${escapeHtml(file.name)}"></button>
+          <button class="ds-upload__action ds-upload__action--remove" type="button" data-remove="${file.uid}" aria-label="${file.status === 'uploading' ? '取消上传' : '删除'}${escapeHtml(file.name)}"></button>
+        </span>`;
+    return `<div class="ds-upload__text-item is-${file.status}">
+      <div class="ds-upload__text-main"><span class="ds-upload__file-icon"></span><span class="ds-upload__file-name">${escapeHtml(file.name)}</span><span class="ds-upload__file-size">${formatSize(file.size)}</span></div>
+      ${action}${progress}${error}
+    </div>`;
+  }
+
+  function pictureItem(file) {
+    let content = '';
+    if (file.status === 'uploading') {
+      content = `<div class="ds-upload__picture-progress"><span class="ds-upload__progress"><span style="width:${file.percent}%"></span></span><button type="button" data-remove="${file.uid}">取消上传</button></div>`;
+    } else if (file.status === 'error') {
+      content = `<div class="ds-upload__picture-error"><span></span><button type="button" data-retry="${file.uid}">重新上传</button></div>`;
+    } else if (file.type?.startsWith('image/') || file.url?.endsWith('.png')) {
+      content = `<button class="ds-upload__picture-preview" type="button" data-preview="${file.uid}"><img src="${escapeHtml(file.url)}" alt="${escapeHtml(file.name)}" /></button>`;
+    } else {
+      content = `<div class="ds-upload__picture-file"><span class="ds-upload__picture-file-icon"></span><strong title="${escapeHtml(file.name)}">${escapeHtml(file.name)}</strong><span>${formatSize(file.size)}</span></div>`;
+    }
+    const remove = file.status === 'uploading' ? '' : `<button class="ds-upload__picture-remove" type="button" data-remove="${file.uid}" aria-label="删除${escapeHtml(file.name)}"></button>`;
+    return `<article class="ds-upload__picture-item is-${file.status}">${content}${remove}</article>`;
+  }
+
+  function renderUpload(root, state) {
+    const list = root.querySelector('.js-upload-list');
+    list.innerHTML = state.files.map(state.type === 'picture' ? pictureItem : textItem).join('');
+  }
+
+  function simulateUpload(root, state, file) {
+    const timer = window.setInterval(() => {
+      const current = state.files.find((item) => item.uid === file.uid);
+      if (!current || current.status !== 'uploading') {
+        window.clearInterval(timer);
+        return;
+      }
+      current.percent = Math.min(100, current.percent + 14);
+      if (current.percent >= 100) current.status = 'done';
+      renderUpload(root, state);
+      if (current.status === 'done') window.clearInterval(timer);
+    }, 220);
+  }
+
+  function addFiles(root, state, fileList) {
+    Array.from(fileList).forEach((raw) => {
+      const file = createFile(raw);
+      state.files.push(file);
+      simulateUpload(root, state, file);
+    });
+    renderUpload(root, state);
+  }
+
+  function openPreview(file) {
+    if (!file.url) return;
+    previewImage.src = file.url;
+    preview.classList.add('is-open');
+  }
+
+  function initUpload(root) {
+    const state = { type: root.dataset.listType, files: [] };
+    if (root.dataset.seed === 'mixed') {
+      state.files = [
+        createFile({ name: '文件上传附件名称.zip', size: 3686, type: 'application/zip' }, 'done'),
+        { ...createFile({ name: '材料清单.xlsx', size: 8240, type: 'application/xlsx' }, 'error'), percent: 0 }
+      ];
+    }
+    if (root.dataset.seed === 'picture') {
+      state.files = [
+        createFile({ name: '校园风景.png', size: 3686, type: 'image/png', url: '../assets/upload-images/6e645e3e358c28666be54a5aa92f3e02.png' }, 'done'),
+        createFile({ name: '本科阶段成绩单.pdf', size: 3686, type: 'application/pdf' }, 'done'),
+        { ...createFile({ name: '证件照片.jpg', size: 5180, type: 'image/jpeg' }, 'error'), percent: 0 }
+      ];
+    }
+    renderUpload(root, state);
+
+    root.querySelector('.js-upload-input')?.addEventListener('change', (event) => {
+      addFiles(root, state, event.target.files);
+      event.target.value = '';
+    });
+
+    const drop = root.querySelector('.js-upload-drop');
+    drop?.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      drop.classList.add('is-dragging');
+    });
+    drop?.addEventListener('dragleave', () => drop.classList.remove('is-dragging'));
+    drop?.addEventListener('drop', (event) => {
+      event.preventDefault();
+      drop.classList.remove('is-dragging');
+      addFiles(root, state, event.dataTransfer.files);
+    });
+    drop?.addEventListener('paste', (event) => {
+      if (!event.clipboardData.files.length) return;
+      event.preventDefault();
+      addFiles(root, state, event.clipboardData.files);
+    });
+
+    root.addEventListener('click', (event) => {
+      const removeKey = event.target.closest('[data-remove]')?.dataset.remove;
+      const retryKey = event.target.closest('[data-retry]')?.dataset.retry;
+      const previewKey = event.target.closest('[data-preview]')?.dataset.preview;
+      const downloadKey = event.target.closest('[data-download]')?.dataset.download;
+      if (removeKey) {
+        const removed = state.files.find((file) => file.uid === removeKey);
+        if (removed?.url?.startsWith('blob:')) URL.revokeObjectURL(removed.url);
+        state.files = state.files.filter((file) => file.uid !== removeKey);
+        renderUpload(root, state);
+      } else if (retryKey) {
+        const file = state.files.find((item) => item.uid === retryKey);
+        file.status = 'uploading';
+        file.percent = 8;
+        renderUpload(root, state);
+        simulateUpload(root, state, file);
+      } else if (previewKey) {
+        openPreview(state.files.find((file) => file.uid === previewKey));
+      } else if (downloadKey) {
+        const file = state.files.find((item) => item.uid === downloadKey);
+        if (file.url) {
+          const link = document.createElement('a');
+          link.href = file.url;
+          link.download = file.name;
+          link.click();
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll('.js-upload').forEach(initUpload);
+  preview.querySelector('.upload-preview-close').addEventListener('click', () => preview.classList.remove('is-open'));
+  preview.addEventListener('click', (event) => {
+    if (event.target === preview) preview.classList.remove('is-open');
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

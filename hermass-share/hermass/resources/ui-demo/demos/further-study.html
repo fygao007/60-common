@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>进修申请 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">进修申请</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">修</span>进修/培训申请</h1>
+        <div class="ap-actions"><button class="ap-btn primary" type="button">发起新申请</button></div>
+      </div>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>申请信息</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-form-grid">
+              <div class="ap-field"><label><span class="req">*</span>进修类型</label><select><option>国内访问学者</option><option>境外研修</option><option>学历提升</option><option>短期专项培训</option></select></div>
+              <div class="ap-field"><label><span class="req">*</span>进修方式</label><select><option>脱产</option><option>半脱产</option><option>不脱产</option></select></div>
+              <div class="ap-field"><label><span class="req">*</span>进修单位</label><input type="text" placeholder="如：华南理工大学" /></div>
+              <div class="ap-field"><label><span class="req">*</span>进修周期</label><input type="text" placeholder="2026-09-01 至 2027-01-15" /></div>
+              <div class="ap-field full"><label><span class="req">*</span>进修内容及目标</label><textarea placeholder="请说明进修方向、预期成果及对教学科研的促进作用"></textarea></div>
+              <div class="ap-field full"><label>佐证材料</label>
+                <span class="ap-upload">⬆ 上传录取通知书/邀请函/培训方案等附件</span>
+              </div>
+            </div>
+            <div class="ap-form-actions">
+              <button class="ap-btn" type="button">存为草稿</button>
+              <button class="ap-btn primary" type="button">提交申请</button>
+            </div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>本年度进修概况</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-info-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+              <div class="ap-info-item"><p>已申请次数</p><h4>2 次</h4></div>
+              <div class="ap-info-item"><p>已完成进修</p><h4>1 次</h4></div>
+              <div class="ap-info-item"><p>累计脱产时长</p><h4>3.5 个月</h4></div>
+              <div class="ap-info-item"><p>本年度名额上限</p><h4>1 人/学院 2 个名额</h4></div>
+            </div>
+            <div style="margin-top:18px" class="ap-timeline">
+              <div class="ap-tl-item current"><span class="ap-tl-dot">2</span><div class="ap-tl-body"><h4>系所推荐审核中</h4><p>当前申请：2026年秋季境外研修计划</p></div></div>
+              <div class="ap-tl-item"><span class="ap-tl-dot">3</span><div class="ap-tl-body"><h4>学院审批</h4><p>等待中</p></div></div>
+              <div class="ap-tl-item"><span class="ap-tl-dot">4</span><div class="ap-tl-body"><h4>人事处审定</h4><p>等待中</p></div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>历史申请记录</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>进修类型</th><th>进修单位</th><th>周期</th><th>提交时间</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>国内访问学者</td><td>华南理工大学</td><td>2025.03 - 2025.07</td><td>2025-01-10</td><td><span class="ap-tag green">已完成</span></td><td class="link">查看总结</td></tr>
+              <tr><td>短期专项培训</td><td>深圳市职业技能公共实训中心</td><td>2024.07 - 2024.07</td><td>2024-06-02</td><td><span class="ap-tag green">已完成</span></td><td class="link">查看总结</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'further-study', versionLabel:'进修申请', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'further-study',label:'进修申请',closable:true}]
+});
+</script>
+</body>
+</html>

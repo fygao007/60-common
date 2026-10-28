@@ -1,0 +1,79 @@
+{
+  "application": {
+    "key": "home",
+    "label": "首页"
+  },
+  "role": {
+    "key": "teacher",
+    "label": "教师"
+  },
+  "menu": {
+    "key": "home",
+    "label": "首页",
+    "activeApp": "home",
+    "defaultFeature": "staff-home"
+  },
+  "pages": [
+    {
+      "key": "staff-home",
+      "label": "首页工作台",
+      "type": "static-demo",
+      "html": "staff-home.html",
+      "related": {
+        "downstream": [
+          "task-center.html",
+          "notice-center.html",
+          "schedule-center.html",
+          "resource-center.html",
+          "../../../teaching-portfolio/major/t-home/t-home.html"
+        ]
+      }
+    },
+    {
+      "key": "task-center",
+      "label": "任务中心",
+      "type": "static-demo",
+      "html": "task-center.html",
+      "related": {
+        "upstream": ["staff-home.html"]
+      }
+    },
+    {
+      "key": "notice-center",
+      "label": "通知中心",
+      "type": "static-demo",
+      "html": "notice-center.html",
+      "related": {
+        "upstream": ["staff-home.html"]
+      }
+    },
+    {
+      "key": "schedule-center",
+      "label": "日程中心",
+      "type": "static-demo",
+      "html": "schedule-center.html",
+      "related": {
+        "upstream": ["staff-home.html"]
+      }
+    },
+    {
+      "key": "resource-center",
+      "label": "资源中心",
+      "type": "static-demo",
+      "html": "resource-center.html",
+      "related": {
+        "upstream": ["staff-home.html"]
+      }
+    },
+    {
+      "key": "shell",
+      "label": "首页框架壳",
+      "type": "static-demo",
+      "html": "shell.html",
+      "related": {
+        "downstream": ["staff-home.html"]
+      }
+    }
+  ],
+  "assets": "assets/"
+}

@@ -1,0 +1,31 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "unified",
+    "label": "教学档案综合管理"
+  },
+  "menus": [
+    { "key": "t-overview", "label": "我的教学档案", "manifest": "major/t-overview/menu.json" },
+    { "key": "t-submission", "label": "教学档案提交", "manifest": "major/t-submission/menu.json" },
+    { "key": "c-review", "label": "教学档案审核", "manifest": "chief/c-review/menu.json" },
+    { "key": "p-board", "label": "教学档案管理", "manifest": "chief/p-board/menu.json" },
+    { "key": "batch-publish", "label": "考核批次管理", "manifest": "sys/batch-publish/menu.json" },
+    { "key": "form-management", "label": "档案字段设置", "manifest": "sys/form-management/menu.json" },
+    { "key": "audit-config", "label": "审核流程配置", "manifest": "sys/audit-config/menu.json" },
+    { "key": "major-group", "label": "专业权限管理", "manifest": "sys/major-group/menu.json" },
+    { "key": "hr-statistics", "label": "统计分析看板", "manifest": "major/p-major-group/menu.json" },
+    { "key": "t-home", "label": "教学档案袋首页", "manifest": "major/t-home/menu.json" },
+    { "key": "t-portrait", "label": "我的教学画像", "manifest": "major/t-portrait/menu.json" },
+    { "key": "chart-designer", "label": "图表配置能力", "manifest": "sys/chart-designer/menu.json" }
+  ],
+  "crossApplicationEntries": [
+    {
+      "application": "home",
+      "label": "首页",
+      "href": "../home/teacher/home/staff-home.html"
+    }
+  ]
+}

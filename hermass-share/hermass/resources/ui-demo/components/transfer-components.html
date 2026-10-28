@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>穿梭框组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Transfer/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .transfer-page { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--ds-color-white); }
+    .transfer-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .transfer-content { display: grid; gap: 24px; width: min(1180px, 100%); }
+    .transfer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .transfer-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .transfer-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .transfer-title span { position: relative; z-index: 1; }
+    .transfer-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .transfer-source { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .transfer-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .transfer-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .transfer-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .transfer-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .transfer-demo { padding: 16px; }
+    .transfer-demo.is-compact { max-width: 860px; }
+    .transfer-demo .ds-transfer__panel { height: 390px; min-height: 390px; }
+    .transfer-demo.is-table .ds-transfer { grid-template-columns: minmax(0, 1fr) minmax(360px, 0.62fr); }
+    .transfer-demo.is-table .ds-transfer__panel { height: 458px; min-height: 458px; }
+    .transfer-demo-note { margin: 12px 0 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .transfer-filter { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 8px; padding: 12px; background: var(--ds-color-bg-subtle); }
+    .transfer-filter input { width: 100%; height: 32px; padding: 5px 12px; border: 1px solid var(--ds-color-border-secondary); border-radius: 4px; color: var(--ds-color-text); background: #fff; font: inherit; }
+    .transfer-filter button { height: 32px; padding: 0 16px; color: #fff; background: var(--ds-color-primary); border: 0; border-radius: 4px; font: inherit; }
+    .transfer-code { color: var(--ds-color-text-tertiary); font-size: 12px; }
+    .ds-transfer__checkbox-button { display: inline-flex; flex: none; padding: 0; background: transparent; border: 0; cursor: pointer; }
+    @media (max-width: 900px) {
+      .transfer-stage { padding: 16px; }
+      .transfer-demo.is-table .ds-transfer { grid-template-columns: 1fr; }
+      .transfer-demo .ds-transfer__panel,
+      .transfer-demo.is-table .ds-transfer__panel { height: 340px; min-height: 340px; }
+      .transfer-filter { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="transfer-page">
+    <section class="transfer-stage">
+      <div class="transfer-content">
+        <header class="transfer-head">
+          <div>
+            <h1 class="transfer-title"><span>穿梭框</span></h1>
+            <p class="transfer-desc">基于 MasterGo 组件规则生成 DSTransfer，统一平铺、分组、表格和树形数据的选择与回退交互。</p>
+            <span class="transfer-source">设计来源：mastergo://getd2c/195991886967017-11-076878</span>
+          </div>
+        </header>
+
+        <section class="transfer-section">
+          <div class="transfer-section-head">
+            <h2 class="transfer-section-title">平铺字段</h2>
+            <span class="transfer-section-meta">搜索 / 全选 / 移除 / 清空</span>
+          </div>
+          <div class="transfer-demo is-compact">
+            <div class="js-transfer" data-variant="flat"></div>
+            <p class="transfer-demo-note">勾选左侧字段后立即加入右侧；搜索只过滤待选区，不改变已选结果。</p>
+          </div>
+        </section>
+
+        <section class="transfer-section">
+          <div class="transfer-section-head">
+            <h2 class="transfer-section-title">分组字段</h2>
+            <span class="transfer-section-meta">分组全选 / 展开收起</span>
+          </div>
+          <div class="transfer-demo is-compact">
+            <div class="js-transfer" data-variant="grouped"></div>
+            <p class="transfer-demo-note">分组标题承载整组选取，字段仍可逐项加入，适合报表字段和权限配置。</p>
+          </div>
+        </section>
+
+        <section class="transfer-section">
+          <div class="transfer-section-head">
+            <h2 class="transfer-section-title">表格穿梭</h2>
+            <span class="transfer-section-meta">筛选区 / 多列数据 / 已选表格</span>
+          </div>
+          <div class="transfer-demo is-table">
+            <div class="js-transfer" data-variant="table"></div>
+            <p class="transfer-demo-note">复杂对象使用列配置呈现；待选表和已选表保持相同字段语义。</p>
+          </div>
+        </section>
+
+        <section class="transfer-section">
+          <div class="transfer-section-head">
+            <h2 class="transfer-section-title">树形穿梭</h2>
+            <span class="transfer-section-meta">层级缩进 / 节点展开收起</span>
+          </div>
+          <div class="transfer-demo is-compact">
+            <div class="js-transfer" data-variant="tree"></div>
+            <p class="transfer-demo-note">树节点保留层级和展开状态，适合组织、菜单和分类目录选择。</p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  const flatItems = [
+    { key: 'field-code', title: '学科编码' },
+    { key: 'field-name', title: '学科名称' },
+    { key: 'category', title: '学科门类' },
+    { key: 'level', title: '培养层次' },
+    { key: 'school', title: '所属院系' },
+    { key: 'leader', title: '负责人' },
+    { key: 'student-count', title: '学生人数' },
+    { key: 'teacher-count', title: '导师人数' },
+    { key: 'status', title: '建设状态' },
+    { key: 'year', title: '获批年度' },
+    { key: 'degree', title: '学位类型' },
+    { key: 'remark', title: '备注' }
+  ];
+
+  const groupedItems = [
+    { key: 'name', title: '姓名', group: '基本信息' },
+    { key: 'number', title: '学工号', group: '基本信息' },
+    { key: 'gender', title: '性别', group: '基本信息' },
+    { key: 'birthday', title: '出生日期', group: '基本信息' },
+    { key: 'mobile', title: '手机号', group: '联系方式' },
+    { key: 'email', title: '邮箱', group: '联系方式' },
+    { key: 'office', title: '办公地点', group: '联系方式' },
+    { key: 'department', title: '所属部门', group: '组织信息' },
+    { key: 'post', title: '岗位', group: '组织信息' },
+    { key: 'identity', title: '人员身份', group: '组织信息' }
+  ];
+
+  const tableItems = [
+    { key: 'course-1', code: '083500', title: '软件工程', category: '工学', school: '计算机学院' },
+    { key: 'course-2', code: '081200', title: '计算机科学与技术', category: '工学', school: '计算机学院' },
+    { key: 'course-3', code: '120100', title: '管理科学与工程', category: '管理学', school: '管理学院' },
+    { key: 'course-4', code: '050100', title: '中国语言文学', category: '文学', school: '人文学院' },
+    { key: 'course-5', code: '070100', title: '数学', category: '理学', school: '理学院' },
+    { key: 'course-6', code: '030500', title: '马克思主义理论', category: '法学', school: '马克思主义学院' }
+  ];
+
+  const treeItems = [
+    { key: 'university', title: '示范大学', depth: 0, hasChildren: true },
+    { key: 'science', title: '理工学部', depth: 1, parent: 'university', hasChildren: true },
+    { key: 'computer', title: '计算机学院', depth: 2, parent: 'science', hasChildren: true },
+    { key: 'software', title: '软件工程系', depth: 3, parent: 'computer' },
+    { key: 'ai', title: '人工智能系', depth: 3, parent: 'computer' },
+    { key: 'math', title: '理学院', depth: 2, parent: 'science' },
+    { key: 'humanities', title: '人文学部', depth: 1, parent: 'university', hasChildren: true },
+    { key: 'literature', title: '人文学院', depth: 2, parent: 'humanities' },
+    { key: 'law', title: '法学院', depth: 2, parent: 'humanities' }
+  ];
+
+  const transferConfigs = {
+    flat: { items: flatItems, selected: ['field-name', 'school'] },
+    grouped: { items: groupedItems, selected: ['mobile', 'department'] },
+    table: { items: tableItems, selected: ['course-2', 'course-5'] },
+    tree: { items: treeItems, selected: ['software', 'literature'] }
+  };
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
+  function checkboxHtml(attributes = '') {
+    return `<button class="ds-transfer__checkbox-button" type="button" ${attributes}><span class="ds-transfer__checkbox"><span class="ds-transfer__checkbox-mark" aria-hidden="true"></span></span></button>`;
+  }
+
+  function renderFlat(items) {
+    return `<div class="ds-transfer__flat-list">${items.map((item) => `
+      <div class="ds-transfer__option">
+        ${checkboxHtml(`data-add="${escapeHtml(item.key)}" aria-label="选择${escapeHtml(item.title)}"`)}
+        <span class="ds-transfer__option-label">${escapeHtml(item.title)}</span>
+      </div>`).join('')}</div>`;
+  }
+
+  function renderGrouped(items, state) {
+    const groups = [...new Set(items.map((item) => item.group))];
+    return `<div class="ds-transfer__groups">${groups.map((group) => {
+      const groupItems = items.filter((item) => item.group === group);
+      const collapsed = state.collapsed.has(group);
+      return `<section class="ds-transfer__group">
+        <div class="ds-transfer__group-head">
+          <button class="ds-transfer__expand" type="button" data-toggle-group="${escapeHtml(group)}" aria-expanded="${!collapsed}" aria-label="${collapsed ? '展开' : '收起'}${escapeHtml(group)}"></button>
+          ${checkboxHtml(`data-add-group="${escapeHtml(group)}" aria-label="选择${escapeHtml(group)}全部字段"`)}
+          <span>${escapeHtml(group)}</span><span class="ds-transfer__group-count">${groupItems.length}</span>
+        </div>
+        ${collapsed ? '' : `<div class="ds-transfer__group-grid">${groupItems.map((item) => `
+          <div class="ds-transfer__option">
+            ${checkboxHtml(`data-add="${escapeHtml(item.key)}" aria-label="选择${escapeHtml(item.title)}"`)}
+            <span class="ds-transfer__option-label">${escapeHtml(item.title)}</span>
+          </div>`).join('')}</div>`}
+      </section>`;
+    }).join('')}</div>`;
+  }
+
+  function renderTable(items, selectable = true) {
+    return `<div class="ds-transfer__table-wrap"><table class="ds-transfer__table">
+      <thead><tr>${selectable ? '<th class="ds-transfer__check-cell"></th>' : ''}<th>学科编码</th><th>学科名称</th><th>门类</th><th>所属院系</th>${selectable ? '' : '<th class="ds-transfer__action-cell">操作</th>'}</tr></thead>
+      <tbody>${items.length ? items.map((item) => `<tr>
+        ${selectable ? `<td class="ds-transfer__check-cell">${checkboxHtml(`data-add="${escapeHtml(item.key)}" aria-label="选择${escapeHtml(item.title)}"`)}</td>` : ''}
+        <td>${escapeHtml(item.code)}</td><td>${escapeHtml(item.title)}</td><td>${escapeHtml(item.category)}</td><td>${escapeHtml(item.school)}</td>
+        ${selectable ? '' : `<td class="ds-transfer__action-cell"><button class="ds-transfer__remove-text" type="button" data-remove="${escapeHtml(item.key)}">删除</button></td>`}
+      </tr>`).join('') : `<tr><td class="ds-transfer__table-empty" colspan="${selectable ? 5 : 5}">暂无数据</td></tr>`}</tbody>
+    </table></div>`;
+  }
+
+  function renderTree(items, state) {
+    const hiddenParents = new Set();
+    const visible = items.filter((item) => {
+      if (!state.query && item.parent && hiddenParents.has(item.parent)) {
+        hiddenParents.add(item.key);
+        return false;
+      }
+      if (!state.query && state.collapsed.has(item.key)) hiddenParents.add(item.key);
+      return true;
+    });
+    return `<div class="ds-transfer__tree">${visible.map((item) => `
+      <div class="ds-transfer__tree-row" style="--ds-transfer-tree-indent:${8 + item.depth * 20}px">
+        ${item.hasChildren ? `<button class="ds-transfer__tree-toggle" type="button" data-toggle-node="${escapeHtml(item.key)}" aria-expanded="${!state.collapsed.has(item.key)}" aria-label="切换${escapeHtml(item.title)}"></button>` : '<span class="ds-transfer__tree-spacer"></span>'}
+        ${checkboxHtml(`data-add="${escapeHtml(item.key)}" aria-label="选择${escapeHtml(item.title)}"`)}
+        <span class="ds-transfer__option-label">${escapeHtml(item.title)}</span>
+      </div>`).join('')}</div>`;
+  }
+
+  function renderSelected(items, variant) {
+    if (variant === 'table') return renderTable(items, false);
+    if (!items.length) return '<div class="ds-transfer__empty">暂无已选数据</div>';
+    return `<div class="ds-transfer__selected-list">${items.map((item) => `
+      <div class="ds-transfer__selected-item">
+        <span class="ds-transfer__selected-label">${escapeHtml(item.title)}</span>
+        <button class="ds-transfer__remove" type="button" data-remove="${escapeHtml(item.key)}" aria-label="移除${escapeHtml(item.title)}"></button>
+      </div>`).join('')}</div>`;
+  }
+
+  function renderTransfer(root, state) {
+    const config = transferConfigs[state.variant];
+    const selectedSet = new Set(state.selected);
+    const allSource = config.items.filter((item) => !selectedSet.has(item.key));
+    const source = allSource.filter((item) => !state.query || item.title.toLowerCase().includes(state.query.toLowerCase()) || item.code?.includes(state.query));
+    const selected = state.selected.map((key) => config.items.find((item) => item.key === key)).filter(Boolean);
+    const sourceBody = state.variant === 'grouped'
+      ? renderGrouped(source, state)
+      : state.variant === 'table'
+        ? renderTable(source)
+        : state.variant === 'tree'
+          ? renderTree(source, state)
+          : renderFlat(source);
+    const filterArea = state.variant === 'table' ? `
+      <div class="transfer-filter">
+        <input placeholder="学科编码" aria-label="学科编码" />
+        <input placeholder="学科名称" aria-label="学科名称" />
+        <input placeholder="学科门类" aria-label="学科门类" />
+        <button type="button">查询</button>
+      </div>` : '';
+
+    root.innerHTML = `<div class="ds-transfer ds-transfer--${state.variant} ${state.variant === 'table' ? 'ds-transfer--selected-table' : ''}">
+      <section class="ds-transfer__panel ds-transfer__panel--source">
+        <header class="ds-transfer__panel-head"><span class="ds-transfer__panel-title"><strong>待选</strong><span>${allSource.length}</span></span></header>
+        <div class="ds-transfer__panel-body">
+          ${filterArea}
+          <div class="ds-transfer__toolbar">
+            <div class="ds-transfer__select-all">${checkboxHtml('data-add-all aria-label="选择当前全部待选项"')}<span>全选</span></div>
+            <label class="ds-transfer__search"><input value="${escapeHtml(state.query)}" placeholder="搜索" aria-label="搜索" data-search /><span aria-hidden="true"></span></label>
+          </div>
+          <div class="ds-transfer__source-content">${source.length ? sourceBody : '<div class="ds-transfer__empty">暂无待选数据</div>'}</div>
+        </div>
+      </section>
+      <section class="ds-transfer__panel ds-transfer__panel--selected">
+        <header class="ds-transfer__panel-head">
+          <span class="ds-transfer__panel-title"><strong>已选</strong><span>${selected.length}</span></span>
+          <button class="ds-transfer__clear" type="button" data-clear ${selected.length ? '' : 'disabled'}>清空</button>
+        </header>
+        <div class="ds-transfer__panel-body">${renderSelected(selected, state.variant)}</div>
+      </section>
+    </div>`;
+  }
+
+  function initTransfer(root) {
+    const variant = root.dataset.variant;
+    const state = {
+      variant,
+      selected: [...transferConfigs[variant].selected],
+      query: '',
+      collapsed: new Set()
+    };
+    renderTransfer(root, state);
+
+    root.addEventListener('click', (event) => {
+      const addControl = event.target.closest('[data-add]');
+      const addKey = addControl?.dataset.add;
+      if (addKey) {
+        event.preventDefault();
+        if (!state.selected.includes(addKey)) state.selected.push(addKey);
+        renderTransfer(root, state);
+        return;
+      }
+      if (event.target.closest('[data-add-all]')) {
+        event.preventDefault();
+        const selectedSet = new Set(state.selected);
+        transferConfigs[variant].items
+          .filter((item) => !selectedSet.has(item.key))
+          .filter((item) => !state.query || item.title.toLowerCase().includes(state.query.toLowerCase()) || item.code?.includes(state.query))
+          .forEach((item) => state.selected.push(item.key));
+        renderTransfer(root, state);
+        return;
+      }
+      const group = event.target.closest('[data-add-group]')?.dataset.addGroup;
+      if (group) {
+        event.preventDefault();
+        const selectedSet = new Set(state.selected);
+        transferConfigs[variant].items
+          .filter((item) => item.group === group && !selectedSet.has(item.key))
+          .forEach((item) => state.selected.push(item.key));
+        renderTransfer(root, state);
+        return;
+      }
+      const removeKey = event.target.closest('[data-remove]')?.dataset.remove;
+      if (removeKey) {
+        state.selected = state.selected.filter((key) => key !== removeKey);
+        renderTransfer(root, state);
+        return;
+      }
+      if (event.target.closest('[data-clear]')) {
+        state.selected = [];
+        renderTransfer(root, state);
+        return;
+      }
+      const toggleGroup = event.target.closest('[data-toggle-group]')?.dataset.toggleGroup;
+      const node = event.target.closest('[data-toggle-node]')?.dataset.toggleNode;
+      const toggleKey = toggleGroup || node;
+      if (toggleKey) {
+        if (state.collapsed.has(toggleKey)) state.collapsed.delete(toggleKey);
+        else state.collapsed.add(toggleKey);
+        renderTransfer(root, state);
+      }
+    });
+
+    root.addEventListener('input', (event) => {
+      if (!event.target.hasAttribute('data-search')) return;
+      state.query = event.target.value;
+      const cursor = state.query.length;
+      renderTransfer(root, state);
+      const search = root.querySelector('[data-search]');
+      search.focus();
+      search.setSelectionRange(cursor, cursor);
+    });
+  }
+
+  document.querySelectorAll('.js-transfer').forEach(initTransfer);
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

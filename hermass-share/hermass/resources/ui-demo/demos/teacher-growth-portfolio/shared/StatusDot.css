@@ -1,0 +1,24 @@
+/* 状态指示器：圆点 + 文字（对齐 ui-demo 状态展示统一规范，与招聘 demo StatusDot 同口径） */
+.ds-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.ds-status-dot > i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ds-color-text-tertiary);
+}
+
+.ds-status-dot--process > i { background: var(--ds-color-primary); }
+.ds-status-dot--done > i { background: var(--ds-color-success); }
+.ds-status-dot--warn > i { background: var(--ds-color-warning); }
+.ds-status-dot--danger > i { background: var(--ds-color-danger); }
+.ds-status-dot--neutral > i { background: var(--ds-color-text-tertiary); }

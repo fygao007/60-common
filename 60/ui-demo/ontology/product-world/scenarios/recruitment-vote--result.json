@@ -1,0 +1,84 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--result",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "在同一页面内切换查看表决结果与打分结果",
+      "以得票构成与总分排名两种口径核对评审结论"
+    ],
+    "painPoints": [
+      "原系统表决与打分结果分处不同菜单，横向核对需要来回切换"
+    ],
+    "openQuestions": [
+      "「待定」对象的第二轮投票是否需自动发起，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "结果查看",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票项目已完成投票并生成结果"
+    ],
+    "mainFlow": [
+      "进入结果查看页，页签定位到「表决结果」",
+      "查看各评审对象的同意、不同意、弃权票数与结论",
+      "切换「打分结果」页签查看总分与排名",
+      "按候选人姓名与结果筛选后导出结果"
+    ],
+    "exceptions": [
+      "筛选无结果时表格展示空态文案",
+      "投票未结束时结果表为空"
+    ]
+  },
+  "page": {
+    "title": "结果查看",
+    "templateId": "regular-list",
+    "menuRef": "recruitment.vote:result",
+    "fieldRefs": [
+      "StaffBasicInformation.xm",
+      "Business.vote.proposedPosition",
+      "Business.vote.totalVotes",
+      "Business.vote.agreeVotes",
+      "Business.vote.disagreeVotes",
+      "Business.vote.abstainVotes",
+      "Business.vote.totalScore",
+      "Business.vote.rankingNo",
+      "Business.vote.voteResult"
+    ],
+    "components": [
+      "DSRegularListTemplate",
+      "DSTag"
+    ],
+    "demoPath": "demos/vote/result/result.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「结果与报表」分组下「结果查看」处于高亮态",
+      "切换「表决结果 / 打分结果」页签后表头与数据同步切换",
+      "结果列以设计系统标签色区分通过、待定与未通过",
+      "按姓名与结果筛选后表格按条件收敛"
+    ]
+  }
+}

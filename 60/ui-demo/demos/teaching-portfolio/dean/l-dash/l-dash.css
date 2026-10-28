@@ -1,0 +1,420 @@
+@import '../../../../framework/react-page-host.css';
+
+/* ============================================================
+   二级学院首页（教师教学画像）
+   视觉规范对齐 t-home / p-major-group（DS 看板体系）
+   ============================================================ */
+
+.ld-page{
+  --ld-card-radius: 8px;
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  gap: var(--ds-space-4); /* 分组卡片间距 16px（对齐图表看板页规范）*/
+  padding: 0;
+  border-radius: 8px;
+  color: var(--ds-color-text-heading);
+  font-variant-numeric: tabular-nums;
+}.ld-page h1,
+.ld-page h2,
+.ld-page p{
+  margin: 0;
+}
+
+/* === 页头 === */
+.ld-header {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  gap: var(--ds-space-8);
+  padding: var(--ds-space-4) var(--ds-space-5);
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border-tertiary);
+  border-radius: var(--ld-card-radius);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.ld-header__identity {
+  min-width: 0;
+}
+
+.ld-header__identity h1 {
+  margin: 0 0 var(--ds-space-3);
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-title);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-title);
+}
+
+.ld-header__identity dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3) var(--ds-space-8);
+  margin: 0;
+}
+
+.ld-header__identity dl div {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ld-header__identity dt {
+  color: var(--ds-color-text-tertiary);
+}
+
+.ld-header__identity dd {
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-weight: var(--ds-font-weight-medium);
+  font-family: var(--ds-font-family-code);
+  font-variant-numeric: tabular-nums;
+}/* === 分组卡片外壳（去掉投影）=== */
+.ld-section-card{
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* 卡片内容 grid 自带 12px 行间距，标题头已有自身 padding，这里去掉重复间距 */
+.ld-section-card .ds-card-component__content {
+  gap: 0;
+}
+
+.ld-section-head {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: var(--ds-space-3) var(--ds-space-4) var(--ds-space-4);
+}
+
+/* 面板标题：主色竖条 + 标题 */
+.ld-panel-title {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.ld-panel-title h2 {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: var(--ds-space-3);
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+  letter-spacing: 0.01em;
+}
+
+.ld-panel-title h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary);
+  transform: translateY(-50%);
+}
+
+/* === 关键指标（业绩纵览形式）=== */
+.ld-kpi-list {
+  display: grid;
+  align-items: center;
+  margin-top: var(--ds-space-5);
+  padding: 0 var(--ds-space-4) var(--ds-space-4);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.ld-kpi-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 var(--ds-space-2);
+  border-left: 1px solid var(--ds-color-border-secondary);
+}
+
+.ld-kpi-item:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.ld-kpi-item__label {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+  white-space: nowrap;
+}
+
+.ld-kpi-item__value {
+  color: var(--ds-color-text-heading);
+  font-size: 24px;
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 28px;
+  white-space: nowrap;
+}
+
+.ld-kpi-item__value small {
+  margin-left: 2px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.ld-kpi-item__compare {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+/* === 图表网格（12 列） === */
+.ld-chart-grid {
+  display: grid;
+  align-items: stretch;
+  gap: var(--ds-space-3);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  padding: 0 var(--ds-space-4);
+}.ld-chart-grid > .ld-chart-card{
+  grid-column: span 6;
+}/* 3 卡一行：各占 4 列 */
+.ld-chart-grid--3 > .ld-chart-card{
+  grid-column: span 4;
+}/* 名单/进度卡片横排 */
+.ld-chart-grid > .ld-card{
+  grid-column: span 6;
+  height: 100%;
+}
+
+/* 档案完整度低名单 + 归档进度总览行：卡片自带边框，去掉 grid 左右 padding 让宽度自适应撑满 */
+.ld-care-grid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* 撤销 compact 给栅格内相邻 ds-card 加的 margin-top，避免右卡下移 */
+.ds-scope .ld-page[data-ds-business-page] .ld-chart-grid > .ds-card + .ds-card {
+  margin-top: 0 !important;
+}
+
+.ld-chart-card{
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}/* === 档案完整度低名单 === */
+.ld-card-head{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-3) var(--ds-space-4) 0;
+  margin-bottom: var(--ds-space-2);  /* 二级标题行到内容间距 8px */
+}
+.ld-card-title{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);      /* 二级标题 14px */
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}.ld-care-card__hint{
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.ld-care-list {
+  padding: 0 var(--ds-space-4) var(--ds-space-3);
+}
+
+.ld-care-row {
+  display: grid;
+  min-height: 48px;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-3);
+  border-bottom: 1px solid var(--ds-color-border-tertiary);
+  grid-template-columns: var(--ds-space-2) 64px minmax(0, 1fr) 56px auto;
+  font-size: var(--ds-font-size-md);
+}
+
+.ld-care-row:last-child {
+  border-bottom: 0;
+}
+
+.ld-care-row__status {
+  width: var(--ds-space-2);
+  height: var(--ds-space-2);
+  background: var(--ds-color-warning);
+  border-radius: 50%;
+}
+
+.ld-care-row > strong {
+  color: var(--ds-color-text-heading);
+}
+
+.ld-care-row > span {
+  color: var(--ds-color-text-tertiary);
+}/* === 归档进度总览卡（精致版）=== */
+.ld-health-card{
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+}/* 名单/进度两卡等高:内部内容区撑满卡片 */
+.ld-care-card > div,
+.ld-health-card > div{
+  height: 100%;
+}.ld-health-card > div{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.ld-health-stats {
+  display: flex;
+  gap: var(--ds-space-6);
+  padding: var(--ds-space-4) var(--ds-space-5) var(--ds-space-3);
+}
+
+.ld-health-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+}
+
+.ld-health-stat__value {
+  color: var(--ds-color-text-heading);
+  font-size: 28px;
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 34px;
+  letter-spacing: -0.02em;
+}
+
+.ld-health-stat--risk .ld-health-stat__value {
+  color: var(--ds-color-danger);
+}
+
+.ld-health-stat__label {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ld-health-bar {
+  display: flex;
+  height: 12px;
+  margin: var(--ds-space-4) var(--ds-space-5) 0;
+  border-radius: var(--ds-radius-pill);
+  overflow: hidden;
+}
+
+.ld-health-bar__segment {
+  transition: width 0.2s ease;
+}
+
+.ld-health-legend {
+  display: grid;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  padding: var(--ds-space-4) var(--ds-space-5);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ld-health-legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ld-health-legend__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ds-radius-pill);
+  flex: none;
+}
+
+.ld-health-legend__label {
+  color: var(--ds-color-text-secondary);
+}
+
+.ld-health-legend__value {
+  margin-left: auto;
+  color: var(--ds-color-text-heading);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.ld-health-action {
+  padding: 0 var(--ds-space-5) var(--ds-space-3);
+  text-align: right;
+}
+
+/* === 通知 toast === */
+.ld-notice {
+  position: fixed;
+  right: var(--ds-space-5);
+  bottom: var(--ds-space-5);
+  z-index: var(--ds-z-dropdown);
+  padding: var(--ds-space-2) var(--ds-space-4);
+  color: var(--ds-color-text-inverse);
+  background: var(--ds-color-text-heading);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow-md);
+  font-size: var(--ds-font-size-md);
+}
+
+/* === 响应式 === */
+@media (max-width: 1280px) {
+  .ld-kpi-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ld-kpi-item:nth-child(4) {
+    padding-left: 0;
+    border-left: 0;
+  }.ld-chart-grid > .ld-chart-card,
+  .ld-chart-grid--3 > .ld-chart-card,
+  .ld-chart-grid > .ld-card{
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 900px) {
+  .ld-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--ds-space-4);
+  }
+
+  .ld-kpi-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ld-kpi-item:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }.ld-chart-grid > .ld-chart-card,
+  .ld-chart-grid--3 > .ld-chart-card,
+  .ld-chart-grid > .ld-card{
+    grid-column: 1 / -1;
+  }
+
+  .ld-care-row {
+    grid-template-columns: var(--ds-space-2) 64px minmax(0, 1fr) 56px;
+  }
+
+  .ld-care-row .ld-care-row__action-wrap,
+  .ld-care-row > [data-action] {
+    grid-column: 1 / -1;
+  }
+
+  .ld-health-legend {
+    grid-template-columns: 1fr;
+  }
+}

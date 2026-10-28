@@ -1,0 +1,74 @@
+/* AI 通用组件样式 · 打字机 / 草稿标 / 置信度条
+   禁 ds- 选择器、禁 hex,统一 var(--ds-*) token */
+
+/* —— 打字机 —— */
+.aiw-typewriter {
+  display: inline;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.7;
+}
+
+.aiw-typewriter__text {
+  color: var(--ds-color-text-primary);
+}
+
+.aiw-typewriter__cursor {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--ds-color-primary);
+  font-weight: var(--ds-font-weight-semibold);
+  transform: translateY(-1px);
+}
+
+/* 完成后光标闪烁 */
+.aiw-typewriter__cursor.is-blink {
+  animation: aiw-blink 1s step-end infinite;
+}
+
+@keyframes aiw-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* —— 草稿标 —— */
+.aiw-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+/* —— 置信度条 —— */
+.aiw-confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aiw-confidence__label {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-text-secondary);
+  white-space: nowrap;
+}
+
+.aiw-confidence__bar {
+  width: 80px;
+  height: 6px;
+  background: var(--ds-color-bg-page);
+  border-radius: var(--ds-radius-full, 999px);
+  overflow: hidden;
+  border: 1px solid var(--ds-color-border-tertiary);
+}
+
+.aiw-confidence__fill {
+  height: 100%;
+  background: var(--ds-color-primary);
+  border-radius: var(--ds-radius-full, 999px);
+  transition: width 0.3s ease;
+}
+
+.aiw-confidence__value {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-text-heading);
+  white-space: nowrap;
+}

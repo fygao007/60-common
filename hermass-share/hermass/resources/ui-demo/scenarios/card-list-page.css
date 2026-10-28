@@ -1,0 +1,15 @@
+html, body, #app { min-height: 100%; margin: 0; }
+.card-list-page { display: flex; min-height: 100vh; flex-direction: column; padding: 12px; background: #fff; }
+.card-list-top-tabs { display: flex; min-height: 40px; flex: none; align-items: center; padding-left: 12px; }
+.card-list-body { display: flex; flex: 1; min-height: calc(100vh - 64px); overflow: hidden; }
+.card-list-template { flex: 1; min-width: 0; min-height: 0; }
+.card-list-page .ds-regular-list-template__content { min-width: 0; }
+.card-list-sidebar { display: flex; width: 228px; flex: none; flex-direction: column; padding: 16px 12px; border-right: 1px solid #eeeef0; }
+.card-list-sidebar__search { flex: none; margin-bottom: 8px; }
+.card-list-sidebar__tree { flex: 1; min-height: 0; overflow: auto; }
+@media (max-width: 800px) {
+  .card-list-body { flex-direction: column; overflow: visible; }
+  .card-list-sidebar { width: auto; max-height: 240px; border-right: 0; border-bottom: 1px solid #eeeef0; }
+  .card-list-template { min-height: 720px; }
+  .card-list-page .ds-regular-list-template__header { margin-left: 0; }
+}

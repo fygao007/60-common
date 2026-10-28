@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>锚点组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Anchor/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .anchor-page {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: var(--ds-color-white);
+      scroll-behavior: smooth;
+    }
+
+    .anchor-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .anchor-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: var(--ds-color-text);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .anchor-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: var(--ds-color-primary-weak);
+    }
+
+    .anchor-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .anchor-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .anchor-layout {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 16px;
+      width: min(1280px, 100%);
+      align-items: start;
+    }
+
+    .anchor-side {
+      position: sticky;
+      top: 0;
+      padding: 12px;
+      border: 1px solid var(--ds-color-border-secondary);
+      background: var(--ds-color-white);
+    }
+
+    .anchor-content {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .anchor-right-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .anchor-right-panel {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .anchor-right-side {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px;
+      border: 1px solid var(--ds-color-border-secondary);
+      background: var(--ds-color-white);
+    }
+
+    .anchor-section {
+      border: 1px solid var(--ds-color-border-secondary);
+      background: var(--ds-color-white);
+    }
+
+    .anchor-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+      padding: 0 16px;
+      background: var(--ds-color-bg-subtle);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .anchor-section-title {
+      margin: 0;
+      color: var(--ds-color-text);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .anchor-section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .anchor-demo {
+      padding: 16px;
+    }
+
+    .anchor-demo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .anchor-demo-card {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--ds-color-border-secondary);
+      background: var(--ds-color-white);
+    }
+
+    .anchor-demo-card h3 {
+      margin: 0 0 12px;
+      color: var(--ds-color-text);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .anchor-block {
+      min-height: 220px;
+      padding: 16px;
+      border: 1px solid var(--ds-color-border-secondary);
+      background: var(--ds-color-bg-subtle);
+    }
+
+    .anchor-block + .anchor-block {
+      margin-top: 12px;
+    }
+
+    .anchor-block h3 {
+      margin: 0 0 8px;
+      color: var(--ds-color-text);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .anchor-block p {
+      margin: 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    @media (max-width: 1100px) {
+      .anchor-layout,
+      .anchor-right-layout,
+      .anchor-demo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .anchor-side {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="anchor-page" id="anchorPage">
+    <header class="anchor-head">
+      <div>
+        <h1 class="anchor-title"><span>锚点组件</span></h1>
+        <p class="anchor-desc">用于长页面目录导航、表单分组跳转、详情页章节定位。覆盖默认、带边线、横向、多级和禁用状态。</p>
+      </div>
+    </header>
+
+    <section class="anchor-layout">
+      <aside class="anchor-side" aria-label="页面锚点">
+        <nav class="ds-anchor ds-anchor--vertical ds-anchor--bordered ds-anchor--offset" aria-label="锚点导航">
+          <ol class="ds-anchor__list">
+            <li class="ds-anchor__item is-active" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#overview"><span>组件概览</span></a></li>
+            <li class="ds-anchor__item" style="--ds-anchor-depth: 0">
+              <a class="ds-anchor__link" href="#states"><span>状态展示</span></a>
+              <ol class="ds-anchor__list ds-anchor__list--nested">
+                <li class="ds-anchor__item" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" href="#basic"><span>基础锚点</span></a></li>
+                <li class="ds-anchor__item" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" href="#bordered"><span>带边线</span></a></li>
+                <li class="ds-anchor__item" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" href="#horizontal"><span>横向锚点</span></a></li>
+                <li class="ds-anchor__item" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" href="#right"><span>右侧锚点</span></a></li>
+              </ol>
+            </li>
+            <li class="ds-anchor__item" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#usage"><span>使用说明</span></a></li>
+            <li class="ds-anchor__item is-disabled" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" aria-disabled="true"><span>禁用锚点</span></a></li>
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="anchor-content">
+        <section class="anchor-section" id="overview">
+          <div class="anchor-section-head">
+            <h2 class="anchor-section-title">组件概览</h2>
+            <span class="anchor-section-meta">Anchor / DSAnchor</span>
+          </div>
+          <div class="anchor-demo">
+            <div class="anchor-block">
+              <h3>长页面目录导航</h3>
+              <p>锚点固定在内容侧边，点击后跳转到对应章节。当前章节使用主色文字、浅主色背景和左侧指示线。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="anchor-section" id="states">
+          <div class="anchor-section-head">
+            <h2 class="anchor-section-title">状态展示</h2>
+            <span class="anchor-section-meta">Default / Active / Disabled</span>
+          </div>
+          <div class="anchor-demo anchor-demo-grid">
+            <article class="anchor-demo-card" id="basic">
+              <h3>基础锚点</h3>
+              <nav class="ds-anchor" aria-label="基础锚点">
+                <ol class="ds-anchor__list">
+                  <li class="ds-anchor__item is-active" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#basic"><span>基础信息</span></a></li>
+                  <li class="ds-anchor__item" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#usage"><span>申报信息</span></a></li>
+                  <li class="ds-anchor__item" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#usage"><span>附件材料</span></a></li>
+                </ol>
+              </nav>
+            </article>
+            <article class="anchor-demo-card" id="bordered">
+              <h3>带边线锚点</h3>
+              <nav class="ds-anchor ds-anchor--bordered" aria-label="带边线锚点">
+                <ol class="ds-anchor__list">
+                  <li class="ds-anchor__item" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#bordered"><span>待审核</span></a></li>
+                  <li class="ds-anchor__item is-active" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#bordered"><span>审核记录</span></a></li>
+                  <li class="ds-anchor__item" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#bordered"><span>操作日志</span></a></li>
+                </ol>
+              </nav>
+            </article>
+            <article class="anchor-demo-card">
+              <h3>多级锚点</h3>
+              <nav class="ds-anchor ds-anchor--bordered" aria-label="多级锚点">
+                <ol class="ds-anchor__list">
+                  <li class="ds-anchor__item is-active" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#states"><span>人员信息</span></a></li>
+                  <li class="ds-anchor__item" style="--ds-anchor-depth: 0">
+                    <a class="ds-anchor__link" href="#states"><span>申报材料</span></a>
+                    <ol class="ds-anchor__list ds-anchor__list--nested">
+                      <li class="ds-anchor__item" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" href="#states"><span>基础材料</span></a></li>
+                      <li class="ds-anchor__item is-disabled" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" aria-disabled="true"><span>补充材料</span></a></li>
+                    </ol>
+                  </li>
+                </ol>
+              </nav>
+            </article>
+          </div>
+        </section>
+
+        <section class="anchor-section" id="horizontal">
+          <div class="anchor-section-head">
+            <h2 class="anchor-section-title">横向锚点</h2>
+            <span class="anchor-section-meta">Horizontal</span>
+          </div>
+          <div class="anchor-demo">
+            <nav class="ds-anchor ds-anchor--horizontal" aria-label="横向锚点">
+              <ol class="ds-anchor__list">
+                <li class="ds-anchor__item is-active"><a class="ds-anchor__link" href="#overview"><span>组件概览</span></a></li>
+                <li class="ds-anchor__item"><a class="ds-anchor__link" href="#states"><span>状态展示</span></a></li>
+                <li class="ds-anchor__item"><a class="ds-anchor__link" href="#usage"><span>使用说明</span></a></li>
+                <li class="ds-anchor__item is-disabled"><a class="ds-anchor__link" aria-disabled="true"><span>禁用项</span></a></li>
+              </ol>
+            </nav>
+          </div>
+        </section>
+
+        <section class="anchor-section" id="right">
+          <div class="anchor-section-head">
+            <h2 class="anchor-section-title">右侧锚点</h2>
+            <span class="anchor-section-meta">Right Placement</span>
+          </div>
+          <div class="anchor-demo">
+            <div class="anchor-right-layout">
+              <div class="anchor-right-panel">
+                <div class="anchor-block" id="right-overview">
+                  <h3>右侧目录导航</h3>
+                  <p>右侧锚点用于内容区右栏目录，基线和选中指示条靠右，文本右对齐。适合详情页、帮助文档和表单分组页。</p>
+                </div>
+                <div class="anchor-block" id="right-detail">
+                  <h3>右侧章节定位</h3>
+                  <p>组件通过 `placement="right"` 或 `.ds-anchor--right` 启用右侧样式，保留默认、选中、悬浮、禁用和多级缩进能力。</p>
+                </div>
+              </div>
+              <aside class="anchor-right-side" aria-label="右侧锚点示例">
+                <nav class="ds-anchor ds-anchor--vertical ds-anchor--bordered ds-anchor--offset ds-anchor--right" aria-label="右侧锚点">
+                  <ol class="ds-anchor__list">
+                    <li class="ds-anchor__item is-active" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#right-overview"><span>右侧目录</span></a></li>
+                    <li class="ds-anchor__item" style="--ds-anchor-depth: 0">
+                      <a class="ds-anchor__link" href="#right-detail"><span>章节定位</span></a>
+                      <ol class="ds-anchor__list ds-anchor__list--nested">
+                        <li class="ds-anchor__item" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" href="#right-detail"><span>基础状态</span></a></li>
+                        <li class="ds-anchor__item is-disabled" style="--ds-anchor-depth: 1"><a class="ds-anchor__link" aria-disabled="true"><span>禁用状态</span></a></li>
+                      </ol>
+                    </li>
+                    <li class="ds-anchor__item" style="--ds-anchor-depth: 0"><a class="ds-anchor__link" href="#usage"><span>使用说明</span></a></li>
+                  </ol>
+                </nav>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="anchor-section" id="usage">
+          <div class="anchor-section-head">
+            <h2 class="anchor-section-title">使用说明</h2>
+            <span class="anchor-section-meta">React / HTML</span>
+          </div>
+          <div class="anchor-demo">
+            <div class="anchor-block">
+              <h3>组件落地规则</h3>
+              <p>React 页面使用 `DSAnchor`；HTML 预览页可直接复用 `.ds-anchor`、`.ds-anchor__item`、`.ds-anchor__link` 这些类。组件颜色统一来自 `tokens.css`。</p>
+            </div>
+            <div class="anchor-block">
+              <h3>适用场景</h3>
+              <p>详情页章节定位、复杂表单分组、审核页分段导航、帮助文档目录、长列表快捷跳转。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  const anchorPage = document.getElementById('anchorPage');
+  const sideAnchors = [...document.querySelectorAll('.anchor-side .ds-anchor__item')];
+  document.querySelectorAll('.anchor-side .ds-anchor__link[href^="#"]').forEach((link) => {
+    link.addEventListener('click', () => {
+      sideAnchors.forEach((item) => item.classList.remove('is-active'));
+      link.closest('.ds-anchor__item')?.classList.add('is-active');
+    });
+  });
+
+  anchorPage.addEventListener('scroll', () => {
+    const sections = ['overview', 'states', 'basic', 'bordered', 'horizontal', 'right', 'usage']
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    const current = sections.slice().reverse().find((section) => section.offsetTop - anchorPage.scrollTop < 96);
+    if (!current) return;
+    const currentLink = document.querySelector(`.anchor-side .ds-anchor__link[href="#${current.id}"]`);
+    if (!currentLink) return;
+    sideAnchors.forEach((item) => item.classList.remove('is-active'));
+    currentLink.closest('.ds-anchor__item')?.classList.add('is-active');
+  });
+
+  const componentFeatureRoutes = {
+    '功能索引': './component-library-index.html',
+    '当前组件': './current-components-index.html',
+    'Ant目录': './all-components-index.html',
+    '组件总览': './ant-components-page.html',
+    '表单': './form-components-page.html',
+    '表格': './basic-table-page.html',
+    '框架': '../framework/framework-index.html'
+  };
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const target = componentFeatureRoutes[feature];
+      if (!target) return;
+      window.location.href = target;
+    }
+  });
+</script>
+</body>
+</html>

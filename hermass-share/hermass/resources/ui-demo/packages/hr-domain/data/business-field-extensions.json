@@ -1,0 +1,2325 @@
+{
+  "$schema": "./business-field-extensions.schema.json",
+  "library": "szpu-hr-basic-information",
+  "version": "1.0.0",
+  "registryId": "BusinessFieldExtensions",
+  "fields": [
+    {
+      "fieldId": "Business.recruitment.recruitmentType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "招聘种类",
+      "dataType": "concept",
+      "semanticTarget": "RecruitmentType",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.positionCollectionMaterials",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "岗位征集材料",
+      "dataType": "attachment-list",
+      "semanticTarget": "PositionCollectionMaterials",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.cancelledMajorReminder",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "已停止招生专业提醒",
+      "dataType": "object",
+      "semanticTarget": "CancelledMajorReminder",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.employmentForm",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "用人方式",
+      "dataType": "concept",
+      "semanticTarget": "EmploymentForm",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.campus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "校区",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.recruitmentMethod",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "招聘方式",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.admittedNotOnboardCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "已录取未入职数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.plannedRetirees2027",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "2027年拟退休人员",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.externalTeacherCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "外聘教师数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.currentStaffCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "现有人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.student2026",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "2026级学生数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.expectedStudent2027",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "2027年预计招生数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.currentStudentTeacherRatio",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "现有师生比",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.annualPerCapitaWorkload",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "年人均工作量",
+      "dataType": "decimal",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.recruitment.collegeDevelopmentPlan",
+      "fieldKind": "business-specific",
+      "ownerDomain": "recruitment",
+      "label": "学院专业发展规划简述",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.contractExpireDate",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "合同到期日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.appointmentExpireDate",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "聘期到期日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.certificateExpireDate",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "资格证书有效期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.warningCategory",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "预警事项",
+      "dataType": "concept",
+      "semanticTarget": "WarningCategory",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.handleStatus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "处置状态",
+      "dataType": "concept",
+      "semanticTarget": "WarningHandleStatus",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.handleRemark",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "处置说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.submitter",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "处置提交人",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.submitTime",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "处置提交时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.auditOpinion",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "审核意见",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.auditor",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "审核人",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.warningCenter.auditTime",
+      "fieldKind": "business-specific",
+      "ownerDomain": "warning-center",
+      "label": "审核时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "active",
+      "status": "active"
+    },
+    {
+      "fieldId": "Business.teacher-growth.planId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展方案标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.planCode",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展方案编号",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.planName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展方案名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.planPeriodType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展方案周期类型",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "annual",
+          "label": "年度"
+        },
+        {
+          "code": "midterm",
+          "label": "中期"
+        },
+        {
+          "code": "special",
+          "label": "专项"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.stageName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "学校发展阶段名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.stageDescription",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "学校发展阶段说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.periodStart",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析周期开始日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.periodEnd",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析周期结束日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.baselineDate",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "方案基准日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.dataCutoff",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析数据截止时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.scopeDefinition",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "统计人员范围定义",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.ownerOrganization",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "业务责任组织",
+      "dataType": "reference",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "semanticTarget": "Organization"
+    },
+    {
+      "fieldId": "Business.teacher-growth.ownerPerson",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "业务责任人",
+      "dataType": "reference",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "semanticTarget": "Person"
+    },
+    {
+      "fieldId": "Business.teacher-growth.collaboratingOrganizations",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "业务协同组织集合",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.documentRefs",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "依据文件引用集合",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.sourceClause",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "依据原文条款",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.schemeVersion",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "配置版本号",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.configurationStatus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "配置生命周期状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "draft",
+          "label": "草稿"
+        },
+        {
+          "code": "confirming",
+          "label": "待确认"
+        },
+        {
+          "code": "published",
+          "label": "已发布"
+        },
+        {
+          "code": "superseded",
+          "label": "已替代"
+        },
+        {
+          "code": "archived",
+          "label": "已归档"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.effectiveFrom",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "配置生效日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.changeReason",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "版本变更原因",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.publicationTime",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "配置发布时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.lastEditor",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "最近编辑人员",
+      "dataType": "reference",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "semanticTarget": "Person"
+    },
+    {
+      "fieldId": "Business.teacher-growth.businessUpdatedAt",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "业务最近更新时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.taskId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展任务标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.taskName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展任务名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.taskDirection",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展任务方向",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.taskPurpose",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展任务预期成果",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.priority",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设优先级",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "high",
+          "label": "高"
+        },
+        {
+          "code": "normal",
+          "label": "普通"
+        },
+        {
+          "code": "low",
+          "label": "低"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.deadline",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设完成期限",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.taskStatus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展任务状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "draft",
+          "label": "草稿"
+        },
+        {
+          "code": "active",
+          "label": "执行中"
+        },
+        {
+          "code": "closing",
+          "label": "待结项"
+        },
+        {
+          "code": "closed",
+          "label": "已结项"
+        },
+        {
+          "code": "cancelled",
+          "label": "已取消"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.requirementCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "关联要求数量",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.requirementId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "师资要求标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.requirementName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "师资要求名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.requirementType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "师资要求类型",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "headcount",
+          "label": "人数"
+        },
+        {
+          "code": "ratio",
+          "label": "比例"
+        },
+        {
+          "code": "coverage",
+          "label": "覆盖"
+        },
+        {
+          "code": "ladder",
+          "label": "梯队"
+        },
+        {
+          "code": "training",
+          "label": "培养完成"
+        },
+        {
+          "code": "manual",
+          "label": "人工评估"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.metricRef",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "统计指标引用",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.filterGroups",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "条件组定义",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.conditionFieldRef",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "条件字段引用",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.conditionOperator",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "条件比较运算符",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "eq",
+          "label": "等于"
+        },
+        {
+          "code": "in",
+          "label": "属于"
+        },
+        {
+          "code": "gte",
+          "label": "不低于"
+        },
+        {
+          "code": "lte",
+          "label": "不高于"
+        },
+        {
+          "code": "between",
+          "label": "区间内"
+        },
+        {
+          "code": "exists",
+          "label": "存在已核验记录"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.conditionValue",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "条件比较值",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.groupLogic",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "条件组合逻辑",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "all",
+          "label": "全部满足"
+        },
+        {
+          "code": "any",
+          "label": "任一满足"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.targetOperator",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "目标比较方式",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "gte",
+          "label": "不低于"
+        },
+        {
+          "code": "lte",
+          "label": "不高于"
+        },
+        {
+          "code": "between",
+          "label": "区间内"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.targetLower",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "目标下限值",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.targetUpper",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "目标上限值",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.targetUnit",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "目标计量单位",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "person",
+          "label": "人"
+        },
+        {
+          "code": "percent",
+          "label": "百分比"
+        },
+        {
+          "code": "organization",
+          "label": "单位"
+        },
+        {
+          "code": "item",
+          "label": "项"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.denominatorMode",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "比例分母口径",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "fixed",
+          "label": "固定名单"
+        },
+        {
+          "code": "dynamic",
+          "label": "动态范围"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.coverageOrganizations",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "覆盖单位集合",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.coverageMinimum",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "每单位最低符合人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.evidencePolicy",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求证据核验规则",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.mandatory",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "是否关键约束要求",
+      "dataType": "boolean",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.manualAssessmentGuide",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "人工评估说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.requirementStatus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "师资要求配置状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "draft",
+          "label": "未完整配置"
+        },
+        {
+          "code": "ready",
+          "label": "已完成配置"
+        },
+        {
+          "code": "disabled",
+          "label": "已停用"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.baselineSnapshotId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "基准快照引用",
+      "dataType": "reference",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.assignmentPeriods",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "单位目标分解集合",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actualValue",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求当前计算值",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.numeratorCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "符合条件人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.denominatorCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "统计基数人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.unknownCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "待核验人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.notApplicableCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "不适用人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.knownNonMatchingCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "已核验不符合人数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.gapValue",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求差距值",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.gapUnit",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求差距单位",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.resultState",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求分析结果",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "met",
+          "label": "已满足"
+        },
+        {
+          "code": "gap",
+          "label": "存在缺口"
+        },
+        {
+          "code": "uncertain",
+          "label": "待核验"
+        },
+        {
+          "code": "manual",
+          "label": "待人工评估"
+        },
+        {
+          "code": "unconfigured",
+          "label": "未完成配置"
+        },
+        {
+          "code": "na",
+          "label": "不适用"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.resultReason",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求分析结果说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.calculatedAt",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析完成时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.analysisSnapshotId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析快照标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.analysisStatus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析计算状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "queued",
+          "label": "排队中"
+        },
+        {
+          "code": "running",
+          "label": "计算中"
+        },
+        {
+          "code": "completed",
+          "label": "已完成"
+        },
+        {
+          "code": "failed",
+          "label": "失败"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.populationCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析去重人员总数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.configurationCoverage",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "要求可计算覆盖情况",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.measuredChange",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "同口径实际变化值",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "关联建设行动数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.ladderId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "人才梯队方案标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.ladderName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "人才梯队方案名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.levelId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "人才梯队层级标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.levelName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "人才梯队层级名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.levelOrder",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "人才梯队层级顺序",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionMode",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定方式",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "official",
+          "label": "引用正式认定"
+        },
+        {
+          "code": "rule",
+          "label": "按条件判断后确认"
+        },
+        {
+          "code": "manual",
+          "label": "人工认定"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionRule",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定条件定义",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.conflictPolicy",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "多层命中处理策略",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "highest",
+          "label": "按最高符合层归属"
+        },
+        {
+          "code": "confirm",
+          "label": "多层命中人工确认"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionState",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定办理状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "proposed",
+          "label": "待确认"
+        },
+        {
+          "code": "effective",
+          "label": "已生效"
+        },
+        {
+          "code": "returned",
+          "label": "已退回"
+        },
+        {
+          "code": "withdrawn",
+          "label": "已撤回"
+        },
+        {
+          "code": "expired",
+          "label": "已失效"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionEvidence",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定证据引用",
+      "dataType": "object",
+      "classification": "sensitive",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionValidFrom",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定生效日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionValidTo",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定失效日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionReason",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定确认说明",
+      "dataType": "text",
+      "classification": "sensitive",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.nominationOrganization",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队提名组织",
+      "dataType": "reference",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "semanticTarget": "Organization"
+    },
+    {
+      "fieldId": "Business.teacher-growth.levelPopulation",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "层级正式人员数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.unclassifiedPopulation",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "未认定人员数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.unresolvedPopulation",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队待处理人员数",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.featureTags",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "教师发展特征标签引用",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.recognitionRecordId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "梯队认定记录标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍建设行动标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍建设行动名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍建设行动类型",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "training",
+          "label": "培养提升"
+        },
+        {
+          "code": "recruitment",
+          "label": "人才引进"
+        },
+        {
+          "code": "practice",
+          "label": "企业实践"
+        },
+        {
+          "code": "team",
+          "label": "团队建设"
+        },
+        {
+          "code": "quality",
+          "label": "数据核验"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionSubjects",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动对象引用集合",
+      "dataType": "object",
+      "classification": "sensitive",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionStart",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动开始日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionEnd",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动结束日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.completionStandard",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动完成标准",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.resources",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动支持资源",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionStatus",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动办理状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "draft",
+          "label": "草稿"
+        },
+        {
+          "code": "assigned",
+          "label": "待接收"
+        },
+        {
+          "code": "running",
+          "label": "进行中"
+        },
+        {
+          "code": "accepting",
+          "label": "待验收"
+        },
+        {
+          "code": "completed",
+          "label": "已完成"
+        },
+        {
+          "code": "returned",
+          "label": "验收退回"
+        },
+        {
+          "code": "paused",
+          "label": "已暂停"
+        },
+        {
+          "code": "cancelled",
+          "label": "已取消"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.actionProgress",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动执行进度",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.milestones",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设行动里程碑集合",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.milestoneName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设里程碑名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.milestoneDeadline",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设里程碑截止日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.milestoneCompletion",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设里程碑完成标准",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.milestoneWeight",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设里程碑进度权重",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.milestoneState",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设里程碑状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "pending",
+          "label": "未完成"
+        },
+        {
+          "code": "submitted",
+          "label": "待确认"
+        },
+        {
+          "code": "accepted",
+          "label": "已确认"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.progressId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设进展记录标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.progressSummary",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设进展说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.progressOccurredAt",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设进展发生日期",
+      "dataType": "date",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.progressEvidence",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设进展成果引用",
+      "dataType": "object",
+      "classification": "sensitive",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.progressBlocker",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设进展阻碍说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.acceptanceDecision",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设验收决定",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "pass",
+          "label": "通过"
+        },
+        {
+          "code": "return",
+          "label": "退回"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.acceptanceComment",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "建设验收意见",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.analysisEffect",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "行动关联指标变化情况",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.issueId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展数据问题标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.issueType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展数据问题类型",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "missing",
+          "label": "资料缺失"
+        },
+        {
+          "code": "conflict",
+          "label": "来源冲突"
+        },
+        {
+          "code": "sync",
+          "label": "同步异常"
+        },
+        {
+          "code": "recognition",
+          "label": "认定待确认"
+        },
+        {
+          "code": "mapping",
+          "label": "业务归属待完善"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.issueDescription",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展数据问题说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.issueState",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展数据问题状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "open",
+          "label": "待处理"
+        },
+        {
+          "code": "assigned",
+          "label": "已分派"
+        },
+        {
+          "code": "processing",
+          "label": "处理中"
+        },
+        {
+          "code": "resolved",
+          "label": "待复核"
+        },
+        {
+          "code": "closed",
+          "label": "已关闭"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.affectedObject",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "数据问题关联对象引用",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.issueEvidence",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "数据问题处理证据",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.jobId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析或导出任务标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.jobType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析或导出任务类型",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "analysis",
+          "label": "重新分析"
+        },
+        {
+          "code": "export",
+          "label": "报告导出"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.jobState",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析或导出任务状态",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "queued",
+          "label": "排队中"
+        },
+        {
+          "code": "running",
+          "label": "处理中"
+        },
+        {
+          "code": "succeeded",
+          "label": "已成功"
+        },
+        {
+          "code": "partial",
+          "label": "部分成功"
+        },
+        {
+          "code": "failed",
+          "label": "已失败"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.jobProgress",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "分析或导出任务进度",
+      "dataType": "number",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.reportName",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍发展报告名称",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.reportFormat",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍发展报告格式",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "xlsx",
+          "label": "数据清单"
+        },
+        {
+          "code": "pdf",
+          "label": "分析报告"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.reportSections",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍发展报告章节选择",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.reportArtifact",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍发展报告文件引用",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.reportGeneratedAt",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "队伍发展报告生成时间",
+      "dataType": "datetime",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.aiCandidateId",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "规划提取候选标识",
+      "dataType": "id",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.aiCandidateType",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "规划提取候选类型",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "task",
+          "label": "发展任务"
+        },
+        {
+          "code": "requirement",
+          "label": "师资要求"
+        },
+        {
+          "code": "owner",
+          "label": "责任建议"
+        },
+        {
+          "code": "deadline",
+          "label": "期限候选"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.aiSuggestedValue",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "规划提取候选内容",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.aiSourceLocation",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "规划提取来源位置",
+      "dataType": "object",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.aiDecision",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "规划提取采纳决定",
+      "dataType": "concept",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+      "valueSet": [
+        {
+          "code": "pending",
+          "label": "未处理"
+        },
+        {
+          "code": "adopt",
+          "label": "已采纳"
+        },
+        {
+          "code": "modify",
+          "label": "修改后采纳"
+        },
+        {
+          "code": "ignore",
+          "label": "已忽略"
+        }
+      ]
+    },
+    {
+      "fieldId": "Business.teacher-growth.aiDecisionReason",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "规划提取处理说明",
+      "dataType": "text",
+      "classification": "internal",
+      "lifecycle": "stored",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.searchKeyword",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展管理查询关键词",
+      "dataType": "string",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    {
+      "fieldId": "Business.teacher-growth.entityCount",
+      "fieldKind": "business-specific",
+      "ownerDomain": "teacher-growth-portfolio",
+      "label": "发展管理对象数量",
+      "dataType": "integer",
+      "classification": "internal",
+      "lifecycle": "derived",
+      "status": "draft",
+      "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。"
+    },
+    { "fieldId": "Business.vote.voteProjectName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "投票项目名称", "dataType": "string", "semanticTarget": "VoteProjectName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.voteObjectCount", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "评审对象数", "dataType": "integer", "semanticTarget": "VoteObjectCount", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.reviewStatus", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "评审状态", "dataType": "concept", "semanticTarget": "ReviewStatus", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.voteMode", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "投票方式", "dataType": "concept", "semanticTarget": "VoteMode", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.votePeriod", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "投票时间", "dataType": "datetime", "semanticTarget": "VotePeriod", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.schemeName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "方案名称", "dataType": "string", "semanticTarget": "SchemeName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.schemeRound", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "轮次", "dataType": "integer", "semanticTarget": "SchemeRound", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.scoreScale", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "分制", "dataType": "concept", "semanticTarget": "ScoreScale", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.objectScope", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "投票对象范围", "dataType": "string", "semanticTarget": "ObjectScope", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.scoreMode", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "设分方式", "dataType": "concept", "semanticTarget": "ScoreMode", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.calcMode", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "计算方式", "dataType": "concept", "semanticTarget": "CalcMode", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.logicOperator", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "逻辑符", "dataType": "concept", "semanticTarget": "LogicOperator", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.itemWeight", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "权重", "dataType": "decimal", "semanticTarget": "ItemWeight", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.trimCount", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "去头尾数量", "dataType": "integer", "semanticTarget": "TrimCount", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.allowExpertViewResult", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "允许专家查看结果", "dataType": "boolean", "semanticTarget": "AllowExpertViewResult", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.allowLeaderViewResult", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "允许组长查看结果", "dataType": "boolean", "semanticTarget": "AllowLeaderViewResult", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.schemeUseStatus", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "使用状态", "dataType": "concept", "semanticTarget": "SchemeUseStatus", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.itemName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "指标名称", "dataType": "string", "semanticTarget": "ItemName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.itemType", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "指标类型", "dataType": "concept", "semanticTarget": "ItemType", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.itemLevel", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "指标层级", "dataType": "concept", "semanticTarget": "ItemLevel", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.itemMaxScore", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "最高分", "dataType": "decimal", "semanticTarget": "ItemMaxScore", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.itemOrderNo", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "指标排序号", "dataType": "integer", "semanticTarget": "ItemOrderNo", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.proposedPosition", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "拟评聘职务", "dataType": "string", "semanticTarget": "ProposedPosition", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.candidatePhoto", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "候选人照片", "dataType": "attachment", "semanticTarget": "CandidatePhoto", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.workReport", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "述职报告", "dataType": "attachment-list", "semanticTarget": "WorkReport", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.specialQuota", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "是否特殊名额", "dataType": "boolean", "semanticTarget": "SpecialQuota", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.quotaItemName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "分项名称", "dataType": "string", "semanticTarget": "QuotaItemName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.minVotes", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "最少票数", "dataType": "integer", "semanticTarget": "MinVotes", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.maxVotes", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "最多票数", "dataType": "integer", "semanticTarget": "MaxVotes", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.groupName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "分组名称", "dataType": "string", "semanticTarget": "GroupName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.groupPositionCount", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "岗位数量", "dataType": "integer", "semanticTarget": "GroupPositionCount", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.groupLeader", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "组长", "dataType": "string", "semanticTarget": "GroupLeader", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.judgeAccountNo", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "评委账号", "dataType": "string", "semanticTarget": "JudgeAccountNo", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.judgeAccountStatus", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "账号状态", "dataType": "concept", "semanticTarget": "JudgeAccountStatus", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.materialType", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "材料类型", "dataType": "concept", "semanticTarget": "MaterialType", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.materialUploadTime", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "上传时间", "dataType": "datetime", "semanticTarget": "MaterialUploadTime", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.promiseContent", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "承诺书正文", "dataType": "text", "semanticTarget": "PromiseContent", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.promiseEnabled", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "是否启用承诺书", "dataType": "boolean", "semanticTarget": "PromiseEnabled", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.signatureEnabled", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "是否需要签名", "dataType": "boolean", "semanticTarget": "SignatureEnabled", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.projectStatus", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "项目状态", "dataType": "concept", "semanticTarget": "ProjectStatus", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.projectStatusNote", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "状态说明", "dataType": "string", "semanticTarget": "ProjectStatusNote", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.submittedCount", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "已提交数", "dataType": "integer", "semanticTarget": "SubmittedCount", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.pendingCount", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "未提交数", "dataType": "integer", "semanticTarget": "PendingCount", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.completeRate", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "完成率", "dataType": "decimal", "semanticTarget": "CompleteRate", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.submitStatus", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "提交状态", "dataType": "concept", "semanticTarget": "SubmitStatus", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.submitTime", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "提交时间", "dataType": "datetime", "semanticTarget": "SubmitTime", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.totalVotes", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "总票数", "dataType": "integer", "semanticTarget": "TotalVotes", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.agreeVotes", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "同意票数", "dataType": "integer", "semanticTarget": "AgreeVotes", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.disagreeVotes", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "不同意票数", "dataType": "integer", "semanticTarget": "DisagreeVotes", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.abstainVotes", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "弃权票数", "dataType": "integer", "semanticTarget": "AbstainVotes", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.totalScore", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "总分", "dataType": "decimal", "semanticTarget": "TotalScore", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.rankingNo", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "排名", "dataType": "integer", "semanticTarget": "RankingNo", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.voteResult", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "投票结果", "dataType": "concept", "semanticTarget": "VoteResult", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.reportName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "报表名称", "dataType": "string", "semanticTarget": "ReportName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.reportType", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "报表类型", "dataType": "concept", "semanticTarget": "ReportType", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.reportTemplate", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "绑定模板", "dataType": "string", "semanticTarget": "ReportTemplate", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.screenTitle", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "大屏标题", "dataType": "string", "semanticTarget": "ScreenTitle", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.welcomeWords", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "欢迎语", "dataType": "string", "semanticTarget": "WelcomeWords", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.startWords", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "开始提示语", "dataType": "string", "semanticTarget": "StartWords", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.endWords", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "结束提示语", "dataType": "string", "semanticTarget": "EndWords", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.startCountdown", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "开始倒计时", "dataType": "integer", "semanticTarget": "StartCountdown", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.endCountdown", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "结束倒计时", "dataType": "integer", "semanticTarget": "EndCountdown", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.screenBackground", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "大屏背景图", "dataType": "attachment", "semanticTarget": "ScreenBackground", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.voteOpinion", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "投票意见", "dataType": "text", "semanticTarget": "VoteOpinion", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.auditSignature", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "审核签名", "dataType": "attachment", "semanticTarget": "AuditSignature", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.systemDisplayName", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "系统名称", "dataType": "string", "semanticTarget": "SystemDisplayName", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.systemLogo", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "系统 LOGO", "dataType": "attachment", "semanticTarget": "SystemLogo", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.loginWelcome", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "登录欢迎语", "dataType": "string", "semanticTarget": "LoginWelcome", "classification": "internal", "lifecycle": "active", "status": "active" },
+    { "fieldId": "Business.vote.homeWelcome", "fieldKind": "business-specific", "ownerDomain": "vote", "label": "首页欢迎语", "dataType": "string", "semanticTarget": "HomeWelcome", "classification": "internal", "lifecycle": "active", "status": "active" }
+  ]
+}

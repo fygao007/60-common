@@ -1,0 +1,109 @@
+{
+  "generatedFrom": "ontology/product-world/scenarios/teacher-growth-process-dynamics.json",
+  "scenarioId": "teacher-growth-process-dynamics",
+  "version": "1.0.0",
+  "generationRules": {
+    "framework": "framework-2",
+    "useTemplateFirst": true,
+    "useDesignSystemOnly": true,
+    "useFieldRefsOnly": true,
+    "copyCrossDemoCode": false,
+    "preserveDeletedCodeAsComments": false
+  },
+  "research": {
+    "sources": [
+      {
+        "id": "user-reference",
+        "type": "mockup",
+        "title": "流程动态右侧面板、时间轴状态与流程图抽屉参考截图"
+      },
+      {
+        "id": "existing-plan-events",
+        "type": "existing-product",
+        "title": "教师成长档案袋发展方案台账与确认详情中的既有流转记录"
+      }
+    ],
+    "actors": [
+      {
+        "id": "manager",
+        "name": "管理部门"
+      }
+    ],
+    "goals": [
+      "在查看方案详情或台账时快速掌握审批进度、操作人、时间与意见"
+    ],
+    "painPoints": [
+      "流转记录与业务详情分离，难以同时查看",
+      "列表中需要额外进入详情才能查看处理历史"
+    ],
+    "openQuestions": [
+      "正式流程图节点与分支需以后端流程定义为准；当前演示只基于已有方案流转记录展示，不新增或伪造审批事件"
+    ]
+  },
+  "scenario": {
+    "name": "查看发展方案流程动态",
+    "actorRefs": [
+      "manager"
+    ],
+    "preconditions": [
+      "方案台账与确认详情使用现有发展方案流转记录"
+    ],
+    "mainFlow": [
+      "在确认详情页右侧查看当前节点及历史流转",
+      "在方案台账行操作中点击流程动态",
+      "在抽屉中切换流程动态与流程图视图",
+      "展开或收起单个节点以查看操作人、时间和审核意见"
+    ],
+    "exceptions": [
+      "无流转记录时展示空状态",
+      "后端流程定义未接入前，流程图只按现有流转记录展示实际发生的节点，不补造未发生的审批节点"
+    ]
+  },
+  "requirements": {
+    "rules": [
+      "复用已存在的方案事件，不增加业务字段或复制其他 Demo 的代码",
+      "时间轴状态标签使用设计系统 DSTag 与统一流程状态色",
+      "流程动态区域必须适配详情页侧栏和列表页抽屉两种承载方式",
+      "列表入口使用设计系统按钮；抽屉使用设计系统 DSDrawer 与 DSTabs"
+    ],
+    "acceptanceCriteria": [
+      "台账每条方案均可打开流程动态抽屉",
+      "抽屉可在流程动态与流程图之间切换",
+      "确认详情页在宽屏右侧显示同一流程动态时间轴，窄屏下顺序回流",
+      "时间轴节点可独立展开或收起并显示现有操作人、时间和意见",
+      "流程状态标签按未开始、待审核、通过、退回、不通过等语义显示对应颜色"
+    ]
+  },
+  "page": {
+    "title": "发展方案流程动态",
+    "templateId": "regular-list",
+    "menuRef": "teacher-growth-portfolio.management:mp-plan-list",
+    "fieldRefs": [],
+    "components": [
+      "DSProcessDynamics",
+      "DSRegularListTemplate",
+      "DSDataTable",
+      "DSButton",
+      "DSDrawer",
+      "DSTabs",
+      "DSTag",
+      "DSEmptyState"
+    ],
+    "demoPath": "demos/teacher-growth-portfolio/teacher/mp-plan-list/mp-plan-list.html",
+    "template": {
+      "id": "regular-list",
+      "component": "DSRegularListTemplate",
+      "useFor": [
+        "查询列表",
+        "只读列表",
+        "普通台账"
+      ],
+      "requiredComponents": [
+        "DSFilterBar",
+        "DSDataTable",
+        "DSPagination"
+      ]
+    },
+    "resolvedFields": []
+  }
+}

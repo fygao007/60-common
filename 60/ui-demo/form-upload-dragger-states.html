@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>拖拽上传状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    .fis-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: #fff; }
+    .fis-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: #fff; }
+    .fis-content { display: flex; flex-direction: column; gap: 24px; width: 693px; }
+    .fis-title { color: #000; font-size: 14px; font-weight: 600; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-rows { display: grid; grid-template-columns: 133px 560px; row-gap: 20px; }
+    .fis-state { align-self: start; padding-top: 5px; color: #505266; font-size: 14px; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-field { display: flex; align-items: flex-start; gap: 16px; }
+    .fis-field-label { flex: none; display: flex; align-items: flex-start; justify-content: flex-end; width: 94px; height: 32px; padding-top: 6px; color: #505266; font-size: 14px; line-height: 20px; text-align: right; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-field-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+    .fis-dragger { width: 160px; height: 120px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; padding: 16px; background: #FFFFFF; border: 1px dashed #DCDCE0; border-radius: 4px; cursor: pointer; }
+    .fis-dragger-icon { display: inline-flex; width: 20px; height: 20px; color: #9697A3; }
+    .fis-dragger-icon img, .fis-dragger-icon svg { width: 100%; height: 100%; display: block; }
+    .fis-dragger-text { color: #505266; font-size: 12px; line-height: 20px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-dragger-text .link { color: #333FFF; }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="fis-page">
+    <section class="fis-stage">
+      <div class="fis-content">
+        <span class="fis-title">状态</span>
+        <div class="fis-rows">
+          <div class="fis-state">默认态</div>
+          <div class="fis-field">
+            <span class="fis-field-label">标题名称</span>
+            <div class="fis-field-body">
+              <div class="fis-dragger" role="button" tabindex="0">
+                <span class="fis-dragger-icon" data-wise-icon="uploadCloud"></span>
+                <span class="fis-dragger-text">拖拽至此处，或点击<span class="link">上传</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

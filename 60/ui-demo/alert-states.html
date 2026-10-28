@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>警告提示状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Alert/index.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Button/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .alert-page {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .alert-stage {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .alert-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1200px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .alert-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .alert-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .alert-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .alert-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .alert-source {
+      color: var(--ds-color-primary);
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .alert-section {
+      width: min(1200px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .alert-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .alert-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .alert-section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .alert-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(400px, 1fr));
+      gap: 0;
+    }
+
+    .alert-card {
+      min-height: 80px;
+      padding: 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .alert-card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .alert-card h3 {
+      margin: 0 0 12px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .alert-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .state-note {
+      display: block;
+      margin-top: 8px;
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    /* 关闭按钮样式 */
+    .ds-alert__close {
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      color: var(--ds-color-text-tertiary);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .ds-alert__close:hover {
+      color: var(--ds-color-text);
+    }
+
+    .ds-alert__close:focus-visible {
+      outline: 2px solid var(--ds-color-focus-ring-strong);
+      outline-offset: 2px;
+    }
+
+    /* Success 图标 */
+    .ds-alert--success .ds-alert__icon::before {
+      content: "✓";
+    }
+
+    /* Warning 图标 */
+    .ds-alert--warning .ds-alert__icon::before {
+      content: "!";
+    }
+
+    /* Danger 图标 */
+    .ds-alert--danger .ds-alert__icon::before {
+      content: "×";
+    }
+
+    @media (max-width: 900px) {
+      .alert-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .alert-card,
+      .alert-card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="alert-page">
+    <section class="alert-stage">
+      <header class="alert-head">
+        <div>
+          <h1 class="alert-title"><span>警告提示状态</span></h1>
+          <p class="alert-desc">覆盖警告提示类型、结构组合、关闭按钮和交互状态，用于后续对齐 MasterGo《PC 基础控件 / Alert》。</p>
+        </div>
+        <a class="alert-source" href="./packages/design-system/docs/alert.md">Alert 规范</a>
+      </header>
+
+      <section class="alert-section">
+        <div class="alert-section-head">
+          <h2 class="alert-section-title">类型 × 结构</h2>
+          <span class="alert-section-meta">Info / Success / Warning / Danger × 仅标题 / 仅描述 / 标题+描述 / 标题+描述+操作 / 标题+描述+操作+关闭</span>
+        </div>
+        <div class="alert-grid">
+          <article class="alert-card">
+            <h3>Info 信息提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--info" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">信息提示标题</strong>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--info" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <div class="ds-alert__description">这是一条信息提示内容，用于告知用户一般信息。</div>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--info" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">信息提示标题</strong>
+                  <div class="ds-alert__description">这是一条信息提示内容，用于告知用户一般信息。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">查看详情</button>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--info" role="status" id="infoClosable">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">信息提示标题</strong>
+                  <div class="ds-alert__description">这是一条信息提示内容，用于告知用户一般信息。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">查看详情</button>
+                </div>
+                <button class="ds-alert__close" type="button" aria-label="关闭">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </section>
+            </div>
+            <span class="state-note">蓝色背景，用于一般信息告知。</span>
+          </article>
+
+          <article class="alert-card">
+            <h3>Success 成功提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--success" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">操作成功</strong>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--success" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <div class="ds-alert__description">您的数据已成功保存，可以继续下一步操作。</div>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--success" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">操作成功</strong>
+                  <div class="ds-alert__description">您的数据已成功保存，可以继续下一步操作。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">继续操作</button>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--success" role="status" id="successClosable">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">操作成功</strong>
+                  <div class="ds-alert__description">您的数据已成功保存，可以继续下一步操作。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">继续操作</button>
+                </div>
+                <button class="ds-alert__close" type="button" aria-label="关闭">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </section>
+            </div>
+            <span class="state-note">绿色背景，用于操作成功反馈。</span>
+          </article>
+
+          <article class="alert-card">
+            <h3>Warning 警告提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--warning" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">警告提示</strong>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--warning" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <div class="ds-alert__description">请注意，此操作可能影响其他数据，请谨慎操作。</div>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--warning" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">警告提示</strong>
+                  <div class="ds-alert__description">请注意，此操作可能影响其他数据，请谨慎操作。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">了解更多</button>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--warning" role="status" id="warningClosable">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">警告提示</strong>
+                  <div class="ds-alert__description">请注意，此操作可能影响其他数据，请谨慎操作。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">了解更多</button>
+                </div>
+                <button class="ds-alert__close" type="button" aria-label="关闭">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </section>
+            </div>
+            <span class="state-note">橙色背景，用于警示用户注意。</span>
+          </article>
+
+          <article class="alert-card">
+            <h3>Danger 错误提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--danger" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">错误提示</strong>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--danger" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <div class="ds-alert__description">操作失败，请检查输入数据后重试。</div>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--danger" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">错误提示</strong>
+                  <div class="ds-alert__description">操作失败，请检查输入数据后重试。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">重新提交</button>
+                </div>
+              </section>
+              <section class="ds-alert ds-alert--danger" role="status" id="dangerClosable">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">错误提示</strong>
+                  <div class="ds-alert__description">操作失败，请检查输入数据后重试。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">重新提交</button>
+                </div>
+                <button class="ds-alert__close" type="button" aria-label="关闭">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </section>
+            </div>
+            <span class="state-note">红色背景，用于错误或危险操作告知。</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="alert-section">
+        <div class="alert-section-head">
+          <h2 class="alert-section-title">使用场景</h2>
+          <span class="alert-section-meta">页面级 / 表单级 / 卡片级</span>
+        </div>
+        <div class="alert-grid">
+          <article class="alert-card">
+            <h3>页面级提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--info" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">系统维护通知</strong>
+                  <div class="ds-alert__description">系统将于今晚 22:00-24:00 进行维护，届时部分功能可能无法使用。</div>
+                </div>
+                <button class="ds-alert__close" type="button" aria-label="关闭">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </section>
+            </div>
+            <span class="state-note">用于页面顶部，告知用户重要信息。</span>
+          </article>
+
+          <article class="alert-card">
+            <h3>表单级提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--warning" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">填写提示</strong>
+                  <div class="ds-alert__description">请确保所有必填字段都已填写完整，否则无法提交。</div>
+                </div>
+              </section>
+            </div>
+            <span class="state-note">用于表单顶部，提示填写规则或错误信息。</span>
+          </article>
+
+          <article class="alert-card">
+            <h3>卡片级提示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--danger" role="status">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">数据异常</strong>
+                  <div class="ds-alert__description">当前卡片数据存在异常，请检查后重新加载。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button">重新加载</button>
+                </div>
+              </section>
+            </div>
+            <span class="state-note">用于卡片内部，提示卡片相关状态信息。</span>
+          </article>
+
+          <article class="alert-card">
+            <h3>交互演示</h3>
+            <div class="alert-stack">
+              <section class="ds-alert ds-alert--info" role="status" id="interactiveDemo">
+                <span class="ds-alert__icon" aria-hidden="true"></span>
+                <div class="ds-alert__content">
+                  <strong class="ds-alert__title">交互演示</strong>
+                  <div class="ds-alert__description">点击关闭按钮可以隐藏此提示，点击操作按钮可以触发回调。</div>
+                </div>
+                <div class="ds-alert__action">
+                  <button class="ds-button ds-button--link" type="button" id="actionBtn">触发操作</button>
+                </div>
+                <button class="ds-alert__close" type="button" aria-label="关闭" id="closeBtn">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </section>
+              <span class="state-note" id="interactionLog">等待交互...</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  // 关闭按钮交互
+  document.querySelectorAll('.ds-alert__close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const alert = e.target.closest('.ds-alert');
+      if (alert) {
+        alert.style.display = 'none';
+      }
+    });
+  });
+
+  // 交互演示
+  let actionCount = 0;
+  document.getElementById('actionBtn')?.addEventListener('click', () => {
+    actionCount += 1;
+    document.getElementById('interactionLog').textContent = `操作按钮已点击 ${actionCount} 次`;
+  });
+
+  document.getElementById('closeBtn')?.addEventListener('click', () => {
+    document.getElementById('interactionLog').textContent = '提示已关闭，操作按钮点击次数：' + actionCount;
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": 1,
+  "policy": {
+    "templateRequired": true,
+    "designSystemRequired": true,
+    "crossDemoDependencies": "menu-registry-only",
+    "nativeControlsAllowed": false
+  },
+  "templates": [
+    {
+      "id": "standard-list-root",
+      "aliases": ["scenarios/szd-standard-list-page.html", "szd-standard-list-page.html"],
+      "previewPath": "scenarios/szd-standard-list-page.html",
+      "component": "DSStandardListTemplate",
+      "useFor": ["无框架根容器标准列表", "严格配置式列表"],
+      "requiredComponents": ["DSFilterBar", "DSButton", "DSDataTable", "DSPagination"],
+      "sourceTemplate": "templates/react-business-page/standard-list.page.jsx.template",
+      "contract": {
+        "version": 1,
+        "configOnly": true,
+        "allowedConfigKeys": ["filterProps", "toolbarActions", "tableProps", "pagination"],
+        "layoutOrder": ["filter", "toolbar", "table", "pagination"],
+        "fixedProps": {"inset": 12, "contentGap": 12, "toolbarGap": 8, "variant": "lowcode", "bordered": true},
+        "frameworkShell": false,
+        "columnWidthPolicy": "packages/design-system/src/RegularListTemplate/standard-list-contract.mjs"
+      }
+    },
+    {
+      "id": "crud-list",
+      "component": "DSCrudTemplate",
+      "useFor": [
+        "增删改查",
+        "管理列表",
+        "配置列表"
+      ],
+      "requiredComponents": [
+        "DSFilterBar",
+        "DSButton",
+        "DSDataTable",
+        "DSPagination"
+      ]
+    },
+    {
+      "id": "regular-list",
+      "component": "DSRegularListTemplate",
+      "useFor": [
+        "查询列表",
+        "只读列表",
+        "普通台账"
+      ],
+      "requiredComponents": [
+        "DSFilterBar",
+        "DSDataTable",
+        "DSPagination"
+      ]
+    },
+    {
+      "id": "card-list",
+      "component": "DSCardListTemplate",
+      "useFor": [
+        "卡片列表",
+        "资源库",
+        "入口集合"
+      ],
+      "requiredComponents": [
+        "DSCard",
+        "DSFilterBar",
+        "DSPagination"
+      ]
+    },
+    {
+      "id": "audit",
+      "component": "DSAuditTemplate",
+      "useFor": [
+        "审核",
+        "审批",
+        "意见处理"
+      ],
+      "requiredComponents": [
+        "DSAuditToolbar",
+        "DSAuditActions",
+        "DSAuditOpinionModal"
+      ]
+    },
+    {
+      "id": "dashboard",
+      "component": "DSDashboardGrid",
+      "useFor": [
+        "首页",
+        "工作台",
+        "统计看板"
+      ],
+      "requiredComponents": [
+        "DSCard",
+        "DSChartCard",
+        "DSDashboardGrid"
+      ]
+    },
+    {
+      "id": "detail-table-anchor",
+      "aliases": [
+        "详情页表格表单",
+        "详情页_表格表单+右侧锚点",
+        "右侧锚点详情页"
+      ],
+      "previewPath": "scenarios/detail-table-anchor-page.html",
+      "component": "DSSubPageHeader + DSGroupTitle + DSAnchor + DSDataTable",
+      "useFor": [
+        "详情页表格表单",
+        "右侧锚点导航",
+        "长表单分组定位"
+      ],
+      "requiredComponents": [
+        "DSSubPageHeader",
+        "DSGroupTitle",
+        "DSAnchor",
+        "DSInput",
+        "DSSelect",
+        "DSDatePicker",
+        "DSTimePicker",
+        "DSSwitch",
+        "DSDataTable",
+        "DSTag",
+        "DSButtonGroup"
+      ]
+    },
+    {
+      "id": "edit-form",
+      "component": "DSEditForm",
+      "useFor": [
+        "新增表单",
+        "编辑表单",
+        "详情维护"
+      ],
+      "requiredComponents": [
+        "DSEditForm",
+        "DSEditField",
+        "DSButtonGroup"
+      ]
+    },
+    {
+      "id": "import-wizard",
+      "component": "DSImportWizard",
+      "useFor": [
+        "批量导入",
+        "数据映射",
+        "导入校验"
+      ],
+      "requiredComponents": [
+        "DSImportSteps",
+        "DSImportUpload",
+        "DSImportValidationPanel"
+      ]
+    },
+    {
+      "id": "display-board",
+      "component": "原始组件组装（fallback）",
+      "useFor": [
+        "大屏展示",
+        "评委端/移动端预览",
+        "投影投放预览"
+      ],
+      "requiredComponents": []
+    }
+  ],
+  "fallback": {
+    "template": "framework/page-template.html",
+    "rule": "找不到与页面实际需求语义接近的模板时，不硬套模板：使用 @wisedu/design-system 原始组件组装新页面；若该页面类型可复用，在需求阶段同步生成并登记新模板页面（templates/ + 本目录条目）供后续复用。"
+  }
+}

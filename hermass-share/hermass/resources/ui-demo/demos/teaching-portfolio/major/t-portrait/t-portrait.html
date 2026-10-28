@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教师教学画像</title>
+  <style>
+    body { margin: 0; background: #f7f8fa; }
+    .ds-scope { min-height: 100vh; color: #1f2937; font-family: var(--ds-font-family); font-variant-numeric: tabular-nums; }
+    .mp-page { margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+    /* 分区头：蓝色竖条 */
+    .mp-card { background: #fff; border: 1px solid #eeeef0; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .mp-card-head { display: flex; align-items: center; min-height: 52px; gap: 8px; padding: 0 16px; border-bottom: 1px solid #eeeef0; }
+    .mp-ribbon { position: relative; padding-left: 10px; font-size: 16px; font-weight: 600; color: #000; }
+    .mp-ribbon::before { content: ""; position: absolute; top: 50%; left: 0; width: 4px; height: 16px; border-radius: 2px; background: var(--ds-color-primary); transform: translateY(-50%); }
+    .mp-card-sub { font-size: 13px; color: #737585; margin-left: 4px; }
+    .mp-card-link { margin-left: auto; font-size: 13px; color: #3167ff; cursor: pointer; }
+    .mp-card-link:hover { text-decoration: underline; }
+
+    /* 色调（图例点 / 条形填充） */
+    .tone-primary { background: #3167ff; }
+    .tone-info { background: #5b9bff; }
+    .tone-success { background: #00B42A; }
+    .tone-warning { background: #ff994a; }
+    .tone-muted { background: #c2c7d0; }
+
+    /* 顶部 5 项 KPI */
+    .mp-metrics { display: grid; gap: 12px; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .mp-metric { position: relative; min-height: 150px; padding: 16px; background: #fff; border: 1px solid #eeeef0; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .mp-metric__label { display: flex; align-items: center; gap: 8px; color: #505266; font-size: 13px; }
+    .mp-metric__ic { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 8px; background: #e8f0ff; color: #3167ff; }
+    .mp-metric__ic svg { width: 20px; height: 20px; }
+    .mp-metric strong { display: block; margin-top: 12px; font-size: 30px; line-height: 1; font-weight: 700; color: #000; }
+    .mp-metric strong small { margin-left: 3px; color: #737585; font-size: 13px; font-weight: 400; }
+    .mp-metric p { margin: 8px 0 0; color: #9094a6; font-size: 12px; }
+
+    /* 专业人员统计：2x2 面板 */
+    .mp-stat-grid { display: grid; gap: 12px; padding: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mp-stat-panel { display: flex; min-width: 0; flex-direction: column; gap: 14px; padding: 16px; border: 1px solid #f0f1f4; border-radius: 8px; background: #fff; }
+    .mp-stat-panel h3 { display: flex; align-items: baseline; gap: 6px; margin: 0; font-size: 14px; font-weight: 600; color: #000; }
+    .mp-stat-panel h3 span { color: #9094a6; font-size: 12px; font-weight: 400; }
+
+    /* 环形图 */
+    .mp-title-chart { display: flex; align-items: center; gap: 24px; width: 100%; }
+    .mp-donut { position: relative; width: 132px; height: 132px; flex: 0 0 132px; }
+    .mp-donut svg { width: 100%; height: 100%; }
+    .mp-donut__track, .mp-donut__seg { fill: none; stroke-width: 16; }
+    .mp-donut__track { stroke: #eef0f4; }
+    .mp-donut__seg--primary { stroke: #3167ff; }
+    .mp-donut__seg--info { stroke: #5b9bff; }
+    .mp-donut__seg--success { stroke: #00B42A; }
+    .mp-donut__seg--warning { stroke: #ff994a; }
+    .mp-donut__seg--muted { stroke: #c2c7d0; }
+    .mp-donut > span { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .mp-donut strong { font-size: 26px; font-weight: 600; line-height: 1; color: #000; }
+    .mp-donut small { margin-top: 3px; color: #9094a6; font-size: 12px; }
+    .mp-legend { display: flex; min-width: 150px; flex: 1; flex-direction: column; gap: 8px; }
+    .mp-legend > div { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #505266; }
+    .mp-legend i { width: 10px; height: 10px; flex: none; border-radius: 999px; }
+    .mp-legend span { flex: 1; color: #9094a6; }
+    .mp-legend small { width: 34px; color: #9094a6; text-align: right; }
+    .mp-legend strong { color: #000; font-weight: 600; }
+
+    /* 横条（岗位梯队 / 学历学位） */
+    .mp-bars { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+    .mp-bar-row { display: flex; align-items: center; gap: 8px; }
+    .mp-bar-row > span { width: 82px; flex: none; color: #505266; font-size: 13px; }
+    .mp-bar-row__track { height: 9px; flex: 1; background: #f0f1f4; border-radius: 999px; overflow: hidden; }
+    .mp-bar-row__track i { display: block; height: 100%; border-radius: inherit; }
+    .mp-bar-row > strong { width: 42px; text-align: right; font-size: 13px; color: #000; }
+    .mp-bar-row > strong small { margin-left: 2px; color: #9094a6; font-size: 10px; }
+    .mp-degree-summary { display: flex; justify-content: space-between; margin-top: 8px; color: #9094a6; font-size: 13px; }
+    .mp-degree-summary strong { color: #00B42A; }
+
+    /* 标志性成果 */
+    .mp-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px 0; }
+    .mp-filter { height: 28px; padding: 0 14px; border-radius: 999px; border: 1px solid #dcdce0; background: #fff; color: #505266; font-size: 13px; cursor: pointer; }
+    .mp-filter.is-active { border-color: var(--ds-color-primary); background: var(--ds-color-primary); color: #fff; }
+    .mp-ach-grid { display: grid; gap: 12px; padding: 12px 16px 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mp-ach { display: flex; min-width: 0; min-height: 132px; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid #f0f1f4; border-radius: 8px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.04); cursor: pointer; transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease; }
+    .mp-ach:hover { border-color: #c9dcff; box-shadow: 0 6px 16px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .mp-ach h3 { margin: 0; font-size: 15px; line-height: 1.5; color: #000; }
+    .mp-ach__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mp-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 11px; font-size: 12px; }
+    .mp-tag.warning { background: #fff7e8; color: #ad6800; }
+    .mp-tag.success { background: #e8f7f1; color: #00B42A; }
+    .mp-tag.primary { background: #e8f0ff; color: #3167ff; }
+    .mp-owner { color: #505266; font-size: 13px; }
+    .mp-ach__view { margin-top: auto; color: #3167ff; font-size: 13px; font-weight: 500; }
+
+    /* 双栏：需带一把 / 数据采集健康度 */
+    .mp-dual { display: grid; gap: 12px; grid-template-columns: 1.15fr 0.85fr; }
+    .mp-care-list { padding: 12px 16px 16px; }
+    .mp-care-list > p { margin: 0 0 8px; color: #9094a6; font-size: 13px; }
+    .mp-care-item { display: flex; align-items: center; gap: 8px; min-height: 42px; padding: 4px 16px; font-size: 13px; color: #505266; }
+    .mp-care-item > i { width: 7px; height: 7px; flex: none; background: #ff994a; border-radius: 999px; }
+    .mp-care-item > span { color: #9094a6; }
+    .mp-care-item__action { margin-left: auto; color: #3167ff; cursor: pointer; font-size: 13px; }
+    .mp-care-item__action:hover { text-decoration: underline; }
+
+    .mp-health { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+    .mp-health__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mp-health__stats > span { display: flex; flex-direction: column; gap: 3px; padding: 0 12px; border-left: 1px solid #eeeef0; }
+    .mp-health__stats > span:first-child { padding-left: 0; border-left: 0; }
+    .mp-health__stats b { font-size: 22px; font-weight: 600; line-height: 1; color: #000; }
+    .mp-health__stats b.warn { color: #f5483b; }
+    .mp-health__stats small { color: #9094a6; font-size: 12px; }
+    .mp-health__bar { display: flex; height: 8px; min-width: 120px; overflow: hidden; background: #f0f1f4; border-radius: 999px; }
+    .mp-health__bar i { display: block; height: 100%; }
+    .mp-health__footer { display: flex; align-items: center; justify-content: space-between; color: #9094a6; font-size: 13px; }
+    .mp-health__footer .mp-card-link { margin-left: 0; }
+
+    /* 弹窗 */
+    .mp-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .mp-modal-mask.show { display: flex; }
+    .mp-modal { width: 440px; max-width: 92vw; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.2); }
+    .mp-modal__head { display: flex; align-items: center; min-height: 52px; padding: 0 20px; border-bottom: 1px solid #eeeef0; font-size: 16px; font-weight: 600; color: #000; }
+    .mp-modal__body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .mp-form-row { display: flex; gap: 12px; }
+    .mp-form-row > label { width: 80px; flex: none; color: #9094a6; font-size: 13px; line-height: 22px; }
+    .mp-form-row > div { flex: 1; font-size: 14px; color: #1f2937; line-height: 22px; }
+    .mp-form-row.full > div { color: #505266; font-size: 13px; line-height: 1.7; }
+    .mp-modal__foot { display: flex; justify-content: flex-end; padding: 12px 20px 20px; }
+    .ap-btn { height: 30px; padding: 0 16px; border-radius: 4px; font-size: 13px; border: 1px solid #dcdce0; background: #fff; color: #000; cursor: pointer; }
+    .ap-btn.primary { border-color: var(--ds-color-primary); background: var(--ds-color-primary); color: #fff; }
+
+    @media (max-width: 1180px) { .mp-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 980px) {
+      .mp-stat-grid, .mp-ach-grid, .mp-dual { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) { .mp-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  </style>
+</head>
+<body>
+<div class="ds-scope">
+  <div class="mp-page">
+
+    <!-- ============ 专业概览 KPI ============ -->
+    <section class="mp-metrics" aria-label="专业概览">
+      <article class="mp-metric">
+        <div class="mp-metric__label"><span class="mp-metric__ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="8" r="3.5"/><circle cx="16" cy="8" r="3.5"/><path d="M2 20v-1.5a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5V20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 13.5a5 5 0 0 1 5 5V20" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>专任教师</div>
+        <strong>8<small>人</small></strong>
+        <p>含校外兼职 1 人</p>
+      </article>
+      <article class="mp-metric">
+        <div class="mp-metric__label"><span class="mp-metric__ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="3.5"/><circle cx="5" cy="9" r="2.8"/><circle cx="19" cy="9" r="2.8"/><path d="M5 20v-1.2c0-2.4 1.6-4.3 3.8-4.7l2.2-.3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19 20v-1.2c0-2.4-1.6-4.3-3.8-4.7l-2.2-.3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.5 21v-1.8a4.5 4.5 0 0 1 9 0V21" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>专业学生</div>
+        <strong>480<small>人</small></strong>
+        <p>生师比 15 : 1</p>
+      </article>
+      <article class="mp-metric">
+        <div class="mp-metric__label"><span class="mp-metric__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5" fill="#e8f0ff"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 7v5M9 12h6"/></svg></span>双师型占比</div>
+        <strong>70<small>%</small></strong>
+        <p>较上学年 ↑3%</p>
+      </article>
+      <article class="mp-metric">
+        <div class="mp-metric__label"><span class="mp-metric__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5" fill="#e8f0ff"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/></svg></span>在研项目</div>
+        <strong>1<small>项</small></strong>
+        <p>横向 1</p>
+      </article>
+      <article class="mp-metric">
+        <div class="mp-metric__label"><span class="mp-metric__ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v7a5 5 0 0 1-10 0V3z"/><path d="M12 15v5M8 20h8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 5a4 4 0 0 0 4 4M19 5a4 4 0 0 1-4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>本学年获奖</div>
+        <strong>4<small>项</small></strong>
+        <p>省级 2 · 校级 2</p>
+      </article>
+    </section>
+
+    <!-- ============ 专业人员统计 ============ -->
+    <article class="mp-card">
+      <div class="mp-card-head">
+        <div class="mp-ribbon">专业人员统计</div>
+        <span class="mp-card-sub">共 8 人 · 嵌入式技术与应用</span>
+      </div>
+      <div class="mp-stat-grid">
+        <section class="mp-stat-panel">
+          <h3>职称结构 <span>正高级 ~ 初级</span></h3>
+          <div class="mp-title-chart">
+            <div class="mp-donut" role="img" aria-label="职称结构：正高级1人，副高级2人，中级4人，初级1人">
+              <svg viewBox="0 0 120 120">
+                <circle class="mp-donut__track" cx="60" cy="60" r="40" />
+                <g transform="rotate(-90 60 60)">
+                  <circle class="mp-donut__seg mp-donut__seg--primary" cx="60" cy="60" r="40" stroke-dasharray="31.4 251.3" stroke-dashoffset="0" />
+                  <circle class="mp-donut__seg mp-donut__seg--info" cx="60" cy="60" r="40" stroke-dasharray="62.8 251.3" stroke-dashoffset="-31.4" />
+                  <circle class="mp-donut__seg mp-donut__seg--success" cx="60" cy="60" r="40" stroke-dasharray="125.7 251.3" stroke-dashoffset="-94.2" />
+                  <circle class="mp-donut__seg mp-donut__seg--muted" cx="60" cy="60" r="40" stroke-dasharray="31.4 251.3" stroke-dashoffset="-219.9" />
+                </g>
+              </svg>
+              <span><strong>8</strong><small>人</small></span>
+            </div>
+            <div class="mp-legend">
+              <div><i class="tone-primary"></i><span>正高级</span><strong>1</strong><small>12%</small></div>
+              <div><i class="tone-info"></i><span>副高级</span><strong>2</strong><small>25%</small></div>
+              <div><i class="tone-success"></i><span>中级</span><strong>4</strong><small>50%</small></div>
+              <div><i class="tone-muted"></i><span>初级</span><strong>1</strong><small>13%</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mp-stat-panel">
+          <h3>岗位梯队 <span>按岗位类型</span></h3>
+          <div class="mp-bars">
+            <div class="mp-bar-row"><span>教学型</span><div class="mp-bar-row__track"><i class="tone-primary" style="width:37.5%"></i></div><strong>3<small>人</small></strong></div>
+            <div class="mp-bar-row"><span>教学科研型</span><div class="mp-bar-row__track"><i class="tone-primary" style="width:25%"></i></div><strong>2<small>人</small></strong></div>
+            <div class="mp-bar-row"><span>青年教师</span><div class="mp-bar-row__track"><i class="tone-primary" style="width:25%"></i></div><strong>2<small>人</small></strong></div>
+            <div class="mp-bar-row"><span>骨干 / 主任</span><div class="mp-bar-row__track"><i class="tone-primary" style="width:12.5%"></i></div><strong>1<small>人</small></strong></div>
+          </div>
+        </section>
+
+        <section class="mp-stat-panel">
+          <h3>学历学位 <span>最高学位</span></h3>
+          <div class="mp-bars">
+            <div class="mp-bar-row"><span>博士</span><div class="mp-bar-row__track"><i class="tone-success" style="width:37.5%"></i></div><strong>3<small>人</small></strong></div>
+            <div class="mp-bar-row"><span>硕士</span><div class="mp-bar-row__track"><i class="tone-success" style="width:50%"></i></div><strong>4<small>人</small></strong></div>
+            <div class="mp-bar-row"><span>学士</span><div class="mp-bar-row__track"><i class="tone-success" style="width:12.5%"></i></div><strong>1<small>人</small></strong></div>
+          </div>
+          <div class="mp-degree-summary"><span>研究生学历</span><strong>87.5%</strong></div>
+        </section>
+
+        <section class="mp-stat-panel">
+          <h3>获奖等级 <span>本学年 4 项</span></h3>
+          <div class="mp-title-chart">
+            <div class="mp-donut" role="img" aria-label="获奖等级：省级2项，校级2项">
+              <svg viewBox="0 0 120 120">
+                <circle class="mp-donut__track" cx="60" cy="60" r="40" />
+                <g transform="rotate(-90 60 60)">
+                  <circle class="mp-donut__seg mp-donut__seg--success" cx="60" cy="60" r="40" stroke-dasharray="125.7 251.3" stroke-dashoffset="0" />
+                  <circle class="mp-donut__seg mp-donut__seg--warning" cx="60" cy="60" r="40" stroke-dasharray="125.7 251.3" stroke-dashoffset="-125.7" />
+                </g>
+              </svg>
+              <span><strong>4</strong><small>项</small></span>
+            </div>
+            <div class="mp-legend">
+              <div><i class="tone-success"></i><span>省级</span><strong>2</strong><small>50%</small></div>
+              <div><i class="tone-warning"></i><span>校级</span><strong>2</strong><small>50%</small></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </article>
+
+    <!-- ============ 标志性成果 · 可推广 ============ -->
+    <article class="mp-card">
+      <div class="mp-card-head">
+        <div class="mp-ribbon">标志性成果 · 可推广</div>
+      </div>
+      <div class="mp-filters" role="group" aria-label="成果类型筛选" id="achFilters">
+        <button class="mp-filter is-active" type="button" data-key="all">全部</button>
+        <button class="mp-filter" type="button" data-key="sz">课程思政</button>
+        <button class="mp-filter" type="button" data-key="cs">竞赛</button>
+        <button class="mp-filter" type="button" data-key="kc">课程建设</button>
+      </div>
+      <div class="mp-ach-grid" id="achGrid"></div>
+    </article>
+
+    <!-- ============ 需带一把 / 数据采集健康度 ============ -->
+    <div class="mp-dual">
+      <article class="mp-card">
+        <div class="mp-card-head">
+          <div class="mp-ribbon">需带一把</div>
+          <span class="mp-card-sub">1 人需关注</span>
+          <span class="mp-card-link" onclick="notify('已发起数据采集督促')">数据采集督促</span>
+        </div>
+        <div class="mp-care-list">
+          <p>青年教师成长 / 档案补全</p>
+          <div class="mp-care-item">
+            <i aria-hidden="true"></i><strong>刘骁</strong>
+            <span>青年教师 · 档案 79% · 课程材料不完整</span>
+            <span class="mp-care-item__action" onclick="notify('已打开刘骁档案详情')">详情</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="mp-card">
+        <div class="mp-card-head">
+          <div class="mp-ribbon">数据采集健康度</div>
+        </div>
+        <div class="mp-health">
+          <div class="mp-health__stats">
+            <span><b>8</b><small>已覆盖（人）</small></span>
+            <span><b class="warn">1</b><small>需关注</small></span>
+            <span><b>91%</b><small>平均完整度</small></span>
+          </div>
+          <div class="mp-health__bar" title="完整度分布：良好75%，需完善25%">
+            <i class="tone-success" style="width:75%"></i>
+            <i class="tone-warning" style="width:25%"></i>
+          </div>
+          <div class="mp-health__footer">
+            <span>完整度分布</span>
+            <span class="mp-card-link" onclick="notify('已查看完整度名单')">查看名单</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ 成果详情弹窗 ============ -->
+<div class="mp-modal-mask" id="achModal" onclick="if(event.target===this)closeModal()">
+  <div class="mp-modal" role="dialog" aria-modal="true">
+    <div class="mp-modal__head" id="achModalTitle">成果详情</div>
+    <div class="mp-modal__body" id="achModalBody"></div>
+    <div class="mp-modal__foot"><button class="ap-btn primary" type="button" onclick="closeModal()">关闭</button></div>
+  </div>
+</div>
+
+<script>
+var ACHIEVEMENTS = [
+  { id: 'ideology', type: 'sz', typeLabel: '课程思政', tagTone: 'warning', title: '《嵌入式系统开发》课程思政案例集', owner: '金晓智', detail: '案例完整、可直接复用，适合作为专业课程思政共建样板。' },
+  { id: 'competition', type: 'cs', typeLabel: '竞赛', tagTone: 'success', title: '2025 省级职业技能大赛 · 二等奖材料', owner: '金晓智', detail: '含备赛方案与指导记录，可沉淀为专业竞赛培训资料。' },
+  { id: 'course', type: 'kc', typeLabel: '课程建设', tagTone: 'primary', title: '《数字电路》精品在线开放课程', owner: '赵敏', detail: '课程资源体系完整，可供专业内课程建设与教研活动共享借鉴。' }
+];
+
+var activeFilter = 'all';
+
+function renderAchievements() {
+  var list = ACHIEVEMENTS.filter(function (it) { return activeFilter === 'all' || it.type === activeFilter; });
+  var html = list.map(function (it) {
+    return '<article class="mp-ach" role="button" tabindex="0" onclick="openModal(\'' + it.id + '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \')openModal(\'' + it.id + '\')">' +
+      '<h3>' + it.title + '</h3>' +
+      '<div class="mp-ach__meta"><span class="mp-tag ' + it.tagTone + '">' + it.typeLabel + '</span><span class="mp-owner">' + it.owner + '</span></div>' +
+      '<span class="mp-ach__view">查看详情 →</span>' +
+      '</article>';
+  }).join('');
+  document.getElementById('achGrid').innerHTML = html;
+}
+
+document.getElementById('achFilters').addEventListener('click', function (e) {
+  var btn = e.target.closest('.mp-filter');
+  if (!btn) return;
+  activeFilter = btn.getAttribute('data-key');
+  Array.prototype.forEach.call(this.querySelectorAll('.mp-filter'), function (b) { b.classList.remove('is-active'); });
+  btn.classList.add('is-active');
+  renderAchievements();
+});
+
+function openModal(id) {
+  var it = ACHIEVEMENTS.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  document.getElementById('achModalTitle').textContent = it.title;
+  document.getElementById('achModalBody').innerHTML =
+    '<div class="mp-form-row"><label>成果类型</label><div><span class="mp-tag ' + it.tagTone + '">' + it.typeLabel + '</span></div></div>' +
+    '<div class="mp-form-row"><label>负责人</label><div>' + it.owner + '</div></div>' +
+    '<div class="mp-form-row full"><label>内容说明</label><div>' + it.detail + '</div></div>';
+  document.getElementById('achModal').classList.add('show');
+}
+function closeModal() { document.getElementById('achModal').classList.remove('show'); }
+
+var toastTimer = null;
+function notify(msg) {
+  var el = document.createElement('div');
+  el.textContent = msg;
+  el.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#20b486;color:#fff;padding:10px 24px;border-radius:6px;font-size:14px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.15)';
+  document.body.appendChild(el);
+  setTimeout(function () { el.remove(); }, 1600);
+}
+
+renderAchievements();
+</script>
+</body>
+</html>

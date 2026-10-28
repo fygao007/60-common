@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>步骤条组件</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Steps/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .steps-page {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .steps-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .steps-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .steps-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .steps-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .steps-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .steps-section {
+      width: min(1180px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .steps-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .steps-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .steps-section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
+    }
+
+    .steps-card {
+      min-height: 180px;
+      padding: 20px 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .steps-card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .steps-card h3 {
+      margin: 0 0 20px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .steps-demo-panel {
+      max-width: 620px;
+    }
+
+    .steps-reference-panel {
+      width: min(800px, 100%);
+    }
+
+    .steps-log {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-top: 18px;
+      padding: 4px 10px;
+      color: var(--ds-color-text-secondary);
+      background: #fafafa;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-card,
+      .steps-card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="steps-page">
+    <header class="steps-head">
+      <div>
+        <h1 class="steps-title"><span>步骤条组件</span></h1>
+        <p class="steps-desc">根据 MasterGo 步骤条设计提取为通用前端组件，覆盖横向、纵向、小尺寸、点状、错误态和可点击状态。</p>
+      </div>
+    </header>
+
+    <section class="steps-section">
+      <div class="steps-section-head">
+        <h2 class="steps-section-title">基础形态</h2>
+        <span class="steps-section-meta">Reference / Horizontal / Vertical / Small</span>
+      </div>
+      <div class="steps-grid">
+        <article class="steps-card" style="grid-column: 1 / -1">
+          <h3>参考样式：48px 高度 / 24px 方形节点 / 自适应连接线</h3>
+          <div class="steps-reference-panel">
+            <ol class="ds-steps ds-steps--horizontal">
+              <li class="ds-steps__item is-finish"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">1</span><span class="ds-steps__content"><strong>已完成</strong></span></button></li>
+              <li class="ds-steps__item is-process"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">2</span><span class="ds-steps__content"><strong>进行中</strong></span></button></li>
+              <li class="ds-steps__item is-wait"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">3</span><span class="ds-steps__content"><strong>未开始</strong></span></button></li>
+              <li class="ds-steps__item is-error"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">4</span><span class="ds-steps__content"><strong>报错</strong></span></button></li>
+              <li class="ds-steps__item is-disabled"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">5</span><span class="ds-steps__content"><strong>禁用</strong></span></button></li>
+            </ol>
+          </div>
+        </article>
+        <article class="steps-card">
+          <h3>横向步骤条</h3>
+          <div class="steps-demo-panel">
+            <ol class="ds-steps ds-steps--horizontal">
+              <li class="ds-steps__item is-finish"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">1</span><span class="ds-steps__content"><strong>已完成</strong></span></button></li>
+              <li class="ds-steps__item is-process"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">2</span><span class="ds-steps__content"><strong>进行中</strong></span></button></li>
+              <li class="ds-steps__item is-wait"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">3</span><span class="ds-steps__content"><strong>未开始</strong></span></button></li>
+              <li class="ds-steps__item is-error"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">4</span><span class="ds-steps__content"><strong>报错</strong></span></button></li>
+            </ol>
+          </div>
+        </article>
+        <article class="steps-card">
+          <h3>小尺寸步骤条</h3>
+          <div class="steps-demo-panel">
+            <ol class="ds-steps ds-steps--horizontal ds-steps--small">
+              <li class="ds-steps__item is-finish"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">1</span><span class="ds-steps__content"><strong>已完成</strong></span></button></li>
+              <li class="ds-steps__item is-process"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">2</span><span class="ds-steps__content"><strong>进行中</strong></span></button></li>
+              <li class="ds-steps__item is-wait"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">3</span><span class="ds-steps__content"><strong>未开始</strong></span></button></li>
+            </ol>
+          </div>
+        </article>
+        <article class="steps-card">
+          <h3>纵向步骤条</h3>
+          <div class="steps-demo-panel" style="max-width: 360px">
+            <ol class="ds-steps ds-steps--vertical">
+              <li class="ds-steps__item is-finish"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">✓</span><span class="ds-steps__content"><strong>发起申请</strong><em>2026-05-19 09:00</em></span></button></li>
+              <li class="ds-steps__item is-process"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">2</span><span class="ds-steps__content"><strong>学院审核</strong><em>等待审核人处理</em></span></button></li>
+              <li class="ds-steps__item is-wait"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">3</span><span class="ds-steps__content"><strong>学校复核</strong><em>待进入</em></span></button></li>
+            </ol>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="steps-section">
+      <div class="steps-section-head">
+        <h2 class="steps-section-title">状态与交互</h2>
+        <span class="steps-section-meta">Error / Clickable</span>
+      </div>
+      <div class="steps-grid">
+        <article class="steps-card">
+          <h3>错误状态</h3>
+          <div class="steps-demo-panel">
+            <ol class="ds-steps ds-steps--horizontal">
+              <li class="ds-steps__item is-finish"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">1</span><span class="ds-steps__content"><strong>已完成</strong></span></button></li>
+              <li class="ds-steps__item is-error"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">2</span><span class="ds-steps__content"><strong>报错</strong></span></button></li>
+              <li class="ds-steps__item is-disabled"><button class="ds-steps__node" type="button" disabled><span class="ds-steps__icon">3</span><span class="ds-steps__content"><strong>禁用</strong></span></button></li>
+            </ol>
+          </div>
+        </article>
+        <article class="steps-card">
+          <h3>可点击切换</h3>
+          <div class="steps-demo-panel">
+            <ol class="ds-steps ds-steps--horizontal is-clickable" id="interactiveSteps">
+              <li class="ds-steps__item is-process"><button class="ds-steps__node" type="button"><span class="ds-steps__icon">1</span><span class="ds-steps__content"><strong>基础信息</strong><em>点击切换</em></span></button></li>
+              <li class="ds-steps__item is-wait"><button class="ds-steps__node" type="button"><span class="ds-steps__icon">2</span><span class="ds-steps__content"><strong>材料上传</strong><em>点击切换</em></span></button></li>
+              <li class="ds-steps__item is-wait"><button class="ds-steps__node" type="button"><span class="ds-steps__icon">3</span><span class="ds-steps__content"><strong>信息确认</strong><em>点击切换</em></span></button></li>
+            </ol>
+            <span class="steps-log" id="stepsLog">当前：基础信息</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const labels = ['基础信息', '材料上传', '信息确认'];
+  const interactive = document.getElementById('interactiveSteps');
+  const log = document.getElementById('stepsLog');
+
+  interactive.querySelectorAll('.ds-steps__item').forEach((item, index) => {
+    item.querySelector('.ds-steps__node').addEventListener('click', () => {
+      interactive.querySelectorAll('.ds-steps__item').forEach((step, stepIndex) => {
+        step.className = `ds-steps__item ${stepIndex < index ? 'is-finish' : stepIndex === index ? 'is-process' : 'is-wait'}`;
+        step.querySelector('.ds-steps__icon').textContent = stepIndex < index ? '✓' : stepIndex + 1;
+      });
+      log.textContent = `当前：${labels[index]}`;
+    });
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+@import '../../../../framework/react-page-host.css';
+@import '../sys-accounts/sys-accounts.css';
+
+.sys-admin-page--form-management {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 目录树节点名称前的状态圆点：启用绿 / 停用灰 */
+.archive-tree-status-dot {
+  display: inline-block;
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ds-color-text-tertiary);
+}
+
+.archive-tree-status-dot.is-enabled {
+  background: var(--ds-color-success);
+}
+
+.sys-admin-page--form-management .archive-wizard {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  padding: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.sys-admin-page--form-management .archive-config-layout,
+.sys-admin-page--form-management .archive-permission-layout {
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  min-width: 0;
+}
+
+.sys-admin-page--form-management .archive-config-tree {
+  position: static;
+  height: auto;
+  min-height: 0;
+}
+
+.sys-admin-page--form-management .archive-config-main,
+.sys-admin-page--form-management .archive-permission-sidebar,
+.sys-admin-page--form-management .archive-permission-main {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.sys-admin-page--form-management .archive-permission-sidebar {
+  position: static;
+  align-self: stretch;
+  min-width: 0;
+}
+
+.sys-admin-page--form-management .archive-permission-main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sys-admin-page--form-management .archive-permission-groups__item.is-active {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.sys-admin-page--form-management .archive-wizard-footer {
+  align-self: end;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 0 0;
+  box-shadow: none;
+}
+
+/* 字段配置使用完整线框表格，并让标题与表格紧密衔接 */
+.sys-admin-page--form-management .archive-config-field-table {
+  border: 0;
+  border-radius: 0;
+}
+
+.sys-admin-page--form-management .archive-config-field-table .ds-data-table__toolbar {
+  min-height: 22px;
+  padding: 0;
+}
+
+.sys-admin-page--form-management .archive-config-field-table .ds-data-table__wrap {
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: 0;
+}
+
+/* 表配置采用“左侧字段名、右侧控件”的横向表单 */
+.sys-admin-page--form-management .archive-config-table-form {
+  column-gap: 16px;
+  row-gap: 12px;
+}
+
+.sys-admin-page--form-management .archive-config-table-form > .ds-edit-field {
+  grid-template-columns: 80px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.sys-admin-page--form-management .archive-config-table-form > .ds-edit-field > .ds-edit-field__label {
+  min-height: 32px;
+  justify-content: flex-end;
+  padding: 0;
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .sys-admin-page--form-management .archive-config-table-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.archive-config-placeholder-hint {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+/* 字段属性列的叹号图标 */
+.field-role-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.field-visible-header {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.field-role-tooltip-trigger {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-color-text-secondary);
+  cursor: help;
+}
+
+/* 字段属性气泡提示（fixed 定位，条件渲染） */
+.field-role-tooltip {
+  position: fixed;
+  padding: 8px 12px;
+  background: var(--ds-color-text);
+  color: var(--ds-color-text-inverse);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.5;
+  max-width: 280px;
+  border-radius: var(--ds-radius-sm);
+  box-shadow: var(--ds-shadow-md);
+  z-index: 9999;
+}
+
+/* 权限矩阵：二级分组类型标签 */
+.archive-permission-type-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  margin-left: 8px;
+  padding: 0 6px;
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: 1;
+  border-radius: var(--ds-radius-sm);
+}
+
+.archive-permission-type-tag.is-table {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+}
+
+.archive-permission-type-tag.is-form {
+  color: var(--ds-color-success-active);
+  background: var(--ds-color-success-light);
+}.archive-permission-type-tag.is-card{
+  color: var(--ds-color-warning-text);
+  background: var(--ds-color-warning-light);
+}
+
+.archive-permission-type-tag.is-text {
+  color: var(--ds-color-danger-active);
+  background: var(--ds-color-danger-light);
+}
+
+.archive-permission-type-tag.is-file {
+  color: var(--ds-color-info);
+  background: var(--ds-color-info-light);
+}
+
+.archive-permission-type-tag.is-timeline {
+  color: #6b4c9a;
+  background: #f0ebf8;
+}.archive-permission-section{
+  margin-bottom: var(--ds-space-3);
+}.archive-permission-section:last-child{
+  margin-bottom: 0;
+}
+
+.archive-permission-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  background: var(--ds-color-bg-soft);
+  border-radius: var(--ds-radius-sm);
+  min-width: 0;
+}
+
+.archive-permission-section__title {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.archive-permission-section__batch {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ds-space-3);
+}
+
+.archive-permission-section__detail {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  padding: var(--ds-space-3);
+}
+
+.archive-permission-field-column {
+  min-width: 0;
+}
+
+.archive-permission-field-column:first-child {
+  padding-right: var(--ds-space-4);
+}
+
+.archive-permission-field-column + .archive-permission-field-column {
+  padding-left: var(--ds-space-4);
+  border-left: 1px solid var(--ds-color-border-secondary);
+}
+
+.archive-permission-field-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  min-height: 32px;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+}
+
+.archive-permission-field-column__permission-labels {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-4);
+}
+
+.archive-permission-field-column__permission-labels > span {
+  min-width: 42px;
+  text-align: center;
+}
+
+.archive-permission-field__perms .ds-checkbox {
+  justify-content: center;
+  min-width: 42px;
+}
+
+/* 一级分组横向页签 */
+.archive-permission-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: var(--ds-space-6);
+  min-height: 39px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1px;
+  border-bottom: 1px solid var(--ds-color-border);
+  scrollbar-width: none;
+}
+
+.archive-permission-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.archive-permission-tabs__item {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  padding: 8px 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.archive-permission-tabs__item:hover {
+  color: var(--ds-color-text-heading);
+}
+
+.archive-permission-tabs__item.is-active {
+  color: var(--ds-color-primary);
+  font-weight: var(--ds-font-weight-semibold);
+  border-bottom-color: var(--ds-color-primary);
+}
+
+/* 页签内容区 */
+.archive-permission-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  padding-top: var(--ds-space-3);
+}
+
+/* 二级分组或直属表列表 */
+.archive-permission-node-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+}
+
+.archive-permission-subgroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.archive-permission-subgroup__title {
+  margin: 0;
+  padding-left: var(--ds-space-3);
+  border-left: 4px solid var(--ds-color-primary);
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+}
+
+.archive-permission-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.archive-permission-section__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.archive-permission-section__arrow {
+  flex: none;
+  color: var(--ds-color-text-tertiary);
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.archive-permission-section__arrow.is-expanded {
+  transform: rotate(90deg);
+}
+
+/* 空状态 */
+.archive-permission-empty {
+  padding: var(--ds-space-4);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .archive-permission-section__detail {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-permission-field-column:first-child,
+  .archive-permission-field-column + .archive-permission-field-column {
+    padding-right: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .archive-permission-field-column + .archive-permission-field-column {
+    padding-top: var(--ds-space-3);
+    border-top: 1px solid var(--ds-color-border-secondary);
+  }
+}

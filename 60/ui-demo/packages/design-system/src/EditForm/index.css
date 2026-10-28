@@ -1,0 +1,101 @@
+@import '../tokens.css';
+@import '../edit-overlay-spec.generated.css';
+
+.ds-edit-form {
+  width: 100%;
+  container-type: inline-size;
+}
+
+.ds-edit-form__grid {
+  display: grid;
+  gap: var(--ds-edit-field-gap);
+  width: 100%;
+}
+
+.ds-edit-form--1-column .ds-edit-form__grid {
+  grid-template-columns: minmax(0, var(--ds-edit-modal-single-width));
+}
+
+.ds-edit-form--2-column .ds-edit-form__grid {
+  grid-template-columns: repeat(2, minmax(var(--ds-edit-modal-double-column-min), 1fr));
+}
+
+.ds-edit-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-space-1);
+  min-width: 0;
+}
+
+.ds-edit-field--full {
+  grid-column: 1 / -1;
+}
+
+.ds-edit-field--start {
+  align-items: start;
+}
+
+.ds-edit-field--start .ds-edit-field__label {
+  padding-top: 0;
+}
+
+.ds-edit-field__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-sm);
+  text-align: left;
+}
+
+.ds-edit-field__label b {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-edit-field__content {
+  display: grid;
+  gap: var(--ds-space-1);
+  min-width: 0;
+}
+
+.ds-edit-field__content > .ds-input,
+.ds-edit-field__content > .ds-select,
+.ds-edit-field__content > .ds-textarea,
+.ds-edit-field__content > .ds-richtext {
+  width: 100%;
+}
+
+.ds-edit-field__message {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-edit-field--error .ds-edit-field__message {
+  color: var(--ds-color-danger);
+}
+
+.ds-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-edit-group-content-gap);
+  min-width: 0;
+}
+
+.ds-form-group + .ds-form-group {
+  margin-top: var(--ds-edit-group-gap);
+}
+
+.ds-form-group__content {
+  min-width: 0;
+}
+
+.ds-form-group > .ds-group-title {
+  height: var(--ds-edit-group-title-height);
+  padding:
+    var(--ds-edit-group-title-padding-y)
+    var(--ds-edit-group-title-padding-x);
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://szpu.example/schemas/field-dictionary-bindings-1.0.0.json",
+  "type": "object",
+  "required": ["library", "version", "bindingCount", "bindings"],
+  "properties": {
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fieldId", "sourceCode", "label", "status", "bindingType"],
+        "properties": {
+          "status": { "enum": ["bound", "bound-with-dictionary-conflict", "external-master-data", "review-required"] },
+          "bindingType": { "enum": ["concept", "reference"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

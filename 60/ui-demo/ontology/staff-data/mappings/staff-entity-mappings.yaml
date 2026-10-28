@@ -1,0 +1,194 @@
+ontology: szpu-hr
+version: 0.4.0
+domain: staff-data
+title: 教职工数据到本体实体的字段映射
+description: >-
+  定义主表 131 个字段与 17 张扩展表如何映射到本体实体。
+  字段完整清单与分级见 data-dictionary/，实体定义见 staff-entities.yaml。
+
+# ============================================================
+# 一、主表 → Person（人员核心属性）
+# ============================================================
+primaryMapping:
+  sourceTable: 教职工基本信息
+  targetEntity: Person
+  joinKey: 工号
+  recordCount: 4512
+  keyMappings:
+    - { source: 工号, target: employeeNumber, note: 业务主键，唯一且非空 }
+    - { source: 姓名, target: name, classification: sensitive }
+    - { source: 姓名全拼, target: namePinyin, classification: sensitive }
+    - { source: 曾用名, target: formerName, classification: sensitive }
+    - { source: 性别, target: gender, vocabulary: Gender }
+    - { source: 出生日期, target: birthDate, classification: sensitive }
+    - { source: 年龄, target: null, note: 派生值，不得入库，应按出生日期实时计算 }
+    - { source: 民族, target: ethnicity, vocabulary: Ethnicity }
+    - { source: 国家（地区）, target: nationality }
+    - { source: 籍贯, target: nativePlace, classification: sensitive }
+    - { source: 出生地, target: birthPlace, classification: sensitive }
+    - { source: 婚姻状况, target: maritalStatus, classification: sensitive }
+    - { source: 宗教信仰, target: religion, classification: sensitive }
+    - { source: 港澳台侨, target: hkMacaoTaiwanOverseasChinese, classification: sensitive }
+    - { source: 是否外籍, target: isForeigner }
+
+  organizationMappings:
+    - { source: 所在部门, target: organizationId, note: 通过部门名称关联 Organization }
+    - { source: 所属机构, target: affiliatedInstitution }
+    - { source: 办公校区, target: campus }
+
+  employmentMappings:
+    - { source: 当前状态, target: employmentStatus, vocabulary: EmploymentStatus, note: 统计基数字段 }
+    - { source: 人员身份, target: employmentMode, vocabulary: EmploymentMode, note: 用人方式 }
+    - { source: 教职工类别, target: personnelCategory, vocabulary: PersonnelCategory, note: 统计主维度 }
+    - { source: 身份性质, target: identityNature }
+    - { source: 首次参工时间, target: firstWorkDate }
+    - { source: 报到日期, target: onboardingDate }
+    - { source: 首次来校日期, target: firstArrivalDate }
+    - { source: 教职工来源, target: staffSource }
+
+  positionMappings:
+    - { source: 主要岗位, target: primaryPositionCategory, vocabulary: PositionCategory }
+    - { source: 聘岗类别1, target: currentPositionCategory, vocabulary: PositionCategory }
+    - { source: 聘岗等级1, target: currentPositionLevel, vocabulary: PositionLevel }
+    - { source: 聘任时间1, target: currentAppointmentDate }
+    - { source: 主要岗位层级起聘时间, target: primaryLevelStartDate }
+    - { source: 职务名称1, target: jobTitle }
+    - { source: 是否双肩挑, target: isDualRole }
+
+  titleMappings:
+    - { source: 职称, target: currentTitleName }
+    - { source: 职称等级, target: currentTitleLevel, vocabulary: TitleLevel, note: 资格等级，非聘用等级 }
+    - { source: 职称取得时间, target: titleAcquisitionDate }
+    - { source: 专任教师类型, target: teacherType, vocabulary: TeacherType }
+    - { source: 导师类别, target: supervisorCategory }
+
+  educationMappings:
+    - { source: 最高学历, target: highestEducation, vocabulary: Education }
+    - { source: 最高学位, target: highestDegree, vocabulary: Degree }
+    - { source: 毕业学校, target: graduationSchool }
+    - { source: 所学专业, target: major }
+    - { source: 学位归属学科, target: degreeDiscipline }
+    - { source: 双师认定级别, target: dualQualificationLevel }
+    - { source: 双师认证年份, target: dualQualificationYear }
+    - { source: 教师资格证号, target: teacherCertNumber }
+
+  flagMappings:
+    note: 主表中大量"是否XX"标记，均为布尔派生字段，可直接用于筛选
+    fields:
+      - { source: 是否辅导员, target: isCounselor }
+      - { source: 是否班主任, target: isClassAdvisor }
+      - { source: 是否双肩挑, target: isDualRole }
+      - { source: 是否教学名师, target: isDistinguishedTeacher }
+      - { source: 是否专职思政课教师, target: isIdeologyTeacher }
+      - { source: 是否心理健康课教师, target: isMentalHealthTeacher }
+      - { source: 是否来自企业, target: isFromEnterprise }
+      - { source: 是否校内雇员, target: isInternalEmployee }
+      - { source: 是否老工勤人员, target: isLegacyWorker }
+      - { source: 是否我校退休人员, target: isSchoolRetiree }
+      - { source: 是否退休人员, target: isRetired }
+      - { source: 是否军转干, target: isMilitaryTransfer }
+      - { source: 是否持有绿卡, target: hasGreenCard }
+      - { source: 是否托管, target: isTrusteeship }
+
+  contractMappings:
+    - { source: 合同开始日期, target: contractStartDate, classification: sensitive }
+    - { source: 合同结束日期, target: contractEndDate, classification: sensitive }
+    - { source: 试用期截止日期, target: probationEndDate, classification: sensitive }
+    - { source: 见习期截止日期, target: internshipEndDate, classification: sensitive }
+    - { source: 预计离退休日期, target: expectedRetirementDate, classification: sensitive }
+
+  restrictedMappings:
+    note: 以下字段映射到 PersonIdentity 或受限存储区，禁止进入统计与检索
+    fields:
+      - { source: 证件类型, target: PersonIdentity.documentType, classification: restricted }
+      - { source: 证件号码, target: PersonIdentity.documentNumber, classification: restricted }
+      - { source: 手机号, target: mobilePhone, classification: sensitive }
+      - { source: 办公电话, target: officePhone, classification: sensitive }
+      - { source: 个人邮箱, target: personalEmail, classification: sensitive }
+      - { source: 学校邮箱, target: schoolEmail, classification: sensitive }
+      - { source: 现居住地址, target: residentialAddress, classification: restricted }
+      - { source: 户口所在地, target: householdLocation, classification: sensitive }
+      - { source: 紧急联系人, target: emergencyContact, classification: restricted }
+      - { source: 紧急联系电话, target: emergencyPhone, classification: restricted }
+      - { source: 银行卡号, target: bankAccount, classification: restricted }
+      - { source: 社保电脑号, target: socialSecurityNumber, classification: restricted }
+      - { source: 公积金账号, target: housingFundAccount, classification: restricted }
+      - { source: 薪酬（万元）, target: salary, classification: restricted }
+
+  unmappedFields:
+    note: 以下字段建议不映射或延迟映射
+    fields:
+      - { source: 排序, reason: 展示层排序字段，非业务语义 }
+      - { source: 判断依据, reason: 与主表人才等级配套，当前无数据 }
+      - { source: 绩效比例, reason: 薪酬体系字段，需专项设计 }
+    emptyFields:
+      note: 42 个字段 100% 为空，暂不建立映射，待数据补全后再评估
+      examples: [银行卡开户行, 护照编码, 工作许可证号, 兼任部门, 兼任机构, 实际工作部门]
+
+# ============================================================
+# 二、扩展表 → 实体映射
+# ============================================================
+extensionMappings:
+  - { source: 学习经历, target: EducationExperience, records: 8196, persons: 4006, joinKey: 工号 }
+  - { source: 工作经历, target: WorkExperience, records: 11281, persons: 2417, joinKey: 工号 }
+  - { source: 职称资格, target: ProfessionalTitle, records: 4992, persons: 2904, joinKey: 工号 }
+  - { source: 聘岗信息, target: PositionAppointment, records: 3424, persons: 3418, joinKey: 工号 }
+  - { source: 学年（年度）考核, target: Assessment, records: 20540, persons: 3668, joinKey: 工号, assessmentType: 学年考核 }
+  - { source: 师德考核, target: Assessment, records: 20539, persons: 3668, joinKey: 工号, assessmentType: 师德考核 }
+  - { source: 聘期考核, target: Assessment, records: 4965, persons: 3088, joinKey: 工号, assessmentType: 聘期考核 }
+  - { source: 政治面貌, target: PoliticalStatus, records: 3901, persons: 3845, joinKey: 工号 }
+  - { source: 双师信息, target: DualQualification, records: 1142, persons: 1124, joinKey: 工号 }
+  - { source: 培训信息, target: TrainingExperience, records: 5384, persons: 1725, joinKey: 工号 }
+  - { source: 奖励情况, target: TeachingAchievement, records: 463, persons: 417, joinKey: 工号 }
+  - { source: 人才信息, target: TalentTitle, records: 346, persons: 268, joinKey: 工号 }
+  - { source: 教师资格证, target: TeacherCertificate, records: 1078, persons: 1074, joinKey: 工号 }
+  - { source: 技能证书, target: SkillCertificate, records: 87, persons: 65, joinKey: 工号 }
+  - { source: 进修交流, target: ExchangeExperience, records: 407, persons: 339, joinKey: 工号 }
+  - { source: 班主任经历, target: ClassAdvisorExperience, records: 6, persons: 4, joinKey: 工号 }
+  - { source: 家庭成员及社会关系, target: FamilyMember, records: 2606, persons: 1294, joinKey: 工号, classification: restricted }
+
+# ============================================================
+# 三、映射规则
+# ============================================================
+mappingRules:
+  - id: M1
+    rule: 扩展表统一以工号关联 Person，不得用姓名关联
+    reason: 姓名存在重名，工号唯一且非空
+
+  - id: M2
+    rule: 一张扩展表对应一个实体，多张考核表合并为 Assessment 并通过 assessmentType 区分
+    reason: 三类考核结构高度一致，合并可避免实体膨胀
+
+  - id: M3
+    rule: 当前值（如当前职称、当前岗位）作为 Person 的派生属性，历史事实保留在对应实体中
+    reason: 遵循本体设计原则第 3 条——当前状态由历史事实计算
+
+  - id: M4
+    rule: 职称（ProfessionalTitle）与聘岗（PositionAppointment）必须映射到不同实体
+    reason: 遵循本体设计原则第 2 条与维度规则，资格与聘用不得互相覆盖
+
+  - id: M5
+    rule: 年龄等派生字段不入库，仅在查询时计算
+    reason: 静态值会随时效失效
+
+  - id: M6
+    rule: restricted 级字段映射到独立存储区，不随 Person 主对象返回
+    ref: governance/sensitive-fields.yaml
+
+  - id: M7
+    rule: 扩展表孤儿记录（工号不在主表）需在 ETL 阶段标记并告警，不得静默丢弃
+    reason: 当前最多 24 条，静默丢弃会导致数据对不上
+
+# ============================================================
+# 四、待确认项
+# ============================================================
+openQuestions:
+  - question: 主表"所在部门"为部门名称，需与 Organization 实体的编码建立映射
+    impact: 影响按部门统计的准确性
+    action: 需建立部门名称到组织代码的对照表
+  - question: 聘岗信息与 EmploymentAssignment 实体的关系
+    impact: 两个实体语义重叠
+    action: 确认是否合并，或明确前者为现网事实、后者为标准模型
+  - question: 班主任经历仅 6 条，与主表标记严重不匹配
+    impact: 无法用于统计
+    action: 确认数据完整性

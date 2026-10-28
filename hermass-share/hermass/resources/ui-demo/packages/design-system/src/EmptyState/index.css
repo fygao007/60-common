@@ -1,0 +1,215 @@
+@import '../tokens.css';
+
+.ds-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: var(--ds-space-6);
+  color: var(--ds-color-text-tertiary);
+  text-align: center;
+}
+
+.ds-empty-state--contained {
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-empty-state--compact {
+  min-height: auto;
+  padding: var(--ds-space-4);
+}
+
+.ds-empty-state__image {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.ds-empty-state--compact .ds-empty-state__image {
+  width: 72px;
+  height: 72px;
+}
+
+.ds-empty-state__legacy-icon {
+  display: grid;
+  place-items: center;
+  color: var(--ds-color-primary);
+  font-size: 32px;
+  background: linear-gradient(135deg, var(--ds-color-primary-light), var(--ds-color-primary-lighter));
+  border: 1px dashed var(--ds-color-border-hover);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-empty-state__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-1);
+  margin-top: var(--ds-space-2);
+}
+
+.ds-empty-state__title,
+.ds-empty-state__description {
+  margin: 0;
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-empty-state__title {
+  color: var(--ds-color-text-tertiary);
+}
+
+.ds-empty-state__description {
+  max-width: 360px;
+  color: var(--ds-color-text-placeholder);
+}
+
+.ds-empty-state__action {
+  margin-top: var(--ds-space-1);
+}
+
+.ds-empty-guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--ds-color-text);
+  text-align: center;
+}
+
+.ds-empty-guide__header {
+  margin-bottom: var(--ds-space-6);
+}
+
+.ds-empty-guide__header h3 {
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-title);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-title);
+}
+
+.ds-empty-guide__header p {
+  margin: var(--ds-space-2) 0 0;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-empty-guide__steps {
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-5);
+  overflow-x: auto;
+  padding: 2px;
+}
+
+.ds-empty-guide__step-wrap {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-5);
+}
+
+.ds-empty-guide__card {
+  position: relative;
+  width: 200px;
+  overflow: hidden;
+  padding: var(--ds-space-4);
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-lg);
+  transition:
+    border-color var(--ds-motion-duration) var(--ds-motion-ease),
+    box-shadow var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-empty-guide__card:hover,
+.ds-empty-guide__card:focus-within {
+  border-color: var(--ds-color-border-hover);
+  box-shadow: 0 0 0 2px var(--ds-color-focus-ring);
+}
+
+.ds-empty-guide__recommended {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  width: 40px;
+  height: 24px;
+  place-items: center;
+  color: var(--ds-color-white);
+  background: linear-gradient(135deg, #7f86ff, #333fff);
+  border-radius: var(--ds-radius-lg) 0 var(--ds-radius-lg) 0;
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-empty-guide__image {
+  display: grid;
+  width: 168px;
+  height: 128px;
+  place-items: center;
+  object-fit: contain;
+}
+
+.ds-empty-guide__card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin-top: var(--ds-space-3);
+}
+
+.ds-empty-guide__step,
+.ds-empty-guide__card strong {
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-empty-guide__step {
+  color: var(--ds-color-black);
+}
+
+.ds-empty-guide__card strong {
+  color: var(--ds-color-black);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-empty-guide__action-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.ds-empty-guide__connector {
+  color: var(--ds-color-text-placeholder);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.ds-empty-guide__skip {
+  margin-top: var(--ds-space-5);
+}
+
+.ds-empty-guide__skip img {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 720px) {
+  .ds-empty-guide {
+    align-items: stretch;
+  }
+
+  .ds-empty-guide__steps {
+    justify-content: flex-start;
+  }
+}

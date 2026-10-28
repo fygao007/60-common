@@ -1,0 +1,86 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--material",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "集中归集候选人述职报告与佐证材料，按类型与人员检索",
+      "支持单个上传与批量导入两种收集方式"
+    ],
+    "painPoints": [
+      "原系统材料收集与候选人档案分离，评委打分时难以就地核对佐证"
+    ],
+    "openQuestions": [
+      "是否有必要按材料类型限制可上传的附件格式，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "材料与佐证",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "候选人名单已确认"
+    ],
+    "mainFlow": [
+      "进入材料与佐证列表，按人员姓名与材料类型筛选",
+      "点击「上传材料」选择材料类型并上传附件",
+      "点击「批量导入」按模板一次性导入多名候选人的材料",
+      "材料列表展示上传时间与所属类型标签"
+    ],
+    "exceptions": [
+      "未选择文件时提交给出提示",
+      "筛选无结果时展示设计系统空状态"
+    ]
+  },
+  "page": {
+    "title": "材料与佐证",
+    "templateId": "regular-list",
+    "menuRef": "recruitment.vote:material",
+    "fieldRefs": [
+      "StaffBasicInformation.xm",
+      "StaffBasicInformation.fj",
+      "Business.vote.materialType",
+      "Business.vote.materialUploadTime"
+    ],
+    "components": [
+      "DSButton",
+      "DSEditField",
+      "DSEditForm",
+      "DSImportUpload",
+      "DSModal",
+      "DSRegularListTemplate",
+      "DSSelect",
+      "DSTag",
+      "DSUpload"
+    ],
+    "demoPath": "demos/vote/material/material.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「项目设置」分组下「材料与佐证」处于高亮态",
+      "材料表格展示人员姓名、材料类型、附件名称与上传时间",
+      "上传弹窗选择类型并上传后新记录出现在列表",
+      "批量导入按模板导入多名候选人的材料"
+    ]
+  }
+}

@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>按钮状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Button/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .button-page {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .button-stage {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .button-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1200px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .button-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .button-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .button-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .button-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .button-source {
+      color: var(--ds-color-primary);
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .button-section {
+      width: min(1200px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .button-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .button-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .button-section-meta {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .state-table-wrap {
+      overflow: auto;
+    }
+
+    .state-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .state-table th,
+    .state-table td {
+      height: 64px;
+      padding: 12px;
+      text-align: left;
+      vertical-align: middle;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .state-table th {
+      height: 44px;
+      color: #000;
+      background: #fafafa;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .state-table td:first-child {
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .state-table th:last-child,
+    .state-table td:last-child {
+      border-right: 0;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 0;
+    }
+
+    .button-card {
+      min-height: 124px;
+      padding: 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .button-card:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .button-card h3 {
+      margin: 0 0 12px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button-stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .state-note {
+      display: block;
+      margin-top: 8px;
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .ds-button.is-hover.ds-button--primary {
+      background: var(--ds-color-primary-hover);
+      border-color: var(--ds-color-primary-hover);
+    }
+
+    .ds-button.is-active.ds-button--primary {
+      background: var(--ds-color-primary-active);
+      border-color: var(--ds-color-primary-active);
+    }
+
+    .ds-button.is-focus {
+      box-shadow: 0 0 0 2px rgba(61, 90, 254, 0.18);
+    }
+
+    .ds-button.is-hover.ds-button--default {
+      color: var(--ds-color-primary);
+      border-color: var(--ds-color-border-hover);
+    }
+
+    .ds-button.is-active.ds-button--default {
+      color: var(--ds-color-primary-active);
+      border-color: var(--ds-color-primary-active);
+    }
+
+    .ds-button.is-hover.ds-button--ghost {
+      color: var(--ds-color-primary-hover);
+      border-color: var(--ds-color-primary-hover);
+      background: rgba(61, 90, 254, 0.06);
+    }
+
+    .ds-button.is-active.ds-button--ghost {
+      color: var(--ds-color-primary-active);
+      border-color: var(--ds-color-primary-active);
+      background: rgba(61, 90, 254, 0.10);
+    }
+
+    .ds-button.is-hover.ds-button--text {
+      background: var(--ds-color-primary-light);
+    }
+
+    .ds-button.is-active.ds-button--text,
+    .ds-button.is-active.ds-button--link {
+      color: var(--ds-color-primary-active);
+    }
+
+    .ds-button.is-hover.ds-button--link {
+      color: var(--ds-color-primary-hover);
+    }
+
+    .ds-button.is-hover.ds-button--danger {
+      color: #fff;
+      background: var(--ds-color-danger-hover);
+      border-color: var(--ds-color-danger-hover);
+    }
+
+    .ds-button.is-active.ds-button--danger {
+      color: #fff;
+      background: var(--ds-color-danger-active);
+      border-color: var(--ds-color-danger-active);
+    }
+
+    .ds-button.is-hover.ds-button--ai {
+      filter: brightness(1.05);
+    }
+
+    .ds-button.is-active.ds-button--ai {
+      filter: brightness(.96);
+    }
+
+    .click-log {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      color: var(--ds-color-text-secondary);
+      background: #fafafa;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-card,
+      .button-card:nth-child(3n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="button-page">
+    <section class="button-stage">
+      <header class="button-head">
+        <div>
+          <h1 class="button-title"><span>按钮状态</span></h1>
+          <p class="button-desc">覆盖按钮类型、尺寸、图标、加载、禁用和交互状态，用于后续对齐 MasterGo《PC 基础控件 / Button》。</p>
+        </div>
+        <a class="button-source" href="./packages/design-system/docs/button.md">Button 规范</a>
+      </header>
+
+      <section class="button-section">
+        <div class="button-section-head">
+          <h2 class="button-section-title">类型 × 状态</h2>
+          <span class="button-section-meta">Default / Hover / Press / Focus / Disabled / Loading</span>
+        </div>
+        <div class="state-table-wrap">
+          <table class="state-table">
+            <thead>
+              <tr>
+                <th style="width: 116px">类型</th>
+                <th>默认</th>
+                <th>悬浮</th>
+                <th>按下</th>
+                <th>聚焦</th>
+                <th>禁用</th>
+                <th>加载</th>
+              </tr>
+            </thead>
+            <tbody id="stateRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="button-section">
+        <div class="button-section-head">
+          <h2 class="button-section-title">尺寸与形态</h2>
+          <span class="button-section-meta">Small / Default / Large / Icon / Rounded / Block</span>
+        </div>
+        <div class="button-grid">
+          <article class="button-card">
+            <h3>尺寸</h3>
+            <div class="button-row">
+              <button class="ds-button ds-button--default ds-button--small" type="button">小按钮</button>
+              <button class="ds-button ds-button--default" type="button">默认按钮</button>
+              <button class="ds-button ds-button--default ds-button--large" type="button">大按钮</button>
+            </div>
+            <span class="state-note">小尺寸 24px，默认 32px，大尺寸 36px。</span>
+          </article>
+          <article class="button-card">
+            <h3>图标按钮</h3>
+            <div class="button-row">
+              <button class="ds-button ds-button--default" type="button"><span class="ds-button__icon">＋</span><span class="ds-button__label">新增</span></button>
+              <button class="ds-button ds-button--default ds-button--icon-only" type="button" aria-label="搜索">⌕</button>
+              <button class="ds-button ds-button--primary ds-button--icon-only" type="button" aria-label="保存">✓</button>
+            </div>
+            <span class="state-note">文本按钮图标间距 4px，纯图标按钮宽高一致。</span>
+          </article>
+          <article class="button-card">
+            <h3>圆角与块级</h3>
+            <div class="button-stack">
+              <button class="ds-button ds-button--primary ds-button--rounded" type="button">圆角按钮</button>
+              <button class="ds-button ds-button--default ds-button--block" type="button">块级按钮</button>
+            </div>
+          </article>
+          <article class="button-card">
+            <h3>按钮组</h3>
+            <div class="button-row" role="group" aria-label="按钮组">
+              <button class="ds-button ds-button--default" type="button">新增</button>
+              <button class="ds-button ds-button--default" type="button">导入</button>
+              <button class="ds-button ds-button--default" type="button">导出</button>
+              <button class="ds-button ds-button--primary" type="button">查询</button>
+            </div>
+          </article>
+          <article class="button-card" id="link-button">
+            <h3>行内操作</h3>
+            <div class="button-row">
+              <button class="ds-button ds-button--link" type="button">编辑</button>
+              <button class="ds-button ds-button--link" type="button">详情</button>
+              <button class="ds-button ds-button--link ds-button--danger" type="button">删除</button>
+            </div>
+            <span class="state-note">表格操作列优先使用 Link / Text。</span>
+          </article>
+          <article class="button-card">
+            <h3>点击反馈</h3>
+            <div class="button-row">
+              <button class="ds-button ds-button--primary" id="clickDemo" type="button">点击按钮</button>
+              <span class="click-log" id="clickLog">等待点击</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const buttonTypes = [
+    { key: 'primary', label: 'Primary', className: 'ds-button--primary', text: '主要按钮' },
+    { key: 'default', label: 'Default', className: 'ds-button--default', text: '默认按钮' },
+    { key: 'ghost', label: 'Ghost', className: 'ds-button--ghost', text: '幽灵按钮' },
+    { key: 'text', label: 'Text', className: 'ds-button--text', text: '文本按钮' },
+    { key: 'link', label: 'Link', className: 'ds-button--link', text: '链接按钮' },
+    { key: 'danger', label: 'Danger', className: 'ds-button--primary ds-button--danger', text: '危险按钮' },
+    { key: 'ai', label: 'AI', className: 'ds-button--ai', text: 'AI 按钮' }
+  ];
+
+  const states = [
+    { key: 'default', label: '默认', extra: '' },
+    { key: 'hover', label: '悬浮', extra: 'is-hover' },
+    { key: 'active', label: '按下', extra: 'is-active' },
+    { key: 'focus', label: '聚焦', extra: 'is-focus' },
+    { key: 'disabled', label: '禁用', extra: '', disabled: true },
+    { key: 'loading', label: '加载', extra: '', loading: true, disabled: true }
+  ];
+
+  function buttonHtml(type, state) {
+    const classes = ['ds-button', type.className, state.extra].filter(Boolean).join(' ');
+    const disabled = state.disabled ? ' disabled' : '';
+    const spinner = state.loading ? '<span class="ds-button__spinner" aria-hidden="true"></span>' : '';
+    return `<button class="${classes}" type="button"${disabled}>${spinner}<span class="ds-button__label">${state.loading ? '加载中' : type.text}</span></button>`;
+  }
+
+  document.getElementById('stateRows').innerHTML = buttonTypes.map(type => `
+    <tr>
+      <td>${type.label}</td>
+      ${states.map(state => `<td>${buttonHtml(type, state)}</td>`).join('')}
+    </tr>
+  `).join('');
+
+  let count = 0;
+  document.getElementById('clickDemo').addEventListener('click', () => {
+    count += 1;
+    document.getElementById('clickLog').textContent = `已点击 ${count} 次`;
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

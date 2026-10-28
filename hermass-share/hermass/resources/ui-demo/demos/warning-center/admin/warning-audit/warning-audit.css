@@ -1,0 +1,82 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 预警处置审批：DSRegularListTemplate 组合，仅写页面专属样式 */
+.wa-page {
+  display: grid;
+  min-height: 100%;
+}
+
+/* 处置状态：圆点 + 文字（规范：禁止彩色标签块） */
+.wa-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.wa-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ds-radius-pill);
+  display: inline-block;
+}
+
+.wa-status.is-pending i {
+  background: var(--ds-color-warning);
+}
+
+.wa-status.is-approved i {
+  background: var(--ds-color-success);
+}
+
+.wa-status.is-returned i {
+  background: var(--ds-color-danger);
+}
+
+/* 审核弹窗内的处置信息摘要（只读） */
+.wa-audit-brief {
+  display: grid;
+  gap: var(--ds-space-2);
+  margin-bottom: var(--ds-space-3);
+  padding: var(--ds-space-3);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-color-bg-soft);
+}
+
+.wa-audit-brief-row {
+  display: flex;
+  gap: var(--ds-space-2);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+  color: var(--ds-color-text-secondary);
+}
+
+.wa-audit-brief-row span {
+  flex: 0 0 72px;
+}
+
+.wa-audit-brief-row strong {
+  font-weight: var(--ds-font-weight-regular);
+  color: var(--ds-color-text);
+}
+
+.wa-audit-brief-tip {
+  margin: 0 0 var(--ds-space-3);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+  color: var(--ds-color-text-secondary);
+}
+
+.wa-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  background: var(--ds-color-text);
+  color: var(--ds-color-white);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1;
+  padding: 10px 16px;
+  border-radius: var(--ds-radius-sm);
+  z-index: var(--ds-z-message);
+}

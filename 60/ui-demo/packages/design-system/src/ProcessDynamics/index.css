@@ -1,0 +1,456 @@
+@import '../tokens.css';
+
+.ds-process-dynamics {
+  min-width: 0;
+  color: var(--ds-color-text);
+}
+
+.ds-process-dynamics__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  min-height: 24px;
+  margin-bottom: var(--ds-space-4);
+}
+
+.ds-process-dynamics__header h2 {
+  position: relative;
+  margin: 0;
+  padding-left: 12px;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-process-dynamics__header h2::before {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  width: 3px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary);
+  content: '';
+}
+
+.ds-process-dynamics__timeline {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-process-dynamics__timeline::before {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 4px;
+  width: 1px;
+  background: var(--ds-color-primary-light);
+  content: '';
+}
+
+.ds-process-dynamics__event {
+  position: relative;
+  min-width: 0;
+  padding: 0 0 var(--ds-space-4) 20px;
+}
+
+.ds-process-dynamics__event:last-child {
+  padding-bottom: 0;
+}
+
+.ds-process-dynamics__dot {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--ds-color-bg-container);
+  border-radius: 50%;
+  background: var(--ds-color-primary-weak);
+  box-shadow: 0 0 0 1px var(--ds-color-primary-light);
+}
+
+.ds-process-dynamics__event.is-current .ds-process-dynamics__dot {
+  width: 11px;
+  height: 11px;
+  left: -1px;
+  top: 6px;
+  background: var(--ds-color-primary);
+  box-shadow: 0 0 0 3px var(--ds-color-primary-light);
+}
+
+.ds-process-dynamics__details {
+  min-width: 0;
+}
+
+.ds-process-dynamics__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: 24px;
+  color: var(--ds-color-text-heading);
+  cursor: pointer;
+}
+
+.ds-process-dynamics__summary strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ds-process-dynamics__status {
+  flex: none;
+  min-width: 0 !important;
+  height: 20px !important;
+  padding: 0 6px !important;
+}
+
+.ds-process-dynamics__event-body {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ds-process-dynamics__event-body p {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ds-process-dynamics__event-body p span {
+  flex: none;
+  color: var(--ds-color-text-tertiary);
+}
+
+/* 流程图：流程引擎式竖向节点 + 带箭头连线（分叉 / 汇聚用折线） */
+.ds-process-dynamics__flow {
+  --ds-process-gap: 12px;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 12px 12px 14px;
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-color-bg-subtle);
+}
+
+.ds-process-dynamics__flow-level {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ds-process-dynamics__flow-row {
+  display: grid;
+  grid-template-columns: repeat(var(--ds-process-columns, 1), minmax(0, 1fr));
+  gap: var(--ds-process-gap, 12px);
+  min-width: 0;
+}
+
+/* 单节点行铺满整行，节点中心与主干连线对齐 */
+.ds-process-dynamics__flow-row > :only-child {
+  grid-column: 1 / -1;
+}
+
+.ds-process-dynamics__flow-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-color-bg-container);
+}
+
+.ds-process-dynamics__flow-row.is-branch .ds-process-dynamics__flow-node {
+  gap: 6px;
+  padding: 8px;
+}
+
+.ds-process-dynamics__flow-node.is-current {
+  border-color: var(--ds-color-primary);
+  background: var(--ds-color-primary-lighter);
+  box-shadow: 0 0 0 3px var(--ds-color-primary-light);
+}
+
+.ds-process-dynamics__flow-node.is-warning {
+  border-color: var(--ds-color-warning-border);
+  background: var(--ds-color-warning-light);
+}
+
+.ds-process-dynamics__flow-node.is-danger {
+  border-color: var(--ds-color-danger);
+  background: var(--ds-color-danger-light);
+}
+
+.ds-process-dynamics__flow-mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 1px solid var(--ds-color-border);
+  border-radius: 50%;
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1;
+}
+
+.ds-process-dynamics__flow-node.is-success .ds-process-dynamics__flow-mark,
+.ds-process-dynamics__flow-node.is-teal .ds-process-dynamics__flow-mark {
+  border-color: var(--ds-color-success);
+  background: var(--ds-color-success);
+  color: var(--ds-color-text-inverse);
+}
+
+.ds-process-dynamics__flow-node.is-current .ds-process-dynamics__flow-mark {
+  border-color: var(--ds-color-primary);
+  background: var(--ds-color-primary);
+  color: var(--ds-color-text-inverse);
+}
+
+.ds-process-dynamics__flow-node.is-warning .ds-process-dynamics__flow-mark {
+  border-color: var(--ds-color-warning);
+  background: var(--ds-color-warning);
+  color: var(--ds-color-text-inverse);
+}
+
+.ds-process-dynamics__flow-node.is-danger .ds-process-dynamics__flow-mark {
+  border-color: var(--ds-color-danger);
+  background: var(--ds-color-danger);
+  color: var(--ds-color-text-inverse);
+}
+
+.ds-process-dynamics__flow-body {
+  display: grid;
+  flex: 1;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ds-process-dynamics__flow-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ds-process-dynamics__flow-title {
+  min-width: 0;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-sm);
+  overflow-wrap: anywhere;
+}
+
+.ds-process-dynamics__flow-node.is-current .ds-process-dynamics__flow-title {
+  color: var(--ds-color-primary);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-process-dynamics__flow-state {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ds-process-dynamics__flow-state i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ds-process-dynamics__flow-node.is-success .ds-process-dynamics__flow-state,
+.ds-process-dynamics__flow-node.is-teal .ds-process-dynamics__flow-state {
+  color: var(--ds-color-success);
+}
+
+.ds-process-dynamics__flow-node.is-current .ds-process-dynamics__flow-state {
+  color: var(--ds-color-primary);
+}
+
+.ds-process-dynamics__flow-node.is-warning .ds-process-dynamics__flow-state {
+  color: var(--ds-color-warning-text);
+}
+
+.ds-process-dynamics__flow-node.is-danger .ds-process-dynamics__flow-state {
+  color: var(--ds-color-danger);
+}
+
+.ds-process-dynamics__flow-meta {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+  overflow-wrap: anywhere;
+}
+
+/* 连线：竖线 + 箭头；分叉 / 汇聚时用「主干 + 横杆 + 各路支线」折线 */
+.ds-process-dynamics__flow-link {
+  --ds-flow-line: var(--ds-color-border);
+
+  position: relative;
+  flex: none;
+  height: 30px;
+}
+
+.ds-process-dynamics__flow-link[data-tone='success'] {
+  --ds-flow-line: var(--ds-color-success);
+}
+
+.ds-process-dynamics__flow-link[data-tone='primary'] {
+  --ds-flow-line: var(--ds-color-primary);
+}
+
+.ds-process-dynamics__flow-link[data-tone='danger'] {
+  --ds-flow-line: var(--ds-color-danger);
+}
+
+.ds-process-dynamics__flow-link.is-straight::before {
+  position: absolute;
+  top: 0;
+  bottom: 7px;
+  left: 50%;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--ds-flow-line);
+  content: '';
+}
+
+.ds-process-dynamics__flow-link.is-straight::after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  border-top: 6px solid var(--ds-flow-line);
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  transform: translateX(-50%);
+  content: '';
+}
+
+.ds-process-dynamics__flow-link.is-split {
+  height: 34px;
+}
+
+/* 与节点行共用同一套网格列定义，支线天然正对节点中心 */
+.ds-process-dynamics__flow-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--ds-process-columns, 1), minmax(0, 1fr));
+  gap: var(--ds-process-gap, 12px);
+}
+
+.ds-process-dynamics__flow-slot {
+  position: relative;
+}
+
+/* 支线跟随各自节点的状态着色 */
+.ds-process-dynamics__flow-slot[data-tone='success'],
+.ds-process-dynamics__flow-slot[data-tone='teal'] {
+  --ds-flow-line: var(--ds-color-success);
+}
+
+.ds-process-dynamics__flow-slot[data-tone='primary'] {
+  --ds-flow-line: var(--ds-color-primary);
+}
+
+.ds-process-dynamics__flow-slot[data-tone='warning'] {
+  --ds-flow-line: var(--ds-color-warning);
+}
+
+.ds-process-dynamics__flow-slot[data-tone='danger'] {
+  --ds-flow-line: var(--ds-color-danger);
+}
+
+/* 单节点行铺满整行，其连线也需同样居中 */
+.ds-process-dynamics__flow-grid > :only-child {
+  grid-column: 1 / -1;
+}
+
+.ds-process-dynamics__flow-seg {
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--ds-flow-line);
+}
+
+.ds-process-dynamics__flow-slot.is-up .ds-process-dynamics__flow-seg {
+  top: 0;
+  height: 50%;
+}
+
+.ds-process-dynamics__flow-slot.is-down .ds-process-dynamics__flow-seg {
+  top: 50%;
+  bottom: 7px;
+}
+
+.ds-process-dynamics__flow-slot.is-down .ds-process-dynamics__flow-seg::after {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  border-top: 6px solid var(--ds-flow-line);
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  transform: translateX(-50%);
+  content: '';
+}
+
+/* 横杆：首列起于列中心、末列止于列中心，中间跨过列间距保持连通 */
+.ds-process-dynamics__flow-bar {
+  position: absolute;
+  top: 50%;
+  right: calc(-0.5 * var(--ds-process-gap, 12px));
+  left: calc(-0.5 * var(--ds-process-gap, 12px));
+  height: 1px;
+  margin-top: -0.5px;
+  background: var(--ds-flow-line);
+}
+
+.ds-process-dynamics__flow-slot[data-edge='first'] .ds-process-dynamics__flow-bar {
+  left: 50%;
+}
+
+.ds-process-dynamics__flow-slot[data-edge='last'] .ds-process-dynamics__flow-bar {
+  right: 50%;
+}
+
+.ds-process-dynamics__flow-slot[data-edge='both'] .ds-process-dynamics__flow-bar {
+  right: 50%;
+  left: 50%;
+}
+
+@media (max-width: 760px) {
+  .ds-process-dynamics__flow {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}

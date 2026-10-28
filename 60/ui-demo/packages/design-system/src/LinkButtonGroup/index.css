@@ -1,0 +1,23 @@
+@import '../tokens.css';
+@import '../LinkButton/index.css';
+
+.ds-link-button-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+}
+
+.ds-link-button-group--compact {
+  gap: 8px;
+}
+
+.ds-link-button-group--vertical {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ds-link-button-group .ds-link-button {
+  flex: none;
+}

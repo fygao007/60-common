@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>我的日程 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+  body{margin:0}
+
+  .sd-layout{
+    display:grid;
+    grid-template-columns: minmax(0,1fr) 360px;
+    gap:18px;
+    align-items:start;
+  }
+
+  /* ---- 顶部工具条 ---- */
+  .sd-toolbar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .sd-toolbar{flex-wrap:wrap;gap:10px 0}
+  .sd-toolbar .ttl-group{display:flex;align-items:center;gap:14px;flex-wrap:wrap;row-gap:8px}
+  .sd-toolbar h2{margin:0;font-size:20px;line-height:30px;font-weight:800;color:var(--ap-ink);white-space:nowrap}
+  .sd-cal-nav{display:flex;align-items:center;gap:6px}
+  .sd-cal-nav button{
+    width:30px;height:30px;border:1px solid var(--ap-line);border-radius:6px;
+    background:#fff;color:var(--ap-text);font-size:14px;
+  }
+  .sd-cal-nav button:hover{color:var(--ap-blue);border-color:var(--ap-blue)}
+  .sd-today-btn{
+    padding:0 14px;height:30px;border-radius:6px;white-space:nowrap;
+    display:inline-flex;align-items:center;justify-content:center;line-height:1;
+    border:1px solid var(--ap-line);background:#fff;color:var(--ap-text);font-size:13px;
+  }
+  .sd-today-btn:hover{color:var(--ap-blue);border-color:var(--ap-blue)}
+  .sd-legend{display:flex;align-items:center;gap:16px;color:var(--ap-muted);font-size:12px}
+  .sd-legend span{display:inline-flex;align-items:center;gap:6px}
+  .sd-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .sd-legend i.blue{background:var(--ap-blue)}
+  .sd-legend i.orange{background:var(--ap-orange)}
+  .sd-legend i.gray{background:#9aa3b2}
+  .sd-legend i.purple{background:#7c6bff}
+  .ap-tag.purple{color:#6a57e0;background:#efebff}
+
+  /* ---- 大日历表格 ---- */
+  .sd-cal{padding:0;overflow:hidden}
+  .sd-weekdays{
+    display:grid;grid-template-columns:repeat(7,1fr);
+    border-bottom:1px solid var(--ap-line);
+    color:var(--ap-muted);font-size:13px;
+  }
+  .sd-weekdays span{padding:12px 14px;text-align:left}
+  .sd-weekdays span.is-weekend{color:#c2c9d6}
+
+  /* 整月共用同一个 7 列网格：日期格与跨天横条都是该网格的直接子项，
+     按各自的 grid-row / grid-column 定位，从而保证逐行列对齐、不会错位 */
+  .sd-cal-body{display:grid;grid-template-columns:repeat(7,1fr)}
+  .sd-cell.is-col-end{border-right:0}
+
+  /* 跨天日程横条：与对应周的日期格落在同一个 grid-row / grid-column 轨道内，
+     通过 margin-top 下移叠加在格子顶部空出的位置上，天然与格子对齐 */
+  .sd-span-bar{
+    position:relative;z-index:2;align-self:start;justify-self:stretch;
+    height:19px;line-height:19px;border-radius:5px;margin:0 4px;padding:0 8px;
+    font-size:11px;color:#fff;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    pointer-events:auto;cursor:pointer;
+    background:linear-gradient(90deg,#1d6fff,#5b97ff);box-shadow:0 1px 3px rgba(29,111,255,.28);
+  }
+  .sd-span-bar:hover{filter:brightness(1.06)}
+  .sd-span-bar.is-mine{background:linear-gradient(90deg,#e08a3c,#f0b876);box-shadow:0 1px 3px rgba(220,140,50,.25)}
+  .sd-span-bar.is-done{background:linear-gradient(90deg,#9aa3b2,#c3cad6);box-shadow:none;color:#fff}
+  .sd-span-bar.is-cont-prev{border-top-left-radius:0;border-bottom-left-radius:0}
+  .sd-span-bar.is-cont-prev::before{content:'‹ ';opacity:.85}
+  .sd-span-bar.is-cont-next{border-top-right-radius:0;border-bottom-right-radius:0}
+  .sd-span-bar.is-cont-next::after{content:' ›';opacity:.85}
+
+  .sd-cell-head{display:flex;align-items:center;gap:6px}
+  .sd-holiday-tag{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:18px;height:18px;padding:0 4px;border-radius:4px;
+    font-size:11px;line-height:18px;color:#fff;background:var(--ap-red);
+  }
+  .sd-holiday-tag.is-makeup{background:#9aa3b2}
+
+  .sd-cell{
+    position:relative;
+    min-height:118px;
+    padding:8px 8px 8px;
+    border-right:1px solid var(--ap-line);
+    border-bottom:1px solid var(--ap-line);
+    display:flex;flex-direction:column;gap:5px;
+    background:#fff;
+    cursor:pointer;
+    text-align:left;
+  }
+  .sd-cell:hover{background:#f8faff}
+  .sd-cell.is-other{background:#fbfcfe;color:#c7cedb}
+  .sd-cell.is-other .sd-num{color:#c7cedb}
+  .sd-cell.is-weekend{background:#fbfcfe}
+  .sd-cell.is-selected{background:#eef4ff;box-shadow:inset 0 0 0 1.5px var(--ap-blue)}
+
+  .sd-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:13px;color:var(--ap-text);font-weight:600;
+    width:24px;height:24px;border-radius:50%;
+  }
+  .sd-cell.is-today .sd-num{background:var(--ap-blue);color:#fff}
+
+  .sd-chip{
+    display:flex;align-items:center;gap:5px;
+    padding:3px 7px;border-radius:5px;
+    background:#eef4ff;color:var(--ap-blue-deep);
+    font-size:12px;line-height:17px;
+    overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  }
+  .sd-chip .ck{flex:none;font-size:11px}
+  .sd-chip span.txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sd-chip.is-mine{background:#fff2e8;color:#cc6420}
+  .sd-chip.is-done{background:#eef0f4;color:#7c8696}
+  .sd-more{
+    padding:2px 7px;color:var(--ap-muted);font-size:12px;background:none;border:0;text-align:left;
+  }
+  .sd-more:hover{color:var(--ap-blue)}
+
+  /* ---- 右侧详情面板 ---- */
+  .sd-side{position:sticky;top:18px}
+  .sd-side-head{
+    display:flex;align-items:center;gap:10px;
+    padding:18px 20px 4px;
+  }
+  .sd-side-head .bar{flex:none;width:4px;height:20px;border-radius:2px;background:var(--ap-blue)}
+  .sd-side-head h2{margin:0;font-size:17px;font-weight:800;color:var(--ap-ink)}
+  .sd-side-head span{color:var(--ap-muted);font-size:13px}
+  .sd-side-sub{padding:2px 20px 12px;color:var(--ap-muted);font-size:12px;display:flex;align-items:center;gap:14px}
+  .sd-side-sub a{color:var(--ap-blue);text-decoration:none}
+
+  .sd-tabs{display:flex;gap:4px;padding:0 20px;border-bottom:1px solid var(--ap-line)}
+  .sd-tab{
+    padding:8px 14px;border-radius:6px 6px 0 0;
+    color:var(--ap-muted);font-size:13px;background:none;border:0;border-bottom:2px solid transparent;
+  }
+  .sd-tab.active{color:var(--ap-blue);font-weight:700;border-bottom-color:var(--ap-blue)}
+  .sd-tab .cnt{
+    display:inline-block;margin-left:3px;min-width:17px;padding:0 4px;border-radius:8px;
+    background:var(--ap-page);color:var(--ap-muted);font-size:11px;
+  }
+  .sd-tab.active .cnt{background:#eaf1ff;color:var(--ap-blue)}
+
+  .sd-list{padding:14px 20px 20px;display:grid;gap:10px;max-height:560px;overflow-y:auto}
+  .sd-event-card{
+    padding:0;border:1px solid var(--ap-line);border-radius:8px;background:#fff;
+    display:flex;gap:0;overflow:hidden;
+  }
+  .sd-event-card .bar{flex:none;align-self:stretch;width:3px;background:var(--ap-blue)}
+  .sd-event-card.is-done .bar{background:#9aa3b2}
+  .sd-event-card .body{flex:1;min-width:0;padding:13px 14px 13px 11px}
+  .sd-event-card .row1{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .sd-event-card h4{margin:0;font-size:14px;font-weight:700;color:var(--ap-ink);line-height:21px}
+  .sd-event-card.is-done h4{color:var(--ap-muted);font-weight:500}
+  .sd-event-card p{margin:6px 0 0;font-size:12px;color:var(--ap-muted);line-height:19px}
+  .sd-event-card .meta{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ap-muted)}
+  .sd-event-card .meta b{color:var(--ap-text);font-weight:600;margin-right:3px}
+  .sd-event-card .ops{margin-top:10px;display:flex;gap:14px}
+  .sd-event-card .ops button{
+    border:0;background:none;padding:0;color:var(--ap-blue);font-size:12px;display:inline-flex;align-items:center;gap:4px;
+  }
+  .sd-event-card .ops button.danger{color:var(--ap-red)}
+  .sd-event-card .ops button:hover{text-decoration:underline}
+
+  .sd-empty{
+    display:grid;justify-items:center;gap:8px;padding:54px 20px;color:var(--ap-muted);font-size:13px;text-align:center;
+  }
+  .sd-empty .ico{font-size:28px}
+
+  /* ---- 新增日程弹层 ---- */
+  .sd-mask{position:fixed;inset:0;z-index:1200;display:none;background:rgba(17,28,52,.45)}
+  .sd-mask.is-open{display:block}
+  .sd-dialog{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:520px;max-width:calc(100% - 48px);
+    background:#fff;border-radius:10px;box-shadow:0 24px 64px rgba(15,35,80,.28);overflow:hidden;
+  }
+  .sd-dialog-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;border-bottom:1px solid var(--ap-line);
+  }
+  .sd-dialog-head h3{margin:0;font-size:16px;font-weight:700;color:var(--ap-ink)}
+  .sd-dialog-body{padding:20px 22px;display:grid;gap:14px}
+  .sd-field{display:grid;gap:6px}
+  .sd-field label{font-size:13px;color:var(--ap-text)}
+  .sd-field input,.sd-field textarea,.sd-field select{
+    border:1px solid var(--ap-line);border-radius:6px;padding:9px 12px;font-size:14px;
+    color:var(--ap-ink);outline:none;font-family:inherit;
+  }
+  .sd-field input:focus,.sd-field textarea:focus,.sd-field select:focus{border-color:var(--ap-blue)}
+  .sd-field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sd-dialog-foot{
+    display:flex;justify-content:flex-end;gap:10px;
+    padding:16px 22px;border-top:1px solid var(--ap-line);background:var(--ap-page);
+  }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+
+  <div class="sd-mask" id="sdMask">
+    <div class="sd-dialog" role="dialog" aria-modal="true" aria-label="新增日程">
+      <div class="sd-dialog-head">
+        <h3 id="sdDialogTitle">新增日程</h3>
+        <button id="sdDialogClose" type="button" aria-label="关闭" style="border:0;background:var(--ap-page);width:28px;height:28px;border-radius:6px;color:var(--ap-muted)">✕</button>
+      </div>
+      <div class="sd-dialog-body">
+        <div class="sd-field">
+          <label>日程主题</label>
+          <input id="sdFieldTitle" type="text" placeholder="请输入日程主题，如：与学院沟通排课安排" />
+        </div>
+        <div class="sd-field-row">
+          <div class="sd-field">
+            <label>业务类型</label>
+            <select id="sdFieldBiz">
+              <option value="个人事务">个人事务</option>
+              <option value="会议">会议</option>
+              <option value="培训">培训</option>
+              <option value="请假">请假</option>
+              <option value="材料提交">材料提交</option>
+              <option value="考核">考核</option>
+            </select>
+          </div>
+          <div class="sd-field">
+            <label>状态</label>
+            <select id="sdFieldStatus">
+              <option value="pending">待办</option>
+              <option value="done">已办</option>
+            </select>
+          </div>
+        </div>
+        <div class="sd-field-row">
+          <div class="sd-field">
+            <label>起始日期</label>
+            <input id="sdFieldDate" type="date" />
+          </div>
+          <div class="sd-field">
+            <label>起始时间</label>
+            <input id="sdFieldTime" type="time" />
+          </div>
+        </div>
+        <p id="sdMultiHint" style="display:none;margin:0;color:var(--ap-orange);font-size:12px;line-height:18px">跨天日程的起止日期暂不支持在此修改，如需调整请删除后重新创建。</p>
+        <div class="sd-field">
+          <label>地点（选填）</label>
+          <input id="sdFieldLoc" type="text" placeholder="请输入活动地点" />
+        </div>
+        <div class="sd-field">
+          <label>备注（选填）</label>
+          <textarea id="sdFieldDesc" rows="3" placeholder="补充说明，如参与人、需要准备的材料等"></textarea>
+        </div>
+      </div>
+      <div class="sd-dialog-foot">
+        <button class="ap-btn" id="sdDialogCancel" type="button">取消</button>
+        <button class="ap-btn primary" id="sdDialogSave" type="button">保存日程</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">我的日程</span></div>
+
+      <div class="sd-toolbar">
+        <div class="ttl-group">
+          <h2 id="sdCalTitle">2026年5月</h2>
+          <div class="sd-cal-nav">
+            <button id="sdPrevMonth" type="button" aria-label="上个月">‹</button>
+            <button class="sd-today-btn" id="sdGoToday" type="button">今天</button>
+            <button id="sdNextMonth" type="button" aria-label="下个月">›</button>
+          </div>
+          <div class="sd-legend">
+            <span><i class="blue"></i>系统日程</span>
+            <span><i class="orange"></i>自定义日程</span>
+            <span><i class="gray"></i>已完成</span>
+            <span><i class="purple"></i>跨天日程</span>
+          </div>
+        </div>
+        <button class="ap-btn primary" id="sdAddBtn" type="button">＋ 新增日程</button>
+      </div>
+
+      <div class="sd-layout">
+        <!-- 左侧：月历，按天展示日程 -->
+        <section class="ap-panel sd-cal">
+          <div class="sd-weekdays">
+            <span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span>
+            <span class="is-weekend">周六</span><span class="is-weekend">周日</span>
+          </div>
+          <div class="sd-cal-body" id="sdGrid"></div>
+        </section>
+
+        <!-- 右侧：所选日期详情 -->
+        <aside class="sd-side">
+          <section class="ap-panel">
+            <div class="sd-side-head">
+              <span class="bar"></span>
+              <h2 id="sdDayTitle">5月8日 · 周四</h2>
+              <span id="sdDaySub">今天</span>
+            </div>
+            <div class="sd-side-sub">
+              <span id="sdDayCount">共 0 项日程</span>
+              <a href="#" id="sdJumpToday">回到今天</a>
+            </div>
+            <div class="sd-tabs">
+              <button class="sd-tab active" data-tab="pending" type="button">待办 <span class="cnt" id="sdCntPending">0</span></button>
+              <button class="sd-tab" data-tab="done" type="button">已办 <span class="cnt" id="sdCntDone">0</span></button>
+              <button class="sd-tab" data-tab="mine" type="button">我的申请 <span class="cnt" id="sdCntMine">0</span></button>
+              <button class="sd-tab" data-tab="all" type="button">全部 <span class="cnt" id="sdCntAll">0</span></button>
+            </div>
+            <div class="sd-list" id="sdList"></div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'schedule-detail', versionLabel:'我的日程', userName:'金晓智',
+  secondaryNav:{items:[]},
+  workspaceVariant:'card',
+  tabs:[{key:'schedule-detail',label:'我的日程',closable:true}]
+});
+</script>
+<script>
+(function () {
+  // 系统当前日期：自动读取本机/互联网当天日期（new Date() 取浏览器当前时间）
+  var NOW = new Date();
+  var TODAY = { y: NOW.getFullYear(), m: NOW.getMonth() + 1, d: NOW.getDate() };
+  var WEEKDAY_NAMES = ['一','二','三','四','五','六','日'];
+  var MAX_CHIPS = 3;
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function key(y, m, d) { return y + '-' + pad(m) + '-' + pad(d); }
+  function dateFromKey(k) { var p = k.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+  function keyFromDate(d) { return key(d.getFullYear(), d.getMonth() + 1, d.getDate()); }
+  function addDays(base, n) { return new Date(base.getFullYear(), base.getMonth(), base.getDate() + n); }
+  function daysBetween(d1, d2) { return Math.round((d2 - d1) / 86400000); }
+  // 相对"今天"生成的日期 key，便于演示数据始终贴近系统当前日期
+  function relKey(offset) { return keyFromDate(addDays(new Date(TODAY.y, TODAY.m - 1, TODAY.d), offset)); }
+
+  // 国家法定节假日安排（来源：国务院办公厅《关于2026年部分节假日安排的通知》，静态缓存数据，代表"读取国家公开的假期日历"）
+  // type: holiday(放假) / makeup(调休上班)
+  var HOLIDAYS = {
+    '2026-01-01': { name: '元旦', type: 'holiday' },
+    '2026-01-02': { name: '元旦', type: 'holiday' },
+    '2026-01-03': { name: '元旦', type: 'holiday' },
+    '2026-01-04': { name: '元旦调休', type: 'makeup' },
+    '2026-02-14': { name: '春节调休', type: 'makeup' },
+    '2026-02-15': { name: '春节', type: 'holiday' },
+    '2026-02-16': { name: '春节', type: 'holiday' },
+    '2026-02-17': { name: '春节', type: 'holiday' },
+    '2026-02-18': { name: '春节', type: 'holiday' },
+    '2026-02-19': { name: '春节', type: 'holiday' },
+    '2026-02-20': { name: '春节', type: 'holiday' },
+    '2026-02-21': { name: '春节', type: 'holiday' },
+    '2026-02-22': { name: '春节', type: 'holiday' },
+    '2026-02-23': { name: '春节', type: 'holiday' },
+    '2026-02-28': { name: '春节调休', type: 'makeup' },
+    '2026-04-04': { name: '清明节', type: 'holiday' },
+    '2026-04-05': { name: '清明节', type: 'holiday' },
+    '2026-04-06': { name: '清明节', type: 'holiday' },
+    '2026-05-01': { name: '劳动节', type: 'holiday' },
+    '2026-05-02': { name: '劳动节', type: 'holiday' },
+    '2026-05-03': { name: '劳动节', type: 'holiday' },
+    '2026-05-04': { name: '劳动节', type: 'holiday' },
+    '2026-05-05': { name: '劳动节', type: 'holiday' },
+    '2026-05-09': { name: '劳动节调休', type: 'makeup' },
+    '2026-06-19': { name: '端午节', type: 'holiday' },
+    '2026-06-20': { name: '端午节', type: 'holiday' },
+    '2026-06-21': { name: '端午节', type: 'holiday' },
+    '2026-09-25': { name: '中秋节', type: 'holiday' },
+    '2026-09-26': { name: '中秋节', type: 'holiday' },
+    '2026-09-27': { name: '中秋节', type: 'holiday' },
+    '2026-09-20': { name: '国庆节调休', type: 'makeup' },
+    '2026-10-01': { name: '国庆节', type: 'holiday' },
+    '2026-10-02': { name: '国庆节', type: 'holiday' },
+    '2026-10-03': { name: '国庆节', type: 'holiday' },
+    '2026-10-04': { name: '国庆节', type: 'holiday' },
+    '2026-10-05': { name: '国庆节', type: 'holiday' },
+    '2026-10-06': { name: '国庆节', type: 'holiday' },
+    '2026-10-07': { name: '国庆节', type: 'holiday' },
+    '2026-10-10': { name: '国庆节调休', type: 'makeup' }
+  };
+
+  // 日程数据：按 yyyy-mm-dd 分组（单日日程）
+  // status: pending(待办) / done(已办)；source: system(系统日程) / mine(自定义日程，亦即"我的申请"中常见的事项)
+  // bizType: 业务类型（会议 / 培训 / 请假 / 材料提交 / 个人事务 / 考核 等）
+  // 高校教职工的日常日程与待办本就不多，这里按"稀疏、贴近真实"的密度造数据，
+  // 同时围绕系统当前日期前后生成一批，确保任何时候打开都有内容可看
+  var EVENTS = {
+    '2026-04-30': [
+      { time:'15:00', end:'16:00', title:'人事处季度工作汇报会', loc:'行政楼 2-203', status:'done', source:'system', bizType:'会议', desc:'已结束 · 季度工作总结与下季度计划汇报' }
+    ],
+    '2026-05-06': [
+      { time:'09:00', end:'10:00', title:'年休假申请系所审核', loc:'线上流程', status:'done', source:'system', bizType:'请假', desc:'李秘书已审核通过，已转交学院审批' }
+    ],
+    '2026-05-08': [
+      { time:'09:30', end:'11:30', title:'人事处招聘大会', loc:'知行楼 3-418', status:'pending', source:'system', bizType:'会议', desc:'介绍2026年师资引进重点岗位与评审安排，相关学院联络人须参加' },
+      { time:'14:30', end:'15:00', title:'与系所教学秘书对接调课安排', loc:'电话沟通', status:'pending', source:'mine', bizType:'个人事务', desc:'确认下周请假期间的代课老师及课表调整方案' }
+    ],
+    '2026-05-12': [
+      { time:'14:00', end:'15:30', title:'2026年师资引进评审预备会', loc:'行政楼 2-203', status:'pending', source:'system', bizType:'会议', desc:'招聘大会后续会议，确认评审小组分工及时间安排' }
+    ],
+    '2026-05-15': [
+      { time:'10:00', end:'11:00', title:'职称评审材料提交截止提醒', loc:'人事系统在线提交', status:'pending', source:'system', bizType:'材料提交', desc:'本批次职称评审材料提交截止时间，请提前完成材料上传' }
+    ],
+    '2026-05-20': [
+      { time:'09:30', end:'11:00', title:'新进教师岗前培训动员会', loc:'知行楼 1-101', status:'pending', source:'system', bizType:'培训', desc:'面向2026年新入职教师，介绍岗前培训整体安排' }
+    ],
+    '2026-05-26': [
+      { time:'14:00', end:'16:00', title:'年度考核个人述职预演', loc:'智能制造学院 会议室B', status:'pending', source:'mine', bizType:'考核', desc:'与同教研室同事互相试讲述职内容并提建议' }
+    ]
+  };
+
+  // 跨天日程（横向跨天展示）：单条记录覆盖 startDate ~ endDate 多天
+  var MULTI_EVENTS = [
+    { startDate:'2026-05-14', endDate:'2026-05-15', time:'08:30', end:'18:00', title:'年休假', loc:'—', status:'pending', source:'mine', bizType:'请假', desc:'已批准的年休假（5月14日—15日，共2天），系统自动同步至日程' }
+  ];
+
+  // 围绕"系统当前日期"动态生成一批演示数据：单日事项写入 EVENTS，跨天事项写入 MULTI_EVENTS
+  var REL_SEED = [
+    { offsetStart: -4, offsetEnd: -4, time:'10:00', end:'11:00', title:'教学督导随堂听课反馈会', loc:'行政楼 2-203', status:'done', source:'system', bizType:'会议', desc:'已结束 · 反馈本月随堂听课情况及改进建议' },
+    { offsetStart: 0,  offsetEnd: 0,  time:'09:30', end:'10:00', title:'确认本周课表调整安排', loc:'电话沟通', status:'pending', source:'mine', bizType:'个人事务', desc:'与教学秘书核实本周临时调课的具体时段' },
+    { offsetStart: 3,  offsetEnd: 5,  time:'08:30', end:'18:00', title:'外出参加学术会议', loc:'—', status:'pending', source:'mine', bizType:'会议', desc:'出差参加学术研讨会（共3天），系统自动同步至日程' },
+    { offsetStart: 9,  offsetEnd: 9,  time:'14:00', end:'15:30', title:'教师发展中心培训预告说明会', loc:'知行楼 1-101', status:'pending', source:'system', bizType:'培训', desc:'介绍下学期教师发展培训项目与报名方式' },
+    { offsetStart: 16, offsetEnd: 16, time:'10:00', end:'11:00', title:'年中考核材料提交提醒', loc:'人事系统在线提交', status:'pending', source:'system', bizType:'材料提交', desc:'年中考核相关材料提交截止提醒，请提前准备' }
+  ];
+  REL_SEED.forEach(function (item) {
+    if (item.offsetStart === item.offsetEnd) {
+      var k = relKey(item.offsetStart);
+      if (!EVENTS[k]) EVENTS[k] = [];
+      EVENTS[k].push({ time:item.time, end:item.end, title:item.title, loc:item.loc, status:item.status, source:item.source, bizType:item.bizType, desc:item.desc });
+    } else {
+      MULTI_EVENTS.push({
+        startDate: relKey(item.offsetStart), endDate: relKey(item.offsetEnd),
+        time:item.time, end:item.end, title:item.title, loc:item.loc, status:item.status, source:item.source, bizType:item.bizType, desc:item.desc
+      });
+    }
+  });
+
+  // 为每条日程分配稳定 id，便于编辑/删除/状态切换定位
+  var idSeed = 0;
+  for (var dk in EVENTS) {
+    if (!EVENTS.hasOwnProperty(dk)) continue;
+    EVENTS[dk].forEach(function (ev) { ev.id = 'ev-' + (++idSeed); });
+  }
+  MULTI_EVENTS.forEach(function (ev) { ev.id = 'mev-' + (++idSeed); });
+
+  var view = { y: TODAY.y, m: TODAY.m };
+  var selected = { y: TODAY.y, m: TODAY.m, d: TODAY.d };
+  var activeTab = 'pending';
+
+  function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
+  // JS getDay(): 0=周日...6=周六 → 转换为 周一=0...周日=6
+  function mondayIndex(y, m, d) { var w = new Date(y, m - 1, d).getDay(); return (w + 6) % 7; }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var calTitle = document.getElementById('sdCalTitle');
+  var grid = document.getElementById('sdGrid');
+  var dayTitle = document.getElementById('sdDayTitle');
+  var daySub = document.getElementById('sdDaySub');
+  var dayCount = document.getElementById('sdDayCount');
+  var list = document.getElementById('sdList');
+  var cntPending = document.getElementById('sdCntPending');
+  var cntDone = document.getElementById('sdCntDone');
+  var cntMine = document.getElementById('sdCntMine');
+  var cntAll = document.getElementById('sdCntAll');
+  var BIZ_TYPE_CLASS = { '会议':'blue', '培训':'purple', '请假':'orange', '材料提交':'red', '考核':'green', '个人事务':'gray' };
+  var tabs = document.querySelectorAll('.sd-tab');
+
+  function selectDay(y, m, d, isOther) {
+    selected = { y: y, m: m, d: d };
+    if (isOther) view = { y: y, m: m };
+    renderCalendar();
+    renderDay();
+  }
+
+  var SPAN_LANE_H = 22; // 每条跨天日程横条的占位高度（含间距）
+
+  function renderCalendar() {
+    calTitle.textContent = view.y + '年' + view.m + '月';
+    grid.innerHTML = '';
+
+    var firstOffset = mondayIndex(view.y, view.m, 1);
+    var totalDays = daysInMonth(view.y, view.m);
+    var prevTotalDays = daysInMonth(view.y, view.m === 1 ? 12 : view.m - 1);
+
+    var cells = [];
+    var pm = view.m === 1 ? 12 : view.m - 1;
+    var py = view.m === 1 ? view.y - 1 : view.y;
+    for (var i = 0; i < firstOffset; i++) {
+      cells.push({ y: py, m: pm, d: prevTotalDays - firstOffset + i + 1, other: true });
+    }
+    for (var d = 1; d <= totalDays; d++) {
+      cells.push({ y: view.y, m: view.m, d: d, other: false });
+    }
+    var nm = view.m === 12 ? 1 : view.m + 1;
+    var ny = view.m === 12 ? view.y + 1 : view.y;
+    var nd = 1;
+    while (cells.length % 7 !== 0 || cells.length < 35) {
+      cells.push({ y: ny, m: nm, d: nd, other: true });
+      nd++;
+      if (cells.length >= 42) break;
+    }
+
+    // 整月只用一个共享网格：日期格与跨天横条都按 grid-row/grid-column 落在
+    // 同一组列、行轨道里，从而保证逐行逐列严格对齐，不会出现错位
+    var weekRows = [];
+    for (var w = 0; w < cells.length; w += 7) weekRows.push(cells.slice(w, w + 7));
+
+    var rowSpans = [];   // 每周一份：[{ev, startCol, endCol, lane, contPrev, contNext}, ...]
+    var rowLaneCount = []; // 每周车道数
+    weekRows.forEach(function (weekCells, wi) {
+      var weekStartDate = new Date(weekCells[0].y, weekCells[0].m - 1, weekCells[0].d);
+      var weekEndDate = new Date(weekCells[6].y, weekCells[6].m - 1, weekCells[6].d);
+
+      // 找出与本周有交集的跨天日程，并按起始日期贪心分配横条"车道"，避免互相遮挡
+      var spans = MULTI_EVENTS.filter(function (ev) {
+        var s = dateFromKey(ev.startDate), e = dateFromKey(ev.endDate);
+        return s <= weekEndDate && e >= weekStartDate;
+      }).slice().sort(function (a, b) { return a.startDate.localeCompare(b.startDate); });
+
+      var laneEnds = []; // 每条车道当前已占用到的列索引
+      spans.forEach(function (ev) {
+        var s = dateFromKey(ev.startDate), e = dateFromKey(ev.endDate);
+        var startCol = Math.max(0, daysBetween(weekStartDate, s));
+        var endCol = Math.min(6, daysBetween(weekStartDate, e));
+        var lane = -1;
+        for (var i = 0; i < laneEnds.length; i++) {
+          if (laneEnds[i] < startCol) { lane = i; break; }
+        }
+        if (lane === -1) { lane = laneEnds.length; laneEnds.push(endCol); }
+        else laneEnds[lane] = endCol;
+        var contPrev = s < weekStartDate;
+        var contNext = e > weekEndDate;
+        rowSpans.push({ ev: ev, wi: wi, startCol: startCol, endCol: endCol, lane: lane, contPrev: contPrev, contNext: contNext });
+      });
+      rowLaneCount[wi] = laneEnds.length;
+    });
+
+    // 渲染日期格——每个格子显式声明所在的 grid-row / grid-column，
+    // 这样无论格子高度如何变化，所有行列轨道始终与跨天横条共用同一套坐标
+    weekRows.forEach(function (weekCells, wi) {
+      var laneCount = rowLaneCount[wi];
+      var extraTop = laneCount ? (8 + laneCount * SPAN_LANE_H) : 0;
+
+      weekCells.forEach(function (c, weekday) {
+        var k = key(c.y, c.m, c.d);
+        // 单日格子内仅展示"非跨天"日程，跨天日程通过上方横条单独展示，避免重复
+        var evs = (EVENTS[k] || []).slice().sort(function (a, b) { return a.time.localeCompare(b.time); });
+        var isToday = (c.y === TODAY.y && c.m === TODAY.m && c.d === TODAY.d);
+        var isSelected = (c.y === selected.y && c.m === selected.m && c.d === selected.d);
+        var holiday = HOLIDAYS[k];
+        var isWeekend = weekday >= 5;
+
+        var cls = 'sd-cell';
+        if (c.other) cls += ' is-other';
+        if (isWeekend) cls += ' is-weekend';
+        if (weekday === 6) cls += ' is-col-end';
+        if (isToday) cls += ' is-today';
+        if (isSelected) cls += ' is-selected';
+        if (holiday && holiday.type === 'holiday') cls += ' is-holiday';
+
+        var cell = document.createElement('div');
+        cell.className = cls;
+        cell.setAttribute('role', 'button');
+        cell.setAttribute('tabindex', '0');
+        cell.style.gridRow = (wi + 1) + ' / ' + (wi + 2);
+        cell.style.gridColumn = (weekday + 1) + ' / ' + (weekday + 2);
+        if (extraTop) cell.style.paddingTop = extraTop + 'px';
+
+        var head = document.createElement('div');
+        head.className = 'sd-cell-head';
+        var num = document.createElement('span');
+        num.className = 'sd-num';
+        num.textContent = c.d;
+        head.appendChild(num);
+        if (holiday) {
+          var htag = document.createElement('span');
+          htag.className = 'sd-holiday-tag' + (holiday.type === 'makeup' ? ' is-makeup' : '');
+          htag.textContent = holiday.type === 'makeup' ? '班' : '休';
+          htag.title = holiday.name + '（国家法定节假日安排）';
+          head.appendChild(htag);
+        }
+        cell.appendChild(head);
+
+        var shown = evs.slice(0, MAX_CHIPS);
+        shown.forEach(function (ev) {
+          var chip = document.createElement('div');
+          var chipCls = 'sd-chip';
+          if (ev.status === 'done') chipCls += ' is-done';
+          else if (ev.source === 'mine') chipCls += ' is-mine';
+          chip.className = chipCls;
+          chip.innerHTML = '<span class="ck">' + (ev.status === 'done' ? '✓' : '●') + '</span><span class="txt">' + escapeHtml(ev.time) + ' ' + escapeHtml(ev.title) + '</span>';
+          cell.appendChild(chip);
+        });
+        if (evs.length > MAX_CHIPS) {
+          var more = document.createElement('button');
+          more.type = 'button';
+          more.className = 'sd-more';
+          more.textContent = '还有 ' + (evs.length - MAX_CHIPS) + ' 项';
+          more.addEventListener('click', function (e) {
+            e.stopPropagation();
+            selectDay(c.y, c.m, c.d, c.other);
+          });
+          cell.appendChild(more);
+        }
+
+        cell.addEventListener('click', function () { selectDay(c.y, c.m, c.d, c.other); });
+        grid.appendChild(cell);
+      });
+    });
+
+    // 渲染跨天横条——直接落在与对应日期格相同的 grid-row / grid-column 轨道内，
+    // 用 margin-top 下移到格子顶部预留的空位中，与格子天然对齐、不会错位
+    rowSpans.forEach(function (sp) {
+      var ev = sp.ev;
+      var bar = document.createElement('div');
+      var barCls = 'sd-span-bar';
+      if (ev.status === 'done') barCls += ' is-done';
+      else if (ev.source === 'mine') barCls += ' is-mine';
+      if (sp.contPrev) barCls += ' is-cont-prev';
+      if (sp.contNext) barCls += ' is-cont-next';
+      bar.className = barCls;
+      bar.style.gridRow = (sp.wi + 1) + ' / ' + (sp.wi + 2);
+      bar.style.gridColumn = (sp.startCol + 1) + ' / ' + (sp.endCol + 2);
+      bar.style.marginTop = (34 + sp.lane * SPAN_LANE_H) + 'px';
+      bar.textContent = ev.title;
+      bar.title = ev.title + '（' + ev.startDate + ' 至 ' + ev.endDate + '，跨天日程）';
+      bar.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var sd = dateFromKey(ev.startDate);
+        selectDay(sd.getFullYear(), sd.getMonth() + 1, sd.getDate(), true);
+      });
+      grid.appendChild(bar);
+    });
+  }
+
+  function dayLabel(y, m, d) {
+    var w = WEEKDAY_NAMES[mondayIndex(y, m, d)];
+    var rel = '';
+    if (y === TODAY.y && m === TODAY.m && d === TODAY.d) rel = '今天';
+    else {
+      var diff = Math.round((new Date(y, m - 1, d) - new Date(TODAY.y, TODAY.m - 1, TODAY.d)) / 86400000);
+      if (diff === 1) rel = '明天';
+      else if (diff === -1) rel = '昨天';
+      else if (diff > 1) rel = diff + ' 天后';
+      else rel = Math.abs(diff) + ' 天前';
+    }
+    return { text: m + '月' + d + '日 · 周' + w, rel: rel };
+  }
+
+  // 找出覆盖指定日期的跨天日程，并附带"第 X / 共 Y 天"信息（计算结果挂在临时字段上，每次渲染重新计算即可）
+  function multiEventsForDate(y, m, d) {
+    var dateObj = new Date(y, m - 1, d);
+    return MULTI_EVENTS.filter(function (ev) {
+      var s = dateFromKey(ev.startDate), e = dateFromKey(ev.endDate);
+      return dateObj >= s && dateObj <= e;
+    }).map(function (ev) {
+      var s = dateFromKey(ev.startDate), e = dateFromKey(ev.endDate);
+      ev._dayIndex = daysBetween(s, dateObj) + 1;
+      ev._totalDays = daysBetween(s, e) + 1;
+      return ev;
+    });
+  }
+
+  function renderDay() {
+    var k = key(selected.y, selected.m, selected.d);
+    var evs = (EVENTS[k] || []).slice().concat(multiEventsForDate(selected.y, selected.m, selected.d));
+    evs.sort(function (a, b) { return a.time.localeCompare(b.time); });
+    var lbl = dayLabel(selected.y, selected.m, selected.d);
+    dayTitle.textContent = lbl.text;
+    daySub.textContent = lbl.rel;
+    dayCount.textContent = '共 ' + evs.length + ' 项日程';
+
+    var pending = evs.filter(function (e) { return e.status === 'pending'; });
+    var done = evs.filter(function (e) { return e.status === 'done'; });
+    var mine = evs.filter(function (e) { return e.source === 'mine'; });
+
+    cntPending.textContent = pending.length;
+    cntDone.textContent = done.length;
+    cntMine.textContent = mine.length;
+    cntAll.textContent = evs.length;
+
+    var shown = activeTab === 'pending' ? pending
+      : activeTab === 'done' ? done
+      : activeTab === 'mine' ? mine
+      : evs;
+
+    if (!shown.length) {
+      var emptyText = activeTab === 'pending' ? '这一天暂无待办日程，可以点击右上角"新增日程"安排一项'
+        : activeTab === 'done' ? '这一天还没有已完成的日程'
+        : activeTab === 'mine' ? '这一天没有"我的申请"相关日程'
+        : '这一天暂无日程安排';
+      list.innerHTML = '<div class="sd-empty"><span class="ico">🗓️</span><span>' + emptyText + '</span></div>';
+      return;
+    }
+
+    list.innerHTML = shown.map(function (ev) {
+      var cardCls = 'sd-event-card' + (ev.status === 'done' ? ' is-done' : '');
+      var isMulti = !!ev.startDate;
+      var timeMeta = isMulti
+        ? '<span><b>起止时间</b>' + escapeHtml(ev.startDate) + ' 至 ' + escapeHtml(ev.endDate) + ' · 共' + ev._totalDays + '天 · 第' + ev._dayIndex + '天</span>'
+        : '<span><b>起止时间</b>' + escapeHtml(ev.time) + '–' + escapeHtml(ev.end) + '</span>';
+      var sourceLabel = ev.source === 'mine' ? '自定义日程' : '系统日程';
+      var meta = '<span><b>业务类型</b>' + escapeHtml(ev.bizType || '其他') + '</span>' +
+        '<span><b>状态</b>' + (ev.status === 'done' ? '已完成' : '待办') + '</span>' +
+        '<span><b>类别</b>' + sourceLabel + (isMulti ? ' · 跨天日程' : '') + '</span>' +
+        timeMeta;
+      var ops = ev.status === 'done'
+        ? '<button type="button" data-act="edit" data-id="' + ev.id + '">编辑</button><button class="danger" type="button" data-act="delete" data-id="' + ev.id + '">删除</button>'
+        : '<button type="button" data-act="done" data-id="' + ev.id + '">标记已办</button><button type="button" data-act="edit" data-id="' + ev.id + '">编辑</button><button class="danger" type="button" data-act="delete" data-id="' + ev.id + '">删除</button>';
+      return (
+        '<article class="' + cardCls + '">' +
+          '<span class="bar"></span>' +
+          '<div class="body">' +
+            '<div class="row1"><h4>' + escapeHtml(ev.title) + (isMulti ? ' <span class="ap-tag purple" style="font-weight:400">第' + ev._dayIndex + '/' + ev._totalDays + '天</span>' : '') + '</h4></div>' +
+            '<p>📍 ' + escapeHtml(ev.loc) + '</p>' +
+            '<p>' + escapeHtml(ev.desc) + '</p>' +
+            '<div class="meta">' + meta + '</div>' +
+            '<div class="ops">' + ops + '</div>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join('');
+
+    list.querySelectorAll('[data-act]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        var act = btn.getAttribute('data-act');
+        var found = findEventById(id);
+        if (!found) return;
+        if (act === 'done') {
+          found.ev.status = 'done';
+          renderCalendar();
+          renderDay();
+        } else if (act === 'delete') {
+          if (window.confirm('确定要删除日程"' + found.ev.title + '"吗？删除后不可恢复。')) {
+            found.list.splice(found.index, 1);
+            renderCalendar();
+            renderDay();
+          }
+        } else if (act === 'edit') {
+          openEditDialog(found.ev, found.dateKey);
+        }
+      });
+    });
+  }
+
+  // 按 id 查找日程：先查单日 EVENTS，再查跨天 MULTI_EVENTS，返回所在数组、下标及所属日期
+  function findEventById(id) {
+    for (var k in EVENTS) {
+      if (!EVENTS.hasOwnProperty(k)) continue;
+      var arr = EVENTS[k];
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i].id === id) return { ev: arr[i], list: arr, index: i, dateKey: k, isMulti: false };
+      }
+    }
+    for (var j = 0; j < MULTI_EVENTS.length; j++) {
+      if (MULTI_EVENTS[j].id === id) return { ev: MULTI_EVENTS[j], list: MULTI_EVENTS, index: j, dateKey: MULTI_EVENTS[j].startDate, isMulti: true };
+    }
+    return null;
+  }
+
+  document.getElementById('sdPrevMonth').addEventListener('click', function () {
+    view.m -= 1;
+    if (view.m < 1) { view.m = 12; view.y -= 1; }
+    renderCalendar();
+  });
+  document.getElementById('sdNextMonth').addEventListener('click', function () {
+    view.m += 1;
+    if (view.m > 12) { view.m = 1; view.y += 1; }
+    renderCalendar();
+  });
+  function goToday() {
+    view = { y: TODAY.y, m: TODAY.m };
+    selected = { y: TODAY.y, m: TODAY.m, d: TODAY.d };
+    renderCalendar();
+    renderDay();
+  }
+  document.getElementById('sdGoToday').addEventListener('click', goToday);
+  document.getElementById('sdJumpToday').addEventListener('click', function (e) { e.preventDefault(); goToday(); });
+
+  tabs.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tabs.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      activeTab = btn.getAttribute('data-tab');
+      renderDay();
+    });
+  });
+
+  // 新增 / 编辑日程弹层
+  var mask = document.getElementById('sdMask');
+  var dialogTitleEl = document.getElementById('sdDialogTitle');
+  var multiHint = document.getElementById('sdMultiHint');
+  var fTitle = document.getElementById('sdFieldTitle');
+  var fBiz = document.getElementById('sdFieldBiz');
+  var fStatus = document.getElementById('sdFieldStatus');
+  var fDate = document.getElementById('sdFieldDate');
+  var fTime = document.getElementById('sdFieldTime');
+  var fLoc = document.getElementById('sdFieldLoc');
+  var fDesc = document.getElementById('sdFieldDesc');
+  var editingId = null; // null = 新增；非空 = 正在编辑该 id 对应的日程
+
+  function openAddDialog() {
+    editingId = null;
+    dialogTitleEl.textContent = '新增日程';
+    multiHint.style.display = 'none';
+    fTitle.value = '';
+    fBiz.value = '个人事务';
+    fStatus.value = 'pending';
+    fDate.value = key(selected.y, selected.m, selected.d);
+    fDate.disabled = false;
+    fTime.value = '09:00';
+    fLoc.value = '';
+    fDesc.value = '';
+    fTitle.style.borderColor = 'var(--ap-line)';
+    fDate.style.borderColor = 'var(--ap-line)';
+    mask.classList.add('is-open');
+    setTimeout(function () { fTitle.focus(); }, 0);
+  }
+
+  function openEditDialog(ev, dateKey) {
+    editingId = ev.id;
+    dialogTitleEl.textContent = '编辑日程';
+    // 含 startDate/endDate 即为跨天日程，限制在此修改起始日期
+    var isMultiDay = !!ev.startDate;
+    multiHint.style.display = isMultiDay ? 'block' : 'none';
+    fTitle.value = ev.title;
+    fBiz.value = ev.bizType || '个人事务';
+    fStatus.value = ev.status;
+    fDate.value = dateKey;
+    fDate.disabled = (multiHint.style.display === 'block');
+    fTime.value = ev.time;
+    fLoc.value = (ev.loc === '—') ? '' : ev.loc;
+    fDesc.value = ev.desc || '';
+    fTitle.style.borderColor = 'var(--ap-line)';
+    fDate.style.borderColor = 'var(--ap-line)';
+    mask.classList.add('is-open');
+    setTimeout(function () { fTitle.focus(); }, 0);
+  }
+
+  function closeAddDialog() { mask.classList.remove('is-open'); fDate.disabled = false; editingId = null; }
+
+  document.getElementById('sdAddBtn').addEventListener('click', openAddDialog);
+  document.getElementById('sdDialogClose').addEventListener('click', closeAddDialog);
+  document.getElementById('sdDialogCancel').addEventListener('click', closeAddDialog);
+  mask.addEventListener('click', function (e) { if (e.target === mask) closeAddDialog(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mask.classList.contains('is-open')) closeAddDialog(); });
+
+  document.getElementById('sdDialogSave').addEventListener('click', function () {
+    var title = fTitle.value.trim();
+    var dateVal = fDate.value;
+    if (!title || !dateVal) {
+      fTitle.style.borderColor = title ? 'var(--ap-line)' : 'var(--ap-red)';
+      fDate.style.borderColor = dateVal ? 'var(--ap-line)' : 'var(--ap-red)';
+      return;
+    }
+    var time = fTime.value || '09:00';
+    var endHour = (parseInt(time.split(':')[0], 10) + 1) % 24;
+    var end = pad(endHour) + ':' + (time.split(':')[1] || '00');
+    var bizType = fBiz.value;
+    var status = fStatus.value;
+    var loc = fLoc.value.trim() || '待补充地点';
+    var desc = fDesc.value.trim() || '由本人手动添加的日程安排';
+
+    if (editingId) {
+      // 编辑现有日程：保留 id / source，按需更新各字段；跨天日程不允许改期（输入框已禁用）
+      var found = findEventById(editingId);
+      if (found) {
+        found.ev.title = title;
+        found.ev.bizType = bizType;
+        found.ev.status = status;
+        found.ev.time = time;
+        found.ev.end = end;
+        found.ev.loc = loc;
+        found.ev.desc = desc;
+        if (!fDate.disabled && dateVal !== found.dateKey) {
+          found.list.splice(found.index, 1);
+          if (!EVENTS[dateVal]) EVENTS[dateVal] = [];
+          EVENTS[dateVal].push(found.ev);
+        }
+      }
+    } else {
+      if (!EVENTS[dateVal]) EVENTS[dateVal] = [];
+      EVENTS[dateVal].push({
+        id: 'ev-' + (++idSeed),
+        time: time,
+        end: end,
+        title: title,
+        loc: loc,
+        status: status,
+        source: 'mine',
+        bizType: bizType,
+        desc: desc
+      });
+    }
+
+    var parts = dateVal.split('-').map(Number);
+    selectDay(parts[0], parts[1], parts[2], true);
+    if (!editingId) {
+      activeTab = 'pending';
+      tabs.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-tab') === 'pending'); });
+    }
+    renderDay();
+
+    closeAddDialog();
+  });
+
+  renderCalendar();
+  renderDay();
+})();
+</script>
+</body>
+</html>

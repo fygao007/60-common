@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "sys",
+    "label": "系统管理员"
+  },
+  "menu": {
+    "key": "form-management",
+    "label": "档案字段设置",
+    "group": "档案字段设置",
+    "defaultFeature": "form-management"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-sys-form-management",
+      "label": "档案字段设置（系统管理员）",
+      "type": "react-business-page",
+      "html": "form-management.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../major-group/major-group.html",
+          "../audit-config/audit-config.html",
+          "../batch-publish/batch-publish.html",
+          "../chart-designer/chart-designer.html"
+        ]
+      }
+    }
+  ]
+}

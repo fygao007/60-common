@@ -1,0 +1,346 @@
+ontology: szpu-hr
+version: 0.4.0
+domain: staff-data
+title: 教职工数据领域实体定义
+description: >-
+  本文件定义教职工基础数据与扩展信息所需的实体。
+  复用 core/entities.yaml 中已存在的实体（Person、PersonIdentity、TrainingExperience、TeachingAchievement），
+  其余为本分区新增。新增实体稳定后应上移至 core/entities.yaml。
+
+# ============================================================
+# 一、复用核心实体
+# ============================================================
+reusedEntities:
+  - id: Person
+    ref: core/entities.yaml
+    source: 教职工基本信息（主表）
+    note: 主表一行对应一个 Person，工号为业务主键
+  - id: PersonIdentity
+    ref: core/entities.yaml
+    source: 主表证件类型 + 证件号码
+    classification: restricted
+  - id: TrainingExperience
+    ref: core/entities.yaml
+    source: 培训信息
+    note: 核心实体已定义，本分区补充字段
+  - id: TeachingAchievement
+    ref: core/entities.yaml
+    source: 奖励情况
+    note: 核心实体已定义，本分区补充字段
+
+# ============================================================
+# 二、本分区新增实体
+# ============================================================
+entities:
+
+  - id: EducationExperience
+    label: 学习经历
+    definition: 人员的一段学历或学位教育经历，一人可有多条，可区分是否最高学历/学位
+    source: 学习经历
+    recordCount: 8196
+    personCount: 4006
+    cardinality: "Person 1 : N"
+    identifier: educationId
+    classification: internal
+    attributes:
+      - { id: educationId, label: 学习经历主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: startDate, label: 入学日期, type: date }
+      - { id: endDate, label: 毕业日期, type: date }
+      - { id: institution, label: 毕业院校, type: string }
+      - { id: major, label: 所学专业, type: string }
+      - { id: education, label: 学历, type: concept, vocabulary: Education }
+      - { id: degree, label: 学位, type: concept, vocabulary: Degree }
+      - { id: discipline, label: 学科门类, type: concept, vocabulary: Discipline }
+      - { id: studyForm, label: 学习形式, type: concept }
+      - { id: educationType, label: 学历类别, type: concept }
+      - { id: isHighestEducation, label: 是否最高学历, type: boolean }
+      - { id: isHighestDegree, label: 是否最高学位, type: boolean }
+      - { id: degreeAwardDate, label: 学位授予日期, type: date }
+      - { id: degreeInstitution, label: 学位授予单位, type: string }
+      - { id: isOnJobEducation, label: 是否在职教育, type: boolean }
+
+  - id: WorkExperience
+    label: 工作经历
+    definition: 人员在本校或外单位的一段工作经历，支持博士后、企业、海外等标记
+    source: 工作经历
+    recordCount: 11281
+    personCount: 2417
+    cardinality: "Person 1 : N"
+    identifier: workExperienceId
+    classification: internal
+    attributes:
+      - { id: workExperienceId, label: 工作经历主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: startDate, label: 开始日期, type: date }
+      - { id: endDate, label: 结束日期, type: date }
+      - { id: durationMonths, label: 时长（月）, type: number }
+      - { id: organizationName, label: 所在单位名称, type: string }
+      - { id: organizationType, label: 单位类别, type: concept, vocabulary: WorkOrganizationType }
+      - { id: department, label: 所在部门, type: string }
+      - { id: position, label: 岗位, type: string }
+      - { id: jobContent, label: 从事工作内容, type: text }
+      - { id: jobTitle, label: 职务, type: string }
+      - { id: country, label: 国家（地区）, type: concept }
+      - { id: isPostdoc, label: 是否博士后经历, type: boolean }
+      - { id: isEnterprise, label: 是否企业经历, type: boolean }
+      - { id: isOverseas, label: 是否海外经历, type: boolean }
+    note: 企业经历与海外经历是双师认定、实践教学能力评价的重要输入
+
+  - id: ProfessionalTitle
+    label: 职称资格
+    definition: 人员取得的专业技术资格事实，与岗位聘用等级分离
+    source: 职称资格
+    recordCount: 4992
+    personCount: 2904
+    cardinality: "Person 1 : N"
+    identifier: titleId
+    classification: internal
+    attributes:
+      - { id: titleId, label: 职称资格主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: titleName, label: 职称名称, type: concept }
+      - { id: titleMajor, label: 职称专业, type: string }
+      - { id: titleLevel, label: 职称等级, type: concept, vocabulary: TitleLevel }
+      - { id: acquisitionWay, label: 取得途径, type: concept }
+      - { id: acquisitionDate, label: 取得日期, type: date }
+      - { id: issueDate, label: 发证日期, type: date }
+      - { id: issuingUnit, label: 发证单位, type: string }
+      - { id: certificateNumber, label: 证书编号, type: string }
+      - { id: reviewUnit, label: 评审单位, type: string }
+    designNote: 本实体描述资格；实际聘用等级见 PositionAppointment，两者不得互相覆盖
+
+  - id: PositionAppointment
+    label: 岗位聘用
+    definition: 人员被聘用到某岗位类别与等级的一段事实，表达实际聘用而非资格
+    source: 聘岗信息
+    recordCount: 3424
+    personCount: 3418
+    cardinality: "Person 1 : N"
+    identifier: appointmentId
+    classification: internal
+    attributes:
+      - { id: appointmentId, label: 聘用主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: appointmentStatus, label: 任（聘）状态, type: concept }
+      - { id: positionCategory, label: 岗位类别, type: concept, vocabulary: PositionCategory }
+      - { id: positionLevel, label: 岗位等级, type: concept, vocabulary: PositionLevel }
+      - { id: startDate, label: 开始日期, type: date }
+      - { id: endDate, label: 结束日期, type: date }
+      - { id: isPrimary, label: 是否主要岗位, type: boolean }
+    designNote: 与 core/entities.yaml 的 EmploymentAssignment 同源，本实体为现网聘岗事实的原始表达
+
+  - id: Assessment
+    label: 考核记录
+    definition: 人员在某一考核周期形成的考核结论事实，按考核类型分学年考核、师德考核、聘期考核
+    source: [学年（年度）考核, 师德考核, 聘期考核]
+    recordCount: 46044
+    classification: sensitive
+    identifier: assessmentId
+    attributes:
+      - { id: assessmentId, label: 考核主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: assessmentType, label: 考核类型, type: concept, vocabulary: AssessmentType }
+      - { id: academicYear, label: 考核学年, type: string }
+      - { id: conclusion, label: 考核结论, type: concept }
+      - { id: assessmentDate, label: 考核开展时间, type: date }
+      - { id: tenureStart, label: 聘期开始时间, type: date, nullable: true }
+      - { id: tenureEnd, label: 聘期结束时间, type: date, nullable: true }
+      - { id: exceptionReason, label: 考核异常原因, type: text, nullable: true }
+    accessNote: 考核结论属个人评价信息，仅本人、直接主管和授权人事岗位可查
+
+  - id: PoliticalStatus
+    label: 政治面貌
+    definition: 人员的政治党派归属事实，支持多党派与历史变更
+    source: 政治面貌
+    recordCount: 3901
+    personCount: 3845
+    cardinality: "Person 1 : N"
+    identifier: politicalStatusId
+    classification: sensitive
+    attributes:
+      - { id: politicalStatusId, label: 政治面貌主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: politicalAffiliation, label: 政治面貌, type: concept, vocabulary: PoliticalAffiliation }
+      - { id: joinDate, label: 参加党派日期, type: date }
+      - { id: joinOrganization, label: 参加时所在单位, type: string }
+      - { id: regularDate, label: 转正日期, type: date }
+      - { id: currentOrganization, label: 当前所在组织, type: string }
+      - { id: organizationRole, label: 现担任组织职务, type: string }
+    accessNote: 需按组织部门授权访问，不得与业绩考核数据自动关联
+
+  - id: DualQualification
+    label: 双师认定
+    definition: 教师取得的双师素质认定事实，关联专业大类
+    source: 双师信息
+    recordCount: 1142
+    personCount: 1124
+    cardinality: "Person 1 : N"
+    identifier: dualQualId
+    classification: internal
+    attributes:
+      - { id: dualQualId, label: 双师认定主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: qualificationName, label: 认定名称, type: string }
+      - { id: teacherType, label: 教师类型, type: concept }
+      - { id: qualificationCategory, label: 认定类别, type: concept }
+      - { id: majorCategoryName, label: 专业大类, type: string }
+      - { id: majorSubCategory, label: 专业子类, type: string }
+      - { id: major, label: 专业, type: string }
+      - { id: qualificationYear, label: 认定年份, type: string }
+      - { id: passDate, label: 认定通过时间, type: date }
+      - { id: issuingUnit, label: 发证单位, type: string }
+      - { id: certificateNumber, label: 证书编号, type: string }
+      - { id: validPeriod, label: 有效期, type: string }
+
+  - id: TalentTitle
+    label: 人才称号
+    definition: 人员获得的各级人才称号与依托项目事实
+    source: 人才信息
+    recordCount: 346
+    personCount: 268
+    cardinality: "Person 1 : N"
+    identifier: talentTitleId
+    classification: internal
+    attributes:
+      - { id: talentTitleId, label: 人才称号主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: titleName, label: 人才称号, type: concept }
+      - { id: titleCode, label: 人才称号代码, type: string }
+      - { id: supportingProject, label: 依托项目, type: string }
+      - { id: talentLevel, label: 人才级别, type: concept, vocabulary: TalentLevel }
+      - { id: researchDirection, label: 研究方向, type: string }
+      - { id: approvalUnit, label: 批准单位, type: string }
+      - { id: approvalUnitLevel, label: 批准单位级别, type: concept }
+      - { id: selectionYear, label: 入选年份, type: string }
+      - { id: startDate, label: 开始时间, type: date }
+      - { id: validPeriod, label: 有效期, type: string }
+      - { id: endDate, label: 结束时间, type: date }
+
+  - id: TeacherCertificate
+    label: 教师资格证
+    definition: 人员持有的教师资格证书事实
+    source: 教师资格证
+    recordCount: 1078
+    personCount: 1074
+    cardinality: "Person 1 : N"
+    identifier: teacherCertId
+    classification: internal
+    attributes:
+      - { id: teacherCertId, label: 资格证主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: certificateType, label: 教师资格证种类, type: concept }
+      - { id: certificateNumber, label: 教师资格证号码, type: string }
+      - { id: teachingSubject, label: 任教学科, type: string }
+      - { id: issueDate, label: 发证日期, type: date }
+      - { id: issuingUnit, label: 发证单位, type: string }
+
+  - id: SkillCertificate
+    label: 技能证书
+    definition: 人员持有的工勤或技能类职业资格证书事实
+    source: 技能证书
+    recordCount: 87
+    personCount: 65
+    cardinality: "Person 1 : N"
+    identifier: skillCertId
+    classification: internal
+    attributes:
+      - { id: skillCertId, label: 技能证书主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: jobType, label: 工种名称, type: concept }
+      - { id: skillLevel, label: 技术等级, type: concept, vocabulary: SkillLevel }
+      - { id: acquisitionWay, label: 取得途径, type: concept }
+      - { id: acquisitionDate, label: 取得时间, type: date }
+      - { id: issueDate, label: 发证时间, type: date }
+      - { id: issuingUnit, label: 发证单位, type: string }
+      - { id: certificateNumber, label: 证书编号, type: string }
+
+  - id: ExchangeExperience
+    label: 进修交流
+    definition: 人员参加访学、交流项目的一段经历
+    source: 进修交流
+    recordCount: 407
+    personCount: 339
+    cardinality: "Person 1 : N"
+    identifier: exchangeId
+    classification: internal
+    attributes:
+      - { id: exchangeId, label: 进修交流主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: startDate, label: 开始日期, type: date }
+      - { id: endDate, label: 结束日期, type: date }
+      - { id: exchangeType, label: 交流类型, type: concept }
+      - { id: projectName, label: 项目名称, type: string }
+      - { id: organizingUnit, label: 组织单位, type: string }
+      - { id: country, label: 交流国家, type: concept }
+      - { id: hostUnit, label: 交流单位, type: string }
+
+  - id: ClassAdvisorExperience
+    label: 班主任经历
+    definition: 人员担任班主任的一段经历
+    source: 班主任经历
+    recordCount: 6
+    personCount: 4
+    cardinality: "Person 1 : N"
+    identifier: advisorExpId
+    classification: internal
+    dataQualityIssue: 仅 6 条记录，与主表"是否班主任"有值的 1438 人严重不匹配，不可用于统计
+    attributes:
+      - { id: advisorExpId, label: 班主任经历主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: startDate, label: 开始时间, type: date }
+      - { id: endDate, label: 结束时间, type: date }
+      - { id: durationMonths, label: 时长（月）, type: number }
+      - { id: className, label: 所带班级, type: string }
+
+  - id: FamilyMember
+    label: 家庭成员
+    definition: 人员的家庭成员及主要社会关系，涉及第三方个人信息
+    source: 家庭成员及社会关系
+    recordCount: 2606
+    personCount: 1294
+    cardinality: "Person 1 : N"
+    identifier: familyMemberId
+    classification: restricted
+    accessNote: 整表按受限级管理，需最高级别授权，禁止进入任何检索与统计
+    attributes:
+      - { id: familyMemberId, label: 家庭成员主键, type: string, required: true }
+      - { id: personId, label: 人员, type: reference, target: Person, required: true }
+      - { id: memberName, label: 家属姓名, type: string, classification: restricted }
+      - { id: relationship, label: 与本人的关系, type: concept, classification: restricted }
+      - { id: birthDate, label: 出生年月, type: date, classification: restricted }
+      - { id: politicalStatus, label: 政治面貌, type: concept, classification: restricted }
+      - { id: workplace, label: 工作单位, type: string, classification: restricted }
+      - { id: jobTitle, label: 职务, type: string, classification: restricted }
+      - { id: contactPhone, label: 联系电话, type: string, classification: restricted }
+      - { id: isSchoolEmployee, label: 是否本校职工, type: boolean, classification: restricted }
+
+# ============================================================
+# 三、实体关系总览
+# ============================================================
+relationships:
+  - { from: Person, to: PersonIdentity, cardinality: "1:1", description: 证件事实 }
+  - { from: Person, to: EducationExperience, cardinality: "1:N", description: 学习经历 }
+  - { from: Person, to: WorkExperience, cardinality: "1:N", description: 工作经历 }
+  - { from: Person, to: ProfessionalTitle, cardinality: "1:N", description: 职称资格 }
+  - { from: Person, to: PositionAppointment, cardinality: "1:N", description: 岗位聘用 }
+  - { from: Person, to: Assessment, cardinality: "1:N", description: 考核记录 }
+  - { from: Person, to: PoliticalStatus, cardinality: "1:N", description: 政治面貌 }
+  - { from: Person, to: DualQualification, cardinality: "1:N", description: 双师认定 }
+  - { from: Person, to: TalentTitle, cardinality: "1:N", description: 人才称号 }
+  - { from: Person, to: TeacherCertificate, cardinality: "1:N", description: 教师资格证 }
+  - { from: Person, to: SkillCertificate, cardinality: "1:N", description: 技能证书 }
+  - { from: Person, to: TrainingExperience, cardinality: "1:N", description: 培训经历 }
+  - { from: Person, to: ExchangeExperience, cardinality: "1:N", description: 进修交流 }
+  - { from: Person, to: TeachingAchievement, cardinality: "1:N", description: 奖励情况 }
+  - { from: Person, to: ClassAdvisorExperience, cardinality: "1:N", description: 班主任经历 }
+  - { from: Person, to: FamilyMember, cardinality: "1:N", description: 家庭成员 }
+  - { from: Person, to: Organization, cardinality: "N:1", description: 所在部门，通过主表所在部门关联 }
+
+statistics:
+  totalEntities: 17
+  reusedFromCore: 4
+  newInThisDomain: 13
+  totalRecords: 89357
+  totalPersons: 4512
+  note: totalRecords 为 17 张扩展表记录数之和，不含主表 4512 条

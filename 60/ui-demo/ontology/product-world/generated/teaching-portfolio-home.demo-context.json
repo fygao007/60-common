@@ -1,0 +1,201 @@
+{
+  "generatedFrom": "ontology/product-world/scenarios/teaching-portfolio-home.json",
+  "scenarioId": "teaching-portfolio-home",
+  "version": "1.0.0",
+  "generationRules": {
+    "framework": "framework-2",
+    "useTemplateFirst": true,
+    "useDesignSystemOnly": true,
+    "useFieldRefsOnly": true,
+    "copyCrossDemoCode": false,
+    "preserveDeletedCodeAsComments": false
+  },
+  "research": {
+    "sources": [
+      {
+        "id": "current-demo",
+        "type": "existing-product",
+        "title": "教学档案袋首页现有 Demo"
+      }
+    ],
+    "actors": [
+      {
+        "id": "teacher",
+        "name": "教师"
+      },
+      {
+        "id": "portfolio-manager",
+        "name": "教学档案管理员"
+      }
+    ],
+    "goals": [
+      "集中查看个人教学档案概况",
+      "快速识别待补充的档案内容",
+      "进入各类教学档案业务页面"
+    ],
+    "painPoints": [
+      "档案数据分散，教师难以判断完整度",
+      "不同档案入口缺少统一导航"
+    ],
+    "openQuestions": [
+      "完整度计算口径及各类字段权重需要业务确认",
+      "不同角色可见的统计卡片范围需要权限调研"
+    ]
+  },
+  "scenario": {
+    "name": "教师查看教学档案袋首页",
+    "actorRefs": [
+      "teacher"
+    ],
+    "preconditions": [
+      "教师已登录系统",
+      "教师身份已关联人员主数据"
+    ],
+    "mainFlow": [
+      "系统展示教学档案统计概况",
+      "系统展示课程及档案完整度",
+      "教师通过菜单进入目标档案页面"
+    ],
+    "exceptions": [
+      "没有档案数据时使用统一空状态组件",
+      "统计失败时展示可重试的错误状态"
+    ]
+  },
+  "requirements": {
+    "rules": [
+      "页面字段必须通过 ontology fieldRef 获取定义",
+      "页面菜单必须通过 WiseMenuRegistry 获取地址",
+      "页面基础控件必须使用设计系统组件"
+    ],
+    "acceptanceCriteria": [
+      "教师能够查看教学档案概况和完整度",
+      "点击菜单能够进入对应档案页面",
+      "无数据和加载失败均有明确状态反馈"
+    ]
+  },
+  "page": {
+    "title": "教学档案袋首页",
+    "templateId": "dashboard",
+    "menuRef": "teaching-portfolio.major:t-home",
+    "fieldRefs": [
+      "Person.personId",
+      "Course.courseId",
+      "Course.courseCode",
+      "Course.name",
+      "Course.totalHours",
+      "CoursePortfolio.coursePortfolioId",
+      "CoursePortfolio.archiveStatus"
+    ],
+    "components": [
+      "DSCard",
+      "DSChartCard",
+      "DSDashboardGrid",
+      "DSDataTable",
+      "DSEmptyState"
+    ],
+    "demoPath": "demos/teaching-portfolio/major/t-home/t-home.html",
+    "template": {
+      "id": "dashboard",
+      "component": "DSDashboardGrid",
+      "useFor": [
+        "首页",
+        "工作台",
+        "统计看板"
+      ],
+      "requiredComponents": [
+        "DSCard",
+        "DSChartCard",
+        "DSDashboardGrid"
+      ]
+    },
+    "resolvedFields": [
+      {
+        "id": "personId",
+        "label": "人员主键",
+        "type": "id",
+        "required": true,
+        "nullable": false,
+        "classification": "internal",
+        "mutable": false,
+        "searchable": "exact",
+        "fieldRef": "Person.personId",
+        "entityId": "Person"
+      },
+      {
+        "id": "courseId",
+        "label": "课程主键",
+        "type": "id",
+        "required": true,
+        "nullable": false,
+        "classification": "internal",
+        "mutable": false,
+        "searchable": "exact",
+        "fieldRef": "Course.courseId",
+        "entityId": "Course"
+      },
+      {
+        "id": "courseCode",
+        "label": "课程编码",
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "classification": "internal",
+        "mutable": true,
+        "searchable": "exact",
+        "unique": true,
+        "fieldRef": "Course.courseCode",
+        "entityId": "Course"
+      },
+      {
+        "id": "name",
+        "label": "课程名称",
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "classification": "internal",
+        "mutable": true,
+        "searchable": "fulltext",
+        "fieldRef": "Course.name",
+        "entityId": "Course"
+      },
+      {
+        "id": "totalHours",
+        "label": "总学时",
+        "type": "integer",
+        "required": false,
+        "nullable": true,
+        "classification": "internal",
+        "mutable": true,
+        "searchable": "none",
+        "minimum": 0,
+        "fieldRef": "Course.totalHours",
+        "entityId": "Course"
+      },
+      {
+        "id": "coursePortfolioId",
+        "label": "课程档案主键",
+        "type": "id",
+        "required": true,
+        "nullable": false,
+        "classification": "internal",
+        "mutable": false,
+        "searchable": "exact",
+        "fieldRef": "CoursePortfolio.coursePortfolioId",
+        "entityId": "CoursePortfolio"
+      },
+      {
+        "id": "archiveStatus",
+        "label": "归档状态",
+        "type": "concept",
+        "required": true,
+        "nullable": false,
+        "classification": "internal",
+        "mutable": true,
+        "searchable": "facet",
+        "vocabulary": "PortfolioArchiveStatus",
+        "fieldRef": "CoursePortfolio.archiveStatus",
+        "entityId": "CoursePortfolio"
+      }
+    ]
+  }
+}

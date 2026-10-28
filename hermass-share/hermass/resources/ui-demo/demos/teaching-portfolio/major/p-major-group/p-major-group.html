@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教学档案袋 · 专业群统计分析看板</title>
+  <style>
+    body { margin: 0; background: #f7f8fa; }
+    .ds-scope { min-height: 100vh; color: #1f2937;
+      font-family: var(--ds-font-family); font-variant-numeric: tabular-nums; }
+
+    .mg-page { margin: 0 auto;
+      display: flex; flex-direction: column; gap: 16px; }
+
+    /* ===== 分区头：蓝色竖条 ===== */
+    .mg-ribbon { position: relative; padding-left: 10px; font-size: 16px; font-weight: 600; color: #1f2937; }
+    .mg-ribbon::before { content: ""; position: absolute; top: 50%; left: 0; width: 4px; height: 16px;
+      border-radius: 2px; background: var(--ds-color-primary); transform: translateY(-50%); }
+    .mg-section-sub { font-size: 13px; color: #737585; margin-left: 6px; }
+
+    /* ===== 卡片通用 ===== */
+    .mg-card { background: #fff; border: 1px solid #eeeef0; border-radius: 8px; padding: 16px 20px; }
+
+    /* ===== 页头 ===== */
+    .mg-header { display: flex; min-height: 92px; align-items: center; justify-content: space-between;
+      gap: 24px; padding: 16px 20px; background: #fff; border: 1px solid #eeeef0; border-radius: 8px; }
+    .mg-header h1 { margin: 0 0 12px; font-size: 20px; font-weight: 600; color: #1f2937; }
+    .mg-id { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 0; }
+    .mg-id div { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+    .mg-id dt { color: #737585; }
+    .mg-id dd { margin: 0; color: #1f2937; font-weight: 500; font-family: var(--ds-font-family-code); }
+    .mg-header__controls { display: flex; flex: none; align-items: center; gap: 16px; white-space: nowrap; }
+    .mg-filter { display: flex; align-items: center; gap: 8px; }
+    .mg-filter > span { color: #4b5563; font-size: 13px; white-space: nowrap; }
+    .mg-filter select { height: 32px; padding: 0 28px 0 10px; border: 1px solid #dcdce0; border-radius: 4px;
+      font-size: 14px; color: #1f2937; background: #fff; outline: none; min-width: 132px;
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5L6 7.5L9 4.5' stroke='%23737585' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>");
+      background-repeat: no-repeat; background-position: right 10px center; }
+    .mg-filter select:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(49,103,255,0.12); }
+    .mg-filter--major select { min-width: 176px; }
+
+    /* ===== 分区外壳（带分区头） ===== */
+    .mg-section-head { display: flex; align-items: center; min-height: 40px; }
+    .mg-section-head--filter { justify-content: space-between; }
+
+    /* ===== KPI ===== */
+    .mg-kpi-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: 4px; }
+    .mg-kpi-item { display: flex; min-width: 0; flex-direction: column; justify-content: center; gap: 8px;
+      padding: 0 16px; border-left: 1px solid #eeeef0; }
+    .mg-kpi-item:first-child { padding-left: 0; border-left: 0; }
+    .mg-kpi-label { display: flex; align-items: center; gap: 6px; color: #737585; font-size: 14px; white-space: nowrap; }
+    .mg-kpi-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+    .mg-kpi-value { color: #1f2937; font-size: 24px; font-weight: 600; line-height: 28px; white-space: nowrap; }
+    .mg-kpi-value small { margin-left: 2px; color: #737585; font-size: 14px; font-weight: 400; }
+    .mg-kpi-compare { color: #737585; font-size: 13px; line-height: 1.5; }
+
+    /* ===== 图表网格 ===== */
+    .mg-chart-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+    .mg-chart-grid > .mg-card { grid-column: span 6; }
+    .mg-chart-grid--3 > .mg-card { grid-column: span 4; }
+
+    .mg-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .mg-card-title { margin: 0; font-size: 14px; font-weight: 600; color: #1f2937; position: relative; padding-left: 10px; }
+    .mg-card-title::before { content: ""; position: absolute; top: 50%; left: 0; width: 3px; height: 14px;
+      border-radius: 2px; background: var(--ds-color-primary); transform: translateY(-50%); }
+    .mg-card-title .mg-hint { color: #737585; font-size: 12px; font-weight: 400; margin-left: 6px; }
+    .mg-link { color: var(--ds-color-primary); font-size: 13px; cursor: pointer; background: none; border: 0; padding: 0; }
+    .mg-link:hover { text-decoration: underline; }
+    .mg-card-body { min-height: 220px; display: flex; align-items: center; justify-content: center; }
+
+    /* 图例 */
+    .mg-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center; margin-top: 4px; }
+    .mg-legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #505266; }
+    .mg-legend-item i { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+
+    /* 环形图 + 图例 */
+    .mg-donut-wrap { display: flex; align-items: center; gap: 16px; width: 100%; }
+    .mg-donut-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
+    .mg-donut-leg { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #505266; }
+    .mg-donut-leg i { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+    .mg-donut-leg b { margin-left: auto; color: #1f2937; font-weight: 600; font-family: var(--ds-font-family-code); }
+
+    /* 横向条形 */
+    .mg-hbar { display: flex; flex-direction: column; gap: 14px; width: 100%; padding: 4px 0; }
+    .mg-hbar-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 64px; align-items: center; gap: 12px; }
+    .mg-hbar-label { font-size: 13px; color: #505266; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mg-hbar-track { height: 12px; background: #eef0f5; border-radius: 6px; overflow: hidden; }
+    .mg-hbar-track i { display: block; height: 100%; border-radius: 6px; }
+    .mg-hbar-val { font-size: 13px; font-weight: 600; color: #1f2937; text-align: right; font-family: var(--ds-font-family-code); }
+
+    /* 需带一把 */
+    .mg-care-list { display: flex; flex-direction: column; width: 100%; }
+    .mg-care-row { display: grid; grid-template-columns: 10px 72px minmax(0, 1fr) auto; align-items: center;
+      gap: 12px; min-height: 52px; border-bottom: 1px solid #eeeef0; font-size: 14px; }
+    .mg-care-row:last-child { border-bottom: 0; }
+    .mg-care-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ds-color-warning); }
+    .mg-care-row strong { color: #1f2937; }
+    .mg-care-row span { color: #737585; }
+
+    /* 数据采集健康度 */
+    .mg-health-stats { display: flex; gap: 12px; margin-bottom: 16px; }
+    .mg-health-stat { flex: 1; padding: 12px 14px; background: #f7f8fa; border-radius: 6px; }
+    .mg-health-stat b { display: block; font-size: 20px; font-weight: 700; color: #1f2937; line-height: 1.2; }
+    .mg-health-stat span { font-size: 12px; color: #737585; }
+    .mg-health-stat.risk b { color: #fa5151; }
+    .mg-seg-bar { display: flex; width: 100%; height: 14px; border-radius: 7px; overflow: hidden; }
+    .mg-seg-seg { height: 100%; }
+    .mg-seg-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; }
+    .mg-seg-item { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #505266; }
+    .mg-seg-item i { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+
+    /* toast */
+    .mg-toast { position: fixed; right: 24px; bottom: 24px; z-index: 9999; padding: 8px 16px;
+      color: #fff; background: #1f2937; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      font-size: 14px; opacity: 0; transform: translateY(8px); transition: opacity .18s, transform .18s; }
+    .mg-toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1200px) {
+      .mg-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .mg-kpi-item:nth-child(4) { border-left: 0; padding-left: 0; }
+      .mg-chart-grid > .mg-card, .mg-chart-grid--3 > .mg-card { grid-column: span 6; }
+    }
+    @media (max-width: 900px) {
+      .mg-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .mg-header__controls { width: 100%; justify-content: flex-end; }
+      .mg-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .mg-kpi-item, .mg-kpi-item:nth-child(4) { border-left: 0; padding-left: 0; }
+      .mg-chart-grid > .mg-card, .mg-chart-grid--3 > .mg-card { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+<div class="ds-scope">
+  <div class="mg-page">
+
+    <!-- ============ 页头 ============ -->
+    <header class="mg-header">
+      <div class="mg-header__identity">
+        <h1>电子信息专业群统计分析</h1>
+        <dl class="mg-id">
+          <div><dt>专业群带头人</dt><dd>陈立群</dd></div>
+          <div><dt>所属院系</dt><dd>电子与通信工程学院</dd></div>
+          <div><dt>群内专业</dt><dd>4个</dd></div>
+          <div><dt>数据更新</dt><dd>2026-07-03 09:30</dd></div>
+        </dl>
+      </div>
+      <div class="mg-header__controls">
+        <div class="mg-filter">
+          <span>分析周期</span>
+          <select id="mgPeriod" aria-label="分析周期">
+            <option value="1">近1年</option>
+            <option value="3">近3年</option>
+            <option value="5" selected>近5年</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ 关键指标 ============ -->
+    <section class="mg-card">
+      <div class="mg-section-head">
+        <div class="mg-ribbon">关键指标<span class="mg-section-sub">（专业群概览）</span></div>
+      </div>
+      <div class="mg-kpi-grid" id="mgKpi"></div>
+    </section>
+
+    <!-- ============ 需带一把 + 数据采集健康度 ============ -->
+    <div class="mg-chart-grid">
+      <section class="mg-card">
+        <div class="mg-card-head">
+          <h3 class="mg-card-title">需带一把<span class="mg-hint" id="mgCareHint">3 人需关注</span></h3>
+        </div>
+        <div class="mg-care-list" id="mgCare"></div>
+      </section>
+
+      <section class="mg-card">
+        <div class="mg-card-head">
+          <h3 class="mg-card-title">数据采集健康度</h3>
+          <button class="mg-link" type="button" onclick="mgNotify('数据采集健康度详情')">查看详情</button>
+        </div>
+        <div class="mg-health-stats" id="mgHealthStats"></div>
+        <div id="mgHealthSeg"></div>
+      </section>
+    </div>
+
+    <!-- ============ 群内专业结构分析 ============ -->
+    <section class="mg-card">
+      <div class="mg-section-head mg-section-head--filter">
+        <div class="mg-ribbon">群内专业结构分析<span class="mg-section-sub">识别各专业招生与师资配置的趋势差异</span></div>
+        <div class="mg-filter mg-filter--major">
+          <span>专业筛选</span>
+          <select id="mgMajor" aria-label="专业筛选">
+            <option value="all">全部专业</option>
+            <option value="embedded">嵌入式技术</option>
+            <option value="iot">物联网应用</option>
+            <option value="chip">集成电路技术</option>
+            <option value="network">计算机网络</option>
+          </select>
+        </div>
+      </div>
+      <div class="mg-chart-grid">
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title" id="mgEnrollTitle">各专业招生规模趋势</h3></div>
+          <div class="mg-card-body"><div id="mgEnroll" style="width:100%"></div></div>
+        </div>
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">各专业师生比（生:师）</h3></div>
+          <div class="mg-card-body"><div id="mgRatio" style="width:100%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 群内人数统计 ============ -->
+    <section class="mg-card">
+      <div class="mg-section-head">
+        <div class="mg-ribbon">群内人数统计<span class="mg-section-sub">关注职称梯队、学历结构与获奖分布</span></div>
+      </div>
+      <div class="mg-chart-grid mg-chart-grid--3">
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">职称结构</h3></div>
+          <div class="mg-card-body" id="mgTitle"></div>
+        </div>
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">学历学位</h3></div>
+          <div class="mg-card-body" id="mgDegree"></div>
+        </div>
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">获奖等级</h3></div>
+          <div class="mg-card-body" id="mgAwardLevel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 成果结构与趋势分析 ============ -->
+    <section class="mg-card">
+      <div class="mg-section-head">
+        <div class="mg-ribbon">成果结构与趋势分析<span class="mg-section-sub">观察成果类型结构、职称贡献与获奖分布</span></div>
+      </div>
+      <div class="mg-chart-grid mg-chart-grid--3">
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">成果类型结构</h3></div>
+          <div class="mg-card-body" id="mgOutcome"></div>
+        </div>
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">职称 × 成果类型交叉</h3></div>
+          <div class="mg-card-body" id="mgCross"></div>
+        </div>
+        <div class="mg-card">
+          <div class="mg-card-head"><h3 class="mg-card-title">获奖情况</h3></div>
+          <div class="mg-card-body" id="mgAward"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 教学闭环 + 校企合作 ============ -->
+    <div class="mg-chart-grid">
+      <div class="mg-card">
+        <div class="mg-card-head"><h3 class="mg-card-title">教学闭环7节点完成率</h3></div>
+        <div class="mg-card-body" id="mgCloseLoop"></div>
+      </div>
+      <div class="mg-card">
+        <div class="mg-card-head"><h3 class="mg-card-title">校企合作项目趋势</h3></div>
+        <div class="mg-card-body" id="mgCoop"></div>
+      </div>
+    </div>
+
+    <div class="mg-toast" id="mgToast"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============ 数据（迁自 p-major-group.page.jsx，字段不丢） ============ */
+  var STAFF_TITLE = [
+    { name: '正高级', value: 4 }, { name: '副高级', value: 7 },
+    { name: '中级', value: 10 }, { name: '初级', value: 3 }
+  ];
+  var STAFF_DEGREE = [
+    { name: '博士', value: 8 }, { name: '硕士', value: 13 }, { name: '学士', value: 3 }
+  ];
+  var STAFF_AWARD = [
+    { name: '国家级', value: 1 }, { name: '省级', value: 5 }, { name: '校级', value: 6 }
+  ];
+
+  var KPI_ITEMS = [
+    { id: 'teacher', color: '#3167ff', label: '专任教师', value: '24', unit: '人', compare: '副高及以上 17 人' },
+    { id: 'major', color: '#2ED2CC', label: '所含专业', value: '4', unit: '个', compare: '4 个招生方向' },
+    { id: 'student', color: '#20b486', label: '专业群学生', value: '1860', unit: '人', compare: '生师比 18.8 : 1' },
+    { id: 'dual', color: '#ff994a', label: '双师型占比', value: '75', unit: '%', compare: '较上年 ↑ 4%' },
+    { id: 'training', color: '#9b6bff', label: '进修培训', value: '22', unit: '人次', compare: '访学 3 · 培训 19' },
+    { id: 'award', color: '#ff7a9c', label: '年度获奖', value: '12', unit: '项', compare: '国家级 1 · 省级 5 · 校级 6' }
+  ];
+
+  var CARE_ITEMS = [
+    { name: '刘晓', detail: '档案完成度 23%' },
+    { name: '赵敏', detail: '档案完成度 18%' },
+    { name: '金晓智', detail: '档案完成度 31%' }
+  ];
+
+  var HEALTH_STATS = [
+    { value: '24人', label: '已覆盖教师' },
+    { value: '89%', label: '完成率' },
+    { value: '3人', label: '需关注教师', risk: true }
+  ];
+  var HEALTH_SEGMENTS = [
+    { label: '完成85%以上', value: 3, status: 'excellent' },
+    { label: '70%-85%', value: 13, status: 'good' },
+    { label: '60%-70%', value: 5, status: 'attention' },
+    { label: '70%以下(需关注)', value: 3, status: 'risk' }
+  ];
+
+  var PERIODS = [{ key: '1', label: '近1年' }, { key: '3', label: '近3年' }, { key: '5', label: '近5年' }];
+  var PERIOD_FACTORS = { '1': 0.32, '3': 0.72, '5': 1 };
+  var PERIOD_XAXIS = {
+    '1': ['2024秋', '2025春', '2025秋', '2026春'],
+    '3': ['2024', '2025', '2026'],
+    '5': ['2022', '2023', '2024', '2025', '2026']
+  };
+
+  var PROFESSIONS = [
+    { key: 'embedded', label: '嵌入式技术', color: '#FF454D', enrollment: [126, 121, 109, 96, 88], students: 485, faculty: 7 },
+    { key: 'iot', label: '物联网应用', color: '#6D77F7', enrollment: [104, 112, 118, 124, 130], students: 545, faculty: 7 },
+    { key: 'chip', label: '集成电路技术', color: '#2ED2CC', enrollment: [88, 96, 103, 110, 118], students: 460, faculty: 5 },
+    { key: 'network', label: '计算机网络', color: '#FDBA4B', enrollment: [96, 93, 89, 84, 80], students: 370, faculty: 5 }
+  ];
+
+  var OUTCOME_BASE = [{ name: '论文', value: 38 }, { name: '专利', value: 25 }, { name: '课题', value: 24 }, { name: '教材', value: 9 }];
+  var CROSS_BASE = [
+    { name: '论文', values: [16, 12, 8, 2] },
+    { name: '专利', values: [14, 7, 3, 1] },
+    { name: '课题', values: [11, 7, 5, 1] },
+    { name: '教材', values: [4, 3, 2, 0] }
+  ];
+  var AWARD_BASE = [
+    { name: '国家级', values: [2, 1, 1, 0] },
+    { name: '省级', values: [5, 4, 3, 2] },
+    { name: '校级', values: [8, 6, 4, 6] }
+  ];
+  var CROSS_X = ['正高', '副高', '中级', '初级'];
+  var AWARD_X = ['技能大赛', '教学能力', '教学成果', '其它'];
+
+  var CLOSE_LOOP = [
+    { name: '课程目标', value: 96 }, { name: '课程设计', value: 92 }, { name: '学生关爱', value: 87 },
+    { name: '教学效果', value: 84 }, { name: '教学评价', value: 81 }, { name: '课程总结', value: 72 },
+    { name: '课程反思', value: 68 }
+  ];
+  var COOPERATION = [9, 13, 17, 20, 23];
+
+  var TITLE_COLORS = ['#3167ff', '#6D77F7', '#2ED2CC', '#FDBA4B'];
+  var DEGREE_COLORS = ['#3167ff', '#6D77F7', '#2ED2CC'];
+  var AWARD_COLORS = ['#fa5151', '#ff994a', '#3167ff'];
+  var OUTCOME_COLORS = ['#3167ff', '#6D77F7', '#2ED2CC', '#FDBA4B'];
+  var SEG_COLORS = { excellent: '#20b486', good: '#3167ff', attention: '#ff994a', risk: '#fa5151' };
+  var RISK = '#FF454D';
+
+  /* ============ 工具 ============ */
+  function niceStep(max, count) {
+    var raw = max / count;
+    if (raw <= 0) return 1;
+    var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var norm = raw / mag, step;
+    if (norm <= 1) step = 1; else if (norm <= 2) step = 2; else if (norm <= 2.5) step = 2.5;
+    else if (norm <= 5) step = 5; else step = 10;
+    return step * mag;
+  }
+  function fmt(v) { return (Math.round(v * 10) / 10).toString(); }
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+
+  /* ============ 折线图 ============ */
+  function lineChartSVG(series, xLabels) {
+    var W = 640, H = 260, pl = 46, pr = 14, pt = 18, pb = 30;
+    var iw = W - pl - pr, ih = H - pt - pb, n = xLabels.length;
+    var maxV = 1;
+    series.forEach(function (s) { s.values.forEach(function (v) { if (v > maxV) maxV = v; }); });
+    var step = niceStep(maxV, 5), top = Math.ceil(maxV / step) * step; if (top < maxV) top = maxV;
+    var xAt = function (i) { return pl + (n <= 1 ? iw / 2 : iw * i / (n - 1)); };
+    var yAt = function (v) { return pt + ih - (v / top) * ih; };
+    var g = '';
+    for (var t = 0; t <= 5; t++) {
+      var val = top * t / 5, yy = yAt(val);
+      g += '<line x1="' + pl + '" y1="' + yy + '" x2="' + (W - pr) + '" y2="' + yy + '" stroke="#eeeef0"/>';
+      g += '<text x="' + (pl - 6) + '" y="' + (yy + 4) + '" text-anchor="end" font-size="11" fill="#9ca3af">' + fmt(val) + '</text>';
+    }
+    var p = '';
+    series.forEach(function (s) {
+      var pts = s.values.map(function (v, i) { return xAt(i) + ',' + yAt(v); }).join(' ');
+      p += '<polyline points="' + pts + '" fill="none" stroke="' + s.color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+      s.values.forEach(function (v, i) { p += '<circle cx="' + xAt(i) + '" cy="' + yAt(v) + '" r="3" fill="#fff" stroke="' + s.color + '" stroke-width="2"/>'; });
+    });
+    var xl = '';
+    xLabels.forEach(function (lab, i) { xl += '<text x="' + xAt(i) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="11" fill="#737585">' + esc(lab) + '</text>'; });
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" preserveAspectRatio="xMidYMid meet">' + g + p + xl + '</svg>';
+  }
+
+  /* ============ 环形图 ============ */
+  function donutSVG(data, opts) {
+    opts = opts || {};
+    var total = data.reduce(function (s, d) { return s + d.value; }, 0);
+    var r = 64, cx = 80, cy = 80, sw = 18, circ = 2 * Math.PI * r, offset = 0, arcs = '';
+    data.forEach(function (d) {
+      var frac = total > 0 ? d.value / total : 0, len = frac * circ;
+      arcs += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + d.color +
+        '" stroke-width="' + sw + '" stroke-dasharray="' + len + ' ' + (circ - len) + '" stroke-dashoffset="' + (-offset) +
+        '" transform="rotate(-90 ' + cx + ' ' + cy + ')"><title>' + esc(d.name) + ': ' + d.value + '</title></circle>';
+      offset += len;
+    });
+    var center = '';
+    if (opts.showCenter) {
+      center = '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">' + opts.centerTop + '</text>' +
+        '<text x="' + cx + '" y="' + (cy + 18) + '" text-anchor="middle" font-size="11" fill="#737585">' + opts.centerBottom + '</text>';
+    }
+    return '<svg viewBox="0 0 160 160" width="160" height="160">' + arcs + center + '</svg>';
+  }
+  function donutBlock(data, opts) {
+    var legend = data.map(function (d) {
+      return '<span class="mg-donut-leg"><i style="background:' + d.color + '"></i>' + esc(d.name) + '<b>' + d.value + '</b></span>';
+    }).join('');
+    return '<div class="mg-donut-wrap">' + donutSVG(data, opts) + '<div class="mg-donut-legend">' + legend + '</div></div>';
+  }
+
+  /* ============ 柱状图（单系列 / 分组） ============ */
+  function barVerticalSVG(data, xLabels) {
+    var grouped = !!(data[0] && data[0].values);
+    var W = 640, H = 260, pl = 40, pr = 14, pt = 16, pb = 34;
+    var iw = W - pl - pr, ih = H - pt - pb;
+    var cats = grouped ? xLabels : data.map(function (d) { return d.name; });
+    var nCats = cats.length, maxV = 1;
+    if (grouped) data.forEach(function (s) { s.values.forEach(function (v) { if (v > maxV) maxV = v; }); });
+    else data.forEach(function (d) { if (d.value > maxV) maxV = d; });
+    var step = niceStep(maxV, 5), top = Math.ceil(maxV / step) * step; if (top < maxV) top = maxV;
+    var yAt = function (v) { return pt + ih - (v / top) * ih; };
+    var catW = iw / nCats, g = '';
+    for (var t = 0; t <= 5; t++) {
+      var val = top * t / 5, yy = yAt(val);
+      g += '<line x1="' + pl + '" y1="' + yy + '" x2="' + (W - pr) + '" y2="' + yy + '" stroke="#eeeef0"/>';
+      g += '<text x="' + (pl - 6) + '" y="' + (yy + 4) + '" text-anchor="end" font-size="11" fill="#9ca3af">' + fmt(val) + '</text>';
+    }
+    var b = '';
+    if (!grouped) {
+      var bw = Math.min(48, catW * 0.5);
+      data.forEach(function (d, i) {
+        var x = pl + catW * i + catW / 2 - bw / 2, y = yAt(d.value), h = pt + ih - y;
+        var col = d.color || TITLE_COLORS[i % TITLE_COLORS.length];
+        b += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" rx="3" fill="' + col + '"><title>' + esc(d.name) + ': ' + d.value + '</title></rect>';
+        b += '<text x="' + (x + bw / 2) + '" y="' + (y - 6) + '" text-anchor="middle" font-size="12" font-weight="600" fill="#1f2937">' + d.value + '</text>';
+        b += '<text x="' + (pl + catW * i + catW / 2) + '" y="' + (H - 14) + '" text-anchor="middle" font-size="12" fill="#737585">' + esc(d.name) + '</text>';
+      });
+    } else {
+      var nS = data.length, groupPad = catW * 0.18, innerW = catW - 2 * groupPad;
+      var bw2 = Math.min(22, innerW / nS - 4);
+      data.forEach(function (s, si) {
+        var col = s.color || OUTCOME_COLORS[si % OUTCOME_COLORS.length];
+        s.values.forEach(function (v, ci) {
+          var gx = pl + catW * ci + groupPad, x = gx + (innerW - nS * bw2) / 2 + si * bw2;
+          var y = yAt(v), h = pt + ih - y;
+          b += '<rect x="' + x + '" y="' + y + '" width="' + bw2 + '" height="' + h + '" rx="2" fill="' + col + '"><title>' + esc(s.name) + ': ' + v + '</title></rect>';
+        });
+      });
+      cats.forEach(function (c, ci) { b += '<text x="' + (pl + catW * ci + catW / 2) + '" y="' + (H - 14) + '" text-anchor="middle" font-size="11" fill="#737585">' + esc(c) + '</text>'; });
+    }
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" preserveAspectRatio="xMidYMid meet">' + g + b + '</svg>';
+  }
+  function legendHTML(items) {
+    return '<div class="mg-legend">' + items.map(function (it) {
+      return '<span class="mg-legend-item"><i style="background:' + it.color + '"></i>' + esc(it.name) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  /* ============ 横向条形 ============ */
+  function hBarHTML(data, max) {
+    max = max || Math.max.apply(null, data.map(function (d) { return d.value; }));
+    return '<div class="mg-hbar">' + data.map(function (d) {
+      var pct = max > 0 ? (d.value / max * 100) : 0, col = d.color || '#3167ff';
+      return '<div class="mg-hbar-row">' +
+        '<span class="mg-hbar-label">' + esc(d.name) + '</span>' +
+        '<div class="mg-hbar-track"><i style="width:' + pct + '%;background:' + col + '"></i></div>' +
+        '<span class="mg-hbar-val">' + fmt(d.value) + (d.suffix || '') + '</span>' +
+        '</div>';
+    }).join('') + '</div>';
+  }
+
+  /* ============ 状态 ============ */
+  var state = { period: '5', major: 'all' };
+
+  function renderKpi() {
+    document.getElementById('mgKpi').innerHTML = KPI_ITEMS.map(function (it) {
+      return '<div class="mg-kpi-item">' +
+        '<span class="mg-kpi-label"><i class="mg-kpi-dot" style="background:' + it.color + '"></i>' + esc(it.label) + '</span>' +
+        '<strong class="mg-kpi-value">' + esc(it.value) + '<small>' + esc(it.unit) + '</small></strong>' +
+        '<span class="mg-kpi-compare">' + esc(it.compare) + '</span>' +
+        '</div>';
+    }).join('');
+  }
+  function renderCare() {
+    document.getElementById('mgCareHint').textContent = CARE_ITEMS.length + ' 人需关注';
+    document.getElementById('mgCare').innerHTML = CARE_ITEMS.map(function (it) {
+      return '<div class="mg-care-row">' +
+        '<span class="mg-care-dot"></span>' +
+        '<strong>' + esc(it.name) + '</strong>' +
+        '<span>' + esc(it.detail) + '</span>' +
+        '<button class="mg-link" type="button" onclick="mgNotify(\'' + esc(it.name) + '的档案详情\')">查看详情</button>' +
+        '</div>';
+    }).join('');
+  }
+  function renderHealth() {
+    document.getElementById('mgHealthStats').innerHTML = HEALTH_STATS.map(function (s) {
+      return '<div class="mg-health-stat' + (s.risk ? ' risk' : '') + '"><b>' + esc(s.value) + '</b><span>' + esc(s.label) + '</span></div>';
+    }).join('');
+    var total = HEALTH_SEGMENTS.reduce(function (s, x) { return s + x.value; }, 0);
+    var segs = HEALTH_SEGMENTS.map(function (seg) {
+      var pct = total > 0 ? seg.value / total * 100 : 0, col = SEG_COLORS[seg.status] || '#3167ff';
+      return '<div class="mg-seg-seg" style="width:' + pct + '%;background:' + col + '" title="' + esc(seg.label) + ': ' + seg.value + '"></div>';
+    }).join('');
+    var legend = HEALTH_SEGMENTS.map(function (seg) {
+      var col = SEG_COLORS[seg.status] || '#3167ff';
+      return '<span class="mg-seg-item"><i style="background:' + col + '"></i>' + esc(seg.label) + ' ' + seg.value + '</span>';
+    }).join('');
+    document.getElementById('mgHealthSeg').innerHTML = '<div class="mg-seg-bar">' + segs + '</div><div class="mg-seg-legend">' + legend + '</div>';
+  }
+
+  function renderCharts() {
+    var factor = PERIOD_FACTORS[state.period];
+    var xAxis = PERIOD_XAXIS[state.period];
+    var scoped = state.major === 'all' ? PROFESSIONS : PROFESSIONS.filter(function (p) { return p.key === state.major; });
+
+    /* 群内专业结构：招生趋势 + 师生比 */
+    var enrollSeries = scoped.map(function (p) {
+      return { name: p.label, color: p.color, values: p.enrollment.slice(-xAxis.length) };
+    });
+    document.getElementById('mgEnroll').innerHTML =
+      lineChartSVG(enrollSeries, xAxis) + legendHTML(enrollSeries.map(function (s) { return { name: s.name, color: s.color }; }));
+    document.getElementById('mgEnrollTitle').textContent =
+      state.major === 'all' ? '各专业招生规模趋势' : ('招生规模趋势 · ' + scoped[0].label);
+
+    var ratioData = scoped.map(function (p) {
+      var ratio = +(p.students / p.faculty).toFixed(1);
+      return { name: p.label, value: ratio, color: ratio >= 80 ? RISK : undefined, suffix: ' : 1' };
+    });
+    document.getElementById('mgRatio').innerHTML = hBarHTML(ratioData, 100);
+
+    /* 群内人数统计：职称 / 学历 / 获奖等级 */
+    var titleData = STAFF_TITLE.map(function (d, i) {
+      return { name: d.name, value: Math.max(1, Math.round(d.value * factor)), color: TITLE_COLORS[i] };
+    });
+    var titleTotal = titleData.reduce(function (s, d) { return s + d.value; }, 0);
+    document.getElementById('mgTitle').innerHTML = donutBlock(titleData, { showCenter: true, centerTop: titleTotal, centerBottom: '人' });
+
+    var degreeData = STAFF_DEGREE.map(function (d, i) {
+      return { name: d.name, value: Math.max(1, Math.round(d.value * factor)), color: DEGREE_COLORS[i] };
+    });
+    document.getElementById('mgDegree').innerHTML =
+      barVerticalSVG(degreeData) + legendHTML(degreeData.map(function (d) { return { name: d.name, color: d.color }; }));
+
+    var awardLevelData = STAFF_AWARD.map(function (d, i) {
+      return { name: d.name, value: Math.max(0, Math.round(d.value * factor)), color: AWARD_COLORS[i] };
+    });
+    var awardTotal = awardLevelData.reduce(function (s, d) { return s + d.value; }, 0);
+    document.getElementById('mgAwardLevel').innerHTML = donutBlock(awardLevelData, { showCenter: true, centerTop: awardTotal, centerBottom: '获奖(项)' });
+
+    /* 成果结构与趋势：类型 / 交叉 / 获奖 */
+    var outcomeData = OUTCOME_BASE.map(function (d, i) {
+      return { name: d.name, value: Math.max(1, Math.round(d.value * factor)), color: OUTCOME_COLORS[i], suffix: ' 项' };
+    });
+    document.getElementById('mgOutcome').innerHTML = hBarHTML(outcomeData);
+
+    var crossData = CROSS_BASE.map(function (s, i) {
+      return { name: s.name, color: OUTCOME_COLORS[i], values: s.values.map(function (v) { return Math.max(0, Math.round(v * factor)); }) };
+    });
+    document.getElementById('mgCross').innerHTML =
+      barVerticalSVG(crossData, CROSS_X) + legendHTML(crossData.map(function (s) { return { name: s.name, color: s.color }; }));
+
+    var awardData = AWARD_BASE.map(function (s, i) {
+      return { name: s.name, color: AWARD_COLORS[i], values: s.values.map(function (v) { return Math.max(0, Math.round(v * factor)); }) };
+    });
+    document.getElementById('mgAward').innerHTML =
+      barVerticalSVG(awardData, AWARD_X) + legendHTML(awardData.map(function (s) { return { name: s.name, color: s.color }; }));
+
+    /* 教学闭环7节点 */
+    var closeData = CLOSE_LOOP.map(function (d) {
+      return { name: d.name, value: d.value, color: d.value < 85 ? RISK : undefined, suffix: '%' };
+    });
+    document.getElementById('mgCloseLoop').innerHTML = hBarHTML(closeData, 100);
+
+    /* 校企合作项目趋势 */
+    var coopSeries = [{ name: '合作项目数', color: '#3167ff', values: COOPERATION.slice(-xAxis.length) }];
+    document.getElementById('mgCoop').innerHTML =
+      lineChartSVG(coopSeries, xAxis);
+  }
+
+  /* ============ toast ============ */
+  var toastTimer = null;
+  window.mgNotify = function (msg) {
+    var el = document.getElementById('mgToast');
+    el.textContent = msg; el.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1800);
+  };
+
+  /* ============ 初始化 ============ */
+  renderKpi();
+  renderCare();
+  renderHealth();
+  renderCharts();
+
+  document.getElementById('mgPeriod').addEventListener('change', function (e) {
+    state.period = e.target.value; renderCharts();
+  });
+  document.getElementById('mgMajor').addEventListener('change', function (e) {
+    state.major = e.target.value; renderCharts();
+  });
+})();
+</script>
+</body>
+</html>

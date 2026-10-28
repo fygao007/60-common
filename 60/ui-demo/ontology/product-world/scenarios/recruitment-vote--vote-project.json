@@ -1,0 +1,89 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--vote-project",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "集中管理投票项目：新建、模板创建、配置、复制与删除",
+      "用评审状态区分未关闭与历史项目"
+    ],
+    "painPoints": [
+      "原系统把投票类型做成低代码独立菜单页，管理入口分散，缺少统一项目视角"
+    ],
+    "openQuestions": [
+      "菜单字面名称需登录态才能取得，本页为业务等价重构而非 1:1 复制",
+      "投票项目与招聘业务的绑定关系待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "投票项目",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票管理员已登录并具备投票管理权限"
+    ],
+    "mainFlow": [
+      "进入投票项目列表（默认落地页）",
+      "切换「未关闭项目 / 全部项目」页签，按项目名称与评审状态筛选",
+      "点击「新增投票项目」或「使用模板创建」填写弹窗表单",
+      "在项目卡片上执行配置、复制或删除"
+    ],
+    "exceptions": [
+      "筛选无结果时展示设计系统空状态",
+      "项目名称未填写时阻止提交并提示"
+    ]
+  },
+  "page": {
+    "title": "投票项目",
+    "templateId": "card-list",
+    "menuRef": "recruitment.vote:vote-project",
+    "fieldRefs": [
+      "Business.vote.voteProjectName",
+      "Business.vote.voteObjectCount",
+      "Business.vote.reviewStatus",
+      "Business.vote.voteMode",
+      "Business.vote.votePeriod"
+    ],
+    "components": [
+      "DSButton",
+      "DSCard",
+      "DSCardListTemplate",
+      "DSEditField",
+      "DSEditForm",
+      "DSEmptyState",
+      "DSInput",
+      "DSModal",
+      "DSSelect"
+    ],
+    "demoPath": "demos/vote/vote-project/vote-project.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "顶部「招聘管理」分组下出现「投票应用」入口并处于高亮态",
+      "左侧菜单显示 6 个分组、17 个功能页，当前页为投票项目",
+      "投票项目页展示项目卡片，含评审对象数、投票方式、投票时间与评审状态标签",
+      "切换页签与筛选条件后卡片列表按条件收敛",
+      "新增弹窗填写项目名称与投票方式后，新项目出现在列表首位"
+    ]
+  }
+}

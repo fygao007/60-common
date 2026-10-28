@@ -1,0 +1,18 @@
+{
+  "key": "home",
+  "label": "首页",
+  "roles": [
+    {
+      "key": "teacher",
+      "label": "教师",
+      "manifest": "teacher/role.json"
+    }
+  ],
+  "relatedApplications": [
+    {
+      "key": "teaching-portfolio",
+      "label": "教学档案袋",
+      "entry": "../teaching-portfolio/major/t-home/t-home.html"
+    }
+  ]
+}

@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>删除场景弹窗</title>
+  <link rel="stylesheet" href="../packages/design-system/src/tokens.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body,
+    button {
+      font-family: var(--ds-font-family);
+      font-size: 14px;
+    }
+
+    body {
+      color: #000;
+      background: #f5f6f8;
+    }
+
+    button { cursor: pointer; }
+
+    .page {
+      min-height: 100%;
+      padding: 24px;
+    }
+
+    .card {
+      min-height: calc(100vh - 48px);
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 12px;
+    }
+
+    .page-title {
+      margin: 0 0 20px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 26px;
+    }
+
+    .hint {
+      margin: 0 0 16px;
+      color: #737585;
+      line-height: 22px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #eeeef0;
+      table-layout: fixed;
+    }
+
+    .table th,
+    .table td {
+      height: 46px;
+      padding: 0 12px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+      text-align: left;
+    }
+
+    .table th {
+      height: 40px;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .table .operation { width: 120px; }
+
+    .status {
+      display: inline-flex;
+      height: 22px;
+      align-items: center;
+      padding: 0 8px;
+      color: #20b486;
+      background: #e9f8ef;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .status.is-referenced {
+      color: #b26a00;
+      background: #fff7e6;
+    }
+
+    .delete-link {
+      padding: 0 4px;
+      color: #fa5151;
+      background: transparent;
+      border: 0;
+      line-height: 22px;
+    }
+
+    .delete-link:hover {
+      color: #ff5555;
+      background: #fff1f0;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(0, 0, 0, .2);
+    }
+
+    .overlay[hidden] { display: none; }
+
+    .dialog {
+      display: flex;
+      width: 480px;
+      max-width: calc(100vw - 48px);
+      height: 134px;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #f6f6f7;
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(31, 41, 55, .14);
+      animation: dialog-enter 160ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    @keyframes dialog-enter {
+      from {
+        opacity: 0;
+        transform: translateY(6px) scale(.99);
+      }
+    }
+
+    .dialog-header {
+      display: flex;
+      min-height: 48px;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 12px 12px 20px;
+    }
+
+    .state-icon {
+      position: relative;
+      display: inline-grid;
+      width: 24px;
+      height: 24px;
+      flex: none;
+      place-items: center;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .state-icon img {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+
+    .state-icon-glyph { display: none; }
+
+    .state-icon.is-error {
+      background: #fa5151;
+    }
+
+    .state-icon.is-error img { display: none; }
+    .state-icon.is-error .state-icon-glyph { display: block; }
+
+    .dialog-title {
+      flex: 1;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .close-icon {
+      display: inline-grid;
+      width: 32px;
+      height: 32px;
+      padding: 8px;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+    }
+
+    .close-icon:hover { background: #f6f6f7; }
+
+    .close-icon img {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    .dialog-content {
+      flex: 1;
+      padding: 0 20px;
+      color: #505266;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .dialog-content p { margin: 0; }
+
+    .dialog-footer {
+      display: flex;
+      min-height: 54px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 20px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-width: 72px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      line-height: 22px;
+    }
+
+    .button:hover {
+      color: #333fff;
+      border-color: #333fff;
+    }
+
+    .button.is-danger {
+      color: #fff;
+      background: #fa5151;
+      border-color: #fa5151;
+    }
+
+    .button.is-danger:hover {
+      color: #fff;
+      background: #ff5555;
+      border-color: #ff5555;
+    }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      z-index: 200;
+      padding: 8px 16px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, .16);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -8px);
+      transition: opacity 160ms, transform 160ms;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 520px) {
+      .page { padding: 12px; }
+      .card { min-height: calc(100vh - 24px); padding: 16px; }
+      .table { min-width: 560px; }
+      .table-wrap { overflow-x: auto; }
+      .overlay { padding: 12px; }
+      .dialog { max-width: calc(100vw - 24px); }
+      .dialog-header { padding-left: 16px; }
+      .dialog-content { padding: 0 16px; }
+      .dialog-footer { padding-right: 16px; padding-left: 16px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <h1 class="page-title">删除弹窗场景</h1>
+      <p class="hint">删除未引用数据会成功；删除已引用数据会进入失败结果态。</p>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>科目代码</th>
+              <th>科目名称</th>
+              <th>引用状态</th>
+              <th class="operation">操作</th>
+            </tr>
+          </thead>
+          <tbody id="subjectRows">
+            <tr data-id="politics" data-name="政治科目" data-referenced="false">
+              <td>101</td>
+              <td>政治科目</td>
+              <td><span class="status">未被引用</span></td>
+              <td><button class="delete-link" type="button">删除</button></td>
+            </tr>
+            <tr data-id="english" data-name="英语科目" data-referenced="true">
+              <td>201</td>
+              <td>英语科目</td>
+              <td><span class="status is-referenced">已被引用</span></td>
+              <td><button class="delete-link" type="button">删除</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay">
+    <section class="dialog" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+      <header class="dialog-header">
+        <span class="state-icon" id="stateIcon" aria-hidden="true">
+          <img src="../../.mastergo/195991886967017-2-003863/asset/icons/svg_075de527.svg" alt="" />
+          <span class="state-icon-glyph">×</span>
+        </span>
+        <h2 class="dialog-title" id="dialogTitle">确定删除该科目吗？</h2>
+        <button class="close-icon" id="closeIcon" type="button" aria-label="关闭弹窗">
+          <img src="../../.mastergo/195991886967017-2-003863/asset/icons/svg_233b9b60.svg" alt="" />
+        </button>
+      </header>
+      <div class="dialog-content">
+        <p id="dialogMessage">“政治科目”删除后不可恢复</p>
+      </div>
+      <footer class="dialog-footer" id="dialogFooter">
+        <button class="button" id="cancelButton" type="button">取消</button>
+        <button class="button is-danger" id="confirmButton" type="button">确定</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">删除成功</div>
+
+  <script>
+    const overlay = document.querySelector('#overlay');
+    const dialog = document.querySelector('#dialog');
+    const stateIcon = document.querySelector('#stateIcon');
+    const dialogTitle = document.querySelector('#dialogTitle');
+    const dialogMessage = document.querySelector('#dialogMessage');
+    const dialogFooter = document.querySelector('#dialogFooter');
+    const closeIcon = document.querySelector('#closeIcon');
+    const cancelButton = document.querySelector('#cancelButton');
+    const confirmButton = document.querySelector('#confirmButton');
+    const rows = document.querySelector('#subjectRows');
+    const toast = document.querySelector('#toast');
+    let currentRow = document.querySelector('[data-id="politics"]');
+    let lastFocusedElement;
+    let toastTimer;
+
+    function renderConfirm(row) {
+      currentRow = row;
+      stateIcon.classList.remove('is-error');
+      dialogTitle.textContent = '确定删除该科目吗？';
+      dialogMessage.textContent = `“${row.dataset.name}”删除后不可恢复`;
+      dialogFooter.innerHTML = `
+        <button class="button" id="cancelButton" type="button">取消</button>
+        <button class="button is-danger" id="confirmButton" type="button">确定</button>
+      `;
+      dialogFooter.querySelector('#cancelButton').addEventListener('click', closeDialog);
+      dialogFooter.querySelector('#confirmButton').addEventListener('click', confirmDelete);
+    }
+
+    function renderFailure(reason) {
+      stateIcon.classList.add('is-error');
+      dialogTitle.textContent = '删除失败';
+      dialogMessage.textContent = `失败原因：${reason}`;
+      dialogFooter.innerHTML = '<button class="button" id="failureClose" type="button">关闭</button>';
+      dialogFooter.querySelector('#failureClose').addEventListener('click', closeDialog);
+    }
+
+    function openDialog(row) {
+      lastFocusedElement = document.activeElement;
+      renderConfirm(row);
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => closeIcon.focus());
+    }
+
+    function closeDialog() {
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      lastFocusedElement?.focus();
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 1800);
+    }
+
+    function confirmDelete() {
+      if (currentRow.dataset.referenced === 'true') {
+        renderFailure('该科目已被考试计划引用，无法删除');
+        return;
+      }
+
+      const name = currentRow.dataset.name;
+      currentRow.remove();
+      closeDialog();
+      showToast(`“${name}”删除成功`);
+    }
+
+    rows.addEventListener('click', (event) => {
+      const deleteButton = event.target.closest('.delete-link');
+      if (!deleteButton) return;
+      openDialog(deleteButton.closest('tr'));
+    });
+
+    closeIcon.addEventListener('click', closeDialog);
+    cancelButton.addEventListener('click', closeDialog);
+    confirmButton.addEventListener('click', confirmDelete);
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) closeDialog();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !overlay.hidden) closeDialog();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') return;
+      const focusable = [...dialog.querySelectorAll('button')].filter((element) => element.offsetParent !== null);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>通知/消息 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+body{margin:0}
+.nl-tabs { display:flex; align-items:center; gap:28px; padding:2px 2px 16px; border-bottom:1px solid var(--ap-line); margin-bottom:4px; }
+.nl-tab { border:0; background:none; padding:6px 2px 12px; font-size:15px; font-weight:600; color:var(--ap-muted); cursor:pointer; position:relative; }
+.nl-tab.active { color:var(--ap-blue); }
+.nl-tab.active::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:var(--ap-blue); border-radius:1px; }
+.nl-list { display:flex; flex-direction:column; }
+.nl-item { display:flex; align-items:center; gap:10px; padding:16px 4px; border-bottom:1px solid var(--ap-line); text-decoration:none; color:inherit; cursor:pointer; }
+.nl-item:last-child { border-bottom:0; }
+.nl-item:hover h3 { color:var(--ap-blue); }
+.nl-item .dot-mark { flex:none; width:6px; height:6px; border-radius:50%; background:var(--ap-red); }
+.nl-item .dot-mark.normal { background:var(--ap-line); }
+.nl-pin { flex:none; padding:1px 8px; font-size:12px; border-radius:4px; background:var(--ap-blue); color:#fff; }
+.nl-text { flex:auto; min-width:0; display:flex; align-items:center; gap:10px; }
+.nl-text h3 { margin:0; flex:auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:14px; font-weight:400; color:var(--ap-text); }
+.nl-time { flex:none; font-size:13px; color:var(--ap-muted); }
+.nl-empty { padding:60px 20px; text-align:center; color:var(--ap-muted); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">通知/消息</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">通</span><span>通知/消息</span></h1>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head">
+          <div class="nl-tabs" id="nlTabs" style="border-bottom:0; padding-bottom:0; margin-bottom:0;">
+            <button class="nl-tab active" type="button" data-cat="notice">通知</button>
+            <button class="nl-tab" type="button" data-cat="message">消息</button>
+          </div>
+        </div>
+        <div class="ap-panel-body">
+          <div class="nl-list" id="nlList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'notice-list', versionLabel:'通知/消息', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'notice-list',label:'通知/消息',closable:true}]
+});
+</script>
+<script>
+(function () {
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var NOTICES = [
+    { id: 'n1', title: '深圳职业大学2026年人事处分工名单', time: '2026-05-12 09:30', pinned: true, read: false },
+    { id: 'n2', title: '关于启动 2025 年度教职工绩效考核填报工作的通知', time: '2026-05-12 10:05', pinned: false, read: false },
+    { id: 'n3', title: '关于组织 2026 新入职辅导员岗前素养培训的报名通知', time: '2026-05-10 08:40', pinned: false, read: true }
+  ];
+  var MESSAGES = [
+    { id: 'm1', title: '实验室设备采购计划编制：调研需求、编制采购计划、招标准备等事项', time: '2026-05-11 16:08', pinned: false, read: false },
+    { id: 'm2', title: '学生公寓电费缴纳通知：请及时缴费，避免停电影响正常生活', time: '2026-05-10 09:42', pinned: false, read: true }
+  ];
+
+  function getQuery(name) {
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+
+  var tabsWrap = document.getElementById('nlTabs');
+  var listEl = document.getElementById('nlList');
+  var activeTab = getQuery('type') === 'message' ? 'message' : 'notice';
+
+  function itemHtml(item, type) {
+    var mark = item.pinned ? '<span class="nl-pin">置顶</span>' : '<span class="dot-mark' + (item.read ? ' normal' : '') + '"></span>';
+    return '<a class="nl-item" href="./notice-detail.html?type=' + type + '&id=' + item.id + '">' +
+        '<span class="nl-text">' + mark + '<h3>' + escapeHtml(item.title) + '</h3></span>' +
+        '<time class="nl-time">' + escapeHtml(item.time) + '</time>' +
+      '</a>';
+  }
+
+  function render() {
+    tabsWrap.querySelectorAll('.nl-tab').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-cat') === activeTab); });
+    var list = activeTab === 'message' ? MESSAGES : NOTICES;
+    listEl.innerHTML = list.length
+      ? list.map(function (it) { return itemHtml(it, activeTab); }).join('')
+      : '<div class="nl-empty">暂无内容</div>';
+  }
+
+  tabsWrap.querySelectorAll('.nl-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      activeTab = btn.getAttribute('data-cat');
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

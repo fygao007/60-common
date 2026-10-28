@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务中心 - 框架2</title>
+<link rel="stylesheet" href="../../../../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../../../../framework/theme.css" />
+<style>
+body { margin: 0; }
+
+.app-page-frame {
+  --ap-blue: #3167FF;
+  --ap-blue-weak: #EDF4FF;
+  --ap-ink: #000000;
+  --ap-text: #505266;
+  --ap-muted: #737585;
+  --ap-line: #EEEEF0;
+  --ap-page: #F4F6FB;
+  --ap-orange: #FF913B;
+  --ap-green: #10B981;
+  --ap-red: #FF4D4F;
+  font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", Arial, sans-serif;
+}
+
+/* 我的申请 菜单项的红色角标 */
+.tc-menu-badge {
+  height: 16px;
+  min-width: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  margin-left: auto;
+  background: #FA5151;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  flex: none;
+}
+
+/* ===== 业务内容容器，占满 frame2-content ===== */
+.tc-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ===== 白色面板 ===== */
+.tc-panel {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ===== 筛选栏 ===== */
+.tc-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 12px 12px;
+  margin: 12px 16px 0;
+  background: linear-gradient(180deg, #FAFAFC 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 8px;
+  flex: none;
+}
+
+.tc-filter-field {
+  min-width: 240px;
+  max-width: 580px;
+  flex: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tc-filter-label {
+  width: 80px;
+  flex: none;
+  font-size: 14px;
+  color: var(--ap-text);
+  text-align: right;
+  line-height: 20px;
+}
+
+.tc-filter-control {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 4px 12px;
+  height: 32px;
+  box-sizing: border-box;
+  cursor: text;
+}
+
+.tc-filter-control input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: var(--ap-ink);
+  background: transparent;
+  min-width: 0;
+  font-family: inherit;
+}
+
+.tc-filter-control input::placeholder { color: #9697A3; }
+
+.tc-filter-select {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 4px 12px;
+  height: 32px;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+}
+
+.tc-filter-select select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.tc-filter-select .sel-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ap-ink);
+  line-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tc-filter-select svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.tc-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 5px 16px;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.tc-btn-reset {
+  background: #fff;
+  color: var(--ap-ink);
+  border: 1px solid #DCDCE0;
+}
+
+.tc-btn-reset:hover { background: #f5f5f5; }
+
+.tc-btn-query {
+  background: var(--ap-blue);
+  color: #fff;
+}
+
+.tc-btn-query:hover { background: #2558e8; }
+
+/* ===== 列表区 ===== */
+.tc-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px 0;
+}
+
+.tc-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9697A3;
+  font-size: 14px;
+  padding: 60px 20px;
+}
+
+/* ===== 列表行 ===== */
+.tc-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 18px;
+  background: #fff;
+  border-bottom: 1px solid var(--ap-line);
+  min-height: 84px;
+  box-sizing: border-box;
+  transition: background 0.12s;
+}
+
+.tc-row:hover { background: #FAFCFF; }
+
+/* 左侧色条 */
+.tc-row-accent {
+  position: absolute;
+  left: 0;
+  top: 19px;
+  width: 3px;
+  height: 14px;
+  border-radius: 0 2px 2px 0;
+}
+
+.tc-row-accent.blue   { background: var(--ap-blue); }
+.tc-row-accent.orange { background: var(--ap-orange); }
+.tc-row-accent.green  { background: var(--ap-green); }
+.tc-row-accent.red    { background: var(--ap-red); }
+.tc-row-accent.gray   { background: #9AA4B6; }
+
+.tc-row-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tc-row-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tc-row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tc-row-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ap-ink);
+  line-height: 26px;
+  white-space: nowrap;
+  flex: none;
+}
+
+/* 状态徽章 */
+.tc-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+  flex: none;
+}
+
+.tc-chip.blue   { background: linear-gradient(90deg, #EDF4FF 0%, #F2EDFF 100%); color: var(--ap-blue); }
+.tc-chip.orange { background: linear-gradient(90deg, #FFF6ED 0%, #FFEFEC 100%); color: var(--ap-orange); }
+.tc-chip.green  { background: linear-gradient(90deg, #EDFAF3 0%, #E8FAF5 100%); color: var(--ap-green); }
+.tc-chip.red    { background: linear-gradient(90deg, #FFF0F0 0%, #FFE8E8 100%); color: var(--ap-red); }
+.tc-chip.gray   { background: linear-gradient(90deg, #F4F5F7 0%, #EEF0F4 100%); color: var(--ap-muted); }
+
+/* 右侧链接/按钮 */
+.tc-row-link {
+  font-size: 14px;
+  color: var(--ap-blue);
+  line-height: 26px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex: none;
+  cursor: pointer;
+}
+
+.tc-row-link:hover { text-decoration: underline; }
+
+.tc-row-bottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tc-row-desc {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ap-muted);
+  line-height: 26px;
+  min-width: 0;
+}
+
+.tc-row-time {
+  font-size: 14px;
+  color: var(--ap-muted);
+  line-height: 26px;
+  flex: none;
+  white-space: nowrap;
+}
+
+/* 待办行：标签在标题前，无左侧色条 */
+.tc-row--todo { padding-left: 16px; }
+
+.tc-meta {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tc-meta-item {
+  font-size: 14px;
+  color: var(--ap-muted);
+  line-height: 26px;
+  white-space: nowrap;
+  flex: none;
+}
+
+.tc-meta-sep {
+  display: inline-block;
+  width: 1px;
+  height: 12px;
+  margin: 0 12px;
+  background: #E5E6EB;
+  flex: none;
+}
+
+/* ===== 分页 ===== */
+.tc-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid var(--ap-line);
+  flex: none;
+}
+
+.tc-page-info {
+  font-size: 12px;
+  color: var(--ap-text);
+  line-height: 20px;
+}
+
+.tc-page-size-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--ap-ink);
+  cursor: pointer;
+  line-height: 20px;
+}
+
+.tc-page-size-wrap svg {
+  width: 14px;
+  height: 14px;
+}
+
+.tc-page-btns {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tc-page-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ap-text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  line-height: 20px;
+}
+
+.tc-page-btn:hover { background: #F0F5FF; color: var(--ap-blue); }
+
+.tc-page-btn.active {
+  background: #EEEEF0;
+  color: var(--ap-ink);
+  font-weight: 600;
+}
+
+.tc-page-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.tc-page-icon-btn:hover { background: #F0F5FF; }
+
+.tc-page-jump {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ap-ink);
+  line-height: 20px;
+}
+
+.tc-page-jump input {
+  width: 40px;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  background: #fff;
+  font-family: inherit;
+  color: var(--ap-ink);
+}
+
+.tc-page-jump input:focus { border-color: var(--ap-blue); }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+
+  <!-- 业务内容：框架会把它移入 frame2-content（左侧菜单 + 右侧页签由框架渲染） -->
+  <div class="tc-page app-page-frame">
+          <div class="tc-panel">
+
+            <!-- 筛选栏 -->
+            <div class="tc-filter" id="tcFilter">
+              <div class="tc-filter-field">
+                <span class="tc-filter-label">主题名称</span>
+                <div class="tc-filter-control">
+                  <input type="text" id="filterKeyword" placeholder="请输入" />
+                </div>
+              </div>
+              <div class="tc-filter-field" id="filterField2">
+                <span class="tc-filter-label" id="filterLabel2">状态</span>
+                <div class="tc-filter-select">
+                  <span class="sel-text" id="filterSelectText">全部</span>
+                  <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#505266" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  <select id="filterSelect" onchange="onFilterSelectChange(this)">
+                    <option value="">全部</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tc-filter-actions">
+                <button class="tc-btn tc-btn-reset" onclick="tcReset()">重置</button>
+                <button class="tc-btn tc-btn-query" onclick="tcQuery()">查询</button>
+              </div>
+            </div>
+
+            <!-- 列表 -->
+            <div class="tc-list" id="tcList"></div>
+
+            <!-- 分页 -->
+            <div class="tc-pagination">
+              <span class="tc-page-info" id="tcPageInfo">共 0 条</span>
+              <div class="tc-page-size-wrap">
+                <span>10条/页</span>
+                <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#505266" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="tc-page-btns" id="tcPageBtns"></div>
+              <div class="tc-page-jump">
+                <span>跳至</span>
+                <input type="text" value="1" />
+                <span>页</span>
+              </div>
+            </div>
+
+          </div>
+  </div>
+
+</div>
+
+<script src="../../../../assets/icon-registry.js"></script>
+<script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../../../../framework/framework-2.js?v=2.2.3"></script>
+<script>
+window.framework2Instance = WiseFramework2.mount({
+  activeApp: 'home', activeFeature: 'task-center',
+  versionLabel: '任务中心', userName: '金晓智', roleName: '教职工',
+  homeHref: './staff-home.html',
+  secondaryNav: {
+    items: [
+      { key: 'apply', label: '我的申请' },
+      { key: 'todo', label: '待办' },
+      { key: 'done', label: '已办' }
+    ]
+  },
+  tabs: [
+    { key: 'task-center', label: '任务中心', closable: true }
+  ]
+});
+</script>
+<script>
+(function () {
+  function getFrameworkShell() {
+    return window.framework2Instance?.shell
+      || document.querySelector('.frame2-stage')?.shadowRoot?.querySelector('[data-frame2-shell-root]')
+      || document;
+  }
+
+  /* ---- 工具函数 ---- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // "2026-06-01 09:02" → "2026.06.01 09:02"
+  function fmtTime(s) {
+    return (s || '').replace(/-/g, '.').replace(' ', ' ');
+  }
+
+  /* ---- 数据 ---- */
+  var SECTIONS = {
+
+    apply: {
+      label: '我的申请',
+      filterLabel: '状态',
+      filterOptions: [
+        { value: '', text: '全部' },
+        { value: 'progress', text: '审核中' },
+        { value: 'returned', text: '被退回' },
+        { value: 'approved', text: '已通过' },
+        { value: 'rejected', text: '已拒绝' }
+      ],
+      items: [
+        {
+          title: '证明打印申请',
+          time: '2026-06-01 09:02',
+          business: '证明打印',
+          status: 'approved',
+          statusLabel: '已通过',
+          accentColor: 'green',
+          chipColor: 'green',
+          desc: '证明类型：在职在编证明',
+          detailUrl: '#'
+        },
+        {
+          title: '年休假申请',
+          time: '2026-05-05 16:32',
+          business: '请假',
+          status: 'progress',
+          statusLabel: '待学院审批',
+          accentColor: 'blue',
+          chipColor: 'blue',
+          desc: '2026.05.06 至 2026.05.08，共2天',
+          detailUrl: '#'
+        },
+        {
+          title: '企业实践认定申请',
+          time: '2026-05-05 16:40',
+          business: '企业实践认定',
+          status: 'returned',
+          statusLabel: '被人事处退回',
+          accentColor: 'orange',
+          chipColor: 'orange',
+          desc: '深圳市智造科技有限公司，实践周期32天',
+          detailUrl: '#'
+        }
+      ]
+    },
+
+    todo: {
+      label: '待办',
+      filterLabel: '应用名称',
+      filterOptions: [
+        { value: '', text: '全部' },
+        { value: '职称评审', text: '职称评审' },
+        { value: '个人信息变更', text: '个人信息变更' },
+        { value: '年休假', text: '年休假' },
+        { value: '出国境报备', text: '出国（境）报备' },
+        { value: '企业实践认定', text: '企业实践认定' },
+        { value: '业绩数据登记', text: '业绩数据登记' }
+      ],
+      items: [
+        {
+          tag: '职称评审',
+          tagColor: 'blue',
+          title: '2026年职称评审申报',
+          meta: [
+            { label: '批次名称', value: '2026年职称评审' },
+            { label: '填报时间', value: '2026-05-30 08:00:00 至 2026-06-30 08:00:00' }
+          ],
+          detailUrl: '#'
+        },
+        {
+          tag: '个人信息变更',
+          tagColor: 'gray',
+          title: '个人信息变更待审核，请及时处理。',
+          meta: [
+            { label: '提交人', value: '唐艺昕' },
+            { label: '审批角色', value: '人事处' }
+          ],
+          time: '2026-05-30 08:00:00',
+          detailUrl: '#'
+        },
+        {
+          tag: '年休假',
+          tagColor: 'gray',
+          title: '年休假申请待审批，请及时处理。',
+          meta: [
+            { label: '提交人', value: '李文博' },
+            { label: '审批角色', value: '学院领导' }
+          ],
+          time: '2026-05-29 14:20:00',
+          detailUrl: '#'
+        },
+        {
+          tag: '出国境报备',
+          tagColor: 'gray',
+          title: '出国（境）报备待审核，请及时处理。',
+          meta: [
+            { label: '提交人', value: '王思远' },
+            { label: '审批角色', value: '外事办' }
+          ],
+          time: '2026-05-28 10:05:00',
+          detailUrl: '#'
+        },
+        {
+          tag: '企业实践认定',
+          tagColor: 'gray',
+          title: '企业实践认定待审核，请及时处理。',
+          meta: [
+            { label: '提交人', value: '陈晓琳' },
+            { label: '审批角色', value: '人事处' }
+          ],
+          time: '2026-05-27 16:40:00',
+          detailUrl: '#'
+        },
+        {
+          tag: '业绩数据登记',
+          tagColor: 'gray',
+          title: '业绩数据登记待确认，请及时处理。',
+          meta: [
+            { label: '提交人', value: '赵明轩' },
+            { label: '审批角色', value: '科研处' }
+          ],
+          time: '2026-05-26 09:15:00',
+          detailUrl: '#'
+        }
+      ]
+    },
+
+    done: {
+      label: '已办',
+      filterLabel: '应用名称',
+      filterOptions: [
+        { value: '', text: '全部' },
+        { value: '职称评审', text: '职称评审' },
+        { value: '个人信息变更', text: '个人信息变更' },
+        { value: '年休假', text: '年休假' },
+        { value: '出国境报备', text: '出国（境）报备' },
+        { value: '企业实践认定', text: '企业实践认定' }
+      ],
+      items: [
+        {
+          tag: '职称评审',
+          tagColor: 'blue',
+          title: '2026年职称评审申报',
+          meta: [
+            { label: '批次名称', value: '2026年职称评审' },
+            { label: '填报时间', value: '2026-05-30 08:00:00 至 2026-06-30 08:00:00' },
+            { label: '', value: '已填报' }
+          ],
+          detailUrl: '#'
+        },
+        {
+          tag: '个人信息变更',
+          tagColor: 'gray',
+          title: '个人信息变更已审核，处理完成。',
+          meta: [
+            { label: '提交人', value: '唐艺昕' },
+            { label: '审批角色', value: '人事处' },
+            { label: '创建时间', value: '2026-05-30 08:00:00' },
+            { label: '处理时间', value: '2026-05-30 08:00:00' }
+          ],
+          detailUrl: '#'
+        },
+        {
+          tag: '年休假',
+          tagColor: 'gray',
+          title: '年休假申请已审批，处理完成。',
+          meta: [
+            { label: '提交人', value: '李文博' },
+            { label: '审批角色', value: '学院领导' },
+            { label: '创建时间', value: '2026-05-29 14:20:00' },
+            { label: '处理时间', value: '2026-05-29 16:05:00' }
+          ],
+          detailUrl: '#'
+        },
+        {
+          tag: '出国境报备',
+          tagColor: 'gray',
+          title: '出国（境）报备已审核，处理完成。',
+          meta: [
+            { label: '提交人', value: '王思远' },
+            { label: '审批角色', value: '外事办' },
+            { label: '创建时间', value: '2026-05-28 10:05:00' },
+            { label: '处理时间', value: '2026-05-28 15:30:00' }
+          ],
+          detailUrl: '#'
+        },
+        {
+          tag: '企业实践认定',
+          tagColor: 'gray',
+          title: '企业实践认定已审核，处理完成。',
+          meta: [
+            { label: '提交人', value: '陈晓琳' },
+            { label: '审批角色', value: '人事处' },
+            { label: '创建时间', value: '2026-05-27 16:40:00' },
+            { label: '处理时间', value: '2026-05-28 09:10:00' }
+          ],
+          detailUrl: '#'
+        }
+      ]
+    }
+
+  };
+
+  /* ---- 当前状态 ---- */
+  var currentSection = 'apply';
+  var filterKeyword = '';
+  var filterStatus = '';
+
+  /* ---- 渲染函数 ---- */
+
+  function applyRowHtml(item) {
+    return '<div class="tc-row">' +
+      '<div class="tc-row-accent ' + item.accentColor + '"></div>' +
+      '<div class="tc-row-body">' +
+        '<div class="tc-row-top">' +
+          '<div class="tc-row-left">' +
+            '<span class="tc-row-title">' + esc(item.title) + '</span>' +
+            '<span class="tc-chip ' + item.chipColor + '">' + esc(item.statusLabel) + '</span>' +
+          '</div>' +
+          '<a class="tc-row-link" href="' + esc(item.detailUrl) + '">查看详情</a>' +
+        '</div>' +
+        '<div class="tc-row-bottom">' +
+          '<span class="tc-row-desc">' + esc(item.desc) + '</span>' +
+          '<span class="tc-row-time">提交时间：' + esc(fmtTime(item.time)) + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // 待办 / 已办 共用：左侧标签 + 标题，副信息为「字段：值」用分隔符串联，可选右侧时间
+  function metaRowHtml(item) {
+    var metaHtml = (item.meta || []).map(function (m) {
+      var txt = m.label ? (esc(m.label) + '：' + esc(m.value)) : esc(m.value);
+      return '<span class="tc-meta-item">' + txt + '</span>';
+    }).join('<span class="tc-meta-sep"></span>');
+
+    return '<div class="tc-row tc-row--todo">' +
+      '<div class="tc-row-body">' +
+        '<div class="tc-row-top">' +
+          '<div class="tc-row-left">' +
+            '<span class="tc-chip ' + item.tagColor + '">' + esc(item.tag) + '</span>' +
+            '<span class="tc-row-title">' + esc(item.title) + '</span>' +
+          '</div>' +
+          '<a class="tc-row-link" href="' + esc(item.detailUrl) + '">查看详情</a>' +
+        '</div>' +
+        '<div class="tc-row-bottom">' +
+          '<div class="tc-meta">' + metaHtml + '</div>' +
+          (item.time ? '<span class="tc-row-time">时间：' + esc(item.time) + '</span>' : '') +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function getRowFn(section) {
+    if (section === 'apply') return applyRowHtml;
+    return metaRowHtml; // todo / done 共用
+  }
+
+  function getFilteredItems(section) {
+    var allItems = SECTIONS[section].items;
+    return allItems.filter(function (item) {
+      var kw = filterKeyword.trim().toLowerCase();
+      if (kw && item.title.toLowerCase().indexOf(kw) === -1) return false;
+      if (filterStatus) {
+        if (section === 'apply' && item.status !== filterStatus) return false;
+        if ((section === 'todo' || section === 'done') && item.tag !== filterStatus) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderList() {
+    var listEl = document.getElementById('tcList');
+    var pageInfoEl = document.getElementById('tcPageInfo');
+    var pageBtnsEl = document.getElementById('tcPageBtns');
+    var items = getFilteredItems(currentSection);
+    var rowFn = getRowFn(currentSection);
+
+    listEl.innerHTML = items.length
+      ? items.map(rowFn).join('')
+      : '<div class="tc-empty">暂无相关事项</div>';
+
+    pageInfoEl.textContent = '共 ' + items.length + ' 条';
+
+    // 简单分页（原型演示用）
+    pageBtnsEl.innerHTML =
+      '<button class="tc-page-icon-btn" title="上一页">' +
+        '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="#505266" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '</button>' +
+      '<button class="tc-page-btn active">1</button>' +
+      '<button class="tc-page-icon-btn" title="下一页">' +
+        '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="#505266" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '</button>';
+  }
+
+  function updateFilter(section) {
+    var sectionData = SECTIONS[section];
+    var labelEl = document.getElementById('filterLabel2');
+    var selectEl = document.getElementById('filterSelect');
+    var selectTextEl = document.getElementById('filterSelectText');
+
+    labelEl.textContent = sectionData.filterLabel;
+    selectEl.innerHTML = sectionData.filterOptions.map(function (opt) {
+      return '<option value="' + esc(opt.value) + '">' + esc(opt.text) + '</option>';
+    }).join('');
+    selectEl.value = '';
+    selectTextEl.textContent = sectionData.filterOptions[0].text;
+    filterStatus = '';
+  }
+
+  function switchSection(section) {
+    if (!SECTIONS[section]) return;
+    currentSection = section;
+    var url = new URL(window.location.href);
+    url.searchParams.set('type', section);
+    window.history.replaceState(null, '', url.href);
+    window.framework2Instance?.updateActiveTab(SECTIONS[section].label, url.href);
+    filterKeyword = '';
+    document.getElementById('filterKeyword').value = '';
+    updateFilter(section);
+    renderList();
+
+    // 更新框架左侧菜单的高亮态
+    getFrameworkShell().querySelectorAll('.frame2-menu .frame2-side-item').forEach(function (el) {
+      el.classList.toggle('is-active', el.getAttribute('data-feature') === section);
+    });
+  }
+
+  /* ---- 全局事件 ---- */
+
+  window.onFilterSelectChange = function (sel) {
+    filterStatus = sel.value;
+    var opt = sel.options[sel.selectedIndex];
+    document.getElementById('filterSelectText').textContent = opt ? opt.text : '全部';
+  };
+
+  window.tcReset = function () {
+    document.getElementById('filterKeyword').value = '';
+    filterKeyword = '';
+    var selectEl = document.getElementById('filterSelect');
+    selectEl.value = '';
+    filterStatus = '';
+    var opt = selectEl.options[0];
+    document.getElementById('filterSelectText').textContent = opt ? opt.text : '全部';
+    renderList();
+  };
+
+  window.tcQuery = function () {
+    filterKeyword = document.getElementById('filterKeyword').value;
+    renderList();
+  };
+
+  // 支持回车查询
+  document.getElementById('filterKeyword').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') window.tcQuery();
+  });
+
+  // 接管框架左侧菜单的点击：在捕获阶段拦截，阻止框架默认的「切页签」行为，
+  // 改为在本页内切换「我的申请 / 待办 / 已办」三个分区。
+  function bindSideMenu() {
+    var menu = getFrameworkShell().querySelector('.frame2-menu');
+    if (!menu) return false;
+    menu.addEventListener('click', function (e) {
+      var node = e.target.closest('[data-feature]');
+      if (!node) return;
+      var section = node.getAttribute('data-feature');
+      if (!SECTIONS[section]) return;
+      e.stopPropagation();
+      e.preventDefault();
+      switchSection(section);
+    }, true);
+
+    // 给「待办」加红色角标
+    var todoItem = menu.querySelector('[data-feature="todo"]');
+    if (todoItem && !todoItem.querySelector('.tc-menu-badge')) {
+      var badge = document.createElement('span');
+      badge.className = 'tc-menu-badge';
+      badge.textContent = '99+';
+      badge.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;margin-left:auto;padding:0 4px;color:#fff;background:#FA5151;border-radius:12px;font-size:12px;font-weight:600;line-height:1';
+      todoItem.appendChild(badge);
+    }
+    return true;
+  }
+
+  /* ---- 初始化 ---- */
+  updateFilter('apply');
+  renderList();
+
+  // 框架 shell 异步渲染菜单，轮询绑定一次
+  (function waitMenu(tries) {
+    if (bindSideMenu()) {
+      switchSection('apply');
+    } else if (tries > 0) {
+      setTimeout(function () { waitMenu(tries - 1); }, 50);
+    }
+  })(40);
+
+})();
+</script>
+</body>
+</html>

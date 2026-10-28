@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>统计看板页场景</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Tag/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .sdp-page {
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .sdp-shell {
+      display: grid;
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      gap: 12px;
+    }
+
+    .sdp-card {
+      min-width: 0;
+      padding: 16px;
+      background: var(--ds-color-bg-container);
+      border-radius: var(--ds-radius-xl);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .sdp-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sdp-header h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .sdp-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+    }
+
+    .sdp-segment {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sdp-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .sdp-metric {
+      display: grid;
+      gap: 2px;
+      padding: 12px 16px;
+      background: var(--ds-color-bg-page);
+      border-radius: var(--ds-radius-lg);
+    }
+
+    .sdp-metric span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .sdp-metric strong {
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .sdp-metric small {
+      color: var(--ds-color-text-secondary);
+      font-size: 12px;
+    }
+
+    .sdp-charts {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 12px;
+    }
+
+    .sdp-chart-title {
+      margin: 0 0 12px;
+      font-size: var(--ds-font-size-md);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .sdp-trend svg {
+      display: block;
+      width: 100%;
+      height: 160px;
+    }
+
+    .sdp-trend-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .sdp-trend-label {
+      display: grid;
+      gap: 2px;
+      text-align: center;
+    }
+
+    .sdp-trend-label strong { font-size: var(--ds-font-size-sm); }
+
+    .sdp-trend-label span {
+      color: var(--ds-color-text-secondary);
+      font-size: 12px;
+    }
+
+    .sdp-steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .sdp-step {
+      display: grid;
+      grid-template-columns: 72px 1fr 48px;
+      align-items: center;
+      gap: 12px;
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .sdp-step__bar {
+      height: 8px;
+      overflow: hidden;
+      background: var(--ds-color-bg-page);
+      border-radius: 999px;
+    }
+
+    .sdp-step__fill {
+      height: 100%;
+      background: var(--ds-color-primary, #333fff);
+      border-radius: 999px;
+    }
+
+    .sdp-step__value {
+      color: var(--ds-color-text-secondary);
+      text-align: right;
+    }
+
+    .sdp-rank ds-data-table {
+      width: 100%;
+      min-width: 0;
+      height: 380px;
+    }
+
+    @media (max-width: 980px) {
+      .sdp-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sdp-charts { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sdp-page ds-scope">
+    <div class="sdp-shell">
+      <section class="sdp-card sdp-header">
+        <h1>统计分析看板</h1>
+        <div class="sdp-filters">
+          <div class="sdp-segment" role="group" aria-label="统计学期" data-segment="semester"></div>
+          <div class="sdp-segment" role="group" aria-label="统计范围" data-segment="scope"></div>
+        </div>
+      </section>
+
+      <section class="sdp-card">
+        <div class="sdp-metrics" aria-label="核心指标" data-metrics></div>
+      </section>
+
+      <div class="sdp-charts">
+        <section class="sdp-card sdp-trend">
+          <h2 class="sdp-chart-title">完成率趋势</h2>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="完成率趋势折线图">
+            <defs>
+              <linearGradient id="sdp-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--ds-color-primary, #333fff)" stop-opacity="0.22" />
+                <stop offset="100%" stop-color="var(--ds-color-primary, #333fff)" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path data-trend-area fill="url(#sdp-grad)" />
+            <path data-trend-line fill="none" stroke="var(--ds-color-primary, #333fff)" stroke-width="1.5" vector-effect="non-scaling-stroke" />
+          </svg>
+          <div class="sdp-trend-labels" data-trend-labels></div>
+        </section>
+
+        <section class="sdp-card">
+          <h2 class="sdp-chart-title">环节达成率</h2>
+          <div class="sdp-steps" data-steps></div>
+        </section>
+      </div>
+
+      <section class="sdp-card sdp-rank">
+        <ds-data-table id="rankTable" title="完成率排名" row-key="id" show-index min-width="860"></ds-data-table>
+      </section>
+    </div>
+  </main>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "lit": "../node_modules/lit/index.js",
+      "lit/": "../node_modules/lit/",
+      "lit-html": "../node_modules/lit-html/lit-html.js",
+      "lit-html/": "../node_modules/lit-html/",
+      "lit-element/": "../node_modules/lit-element/",
+      "@lit/reactive-element": "../node_modules/@lit/reactive-element/reactive-element.js",
+      "@lit/reactive-element/": "../node_modules/@lit/reactive-element/"
+    }
+  }
+  </script>
+  <script type="module" src="../packages/design-system/web-components/DataTable/ds-data-table.js"></script>
+  <script type="module">
+    const SEMESTERS = ['本学期', '上学期'];
+    const SCOPES = ['全部单位', '重点单位'];
+
+    // 同一份示例数据按（学期 × 范围）给出不同切片，演示筛选联动
+    const DATA = {
+      '本学期|全部单位': {
+        metrics: [
+          ['整体完成率', '88.4%', '较上学期 +5.8%'],
+          ['内容完整度', '82.6%', '较上学期 +4.2%'],
+          ['参与人数', '486', '覆盖 12 个单位'],
+          ['待改进单位', '3', '完成率低于 70%'],
+        ],
+        trend: [{ label: '24秋', rate: 71.8 }, { label: '25春', rate: 76.4 }, { label: '25秋', rate: 82.6 }, { label: '26春', rate: 88.4 }],
+        steps: [['目标设定', 92], ['过程记录', 86], ['结果评价', 78], ['总结改进', 64]],
+        rank: [
+          { id: 1, name: '示例单位一', rate: 92.4, completeness: 88.6, trend: '+3.2%' },
+          { id: 2, name: '示例单位二', rate: 89.2, completeness: 84.1, trend: '+2.8%' },
+          { id: 3, name: '示例单位三', rate: 84.5, completeness: 86.8, trend: '+4.1%' },
+          { id: 4, name: '示例单位四', rate: 76.8, completeness: 71.5, trend: '+1.6%' },
+          { id: 5, name: '示例单位五', rate: 68.6, completeness: 63.8, trend: '-0.8%' },
+        ],
+      },
+      '本学期|重点单位': {
+        metrics: [
+          ['整体完成率', '91.2%', '较上学期 +4.6%'],
+          ['内容完整度', '86.3%', '较上学期 +3.5%'],
+          ['参与人数', '212', '覆盖 5 个单位'],
+          ['待改进单位', '1', '完成率低于 70%'],
+        ],
+        trend: [{ label: '24秋', rate: 75.2 }, { label: '25春', rate: 80.1 }, { label: '25秋', rate: 86.4 }, { label: '26春', rate: 91.2 }],
+        steps: [['目标设定', 95], ['过程记录', 90], ['结果评价', 83], ['总结改进', 70]],
+        rank: [
+          { id: 1, name: '示例单位一', rate: 94.6, completeness: 90.2, trend: '+2.9%' },
+          { id: 2, name: '示例单位二', rate: 92.1, completeness: 87.4, trend: '+3.4%' },
+          { id: 3, name: '示例单位三', rate: 88.3, completeness: 85.0, trend: '+2.2%' },
+        ],
+      },
+      '上学期|全部单位': {
+        metrics: [
+          ['整体完成率', '82.6%', '较上上学期 +6.2%'],
+          ['内容完整度', '78.4%', '较上上学期 +3.8%'],
+          ['参与人数', '452', '覆盖 12 个单位'],
+          ['待改进单位', '4', '完成率低于 70%'],
+        ],
+        trend: [{ label: '24春', rate: 66.4 }, { label: '24秋', rate: 71.8 }, { label: '25春', rate: 76.4 }, { label: '25秋', rate: 82.6 }],
+        steps: [['目标设定', 88], ['过程记录', 82], ['结果评价', 74], ['总结改进', 58]],
+        rank: [
+          { id: 1, name: '示例单位一', rate: 89.5, completeness: 85.2, trend: '+2.4%' },
+          { id: 2, name: '示例单位二', rate: 86.4, completeness: 81.3, trend: '+3.1%' },
+          { id: 3, name: '示例单位三', rate: 80.2, completeness: 82.4, trend: '+2.6%' },
+          { id: 4, name: '示例单位四', rate: 72.4, completeness: 68.2, trend: '+1.2%' },
+          { id: 5, name: '示例单位五', rate: 64.8, completeness: 60.4, trend: '-1.4%' },
+        ],
+      },
+      '上学期|重点单位': {
+        metrics: [
+          ['整体完成率', '86.6%', '较上上学期 +5.0%'],
+          ['内容完整度', '82.8%', '较上上学期 +4.4%'],
+          ['参与人数', '198', '覆盖 5 个单位'],
+          ['待改进单位', '1', '完成率低于 70%'],
+        ],
+        trend: [{ label: '24春', rate: 70.4 }, { label: '24秋', rate: 75.2 }, { label: '25春', rate: 80.1 }, { label: '25秋', rate: 86.6 }],
+        steps: [['目标设定', 92], ['过程记录', 87], ['结果评价', 79], ['总结改进', 66]],
+        rank: [
+          { id: 1, name: '示例单位一', rate: 91.2, completeness: 88.0, trend: '+2.1%' },
+          { id: 2, name: '示例单位二', rate: 88.6, completeness: 84.2, trend: '+2.8%' },
+          { id: 3, name: '示例单位三', rate: 84.4, completeness: 81.6, trend: '+1.9%' },
+        ],
+      },
+    };
+
+    const state = { semester: SEMESTERS[0], scope: SCOPES[0] };
+    const table = document.getElementById('rankTable');
+
+    function renderSegments() {
+      const configs = [
+        ['semester', SEMESTERS],
+        ['scope', SCOPES],
+      ];
+      for (const [key, options] of configs) {
+        const box = document.querySelector(`[data-segment="${key}"]`);
+        box.innerHTML = options.map((option) => `
+          <button class="ds-button ds-button--${state[key] === option ? 'primary' : 'default'} ds-button--small" type="button" data-key="${key}" data-value="${option}">
+            <span class="ds-button__label">${option}</span>
+          </button>`).join('');
+      }
+    }
+
+    function currentData() {
+      return DATA[`${state.semester}|${state.scope}`];
+    }
+
+    function renderMetrics() {
+      document.querySelector('[data-metrics]').innerHTML = currentData().metrics.map(([label, value, note]) => `
+        <div class="sdp-metric"><span>${label}</span><strong>${value}</strong><small>${note}</small></div>`).join('');
+    }
+
+    function renderTrend() {
+      const trend = currentData().trend;
+      const minY = 50;
+      const range = 100 - minY;
+      const points = trend.map((item, index) => ({
+        x: (index / (trend.length - 1)) * 100,
+        y: 100 - ((item.rate - minY) / range) * 100,
+        ...item,
+      }));
+      const line = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+      document.querySelector('[data-trend-line]').setAttribute('d', line);
+      document.querySelector('[data-trend-area]').setAttribute('d', `M0,100 ${points.map((p) => `L${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ')} L100,100 Z`);
+      document.querySelector('[data-trend-labels]').innerHTML = points.map((p) => `
+        <div class="sdp-trend-label"><strong>${p.rate}%</strong><span>${p.label}</span></div>`).join('');
+    }
+
+    function renderSteps() {
+      document.querySelector('[data-steps]').innerHTML = currentData().steps.map(([label, rate]) => `
+        <div class="sdp-step">
+          <span>${label}</span>
+          <div class="sdp-step__bar"><div class="sdp-step__fill" style="width: ${rate}%"></div></div>
+          <span class="sdp-step__value">${rate}%</span>
+        </div>`).join('');
+    }
+
+    function renderRank() {
+      table.columns = [
+        { key: 'name', title: '单位', width: 220, fixed: 'left' },
+        {
+          key: 'rate',
+          title: '完成率',
+          width: 200,
+          type: 'progress',
+          color: (value) => (value >= 90 ? 'var(--ds-color-success, #12b76a)' : value >= 70 ? 'var(--ds-color-warning, #f79009)' : 'var(--ds-color-danger, #f04438)'),
+        },
+        { key: 'completeness', title: '内容完整度', width: 140, render: (value) => `${value}%` },
+        { key: 'trend', title: '环比', width: 100 },
+      ];
+      table.data = currentData().rank;
+    }
+
+    function renderAll() {
+      renderSegments();
+      renderMetrics();
+      renderTrend();
+      renderSteps();
+      renderRank();
+    }
+
+    document.querySelector('.sdp-page').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-key][data-value]');
+      if (!button) return;
+      state[button.dataset.key] = button.dataset.value;
+      renderAll();
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

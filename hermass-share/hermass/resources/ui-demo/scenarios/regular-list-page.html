@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>常规列表页模板</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Field/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/FilterBar/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/DataTable/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Pagination/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Tabs/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/RegularListTemplate/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: #000;
+      background: #eef1f7;
+      font-family: var(--ds-font-family);
+      overflow: auto;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .preview-page {
+      min-height: 100%;
+      padding: 12px;
+    }
+
+    .preview-stage {
+      width: min(1196px, 100%);
+      height: max(796px, calc(100vh - 24px));
+      margin: 0 auto;
+      box-shadow: 0 6px 24px rgba(70, 79, 105, .08);
+    }
+
+    .preview-stage.is-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      border-radius: 0;
+    }
+
+    .preview-stage .ds-regular-list-template {
+      height: 100%;
+    }
+
+    .preview-tabs .ds-tabs__entry {
+      display: inline-flex;
+    }
+
+    .preview-tabs .ds-tabs__item {
+      color: #505266;
+    }
+
+    .preview-tabs .ds-tabs__item[aria-selected="true"] {
+      color: #000;
+    }
+
+    .preview-tabs .ds-tabs__item[aria-selected="true"]::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      left: 2px;
+      z-index: 0;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .preview-tabs .ds-tabs__item span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .preview-meta {
+      position: relative;
+    }
+
+    .preview-meta-menu {
+      position: absolute;
+      z-index: 8;
+      top: calc(100% + 4px);
+      right: 0;
+      width: 112px;
+      padding: 4px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(70, 79, 105, .12);
+    }
+
+    .preview-meta-menu[hidden] { display: none; }
+
+    .preview-meta-menu button {
+      width: 100%;
+      height: 32px;
+      padding: 0 8px;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .preview-meta-menu button:hover {
+      color: #333fff;
+      background: #f5f5ff;
+    }
+
+    .preview-extra[hidden] { display: none; }
+
+    .preview-toolbar-button.ds-button {
+      min-width: 56px;
+    }
+
+    .preview-table-wrap {
+      height: 100%;
+      overflow: auto;
+      border: 1px solid #eeeef0;
+    }
+
+    .preview-table {
+      width: 100%;
+      min-width: 1196px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .preview-table th,
+    .preview-table td {
+      height: 46px;
+      padding: 0 12px;
+      overflow: hidden;
+      background: #fff;
+      border-bottom: 1px solid #eeeef0;
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .preview-table th {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      height: 40px;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .preview-table th + th,
+    .preview-table td + td {
+      border-left: 1px solid rgba(238, 238, 240, .72);
+    }
+
+    .preview-table tbody tr:hover td {
+      background: #f6f6f7;
+    }
+
+    .preview-table tbody tr.is-selected td {
+      background: #f5f5ff;
+    }
+
+    .preview-table .is-check {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      width: 48px;
+      text-align: center;
+    }
+
+    .preview-table th.is-check {
+      z-index: 6;
+    }
+
+    .preview-table .is-index {
+      position: sticky;
+      left: 48px;
+      z-index: 4;
+      width: 64px;
+      box-shadow: 1px 0 4px rgba(70, 79, 105, .08);
+    }
+
+    .preview-table th.is-index {
+      z-index: 6;
+    }
+
+    .preview-table .is-actions {
+      position: sticky;
+      right: 0;
+      z-index: 4;
+      width: 124px;
+      box-shadow: -1px 0 4px rgba(70, 79, 105, .08);
+    }
+
+    .preview-table th.is-actions {
+      z-index: 6;
+    }
+
+    .preview-table .is-hidden-column {
+      display: none;
+    }
+
+    .preview-checkbox {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: #333fff;
+    }
+
+    .preview-row-actions {
+      display: inline-flex;
+      gap: 12px;
+    }
+
+    .preview-link {
+      padding: 0;
+      color: #333fff;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .preview-pagination {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #505266;
+      font-size: 12px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .preview-page-size,
+    .preview-jump {
+      height: 24px;
+      padding: 1px 8px;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+    }
+
+    .preview-page-list {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .preview-page-button {
+      display: inline-grid;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      place-items: center;
+      color: #505266;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .preview-page-button.is-active {
+      color: #000;
+      background: #eeeef0;
+      font-weight: 600;
+    }
+
+    .preview-toast {
+      position: fixed;
+      z-index: 50;
+      right: 24px;
+      bottom: 24px;
+      padding: 9px 16px;
+      color: #fff;
+      background: rgba(31, 38, 153, .94);
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(31, 38, 153, .2);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .preview-toast[hidden] { display: none; }
+
+    @media (max-width: 760px) {
+      .preview-page {
+        padding: 0;
+      }
+
+      .preview-stage {
+        width: 100%;
+        height: 100vh;
+        min-height: 680px;
+        box-shadow: none;
+      }
+
+      .preview-pagination {
+        min-width: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="preview-page ds-scope">
+    <section class="preview-stage" data-stage>
+      <section class="ds-regular-list-template">
+        <header class="ds-regular-list-template__header">
+          <nav class="ds-tabs ds-tabs--section ds-regular-list-template__tabs preview-tabs" aria-label="一级页签">
+            <span class="ds-tabs__entry is-active">
+              <button class="ds-tabs__item is-active" type="button" role="tab" aria-selected="true" data-tab="all"><span>选项</span></button>
+            </span>
+            <span class="ds-tabs__entry">
+              <button class="ds-tabs__item" type="button" role="tab" aria-selected="false" data-tab="pending"><span>选项</span></button>
+            </span>
+          </nav>
+
+          <div class="preview-meta">
+            <button class="ds-regular-list-template__meta" type="button" aria-expanded="false" data-meta>
+              <span>标题：</span>
+              <strong data-meta-value>选项</strong>
+              <span class="ds-regular-list-template__dropdown-icon" aria-hidden="true"></span>
+            </button>
+            <div class="preview-meta-menu" role="menu" data-meta-menu hidden>
+              <button type="button" role="menuitem" data-meta-option="选项">选项</button>
+              <button type="button" role="menuitem" data-meta-option="全部数据">全部数据</button>
+              <button type="button" role="menuitem" data-meta-option="仅看本人">仅看本人</button>
+            </div>
+          </div>
+        </header>
+
+        <div class="ds-regular-list-template__notice" role="status">
+          <span class="ds-regular-list-template__info-icon" aria-hidden="true"></span>
+          <span>此处是描述文本</span>
+        </div>
+
+        <div class="ds-regular-list-template__content">
+          <section class="ds-filter-area" aria-label="筛选区域">
+            <div class="ds-filter-area__panel">
+              <div class="ds-filter-area__fields">
+                <label class="ds-field ds-filter-area__field">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+                <label class="ds-field ds-filter-area__field">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+                <label class="ds-field ds-filter-area__field">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+                <label class="ds-field ds-filter-area__field">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+                <label class="ds-field ds-filter-area__field preview-extra">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+                <label class="ds-field ds-filter-area__field preview-extra">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+                <label class="ds-field ds-filter-area__field preview-extra">
+                  <span class="ds-field__label ds-filter-area__label">标题名称</span>
+                  <input class="ds-input" placeholder="请输入" />
+                </label>
+              </div>
+
+              <div class="ds-filter-area__actions">
+                <button class="ds-button ds-button--default ds-button--default-size ds-button--icon-only ds-filter-area__more" type="button" title="更多筛选" data-action="更多筛选">...</button>
+                <button class="ds-button ds-button--default ds-button--default-size" type="button" data-reset><span class="ds-button__label">重置</span></button>
+                <button class="ds-button ds-button--primary ds-button--default-size" type="button" data-search><span class="ds-button__label">查询</span></button>
+                <button class="ds-button ds-button--link ds-button--default-size ds-filter-area__expand" type="button" aria-expanded="true" data-expand>
+                  <span class="ds-button__label">收起</span>
+                  <span class="ds-filter-area__chevron" aria-hidden="true">⌃</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <div class="ds-regular-list-template__toolbar">
+            <div class="ds-regular-list-template__toolbar-actions">
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="新增"><span class="ds-button__label">按钮</span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="批量操作"><span class="ds-button__label">按钮</span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="导出报表"><span class="ds-button__label">导出报表</span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="批量下载"><span class="ds-button__label">批量下载</span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="导入"><span class="ds-button__label">导入</span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="导出"><span class="ds-button__label">导出</span><span class="ds-regular-list-template__dropdown-icon" aria-hidden="true"></span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="打印"><span class="ds-button__label">打印</span></button>
+              <button class="ds-button ds-button--default ds-button--default-size preview-toolbar-button" type="button" data-action="排序查询"><span class="ds-button__label">排序查询</span></button>
+            </div>
+            <div class="ds-regular-list-template__table-tools" aria-label="表格工具">
+              <button class="ds-regular-list-template__tool is-fullscreen" type="button" aria-label="全屏表格" data-fullscreen></button>
+              <button class="ds-regular-list-template__tool is-columns" type="button" aria-label="列设置" aria-pressed="false" data-columns></button>
+            </div>
+          </div>
+
+          <div class="ds-regular-list-template__summary" data-summary>数据统计：全部(0)&nbsp;&nbsp;未提交(0)&nbsp;&nbsp;已提交(50)</div>
+
+          <div class="ds-regular-list-template__table">
+            <div class="preview-table-wrap">
+              <table class="preview-table" aria-label="常规列表">
+                <thead>
+                  <tr>
+                    <th class="is-check"><input class="preview-checkbox" type="checkbox" aria-label="全选" data-select-all /></th>
+                    <th class="is-index">序号</th>
+                    <th>标题</th>
+                    <th>标题</th>
+                    <th>标题</th>
+                    <th class="preview-toggle-column">标题</th>
+                    <th class="is-actions">操作</th>
+                  </tr>
+                </thead>
+                <tbody data-table-body></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <footer class="ds-regular-list-template__footer">
+          <div class="preview-pagination" aria-label="分页">
+            <span>共 100 条</span>
+            <button class="preview-page-size" type="button" data-action="切换每页条数">10条/页⌄</button>
+            <div class="preview-page-list">
+              <button class="preview-page-button" type="button" aria-label="上一页">‹</button>
+              <button class="preview-page-button is-active" type="button" data-page="1">1</button>
+              <button class="preview-page-button" type="button" data-page="2">2</button>
+              <span class="preview-page-button">…</span>
+              <button class="preview-page-button" type="button" data-page="10">10</button>
+              <button class="preview-page-button" type="button" aria-label="下一页">›</button>
+            </div>
+            <span>跳至</span>
+            <input class="preview-jump" value="1" aria-label="跳转页码" />
+            <span>页</span>
+          </div>
+          <div class="ds-regular-list-template__footer-actions">
+            <button class="ds-button ds-button--default ds-button--large ds-regular-list-template__footer-button" type="button" data-action="次要操作"><span class="ds-button__label">按钮</span></button>
+            <button class="ds-button ds-button--primary ds-button--large ds-regular-list-template__footer-button" type="button" data-action="主要操作"><span class="ds-button__label">按钮</span></button>
+          </div>
+        </footer>
+      </section>
+    </section>
+  </main>
+
+  <div class="preview-toast" role="status" data-toast hidden></div>
+
+  <script>
+    const tableBody = document.querySelector('[data-table-body]')
+    const summary = document.querySelector('[data-summary]')
+    const toast = document.querySelector('[data-toast]')
+    let toastTimer
+
+    const showToast = (message) => {
+      window.clearTimeout(toastTimer)
+      toast.textContent = message
+      toast.hidden = false
+      toastTimer = window.setTimeout(() => { toast.hidden = true }, 1600)
+    }
+
+    tableBody.innerHTML = Array.from({ length: 10 }, (_, index) => `
+      <tr>
+        <td class="is-check"><input class="preview-checkbox" type="checkbox" aria-label="选择第 ${index + 1} 行" data-row-check /></td>
+        <td class="is-index">${index + 1}</td>
+        <td>文本</td>
+        <td>文本</td>
+        <td>文本</td>
+        <td class="preview-toggle-column">文本</td>
+        <td class="is-actions">
+          <span class="preview-row-actions">
+            <button class="preview-link" type="button" data-action="编辑第 ${index + 1} 行">按钮</button>
+            <button class="preview-link" type="button" data-action="查看第 ${index + 1} 行">按钮</button>
+          </span>
+        </td>
+      </tr>
+    `).join('')
+
+    document.querySelectorAll('[data-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('[data-tab]').forEach((item) => {
+          const selected = item === tab
+          item.classList.toggle('is-active', selected)
+          item.closest('.ds-tabs__entry').classList.toggle('is-active', selected)
+          item.setAttribute('aria-selected', String(selected))
+        })
+        showToast('已切换列表页签')
+      })
+    })
+
+    const metaButton = document.querySelector('[data-meta]')
+    const metaMenu = document.querySelector('[data-meta-menu]')
+    metaButton.addEventListener('click', () => {
+      const open = metaMenu.hidden
+      metaMenu.hidden = !open
+      metaButton.setAttribute('aria-expanded', String(open))
+    })
+
+    document.querySelectorAll('[data-meta-option]').forEach((option) => {
+      option.addEventListener('click', () => {
+        document.querySelector('[data-meta-value]').textContent = option.dataset.metaOption
+        metaMenu.hidden = true
+        metaButton.setAttribute('aria-expanded', 'false')
+      })
+    })
+
+    const expandButton = document.querySelector('[data-expand]')
+    expandButton.addEventListener('click', () => {
+      const expanded = expandButton.getAttribute('aria-expanded') === 'true'
+      document.querySelectorAll('.preview-extra').forEach((field) => { field.hidden = expanded })
+      expandButton.setAttribute('aria-expanded', String(!expanded))
+      expandButton.querySelector('.ds-button__label').textContent = expanded ? '展开' : '收起'
+      expandButton.querySelector('.ds-filter-area__chevron').textContent = expanded ? '⌄' : '⌃'
+    })
+
+    document.querySelector('[data-reset]').addEventListener('click', () => {
+      document.querySelectorAll('.ds-filter-area input').forEach((input) => { input.value = '' })
+      summary.innerHTML = '数据统计：全部(0)&nbsp;&nbsp;未提交(0)&nbsp;&nbsp;已提交(50)'
+      showToast('筛选条件已重置')
+    })
+
+    document.querySelector('[data-search]').addEventListener('click', () => {
+      const values = [...document.querySelectorAll('.ds-filter-area input')].filter((input) => input.value.trim()).length
+      summary.textContent = `查询结果：共 10 条，已使用 ${values} 个筛选条件`
+      showToast('查询完成')
+    })
+
+    const updateSelection = () => {
+      const checks = [...document.querySelectorAll('[data-row-check]')]
+      const selected = checks.filter((check) => check.checked).length
+      checks.forEach((check) => check.closest('tr').classList.toggle('is-selected', check.checked))
+      document.querySelector('[data-select-all]').checked = selected === checks.length
+      summary.textContent = selected
+        ? `已选择 ${selected} 条数据`
+        : '数据统计：全部(0)  未提交(0)  已提交(50)'
+    }
+
+    document.querySelector('[data-select-all]').addEventListener('change', (event) => {
+      document.querySelectorAll('[data-row-check]').forEach((check) => { check.checked = event.target.checked })
+      updateSelection()
+    })
+
+    document.querySelectorAll('[data-row-check]').forEach((check) => {
+      check.addEventListener('change', updateSelection)
+    })
+
+    document.querySelector('[data-fullscreen]').addEventListener('click', () => {
+      const stage = document.querySelector('[data-stage]')
+      stage.classList.toggle('is-fullscreen')
+      showToast(stage.classList.contains('is-fullscreen') ? '已进入全屏' : '已退出全屏')
+    })
+
+    document.querySelector('[data-columns]').addEventListener('click', (event) => {
+      const hidden = event.currentTarget.getAttribute('aria-pressed') !== 'true'
+      document.querySelectorAll('.preview-toggle-column').forEach((cell) => cell.classList.toggle('is-hidden-column', hidden))
+      event.currentTarget.setAttribute('aria-pressed', String(hidden))
+      showToast(hidden ? '已隐藏一列' : '已恢复全部列')
+    })
+
+    document.querySelectorAll('[data-page]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-page]').forEach((item) => item.classList.toggle('is-active', item === button))
+        document.querySelector('.preview-jump').value = button.dataset.page
+        showToast(`已切换至第 ${button.dataset.page} 页`)
+      })
+    })
+
+    document.addEventListener('click', (event) => {
+      const action = event.target.closest('[data-action]')
+      if (action) showToast(`${action.dataset.action}已触发`)
+      if (!event.target.closest('.preview-meta')) {
+        metaMenu.hidden = true
+        metaButton.setAttribute('aria-expanded', 'false')
+      }
+    })
+  </script>
+</body>
+</html>

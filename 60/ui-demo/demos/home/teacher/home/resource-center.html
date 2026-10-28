@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>资料中心 - 框架2</title>
+<link rel="stylesheet" href="../../../../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../../../../framework/theme.css" />
+<style>
+body { margin: 0; }
+
+.app-page-frame {
+  --ap-blue: #3167FF;
+  --ap-blue-weak: #EDF4FF;
+  --ap-ink: #000000;
+  --ap-text: #505266;
+  --ap-muted: #737585;
+  --ap-line: #EEEEF0;
+  --ap-page: #F4F6FB;
+  font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.app-page { min-height: 100%; background: #F0F5FC; }
+
+/* ===== 业务内容容器 ===== */
+.rc-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.rc-panel {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ===== 筛选栏 ===== */
+.rc-filter {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 12px 12px;
+  margin: 12px 16px 0;
+  background: linear-gradient(180deg, #FAFAFC 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 8px;
+  flex: none;
+}
+
+.rc-filter-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rc-filter-field.grow { flex: 1; }
+
+.rc-filter-label {
+  flex: none;
+  font-size: 14px;
+  color: var(--ap-text);
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.rc-filter-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 4px 12px;
+  height: 36px;
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+  box-sizing: border-box;
+}
+
+.rc-filter-control input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: var(--ap-ink);
+  background: transparent;
+  min-width: 0;
+  font-family: inherit;
+}
+
+.rc-filter-control input::placeholder { color: #9697A3; }
+
+.rc-filter-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 4px 12px;
+  height: 36px;
+  flex: 1;
+  min-width: 0;
+  max-width: 360px;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+}
+
+.rc-filter-select select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.rc-filter-select .sel-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ap-ink);
+  line-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.rc-filter-select .sel-text.is-placeholder { color: #9697A3; }
+
+.rc-filter-select svg { flex: none; width: 14px; height: 14px; pointer-events: none; }
+
+.rc-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  margin-left: auto;
+}
+
+.rc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 7px 18px;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.rc-btn-reset { background: #fff; color: var(--ap-ink); border: 1px solid #DCDCE0; }
+.rc-btn-reset:hover { background: #f5f5f5; }
+.rc-btn-query { background: var(--ap-blue); color: #fff; }
+.rc-btn-query:hover { background: #2558e8; }
+
+/* ===== 表格 ===== */
+.rc-table-wrap { flex: 1; overflow: auto; padding: 8px 16px 0; }
+
+.rc-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+.rc-table th {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ap-ink);
+  padding: 13px 12px;
+  background: #F7F8FA;
+  border-bottom: 1px solid var(--ap-line);
+  white-space: nowrap;
+}
+
+.rc-table td {
+  font-size: 14px;
+  color: var(--ap-text);
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--ap-line);
+  vertical-align: middle;
+}
+
+.rc-table tbody tr:hover td { background: #FAFCFF; }
+
+.rc-col-no { width: 60px; }
+.rc-col-count { width: 120px; }
+.rc-col-time { width: 200px; }
+.rc-col-op { width: 90px; }
+
+.rc-title-cell { display: flex; align-items: center; gap: 8px; color: var(--ap-ink); overflow: hidden; }
+.rc-title-cell .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.rc-top-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--ap-blue);
+  background: linear-gradient(90deg, #EDF4FF 0%, #F2EDFF 100%);
+}
+
+.rc-op-link { color: var(--ap-blue); font-size: 14px; text-decoration: none; cursor: pointer; }
+.rc-op-link:hover { text-decoration: underline; }
+
+.rc-empty { padding: 60px 20px; text-align: center; color: #9697A3; font-size: 14px; }
+
+/* ===== 分页 ===== */
+.rc-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid var(--ap-line);
+  flex: none;
+}
+
+.rc-page-info { font-size: 12px; color: var(--ap-text); line-height: 20px; }
+
+.rc-page-size-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--ap-ink);
+  cursor: pointer;
+  line-height: 20px;
+}
+.rc-page-size-wrap svg { width: 14px; height: 14px; }
+
+.rc-page-btns { display: flex; align-items: center; gap: 2px; }
+
+.rc-page-btn {
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--ap-text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  line-height: 20px;
+}
+.rc-page-btn:hover { background: #F0F5FF; color: var(--ap-blue); }
+.rc-page-btn.active { background: #EEEEF0; color: var(--ap-ink); font-weight: 600; }
+
+.rc-page-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.rc-page-icon-btn:hover { background: #F0F5FF; }
+
+.rc-page-jump { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ap-ink); line-height: 20px; }
+
+.rc-page-jump input {
+  width: 40px;
+  border: 1px solid #DCDCE0;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  background: #fff;
+  font-family: inherit;
+  color: var(--ap-ink);
+}
+.rc-page-jump input:focus { border-color: var(--ap-blue); }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+
+  <!-- 业务内容：框架会把它移入 frame2-content（左侧菜单 + 右侧页签由框架渲染） -->
+  <div class="rc-page app-page-frame">
+    <div class="rc-panel">
+
+      <!-- 筛选栏 -->
+      <div class="rc-filter">
+        <div class="rc-filter-field grow">
+          <span class="rc-filter-label" id="rcNameLabel">文件名称</span>
+          <div class="rc-filter-control">
+            <input type="text" id="rcKeyword" placeholder="请输入" />
+          </div>
+        </div>
+        <div class="rc-filter-field grow">
+          <span class="rc-filter-label" id="rcCatLabel">文件分类</span>
+          <div class="rc-filter-select">
+            <span class="sel-text is-placeholder" id="rcCatText">请选择</span>
+            <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#505266" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <select id="rcCat" onchange="rcOnCatChange(this)"></select>
+          </div>
+        </div>
+        <div class="rc-filter-actions">
+          <button class="rc-btn rc-btn-reset" onclick="rcReset()">重置</button>
+          <button class="rc-btn rc-btn-query" onclick="rcQuery()">查询</button>
+        </div>
+      </div>
+
+      <!-- 表格 -->
+      <div class="rc-table-wrap">
+        <table class="rc-table">
+          <thead>
+            <tr>
+              <th class="rc-col-no">序号</th>
+              <th id="rcColTitle">文件名称</th>
+              <th class="rc-col-count" id="rcColCount">浏览量</th>
+              <th class="rc-col-time" id="rcColTime">发布时间</th>
+              <th class="rc-col-op">操作</th>
+            </tr>
+          </thead>
+          <tbody id="rcTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- 分页 -->
+      <div class="rc-pagination">
+        <span class="rc-page-info" id="rcPageInfo">共 0 条</span>
+        <div class="rc-page-size-wrap">
+          <span>10条/页</span>
+          <svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#505266" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="rc-page-btns" id="rcPageBtns"></div>
+        <div class="rc-page-jump">
+          <span>跳至</span>
+          <input type="text" value="1" />
+          <span>页</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="../../../../assets/icon-registry.js"></script>
+<script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../../../../framework/framework-2.js?v=2.2.3"></script>
+<script>
+window.framework2Instance = WiseFramework2.mount({
+  activeApp: 'home', activeFeature: 'resource-center',
+  versionLabel: '资料中心', userName: '金晓智', roleName: '教职工',
+  homeHref: './staff-home.html',
+  secondaryNav: {
+    items: [
+      { key: 'policy', label: '政策文件' },
+      { key: 'material', label: '资料下载' }
+    ]
+  },
+  tabs: [
+    { key: 'resource-center', label: '政策文件', closable: true }
+  ]
+});
+</script>
+<script>
+(function () {
+  function getFrameworkShell() {
+    return window.framework2Instance?.shell
+      || document.querySelector('.frame2-stage')?.shadowRoot?.querySelector('[data-frame2-shell-root]')
+      || document;
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---- 数据 ---- */
+  var SECTIONS = {
+    policy: {
+      tabLabel: '政策文件',
+      nameLabel: '文件名称',
+      titleColLabel: '文件名称',
+      countColLabel: '浏览量',
+      timeColLabel: '发布时间',
+      catLabel: '文件分类',
+      opLabel: '详情',
+      catOptions: [
+        { value: '', text: '全部' },
+        { value: '规章制度', text: '规章制度' },
+        { value: '劳资福利', text: '劳资福利' },
+        { value: '职称聘用', text: '职称聘用' },
+        { value: '考核评价', text: '考核评价' }
+      ],
+      items: [
+        { no: 1, title: '中共深圳职业技术大学委员会关于印发《深职大教职工岗位聘用管理办法（2026修订版）》', cat: '职称聘用', count: 2398, time: '2026-05-20', top: true, detailUrl: '#' },
+        { no: 2, title: '深圳职业技术大学绩效工资核算实施细则（试行）', cat: '劳资福利', count: 531, time: '2026-05-20', top: false, detailUrl: '#' },
+        { no: 3, title: '【劳资福利】教职工带薪休假与考勤管理制度', cat: '劳资福利', count: 64, time: '2026-05-18', top: false, detailUrl: '#' },
+        { no: 4, title: '深圳职业技术大学教职工因公出国（境）管理规定', cat: '规章制度', count: 312, time: '2026-05-15', top: false, detailUrl: '#' },
+        { no: 5, title: '深圳职业技术大学年度考核工作实施方案', cat: '考核评价', count: 876, time: '2026-05-12', top: false, detailUrl: '#' }
+      ]
+    },
+    material: {
+      tabLabel: '资料下载',
+      nameLabel: '资料名称',
+      titleColLabel: '资料名称',
+      countColLabel: '下载量',
+      timeColLabel: '更新时间',
+      catLabel: '资料类型',
+      opLabel: '下载',
+      catOptions: [
+        { value: '', text: '全部' },
+        { value: '申报模板', text: '申报模板' },
+        { value: '材料清单', text: '材料清单' },
+        { value: '操作手册', text: '操作手册' }
+      ],
+      items: [
+        { no: 1, title: '2026年度职称评审申报材料模板.docx', cat: '申报模板', count: 1206, time: '2026-08-20 10:12:09', top: true, detailUrl: '#' },
+        { no: 2, title: '教职工因公出国（境）报备材料清单.xlsx', cat: '材料清单', count: 842, time: '2026-07-02 09:05:33', top: false, detailUrl: '#' },
+        { no: 3, title: '新教师入职培训手册.pdf', cat: '操作手册', count: 2031, time: '2026-03-15 14:30:02', top: false, detailUrl: '#' },
+        { no: 4, title: '年度考核登记表模板.docx', cat: '申报模板', count: 654, time: '2026-06-10 16:20:41', top: false, detailUrl: '#' },
+        { no: 5, title: '企业实践认定申请表.docx', cat: '申报模板', count: 489, time: '2026-05-28 11:08:55', top: false, detailUrl: '#' }
+      ]
+    }
+  };
+
+  /* ---- 当前状态 ---- */
+  // 支持从首页通过 ?type=policy|material 直达对应分区
+  var initialSection = (function () {
+    var m = /[?&]type=(policy|material)/.exec(window.location.search);
+    return m ? m[1] : 'policy';
+  })();
+  var currentSection = initialSection;
+  var filterKeyword = '';
+  var filterCat = '';
+
+  var tbodyEl = document.getElementById('rcTbody');
+  var pageInfoEl = document.getElementById('rcPageInfo');
+  var pageBtnsEl = document.getElementById('rcPageBtns');
+
+  function getFilteredItems() {
+    return SECTIONS[currentSection].items.filter(function (it) {
+      var kw = filterKeyword.trim().toLowerCase();
+      if (kw && it.title.toLowerCase().indexOf(kw) === -1) return false;
+      if (filterCat && it.cat !== filterCat) return false;
+      return true;
+    });
+  }
+
+  function rowHtml(item) {
+    var s = SECTIONS[currentSection];
+    var titleCell = '<div class="rc-title-cell">' +
+      (item.top ? '<span class="rc-top-badge">置顶</span>' : '') +
+      '<span class="name">' + esc(item.title) + '</span>' +
+    '</div>';
+
+    return '<tr>' +
+      '<td class="rc-col-no">' + item.no + '</td>' +
+      '<td>' + titleCell + '</td>' +
+      '<td class="rc-col-count">' + item.count + '</td>' +
+      '<td class="rc-col-time">' + esc(item.time) + '</td>' +
+      '<td class="rc-col-op"><a class="rc-op-link" href="' + esc(item.detailUrl) + '">' + esc(s.opLabel) + '</a></td>' +
+    '</tr>';
+  }
+
+  function renderTable() {
+    var items = getFilteredItems();
+    tbodyEl.innerHTML = items.length
+      ? items.map(rowHtml).join('')
+      : '<tr><td colspan="5"><div class="rc-empty">暂无相关数据</div></td></tr>';
+
+    pageInfoEl.textContent = '共 ' + items.length + ' 条';
+
+    pageBtnsEl.innerHTML =
+      '<button class="rc-page-icon-btn" title="上一页"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="#505266" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '<button class="rc-page-btn active">1</button>' +
+      '<button class="rc-page-icon-btn" title="下一页"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="#505266" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+  }
+
+  function applySectionLabels() {
+    var s = SECTIONS[currentSection];
+    document.getElementById('rcNameLabel').textContent = s.nameLabel;
+    document.getElementById('rcCatLabel').textContent = s.catLabel;
+    document.getElementById('rcColTitle').textContent = s.titleColLabel;
+    document.getElementById('rcColCount').textContent = s.countColLabel;
+    document.getElementById('rcColTime').textContent = s.timeColLabel;
+
+    // 重建分类下拉
+    var sel = document.getElementById('rcCat');
+    sel.innerHTML = s.catOptions.map(function (opt) {
+      return '<option value="' + esc(opt.value) + '">' + esc(opt.text) + '</option>';
+    }).join('');
+    sel.value = '';
+    var t = document.getElementById('rcCatText');
+    t.textContent = '请选择';
+    t.classList.add('is-placeholder');
+  }
+
+  // 更新框架业务页签标题，使其与当前分区一致
+  function updateTabLabel(label) {
+    var url = new URL(window.location.href);
+    url.searchParams.set('type', currentSection);
+    window.history.replaceState(null, '', url.href);
+    if (window.framework2Instance?.updateActiveTab) {
+      window.framework2Instance.updateActiveTab(label, url.href);
+      return;
+    }
+    var tab = getFrameworkShell().querySelector('.frame2-tabs .frame2-tab[data-tab="resource-center"]');
+    if (!tab) return;
+    var span = tab.querySelector('span:not(.frame2-tab-icon):not(.frame2-tab-close)');
+    if (span) span.textContent = label;
+    tab.setAttribute('data-tab-label', label);
+    tab.setAttribute('title', label);
+  }
+
+  function switchSection(section) {
+    if (!SECTIONS[section]) return;
+    currentSection = section;
+    filterKeyword = '';
+    filterCat = '';
+    document.getElementById('rcKeyword').value = '';
+
+    applySectionLabels();
+    renderTable();
+    updateTabLabel(SECTIONS[section].tabLabel);
+
+    getFrameworkShell().querySelectorAll('.frame2-menu .frame2-side-item').forEach(function (el) {
+      el.classList.toggle('is-active', el.getAttribute('data-feature') === section);
+    });
+  }
+
+  /* ---- 全局事件 ---- */
+  window.rcOnCatChange = function (sel) {
+    filterCat = sel.value;
+    var opt = sel.options[sel.selectedIndex];
+    var t = document.getElementById('rcCatText');
+    t.textContent = sel.value ? opt.text : '请选择';
+    t.classList.toggle('is-placeholder', !sel.value);
+  };
+
+  window.rcReset = function () {
+    filterKeyword = '';
+    filterCat = '';
+    document.getElementById('rcKeyword').value = '';
+    var sel = document.getElementById('rcCat');
+    sel.value = '';
+    var t = document.getElementById('rcCatText');
+    t.textContent = '请选择';
+    t.classList.add('is-placeholder');
+    renderTable();
+  };
+
+  window.rcQuery = function () {
+    filterKeyword = document.getElementById('rcKeyword').value;
+    renderTable();
+  };
+
+  document.getElementById('rcKeyword').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') window.rcQuery();
+  });
+
+  /* ---- 接管框架左侧菜单点击 ---- */
+  function bindSideMenu() {
+    var menu = getFrameworkShell().querySelector('.frame2-menu');
+    if (!menu) return false;
+    menu.addEventListener('click', function (e) {
+      var node = e.target.closest('[data-feature]');
+      if (!node) return;
+      var section = node.getAttribute('data-feature');
+      if (!SECTIONS[section]) return;
+      e.stopPropagation();
+      e.preventDefault();
+      switchSection(section);
+    }, true);
+    return true;
+  }
+
+  /* ---- 初始化 ---- */
+  applySectionLabels();
+  renderTable();
+
+  (function waitMenu(tries) {
+    if (bindSideMenu()) {
+      switchSection(initialSection);
+    } else if (tries > 0) {
+      setTimeout(function () { waitMenu(tries - 1); }, 50);
+    }
+  })(40);
+
+})();
+</script>
+</body>
+</html>

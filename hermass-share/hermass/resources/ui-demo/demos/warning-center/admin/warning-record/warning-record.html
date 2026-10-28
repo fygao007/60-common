@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>预警中心（预警管理员 · 预警记录）</title>
+  <link rel="stylesheet" href="../../../../framework/theme.css" />
+  <link rel="stylesheet" href="../../../../assets/bundles/pages/warning-record.bundle.css?v=20260930-1" />
+</head>
+<body>
+  <div class="frame2-stage ds-scope" data-ds-page="react" data-generated-page-contract="v1" data-page-template="react-business-page">
+    <div id="app"></div>
+  </div>
+  <script src="../../../../assets/icon-registry.js"></script>
+  <script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+  <script src="../../../../framework/framework-2.staff-preset.js?v=2.2.4"></script>
+  <script src="../../../../framework/framework-2.js?v=2.2.3"></script>
+  <script>
+    // 菜单单源：demos/warning-center/admin/role.json（访问权限清单）；导航分组「预警」为呈现层，在此内联 appMenus 中维护
+    WiseFramework2.mount({
+      root: '.frame2-stage',
+      versionLabel: '预警中心',
+      userName: '高管理员 · 人事处 · 预警管理员',
+      roleName: '预警管理员',
+      activeApp: 'warning-center',
+      pinHomeTab: false,
+      workspaceVariant: 'canvas',
+      appMenus: { 'warning-center': [
+        { key: 'warning-home', label: '首页', icon: 'home', href: '../warning-home/warning-home.html' },
+        {
+          key: 'warning-group', label: '预警', icon: 'clock', expanded: false,
+          children: [
+            { key: 'warning-rule-config', label: '预警规则配置', icon: 'settings', href: '../warning-rule-config/warning-rule-config.html' },
+            { key: 'warning-record', label: '预警记录', icon: 'exam', href: '../warning-record/warning-record.html' },
+            { key: 'warning-audit', label: '预警处置审批', icon: 'exam', href: '../warning-audit/warning-audit.html' }
+          ]
+        }
+      ] },
+      featureRoutes: {
+        'warning-home': '../warning-home/warning-home.html',
+        'warning-rule-config': '../warning-rule-config/warning-rule-config.html',
+        'warning-record': '../warning-record/warning-record.html',
+        'warning-audit': '../warning-audit/warning-audit.html'
+      },
+      activeFeature: 'warning-record',
+      tabs: [
+        { key: 'warning-record', label: '预警记录', href: location.pathname.split('/').pop() + location.search, closable: false }
+      ],
+      onFeatureChange: function (key) {
+        var routes = {
+        'warning-home': '../warning-home/warning-home.html',
+        'warning-rule-config': '../warning-rule-config/warning-rule-config.html',
+        'warning-record': '../warning-record/warning-record.html',
+        'warning-audit': '../warning-audit/warning-audit.html'
+      };
+        if (routes[key]) window.location.href = routes[key];
+      }
+    });
+  </script>
+  <script defer src="../../../../assets/bundles/pages/warning-record.bundle.js?v=20260930-1"></script>
+</body>
+</html>

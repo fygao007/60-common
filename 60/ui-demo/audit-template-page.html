@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核模板 DSAuditTemplate</title>
+  <link rel="stylesheet" href="packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="packages/design-system/src/AuditTemplate/index.css" />
+  <style>
+    body { margin: 0; background: var(--ds-color-bg-page); font-family: var(--ds-font-family); color: var(--ds-color-text); }
+    .ds-template { max-width: 1200px; margin: 0 auto; padding: 24px; background: var(--ds-color-white); min-height: 100vh; }
+
+    /* Header */
+    .ds-template__header { margin-bottom: 16px; }
+    .ds-template__header h1 { margin: 0 0 4px; font-size: 20px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .ds-template__header p { margin: 0; font-size: 13px; color: var(--ds-color-text-tertiary); }
+
+    /* Status Tabs */
+    .ds-audit-status-tabs { display: flex; align-items: center; gap: 40px; height: 56px; border-bottom: 0; margin-bottom: 8px; }
+    .ds-audit-status-tabs__tab { display: inline-flex; align-items: center; gap: 6px; height: 100%; padding: 0; background: transparent; border: 0; cursor: pointer; font-size: 16px; line-height: 24px; color: var(--ds-color-text-secondary); position: relative; }
+    .ds-audit-status-tabs__tab.is-active { color: var(--ds-color-primary); font-weight: 600; }
+    .ds-audit-status-tabs__tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--ds-color-primary); }
+    .ds-audit-status-tabs__tab.is-disabled { color: var(--ds-color-text-disabled); cursor: not-allowed; }
+    .ds-audit-status-tabs__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; background: var(--ds-color-primary-light); color: var(--ds-color-primary); font-size: var(--ds-font-size-xs); line-height: 18px; border-radius: 10px; font-weight: 600; }
+
+    /* Filter Bar */
+    .ds-filter-bar { display: flex; align-items: center; gap: 12px; padding: 12px 0; flex-wrap: wrap; }
+    .ds-filter-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ds-color-text-secondary); }
+    .ds-filter-item input { height: 32px; padding: 0 12px; border: 1px solid var(--ds-color-border); border-radius: 4px; font-size: 14px; outline: none; box-sizing: border-box; }
+    .ds-filter-item input:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px var(--ds-color-focus-ring); }
+
+    /* Button */
+    .ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .ds-btn:hover:not(:disabled) { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .ds-btn:disabled { color: var(--ds-color-text-disabled); background: var(--ds-color-bg-disabled); cursor: not-allowed; border-color: var(--ds-color-border-disabled); }
+    .ds-btn--primary { color: var(--ds-color-white); background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .ds-btn--primary:hover:not(:disabled) { background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); color: var(--ds-color-white); }
+    .ds-btn--ghost { border: 0; background: transparent; color: var(--ds-color-text-secondary); }
+    .ds-btn--ghost:hover:not(:disabled) { color: var(--ds-color-primary); }
+
+    /* Toolbar */
+    .ds-template__toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .ds-template__toolbar-info { font-size: 13px; color: var(--ds-color-text-tertiary); }
+    .ds-template__toolbar-info strong { color: var(--ds-color-primary); margin: 0 2px; }
+
+    /* Table */
+    .ds-table-wrap { border: 1px solid var(--ds-color-border-secondary); border-radius: 4px; overflow: auto; }
+    .ds-table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--ds-color-white); }
+    .ds-table th, .ds-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .ds-table th { background: var(--ds-color-bg-header, #fafafa); font-weight: 600; color: var(--ds-color-text-secondary); }
+    .ds-table tbody tr:last-child td { border-bottom: 0; }
+    .ds-table tbody tr:hover { background: var(--ds-color-bg-hover); }
+    .ds-table td .ds-checkbox { width: 16px; height: 16px; cursor: pointer; }
+
+    /* Tag */
+    .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 2px; font-size: 12px; }
+    .tag--info { color: var(--ds-color-primary); background: var(--ds-color-primary-light); }
+    .tag--warning { color: var(--ds-color-warning-text); background: var(--ds-color-warning-light); }
+    .tag--danger { color: var(--ds-color-danger); background: var(--ds-color-danger-light); }
+    .tag--success { color: var(--ds-color-success); background: var(--ds-color-success-light); }
+
+    /* Row actions */
+    .ds-row-actions { display: inline-flex; align-items: center; gap: 8px; }
+    .text-action { background: transparent; border: 0; padding: 0; font-size: 14px; color: var(--ds-color-primary); cursor: pointer; }
+    .text-action:hover { color: var(--ds-color-primary-hover); }
+    .text-action.danger { color: var(--ds-color-danger); }
+    .text-action.danger:hover { color: var(--ds-color-danger-hover); }
+    .text-action:disabled { color: var(--ds-color-text-disabled); cursor: not-allowed; }
+    .text-sep { width: 1px; height: 12px; background: var(--ds-color-border); }
+
+    /* Pagination */
+    .ds-pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 16px 0; }
+    .ds-pagination__btn { min-width: 32px; height: 32px; padding: 0 8px; border: 1px solid var(--ds-color-border); background: #fff; border-radius: 4px; cursor: pointer; font-size: 14px; color: var(--ds-color-text); }
+    .ds-pagination__btn:hover:not(:disabled) { border-color: var(--ds-color-primary); color: var(--ds-color-primary); }
+    .ds-pagination__btn.is-active { background: var(--ds-color-primary); border-color: var(--ds-color-primary); color: #fff; }
+    .ds-pagination__btn:disabled { color: var(--ds-color-text-disabled); cursor: not-allowed; }
+    .ds-pagination__total { font-size: 13px; color: var(--ds-color-text-tertiary); margin-right: 12px; }
+  </style>
+</head>
+<body>
+<div class="ds-template">
+  <!-- Header -->
+  <header class="ds-template__header">
+    <h1>离职审核</h1>
+    <p>审核离职申请，支持通过、不通过、退回等多種操作</p>
+  </header>
+
+  <!-- Status Tabs -->
+  <div class="ds-audit-status-tabs" role="tablist">
+    <button class="ds-audit-status-tabs__tab is-active" data-tab="pending">待审核<em class="ds-audit-status-tabs__badge">12</em></button>
+    <button class="ds-audit-status-tabs__tab" data-tab="approved">已审核</button>
+    <button class="ds-audit-status-tabs__tab" data-tab="all">全部</button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="ds-filter-bar">
+    <div class="ds-filter-item"><label>工号/姓名</label><input type="text" placeholder="请输入" style="width:180px;" /></div>
+    <div class="ds-filter-item"><label>所在单位</label><input type="text" placeholder="请输入" style="width:180px;" /></div>
+    <div class="ds-filter-item"><label>离职日期</label><input type="date" /> <span>-</span> <input type="date" /></div>
+    <div style="margin-left:auto;display:flex;gap:8px;">
+      <button class="ds-btn ds-btn--ghost" onclick="alert('重置')">重置</button>
+      <button class="ds-btn ds-btn--primary" onclick="alert('查询')">查询</button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="ds-template__toolbar">
+    <div class="ds-template__toolbar-info">共 <strong id="total">24</strong> 条记录，已选 <strong id="selected">0</strong> 条</div>
+    <div style="display:flex;gap:8px;">
+      <button class="ds-btn" onclick="alert('导出')">导出</button>
+      <button class="ds-btn" id="batch-pass" disabled>批量通过</button>
+      <button class="ds-btn" id="batch-reject" disabled>批量退回</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="ds-table-wrap">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th style="width:40px;"><input type="checkbox" class="ds-checkbox" id="check-all" onclick="toggleAll(this)" /></th>
+          <th style="width:60px;">序号</th>
+          <th>工号</th>
+          <th>姓名</th>
+          <th>所在部门</th>
+          <th>离职类型</th>
+          <th>离职日期</th>
+          <th>申请日期</th>
+          <th>审核状态</th>
+          <th style="width:240px;">操作</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="ds-pagination">
+    <span class="ds-pagination__total">共 24 条</span>
+    <button class="ds-pagination__btn" disabled>上一页</button>
+    <button class="ds-pagination__btn is-active">1</button>
+    <button class="ds-pagination__btn">2</button>
+    <button class="ds-pagination__btn">3</button>
+    <button class="ds-pagination__btn">下一页</button>
+    <select style="height:32px;border:1px solid var(--ds-color-border);border-radius:4px;font-size:14px;background:#fff;">
+      <option>10 条/页</option>
+      <option>20 条/页</option>
+      <option>50 条/页</option>
+    </select>
+  </div>
+</div>
+
+<script>
+const rows = [
+  { id: 1, no: 'T20210001', name: '张三', dept: '计算机学院', type: '辞职', date: '2026-07-15', applyDate: '2026-06-05', status: 'pending' },
+  { id: 2, no: 'T20200012', name: '李四', dept: '物理学院', type: '到期不续聘', date: '2026-08-31', applyDate: '2026-06-10', status: 'pending' },
+  { id: 3, no: 'T20190008', name: '王五', dept: '数学学院', type: '开除', date: '2026-05-20', applyDate: '2026-05-01', status: 'pending' },
+  { id: 4, no: 'T20180003', name: '赵六', dept: '化学学院', type: '辞职', date: '2026-06-30', applyDate: '2026-05-15', status: 'pending' }
+];
+
+function typeTagClass(type) {
+  if (type === '开除') return 'tag--danger';
+  if (type === '到期不续聘') return 'tag--warning';
+  return 'tag--info';
+}
+
+function statusLabel(status) {
+  if (status === 'pending') return '<span class="tag tag--info">待审核</span>';
+  if (status === 'approved') return '<span class="tag tag--success">已通过</span>';
+  if (status === 'rejected') return '<span class="tag tag--danger">已驳回</span>';
+  return '<span class="tag tag--warning">已退回</span>';
+}
+
+function renderTable(activeTab = 'pending') {
+  const filtered = activeTab === 'all'
+    ? rows
+    : activeTab === 'approved'
+      ? rows.filter(r => r.status !== 'pending')
+      : rows.filter(r => r.status === 'pending');
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = filtered.map((r, i) => {
+    const actions = r.status === 'pending'
+      ? `<span class="ds-row-actions">
+          <button class="text-action" onclick="alert('通过 ${r.name}')">通过</button>
+          <span class="text-sep"></span>
+          <button class="text-action" onclick="alert('不通过 ${r.name}')">不通过</button>
+          <span class="text-sep"></span>
+          <button class="text-action danger" onclick="alert('退回 ${r.name}')">退回</button>
+          <span class="text-sep"></span>
+          <button class="text-action" onclick="alert('详情 ${r.name}')">详情</button>
+        </span>`
+      : `<span class="ds-row-actions"><button class="text-action" onclick="alert('详情 ${r.name}')">详情</button></span>`;
+    return `<tr>
+      <td><input type="checkbox" class="ds-checkbox row-check" data-id="${r.id}" onclick="updateSelected()" /></td>
+      <td>${i + 1}</td>
+      <td>${r.no}</td>
+      <td>${r.name}</td>
+      <td>${r.dept}</td>
+      <td><span class="tag ${typeTagClass(r.type)}">${r.type}</span></td>
+      <td>${r.date}</td>
+      <td>${r.applyDate}</td>
+      <td>${statusLabel(r.status)}</td>
+      <td>${actions}</td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleAll(el) {
+  document.querySelectorAll('.row-check').forEach(c => c.checked = el.checked);
+  updateSelected();
+}
+
+function updateSelected() {
+  const checked = document.querySelectorAll('.row-check:checked').length;
+  document.getElementById('selected').textContent = checked;
+  document.getElementById('batch-pass').disabled = checked === 0;
+  document.getElementById('batch-reject').disabled = checked === 0;
+}
+
+document.querySelectorAll('.ds-audit-status-tabs__tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ds-audit-status-tabs__tab').forEach(t => t.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    renderTable(tab.dataset.tab);
+  });
+});
+
+renderTable('pending');
+</script>
+</body>
+</html>

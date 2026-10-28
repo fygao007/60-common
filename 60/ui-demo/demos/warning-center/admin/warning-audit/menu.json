@@ -1,0 +1,16 @@
+{
+  "application": { "key": "warning-center", "label": "预警中心" },
+  "role": { "key": "admin", "label": "预警管理员" },
+  "menu": { "key": "warning-audit", "label": "预警处置审批", "group": "预警中心", "defaultFeature": "warning-audit" },
+  "pages": [
+    {
+      "key": "warning-center-admin-warning-audit",
+      "label": "预警处置审批（预警管理员）",
+      "type": "react-business-page",
+      "html": "warning-audit.html",
+      "jsx": "warning-audit.page.jsx",
+      "css": "warning-audit.css",
+      "bundle": "assets/bundles/pages/warning-audit.bundle.js"
+    }
+  ]
+}

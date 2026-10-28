@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>选人组件状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/UserPicker/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .picker-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: var(--ds-color-white); }
+    .picker-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .picker-content { display: grid; gap: 24px; width: min(1120px, 100%); }
+    .picker-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .picker-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .picker-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .picker-title span { position: relative; z-index: 1; }
+    .picker-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .picker-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .picker-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .picker-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .picker-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .picker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .picker-card { min-width: 0; min-height: 128px; padding: 16px; border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .picker-card h3 { margin: 0 0 12px; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .picker-card .ds-user-picker { width: 100%; }
+    .picker-card p { margin: 10px 0 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .picker-row { display: grid; grid-template-columns: 108px minmax(0, 360px); gap: 16px; align-items: start; padding: 16px; border-top: 1px solid var(--ds-color-border-secondary); }
+    .picker-label { height: 32px; display: flex; align-items: center; justify-content: flex-end; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 20px; text-align: right; }
+    .picker-message { margin-top: 4px; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .picker-message.is-error { color: var(--ds-color-danger); }
+    .picker-output { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; margin-top: 12px; padding: 10px 12px; color: var(--ds-color-text-secondary); background: var(--ds-color-bg-subtle); border: 1px solid var(--ds-color-border-secondary); font-size: 12px; line-height: 20px; }
+    .picker-output strong { color: var(--ds-color-text); font-weight: 500; }
+    @media (max-width: 1100px) {
+      .picker-grid { grid-template-columns: 1fr; }
+      .picker-row { grid-template-columns: 1fr; }
+      .picker-label { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="picker-page">
+    <section class="picker-stage">
+      <div class="picker-content">
+        <header class="picker-head">
+          <div>
+            <h1 class="picker-title"><span>选人组件</span></h1>
+            <p class="picker-desc">弹窗式选人组件，支持组织架构树、人员列表搜索、多选、已选列表管理，适用于审批人选择、通知发送对象等场景。</p>
+          </div>
+        </header>
+
+        <section class="picker-section">
+          <div class="picker-section-head">
+            <h2 class="picker-section-title">基础状态</h2>
+            <span class="picker-section-meta">Default / Filled / Disabled / Error</span>
+          </div>
+          <div class="picker-grid">
+            <article class="picker-card">
+              <h3>未选择</h3>
+              <div class="ds-user-picker js-user-picker" data-placeholder="请选择人员"></div>
+              <p>默认展示占位文字，点击打开选人弹窗。</p>
+            </article>
+            <article class="picker-card">
+              <h3>已选择（单选）</h3>
+              <div class="ds-user-picker js-user-picker has-value" data-value="user-001" data-placeholder="请选择审批人"></div>
+              <p>选中后显示人数徽章和人员姓名。</p>
+            </article>
+            <article class="picker-card">
+              <h3>已选择（多选）</h3>
+              <div class="ds-user-picker js-user-picker has-value" data-value="user-001,user-002,user-003" data-placeholder="请选择通知对象"></div>
+              <p>多选时显示人数徽章，姓名超过2人显示省略。</p>
+            </article>
+            <article class="picker-card">
+              <h3>禁用</h3>
+              <div class="ds-user-picker js-user-picker is-disabled" data-placeholder="请选择人员"></div>
+              <p>禁用态不可点击，背景和文字置灰。</p>
+            </article>
+            <article class="picker-card">
+              <h3>禁用（有值）</h3>
+              <div class="ds-user-picker js-user-picker is-disabled has-value" data-value="user-001,user-002" data-placeholder="请选择人员"></div>
+              <p>禁用态有值时仅展示，不可修改。</p>
+            </article>
+            <article class="picker-card">
+              <h3>错误</h3>
+              <div class="ds-user-picker js-user-picker is-error" data-placeholder="请选择审批人"></div>
+              <p class="picker-message is-error">请选择审批人。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="picker-section">
+          <div class="picker-section-head">
+            <h2 class="picker-section-title">表单行示例</h2>
+            <span class="picker-section-meta">Form Field</span>
+          </div>
+          <div class="picker-row">
+            <span class="picker-label">审批人</span>
+            <div>
+              <div class="ds-user-picker js-user-picker js-user-picker-live" data-placeholder="请选择审批人" data-clearable="true"></div>
+              <p class="picker-message">点击打开选人弹窗，支持组织架构筛选、姓名/工号搜索、多选。</p>
+              <div class="picker-output" aria-live="polite">
+                <span>当前值</span>
+                <strong class="js-user-picker-output">未选择</strong>
+              </div>
+            </div>
+          </div>
+          <div class="picker-row">
+            <span class="picker-label">通知对象</span>
+            <div>
+              <div class="ds-user-picker js-user-picker" data-placeholder="请选择通知对象" data-value="user-005,user-006" data-clearable="true"></div>
+              <p class="picker-message">已预选2人，可继续添加或移除。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="picker-section">
+          <div class="picker-section-head">
+            <h2 class="picker-section-title">弹窗布局预览</h2>
+            <span class="picker-section-meta">Tree(240px) / Table / Selected(240px)</span>
+          </div>
+          <div style="padding:16px">
+            <div class="ds-user-picker__modal-preview js-user-picker-modal-preview"></div>
+          </div>
+        </section>
+
+        <section class="picker-section">
+          <div class="picker-section-head">
+            <h2 class="picker-section-title">触发器状态</h2>
+            <span class="picker-section-meta">点击触发器打开弹窗</span>
+          </div>
+          <div class="picker-grid">
+            <article class="picker-card" style="min-height:200px">
+              <h3>点击打开弹窗</h3>
+              <div class="ds-user-picker js-user-picker" data-placeholder="点击打开弹窗"></div>
+              <p>点击触发器按钮，打开选人弹窗。</p>
+            </article>
+            <article class="picker-card" style="min-height:200px">
+              <h3>已选2人</h3>
+              <div class="ds-user-picker js-user-picker has-value" data-value="user-001,user-002" data-placeholder="点击修改"></div>
+              <p>已选人员可点击修改，支持清除。</p>
+            </article>
+            <article class="picker-card" style="min-height:200px">
+              <h3>已选多人</h3>
+              <div class="ds-user-picker js-user-picker has-value" data-value="user-001,user-002,user-003,user-004,user-005" data-placeholder="点击查看"></div>
+              <p>超过2人显示省略号，点击查看完整列表。</p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script src="./packages/design-system/src/UserPicker/index.jsx"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

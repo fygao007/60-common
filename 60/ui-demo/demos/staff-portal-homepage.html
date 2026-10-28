@@ -1,0 +1,1641 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 智慧人事一体化服务系统首页</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../framework/theme.css" />
+  <style>
+    body { margin: 0; }
+
+    .portal-home-frame {
+      --pf-blue: #2f6bff;
+      --pf-blue-deep: #1d4fd8;
+      --pf-ink: #1f2937;
+      --pf-text: #4b5563;
+      --pf-muted: #8a93a6;
+      --pf-line: #edf1f7;
+      --pf-page: #f4f7fb;
+      --pf-card: #fff;
+      --pf-orange: #ff7d35;
+      --pf-red: #ff4d4f;
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+      font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .portal-home {
+      height: 100%;
+      overflow: auto;
+      overflow-x: hidden;
+      color: var(--pf-ink);
+      background: transparent;
+    }
+
+    .portal-home button { font: inherit; cursor: pointer; }
+
+    .portal-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.6fr) minmax(300px, 1fr);
+      gap: 12px;
+      width: 100%;
+      min-width: 0;
+      margin: 0 auto;
+      padding: 0 0 32px;
+    }
+
+    .portal-left, .portal-right { min-width: 0; display: grid; gap: 12px; align-content: start; }
+
+    /* 欢迎横幅 */
+    .welcome-card {
+      position: relative;
+      height: 196px;
+      padding: 38px 48px;
+      overflow: hidden;
+      background:
+        linear-gradient(120deg, rgba(40,76,209,.78) 0%, rgba(63,118,255,.55) 46%, rgba(120,170,255,.35) 100%),
+        linear-gradient(120deg, #2756d6 0%, #4a7dff 60%, #8db2ff 100%);
+      border-radius: 6px;
+    }
+
+    .welcome-card h1 {
+      margin: 0;
+      color: #fff;
+      font-size: 28px;
+      line-height: 38px;
+      font-weight: 800;
+    }
+
+    .welcome-card p {
+      margin: 12px 0 24px;
+      max-width: 760px;
+      color: rgba(255,255,255,.86);
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .welcome-search {
+      display: flex;
+      max-width: 620px;
+      height: 46px;
+      background: rgba(255,255,255,.94);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .welcome-search input {
+      flex: 1;
+      padding: 0 18px;
+      border: 0;
+      outline: none;
+      font-size: 14px;
+      color: var(--pf-ink);
+      background: transparent;
+    }
+
+    .welcome-search input::placeholder { color: var(--pf-muted); }
+
+    .welcome-search button {
+      padding: 0 28px;
+      color: #fff;
+      background: var(--pf-blue);
+      border: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* 全部应用 */
+    .panel {
+      background: var(--pf-card);
+      border: 1px solid var(--pf-line);
+      border-radius: 6px;
+      box-shadow: 0 6px 20px rgba(31,59,105,.04);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 24px 0;
+    }
+
+    .panel-head .head-left {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+
+    .panel-head h2 .dot {
+      display: inline-block;
+      width: 6px;
+      height: 16px;
+      background: var(--pf-blue);
+      border-radius: 3px;
+    }
+
+    .tab-link {
+      padding: 10px 0;
+      color: var(--pf-muted);
+      font-size: 15px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-link.active {
+      color: var(--pf-blue);
+      font-weight: 700;
+      border-bottom-color: var(--pf-blue);
+    }
+
+    .panel-head a.more {
+      color: var(--pf-blue);
+      font-size: 14px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 18px 12px;
+      padding: 22px 24px 26px;
+    }
+
+    .app-tile {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      padding: 14px 6px;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .app-tile:hover { background: var(--pf-page); }
+
+    .app-icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      font-size: 22px;
+      color: #fff;
+    }
+
+    .app-tile span { font-size: 14px; color: var(--pf-text); }
+
+    .ic-1 { background: linear-gradient(135deg,#ff9966,#ff7043); }
+    .ic-2 { background: linear-gradient(135deg,#5bc0ff,#3d8bff); }
+    .ic-3 { background: linear-gradient(135deg,#9b8cff,#7a6bff); }
+    .ic-4 { background: linear-gradient(135deg,#ff8fb1,#ff6f9c); }
+    .ic-5 { background: linear-gradient(135deg,#7c8ba1,#5b6b82); }
+    .ic-6 { background: linear-gradient(135deg,#7fd9c4,#4fc3a1); }
+    .ic-7 { background: linear-gradient(135deg,#ffd34f,#f6b82e); }
+    .ic-8 { background: linear-gradient(135deg,#5dd0a6,#34b88a); }
+    .ic-9 { background: linear-gradient(135deg,#7aa6ff,#577dff); }
+    .ic-10 { background: linear-gradient(135deg,#ffab6e,#ff8a3d); }
+    .ic-11 { background: linear-gradient(135deg,#9adf8e,#6fcf6a); }
+    .ic-12 { background: linear-gradient(135deg,#ffb259,#ff9234); }
+
+    /* 我的申请 */
+    .apply-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      padding: 18px 24px 24px;
+    }
+
+    .apply-card {
+      padding: 18px 20px;
+      border: 1px solid var(--pf-line);
+      border-left: 3px solid var(--pf-blue);
+      border-radius: 4px;
+      background: #fafcff;
+    }
+
+    .apply-card.is-returned { border-left-color: var(--pf-orange); }
+
+    .apply-card .apply-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .apply-card .apply-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-tag.progress { color: #1d6fff; background: #e8f1ff; }
+    .status-tag.returned { color: #ff7d35; background: #fff1e6; }
+
+    .apply-card a.detail {
+      color: var(--pf-blue);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .apply-card p {
+      margin: 0 0 6px;
+      color: var(--pf-text);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .apply-card .step {
+      color: var(--pf-blue);
+      font-weight: 600;
+    }
+
+    .apply-card .reason {
+      margin-top: 8px;
+      padding: 8px 12px;
+      color: var(--pf-orange);
+      background: #fff4ec;
+      border-radius: 4px;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .apply-card .note {
+      margin-top: 8px;
+      color: var(--pf-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    /* 待办卡片：系统需要本人去做的事项 */
+    .todo-card {
+      padding: 18px 20px;
+      border: 1px solid var(--pf-line);
+      border-left: 3px solid var(--pf-blue);
+      border-radius: 4px;
+      background: #fafcff;
+    }
+
+    .todo-card.is-urgent {
+      border-left-color: var(--pf-red);
+    }
+
+    .todo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .todo-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+
+    .todo-deadline {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d6fff;
+      background: #e8f1ff;
+      white-space: nowrap;
+    }
+
+    .todo-deadline.urgent {
+      color: #ff4d4f;
+      background: #ffe8e8;
+    }
+
+    .todo-desc {
+      margin: 0 0 14px;
+      color: var(--pf-text);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .todo-action {
+      color: var(--pf-blue);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .todo-action:hover {
+      text-decoration: underline;
+    }
+
+    /* 右栏：日程 */
+    .schedule-card { padding: 20px 22px; }
+
+    .schedule-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .schedule-date {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .schedule-date .day-num {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      color: #fff;
+      background: linear-gradient(135deg,#5b8cff,#3565ea);
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .schedule-date .day-meta p { margin: 0; color: var(--pf-muted); font-size: 13px; }
+    .schedule-date .day-meta h3 { margin: 2px 0 0; font-size: 17px; font-weight: 700; color: var(--pf-ink); }
+
+    .schedule-actions { display: flex; gap: 14px; }
+    .schedule-actions a { color: var(--pf-blue); font-size: 14px; text-decoration: none; white-space: nowrap; }
+
+    .schedule-event {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 14px 16px;
+      background: var(--pf-page);
+      border-radius: 6px;
+    }
+
+    .schedule-event .ck {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      color: #fff;
+      background: #18b981;
+      border-radius: 50%;
+      font-size: 13px;
+    }
+
+    .schedule-event h4 { margin: 0 0 6px; font-size: 15px; font-weight: 700; color: var(--pf-ink); }
+    .schedule-event p { margin: 0; color: var(--pf-muted); font-size: 13px; }
+
+    /* 通知 */
+    .notice-list { padding: 4px 24px 16px; display: grid; }
+
+    .notice-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--pf-line);
+    }
+
+    .notice-item:last-child { border-bottom: none; }
+
+    .notice-item {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .notice-item:hover h3 { color: var(--pf-blue); }
+
+    .notice-item .dot-mark {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin: 8px 8px 0 0;
+      background: var(--pf-red);
+      border-radius: 50%;
+      flex: none;
+    }
+    .notice-item .dot-mark.normal { background: #c6cdd9; }
+
+    .notice-item .text {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .notice-item h3 {
+      margin: 0;
+      overflow: hidden;
+      color: var(--pf-text);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* 已读/未读仅通过左侧圆点区分，标题字体颜色与字重保持一致 */
+
+    .notice-pin {
+      display: inline-flex;
+      align-items: center;
+      flex: none;
+      height: 22px;
+      padding: 0 7px;
+      color: #fff;
+      background: var(--pf-blue);
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .notice-item time {
+      flex: none;
+      color: var(--pf-muted);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notice-unread-badge {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--pf-red);
+      border-radius: 50%;
+    }
+
+    /* 政策文件 */
+    .policy-search {
+      display: flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 12px;
+      gap: 6px;
+      color: var(--pf-muted);
+      background: var(--pf-page);
+      border-radius: 17px;
+      font-size: 13px;
+      width: 168px;
+    }
+
+    .policy-search input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--pf-text);
+    }
+
+    .policy-list { padding: 4px 24px 20px; display: grid; }
+
+    .policy-item {
+      display: block;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--pf-line);
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .policy-item:last-child { border-bottom: none; }
+
+    .policy-item:hover h3 { color: var(--pf-blue); }
+
+    .policy-item h3 {
+      margin: 0 0 8px;
+      overflow: hidden;
+      color: var(--pf-text);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* 置顶项仅通过左侧"置顶"标签区分，标题字体颜色与字重与普通项保持一致 */
+
+    .policy-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--pf-muted);
+      font-size: 12px;
+    }
+
+    .top-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      margin-right: 6px;
+      padding: 0 6px;
+      color: #fff;
+      background: var(--pf-blue);
+      border-radius: 3px;
+      font-size: 11px;
+      vertical-align: 2px;
+    }
+    /* 全局搜索弹窗 */
+    .gs-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      display: none;
+      background: rgba(17,28,52,.45);
+      backdrop-filter: blur(2px);
+    }
+    .gs-mask.is-open { display: block; }
+
+    .gs-dialog {
+      position: absolute;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 720px;
+      max-width: calc(100% - 48px);
+      max-height: calc(100vh - 160px);
+      display: flex;
+      flex-direction: column;
+      background: var(--pf-card);
+      border-radius: 10px;
+      box-shadow: 0 24px 64px rgba(15,35,80,.28);
+      overflow: hidden;
+    }
+
+    .gs-input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--pf-line);
+    }
+
+    .gs-input-row .gs-icon { color: var(--pf-muted); font-size: 18px; flex: none; }
+
+    .gs-input-row input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      font-size: 16px;
+      color: var(--pf-ink);
+      background: transparent;
+    }
+
+    .gs-input-row input::placeholder { color: var(--pf-muted); }
+
+    .gs-close {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 6px;
+      color: var(--pf-muted);
+      background: var(--pf-page);
+      font-size: 14px;
+    }
+    .gs-close:hover { color: var(--pf-ink); background: #e7ecf5; }
+
+    .gs-body {
+      overflow-y: auto;
+      padding: 6px 0 14px;
+    }
+
+    .gs-hint {
+      padding: 14px 22px 4px;
+      color: var(--pf-muted);
+      font-size: 13px;
+    }
+
+    /* AI 智能搜索助手卡片（默认态） */
+    .gs-ai {
+      margin: 6px 22px 16px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #eef4ff 0%, #f6f1ff 100%);
+      border: 1px solid #e2e9fb;
+    }
+    .gs-ai-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+    .gs-ai-head .spark {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      font-size: 13px;
+      color: #fff;
+      background: linear-gradient(135deg, #6a8bff, #b07bff);
+    }
+    .gs-ai-sub {
+      margin: 6px 0 14px;
+      font-size: 13px;
+      color: var(--pf-muted);
+      line-height: 20px;
+    }
+    .gs-ai-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .gs-ai-prompts button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 16px;
+      border: 1px solid #dbe3fb;
+      background: #fff;
+      color: var(--pf-text);
+      font-size: 13px;
+    }
+    .gs-ai-prompts button .ico { font-size: 13px; }
+    .gs-ai-prompts button:hover { color: var(--pf-blue); border-color: var(--pf-blue); background: #f3f7ff; }
+
+    /* AI 回答卡片：在搜索结果上方展示 AI 对自然语言提问的理解与总结 */
+    .gs-ai-answer {
+      margin: 14px 22px 4px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f3f6ff 0%, #faf6ff 100%);
+      border: 1px solid #e6ebfb;
+    }
+    .gs-ai-answer-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+    .gs-ai-answer-head .spark {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #fff;
+      background: linear-gradient(135deg, #6a8bff, #b07bff);
+    }
+    .gs-ai-answer-text {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 22px;
+      color: var(--pf-text);
+    }
+    .gs-think-dots { display: flex; gap: 5px; margin: 12px 2px 2px; }
+    .gs-think-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #b3c0e6;
+      animation: gsThinkBounce 1.1s infinite ease-in-out;
+    }
+    .gs-think-dots span:nth-child(2) { animation-delay: .15s; }
+    .gs-think-dots span:nth-child(3) { animation-delay: .3s; }
+    @keyframes gsThinkBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: .5; }
+      40% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    .gs-group { padding: 6px 22px 4px; }
+
+    .gs-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0 6px;
+      color: var(--pf-muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .gs-group-title .cnt { color: var(--pf-muted); font-weight: 400; }
+
+    .gs-result {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .gs-result:hover { background: var(--pf-page); }
+
+    .gs-result .gs-badge {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .gs-result .gs-meta { min-width: 0; flex: 1; }
+    .gs-result .gs-meta h4 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--pf-ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gs-mask mark {
+      background: none;
+      color: var(--pf-blue);
+      font-weight: 600;
+      border-radius: 0;
+      padding: 0;
+    }
+
+    /* 分类切换 Tab */
+    .gs-tabs {
+      flex: none;
+      display: flex;
+      gap: 22px;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--pf-line);
+      overflow-x: auto;
+    }
+    .gs-tab {
+      flex: none;
+      padding: 12px 1px;
+      font-size: 14px;
+      color: var(--pf-muted);
+      background: none;
+      border: 0;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+    }
+    .gs-tab:hover { color: var(--pf-ink); }
+    .gs-tab.active { color: var(--pf-blue); font-weight: 600; }
+    .gs-tab.active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
+      height: 2px; background: var(--pf-blue); border-radius: 1px;
+    }
+
+    /* 综合 / 分类结果分组 */
+    .gs-sec { padding: 12px 22px 4px; }
+    .gs-sec.gs-sec-flat { padding-top: 10px; }
+    .gs-sec-title {
+      margin: 0 0 6px; padding: 6px 0;
+      font-size: 13px; font-weight: 600; color: var(--pf-muted);
+    }
+    .gs-more {
+      display: inline-flex; align-items: center; gap: 2px;
+      margin: 4px 0 8px; padding: 4px 0; border: 0; background: none;
+      font-size: 13px; color: var(--pf-blue); cursor: pointer;
+    }
+    .gs-more:hover { text-decoration: underline; }
+
+    /* 教职工结果行 */
+    .gs-person {
+      display: flex; align-items: center; gap: 14px;
+      padding: 10px 12px; border-radius: 6px; text-decoration: none; color: inherit;
+    }
+    .gs-person:hover { background: var(--pf-page); }
+    .gs-avatar {
+      flex: none; width: 34px; height: 34px; border-radius: 50%;
+      display: grid; place-items: center; font-size: 16px; background: #eef1f6;
+    }
+    .gs-p-name { font-size: 14px; font-weight: 600; color: var(--pf-ink); }
+    .gs-p-id { font-size: 13px; color: var(--pf-muted); }
+    .gs-p-college { margin-left: auto; font-size: 13px; color: var(--pf-muted); flex: none; }
+
+    /* 应用结果：双列宫格 */
+    .gs-app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; }
+    .gs-app-item {
+      display: flex; align-items: center; gap: 10px; min-width: 0;
+      padding: 10px 12px; border-radius: 6px; text-decoration: none; color: inherit;
+    }
+    .gs-app-item:hover { background: var(--pf-page); }
+    .gs-app-item h4 {
+      margin: 0; font-size: 14px; font-weight: 500; color: var(--pf-ink);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* 待办 / 消息 / 通知 / 政策：标题 + 元信息行 */
+    .gs-task {
+      display: block; padding: 10px 12px; border-radius: 6px;
+      text-decoration: none; color: inherit;
+    }
+    .gs-task:hover { background: var(--pf-page); }
+    .gs-task h4 {
+      margin: 0; font-size: 14px; font-weight: 600; color: var(--pf-ink);
+      line-height: 21px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .gs-task .gs-sub {
+      margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 18px;
+      font-size: 12px; color: var(--pf-muted);
+    }
+
+    /* 文档结果：文件图标 + 信息 */
+    .gs-info {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 6px; text-decoration: none; color: inherit;
+    }
+    .gs-info:hover { background: var(--pf-page); }
+    .gs-file-ico {
+      flex: none; width: 34px; height: 34px; border-radius: 8px;
+      display: grid; place-items: center; color: #fff; font-size: 14px; font-weight: 700;
+    }
+    .gs-file-ico.is-doc { background: linear-gradient(135deg,#5bc0ff,#3d8bff); }
+    .gs-file-ico.is-xls { background: linear-gradient(135deg,#7bd99a,#33b06a); }
+    .gs-info .gs-meta h4 {
+      margin: 0; font-size: 14px; font-weight: 600; color: var(--pf-ink);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .gs-info .gs-meta .gs-sub {
+      margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px 18px;
+      font-size: 12px; color: var(--pf-muted);
+    }
+    .gs-result .gs-meta p {
+      margin: 3px 0 0;
+      font-size: 13px;
+      color: var(--pf-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .gs-result .gs-cat {
+      flex: none;
+      padding: 3px 9px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: var(--pf-blue);
+      background: #eaf1ff;
+    }
+
+    .gs-empty {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      padding: 56px 20px 64px;
+      color: var(--pf-muted);
+      font-size: 14px;
+      text-align: center;
+    }
+    .gs-empty .ico { font-size: 30px; }
+
+    /* 我的申请 - 已办状态补充配色 */
+    .status-tag.approved { color: #0a8f5f; background: #e3f8ef; }
+    .status-tag.rejected { color: #ff4d4f; background: #ffe8e8; }
+    .apply-card.is-approved { border-left-color: #0a8f5f; }
+    .apply-card.is-rejected { border-left-color: #ff4d4f; }
+    .apply-empty { padding: 40px 20px; text-align: center; color: var(--pf-muted); font-size: 14px; grid-column: 1 / -1; }
+
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <div class="portal-home-frame">
+  <div class="gs-mask" id="gsMask">
+    <div class="gs-dialog" role="dialog" aria-modal="true" aria-label="全局搜索">
+      <div class="gs-input-row">
+        <span class="gs-icon">🔍</span>
+        <input id="gsInput" type="text" placeholder="搜索应用、通知、政策文件、我的申请、日程……" autocomplete="off" />
+        <button class="gs-close" id="gsClose" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="gs-tabs" id="gsTabs"></div>
+      <div class="gs-body" id="gsBody"></div>
+    </div>
+  </div>
+
+  <main class="portal-home">
+    <div class="portal-layout">
+      <section class="portal-left" aria-label="首页主区">
+        <div class="welcome-card">
+          <h1>金老师，中午好！欢迎来访人事系统</h1>
+          <p>把繁琐留给系统，把时间还给教学。您专注育人，琐事交给我们。让您少跑腿、不操心，把心思留给讲台。</p>
+          <div class="welcome-search">
+            <input id="gsTrigger" type="text" placeholder="您可以搜索应用名称、消息、待办等内容" readonly />
+            <button id="gsTriggerBtn" type="button">搜索</button>
+          </div>
+        </div>
+
+        <section class="panel" aria-label="全部应用">
+          <div class="panel-head">
+            <div class="head-left">
+              <button class="tab-link active" type="button">全部应用</button>
+              <button class="tab-link" type="button">常用应用</button>
+              <button class="tab-link" type="button">考核评价</button>
+            </div>
+            <a class="more" href="./app-custom.html">自定义</a>
+          </div>
+          <div class="app-grid">
+            <a class="app-tile" href="./my-info.html"><span class="app-icon ic-1">人</span><span>我的信息</span></a>
+            <a class="app-tile" href="./leave-application.html"><span class="app-icon ic-2">假</span><span>我要请假</span></a>
+            <a class="app-tile" href="./period-assessment.html"><span class="app-icon ic-3">聘</span><span>聘期考核</span></a>
+            <a class="app-tile" href="./dual-qualified.html"><span class="app-icon ic-4">师</span><span>双师认定</span></a>
+            <a class="app-tile" href="./certificate-print.html"><span class="app-icon ic-5">证</span><span>证明打印</span></a>
+            <a class="app-tile" href="./further-study.html"><span class="app-icon ic-3">修</span><span>进修申请</span></a>
+            <a class="app-tile" href="./annual-assessment.html"><span class="app-icon ic-7">年</span><span>年度考核</span></a>
+            <a class="app-tile" href="./title-review.html"><span class="app-icon ic-8">职</span><span>职称评审</span></a>
+            <a class="app-tile" href="./performance-data.html"><span class="app-icon ic-9">绩</span><span>业绩数据登记</span></a>
+            <a class="app-tile" href="./overseas-report.html"><span class="app-icon ic-10">境</span><span>出国境报备</span></a>
+            <a class="app-tile" href="./teaching-portfolio.html"><span class="app-icon ic-11">档</span><span>教学档案袋</span></a>
+            <a class="app-tile" href="./my-salary.html"><span class="app-icon ic-12">资</span><span>我的工资</span></a>
+          </div>
+        </section>
+
+        <section class="panel" aria-label="我的申请">
+          <div class="panel-head">
+            <div class="head-left" id="myApplyTabs">
+              <button class="tab-link active" type="button" data-cat="apply" id="myApplyTabBtn">我的申请</button>
+              <button class="tab-link" type="button" data-cat="todo" id="myTodoTabBtn">待办</button>
+            </div>
+            <a class="more" href="./task-center.html" id="myApplyMore">查看全部</a>
+          </div>
+          <div class="apply-grid" id="myApplyGrid"></div>
+        </section>
+      </section>
+
+      <aside class="portal-right" aria-label="日程与通知">
+        <section class="panel schedule-card">
+          <div class="schedule-top">
+            <div class="schedule-date">
+              <span class="day-num">08</span>
+              <div class="day-meta">
+                <p>2026.05</p>
+                <h3>周四</h3>
+              </div>
+            </div>
+            <div class="schedule-actions">
+              <a href="#">＋ 新增</a>
+              <a href="./schedule-detail.html">查看日程</a>
+            </div>
+          </div>
+          <a class="schedule-event" href="./schedule-detail.html" style="text-decoration:none;color:inherit">
+            <span class="ck">✓</span>
+            <div>
+              <h4>人事处招聘大会</h4>
+              <p>📍 知行楼3-418</p>
+            </div>
+          </a>
+        </section>
+
+        <section class="panel" aria-label="通知消息">
+          <div class="panel-head">
+            <div class="head-left" id="noticeTabs">
+              <button class="tab-link active" type="button" data-cat="notice">通知</button>
+              <button class="tab-link" type="button" data-cat="message">消息</button>
+            </div>
+            <a class="more" href="./notice-list.html" id="noticeMore">»</a>
+          </div>
+          <div class="notice-list" id="noticeList"></div>
+        </section>
+
+        <section class="panel" aria-label="政策文件资料下载">
+          <div class="panel-head">
+            <div class="head-left" id="policyTabs">
+              <button class="tab-link active" type="button" data-cat="policy">政策文件</button>
+              <button class="tab-link" type="button" data-cat="material">资料下载</button>
+            </div>
+            <div class="policy-search">
+              <span>🔍</span>
+              <input type="text" id="policySearchInput" placeholder="搜索文件、资料" />
+            </div>
+            <a class="more" href="./policy-list.html" id="policyMore">»</a>
+          </div>
+          <div class="policy-list" id="policyList"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+  </div>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    activeApp: 'home',
+    activeFeature: 'staff-portal-home',
+    versionLabel: '首页',
+    userName: '金晓智',
+    hideSidebar: true,
+  secondaryNav: { items: [] },
+    tabs: [{ key: 'staff-portal-home', label: '首页', closable: false }]
+  });
+</script>
+<script>
+(function () {
+  // 全局搜索：综合 / 教职工 / 应用 / 待办 / 消息 / 通知 / 文档 / 政策
+  var SEARCH_CATS = ['综合', '教职工', '应用', '待办', '消息', '通知', '文档', '政策'];
+
+  var SEARCH_INDEX = [
+    // 教职工
+    { cat: '教职工', name: '诸葛查查', staffId: '01123789', college: '土木工程学院', avatar: '🧑‍🏫' },
+    { cat: '教职工', name: '查圆', staffId: '01123790', college: '经济管理学院', avatar: '👩‍🏫' },
+    { cat: '教职工', name: '李查明', staffId: '01123822', college: '信息工程学院', avatar: '🧑‍💻' },
+
+    // 应用
+    { cat: '应用', icon: 'ic-2', badge: '变', title: '教职工信息变更管理', desc: '教职工个人信息变更申请与审批', url: './my-info.html' },
+    { cat: '应用', icon: 'ic-5', badge: '账', title: '查合同台账', desc: '教职工合同信息查询与台账管理', url: '#' },
+    { cat: '应用', icon: 'ic-10', badge: '离', title: '毕业生查离校', desc: '毕业生离校手续办理与查询', url: '#' },
+    { cat: '应用', icon: 'ic-8', badge: '师', title: '重点教师查管理', desc: '重点教师培养计划与考核管理', url: '#' },
+
+    // 待办
+    { cat: '待办', title: '实验室设备采购计划编制：调研需求、编制采购查计划、招标准备等事项', submitter: '张思远', time: '2024-09-12 11:23:08', app: '设备管理系统' },
+    { cat: '待办', title: '学生公寓电费缴纳通知：请及时查费，避免停电影响正常生活', submitter: '张思远', time: '2024-09-12 11:23:08', app: '后勤服务平台' },
+
+    // 消息
+    { cat: '消息', title: '实验室设备采购计划编制：调研需求、编制采购计划、查查准备等事项', time: '2024-09-12 11:23:08', app: '设备管理系统' },
+    { cat: '消息', title: '学生公寓电费缴纳通知：请及时缴费，避免查停电影响正常生活', time: '2024-09-12 11:23:08', app: '后勤服务平台' },
+
+    // 通知
+    { cat: '通知', title: '设备采购计划编制：调研需求、招标准备查事项', time: '2024-09-12' },
+    { cat: '通知', title: '关于2025年元旦放查的通知', time: '2024-09-12' },
+
+    // 文档
+    { cat: '文档', ext: 'docx', title: '贫困家庭查申请表.docx', uploadTime: '2024-09-12 11:23:08', downloads: 2398 },
+    { cat: '文档', ext: 'xlsx', title: '国家级奖学金申查料.excel', uploadTime: '2024-09-12 11:23:08', downloads: 2398 },
+
+    // 政策
+    { cat: '政策', title: '【人事管理】文件名称查名称', time: '2024-09-12', stat: '下载量：2398次' },
+    { cat: '政策', title: '【人事管理】查查名称名称名称', time: '2024-09-12', stat: '浏览量：2398次' }
+  ];
+
+  // 综合视图下每个分组最多展示的条数（应用按双列宫格展示，可多放几个）
+  var SECTION_LIMIT = { '教职工': 2, '应用': 4, '待办': 2, '消息': 2, '通知': 2, '文档': 2, '政策': 2 };
+
+  // AI 智能搜索助手：用自然语言提问，由 AI 理解意图后给出搜索结果（演示用预设问法）
+  var AI_PROMPTS = [
+    { ico: '🗓️', text: '本周还有哪些待办日程没处理？' },
+    { ico: '📄', text: '帮我找一下贫困家庭相关的申请表' },
+    { ico: '🧾', text: '查一下我的合同台账信息' },
+    { ico: '📢', text: '最近有哪些和放假相关的通知？' },
+    { ico: '📚', text: '查一下教职工管理相关的政策文件' }
+  ];
+
+  // 自然语言提问的意图识别规则：命中即认为该问题是在找某一类内容
+  // （顺序很重要——更具体的规则放前面，避免被宽泛的规则提前截获）
+  var INTENT_RULES = [
+    { test: /政策|制度|管理办法|规定/, cat: '政策' },
+    { test: /待办|事项|任务|没处理|未处理|要做/, cat: '待办' },
+    { test: /消息|提醒/, cat: '消息' },
+    { test: /通知|公告|放假|安排/, cat: '通知' },
+    { test: /合同|台账/, cat: '应用', kw: '台账' },
+    { test: /文件|文档|表格|申请表|材料/, cat: '文档' },
+    { test: /教职工|老师|同事|联系方式/, cat: '教职工' }
+  ];
+
+  // 粗略判断输入是否为"自然语言提问"（区别于普通关键词搜索）
+  function looksLikeQuestion(s) {
+    if (s.length < 5) return false;
+    return /[？?]|哪些|怎么|如何|帮我|查一下|找一下|看一下|有没有|是否|多少|什么|吗$|呢$/.test(s);
+  }
+
+  function detectIntent(question) {
+    for (var i = 0; i < INTENT_RULES.length; i++) {
+      if (INTENT_RULES[i].test.test(question)) return INTENT_RULES[i];
+    }
+    return null;
+  }
+
+  // 根据问题与命中的结果，组织一段"AI 助手"的自然语言回答
+  function buildAiAnswer(question, matched) {
+    if (!matched.length) {
+      return '抱歉，没有在系统中找到与“' + escapeHtml(question) + '”相关的内容。您可以换个说法再问问，或切换到上方分类标签自行查找。';
+    }
+    var byCat = {};
+    matched.forEach(function (it) { (byCat[it.cat] = byCat[it.cat] || []).push(it); });
+    function pickTitle(it) {
+      var t = it.title || it.name || '';
+      return t.length > 22 ? t.slice(0, 22) + '…' : t;
+    }
+    var parts = [];
+    if (byCat['待办']) parts.push('有 ' + byCat['待办'].length + ' 项待办尚待处理，例如《' + escapeHtml(pickTitle(byCat['待办'][0])) + '》，建议尽快跟进');
+    if (byCat['消息']) parts.push(byCat['消息'].length + ' 条相关消息');
+    if (byCat['通知']) parts.push('最新一条相关通知是《' + escapeHtml(pickTitle(byCat['通知'][0])) + '》');
+    if (byCat['应用']) parts.push('可以使用「' + escapeHtml(pickTitle(byCat['应用'][0])) + '」等 ' + byCat['应用'].length + ' 个相关应用办理');
+    if (byCat['教职工']) parts.push('找到 ' + byCat['教职工'].length + ' 位相关教职工，例如 ' + escapeHtml(byCat['教职工'][0].name));
+    if (byCat['文档']) parts.push(byCat['文档'].length + ' 份相关文件，例如《' + escapeHtml(pickTitle(byCat['文档'][0])) + '》');
+    if (byCat['政策']) parts.push(byCat['政策'].length + ' 篇相关政策文件');
+
+    var summary = '已经帮您找到 ' + matched.length + ' 条相关结果';
+    summary += parts.length ? ('：' + parts.join('；') + '。') : '。';
+    summary += '下面是详细内容，您也可以点击上方分类标签切换查看～';
+    return summary;
+  }
+
+  function aiAnswerBlock(text) {
+    return '<div class="gs-ai-answer">' +
+      '<div class="gs-ai-answer-head"><span class="spark">✨</span>AI 智能助手</div>' +
+      '<p class="gs-ai-answer-text">' + text + '</p>' +
+    '</div>';
+  }
+
+  function renderThinking() {
+    body.innerHTML =
+      '<div class="gs-ai-answer">' +
+        '<div class="gs-ai-answer-head"><span class="spark">✨</span>AI 正在理解您的问题…</div>' +
+        '<div class="gs-think-dots"><span></span><span></span><span></span></div>' +
+      '</div>';
+  }
+
+  var mask = document.getElementById('gsMask');
+  var input = document.getElementById('gsInput');
+  var body = document.getElementById('gsBody');
+  var tabsWrap = document.getElementById('gsTabs');
+  var closeBtn = document.getElementById('gsClose');
+  var trigger = document.getElementById('gsTrigger');
+  var triggerBtn = document.getElementById('gsTriggerBtn');
+
+  var activeTab = '综合';
+  // 缓存当前问题对应的 AI 回答，避免切换分类标签时重复触发"思考中"动画
+  var aiState = { kw: '', answer: '', isQuestion: false };
+  var aiTimer = null;
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function highlight(text, kw) {
+    if (!kw) return escapeHtml(text);
+    var idx = text.toLowerCase().indexOf(kw.toLowerCase());
+    if (idx === -1) return escapeHtml(text);
+    return escapeHtml(text.slice(0, idx)) + '<mark>' + escapeHtml(text.slice(idx, idx + kw.length)) + '</mark>' + escapeHtml(text.slice(idx + kw.length));
+  }
+
+  // 不同分类的可匹配文本（用于关键字过滤）
+  function matchText(item) {
+    switch (item.cat) {
+      case '教职工': return item.name + ' ' + item.staffId + ' ' + item.college;
+      case '应用': return item.title + ' ' + item.desc;
+      case '待办':
+      case '消息': return item.title + ' ' + (item.submitter || '') + ' ' + (item.app || '');
+      case '通知': return item.title;
+      case '文档': return item.title;
+      case '政策': return item.title;
+      default: return item.title || '';
+    }
+  }
+
+  // 不同分类对应不同的结果行外观
+  function rowPerson(item, kw) {
+    return '<a class="gs-person" href="#">' +
+      '<span class="gs-avatar">' + item.avatar + '</span>' +
+      '<span class="gs-p-name">' + highlight(item.name, kw) + '</span>' +
+      '<span class="gs-p-id">' + escapeHtml(item.staffId) + '</span>' +
+      '<span class="gs-p-college">' + escapeHtml(item.college) + '</span>' +
+    '</a>';
+  }
+  function rowApp(item, kw) {
+    return '<a class="gs-app-item" href="' + item.url + '">' +
+      '<span class="gs-badge ' + item.icon + '">' + escapeHtml(item.badge) + '</span>' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+    '</a>';
+  }
+  function rowTask(item, kw) {
+    return '<a class="gs-task" href="#">' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+      '<span class="gs-sub">' +
+        (item.submitter ? '<span>👤 ' + escapeHtml(item.submitter) + '</span>' : '') +
+        '<span>🕐 ' + escapeHtml(item.time) + '</span>' +
+        (item.app ? '<span>🗂 ' + escapeHtml(item.app) + '</span>' : '') +
+      '</span>' +
+    '</a>';
+  }
+  function rowNotice(item, kw) {
+    return '<a class="gs-task" href="#">' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+      '<span class="gs-sub"><span>🕐 ' + escapeHtml(item.time) + '</span></span>' +
+    '</a>';
+  }
+  function rowDoc(item, kw) {
+    var isXls = item.ext === 'xlsx';
+    return '<a class="gs-info" href="#">' +
+      '<span class="gs-file-ico ' + (isXls ? 'is-xls' : 'is-doc') + '">' + (isXls ? 'X' : 'W') + '</span>' +
+      '<span class="gs-meta">' +
+        '<h4>' + highlight(item.title, kw) + '</h4>' +
+        '<span class="gs-sub"><span>上传时间：' + escapeHtml(item.uploadTime) + '</span><span>下载量：' + item.downloads + ' 次</span></span>' +
+      '</span>' +
+    '</a>';
+  }
+  function rowPolicy(item, kw) {
+    return '<a class="gs-task" href="#">' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+      '<span class="gs-sub"><span>发布时间：' + escapeHtml(item.time) + '</span><span>' + escapeHtml(item.stat) + '</span></span>' +
+    '</a>';
+  }
+
+  function renderRow(item, kw) {
+    switch (item.cat) {
+      case '教职工': return rowPerson(item, kw);
+      case '应用': return rowApp(item, kw);
+      case '待办':
+      case '消息': return rowTask(item, kw);
+      case '通知': return rowNotice(item, kw);
+      case '文档': return rowDoc(item, kw);
+      case '政策': return rowPolicy(item, kw);
+      default: return '';
+    }
+  }
+
+  function renderRows(cat, items, kw) {
+    if (cat === '应用') {
+      return '<div class="gs-app-grid">' + items.map(function (it) { return renderRow(it, kw); }).join('') + '</div>';
+    }
+    return items.map(function (it) { return renderRow(it, kw); }).join('');
+  }
+
+  // 综合视图：按分类分组展示，超出上限时给出"在 XX 中查看更多"入口（点击即切到该分类 Tab）
+  function renderGroup(cat, items, kw) {
+    var limit = SECTION_LIMIT[cat] || 2;
+    var shown = items.slice(0, limit);
+    var more = items.length > limit
+      ? '<button type="button" class="gs-more" data-cat="' + escapeHtml(cat) + '">在' + escapeHtml(cat) + '中查看更多 <span aria-hidden="true">›</span></button>'
+      : '';
+    return '<div class="gs-sec"><h3 class="gs-sec-title">' + escapeHtml(cat) + '</h3>' + renderRows(cat, shown, kw) + more + '</div>';
+  }
+
+  function emptyHtml(kw) {
+    return '<div class="gs-empty"><span class="ico">🔍</span>' +
+      '<span>没有找到与"' + escapeHtml(kw) + '"相关的内容</span>' +
+      '<span style="font-size:13px">换个关键词试试，或切换到其他分类查看</span></div>';
+  }
+
+  function renderDefault() {
+    body.innerHTML =
+      '<div class="gs-ai">' +
+        '<div class="gs-ai-head"><span class="spark">✨</span><span>AI 智能搜索助手</span></div>' +
+        '<p class="gs-ai-sub">直接说出您想找的内容，AI 会理解意图并帮您定位到相关的应用、日程、消息或文件——试着这样问我：</p>' +
+        '<div class="gs-ai-prompts" id="gsAiPrompts">' +
+          AI_PROMPTS.map(function (p) {
+            return '<button type="button" data-kw="' + escapeHtml(p.kw) + '"><span class="ico">' + p.ico + '</span>' + escapeHtml(p.text) + '</button>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+    document.getElementById('gsAiPrompts').querySelectorAll('button').forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        input.value = AI_PROMPTS[i].text;
+        runSearch(input.value);
+        input.focus();
+      });
+    });
+  }
+
+  function bindMore() {
+    body.querySelectorAll('.gs-more').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setActiveTab(btn.getAttribute('data-cat'));
+      });
+    });
+  }
+
+  function renderTabs() {
+    tabsWrap.innerHTML = SEARCH_CATS.map(function (cat) {
+      return '<button type="button" class="gs-tab' + (cat === activeTab ? ' active' : '') + '" data-cat="' + escapeHtml(cat) + '">' + escapeHtml(cat) + '</button>';
+    }).join('');
+    tabsWrap.querySelectorAll('.gs-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () { setActiveTab(btn.getAttribute('data-cat')); });
+    });
+  }
+
+  function setActiveTab(cat) {
+    if (activeTab === cat) return;
+    activeTab = cat;
+    renderTabs();
+    runSearch(input.value);
+  }
+
+  // 实际渲染搜索结果（AI 回答区 + 分类列表）。effectiveKw 用于过滤与高亮，
+  // displayKw 用于"无结果"提示中向用户复述其原始输入
+  function renderResults(displayKw, effectiveKw, matched) {
+    var aiHtml = (aiState.isQuestion && aiState.kw === displayKw) ? aiAnswerBlock(aiState.answer) : '';
+
+    if (!matched.length) {
+      body.innerHTML = aiHtml + emptyHtml(displayKw);
+      bindMore();
+      return;
+    }
+
+    var html = '';
+    if (activeTab === '综合') {
+      // 按固定分类顺序分组展示，每组限量 + "查看更多" 跳转到对应 Tab
+      SEARCH_CATS.slice(1).forEach(function (cat) {
+        var items = matched.filter(function (item) { return item.cat === cat; });
+        if (items.length) html += renderGroup(cat, items, effectiveKw);
+      });
+    } else {
+      var items = matched.filter(function (item) { return item.cat === activeTab; });
+      if (!items.length) { body.innerHTML = aiHtml + emptyHtml(displayKw); bindMore(); return; }
+      html = '<div class="gs-sec gs-sec-flat">' + renderRows(activeTab, items, effectiveKw) + '</div>';
+    }
+
+    body.innerHTML = aiHtml + (html || emptyHtml(displayKw));
+    bindMore();
+  }
+
+  function plainFilter(text) {
+    return SEARCH_INDEX.filter(function (item) {
+      return matchText(item).toLowerCase().indexOf(text.toLowerCase()) !== -1;
+    });
+  }
+
+  function runSearch(keyword) {
+    var kw = (keyword || '').trim();
+    if (aiTimer) { clearTimeout(aiTimer); aiTimer = null; }
+
+    if (!kw) {
+      aiState = { kw: '', answer: '', isQuestion: false };
+      renderDefault();
+      return;
+    }
+
+    var isNewKw = (kw !== aiState.kw);
+    var isQuestion = looksLikeQuestion(kw);
+
+    if (isNewKw && isQuestion) {
+      // 新的自然语言提问：先模拟"AI 思考中"，再给出理解后的回答 + 结果
+      renderThinking();
+      aiTimer = setTimeout(function () {
+        aiTimer = null;
+        var intent = detectIntent(kw);
+        var matched, effectiveKw;
+        if (intent) {
+          effectiveKw = intent.kw || '';
+          matched = SEARCH_INDEX.filter(function (item) {
+            if (item.cat !== intent.cat) return false;
+            return effectiveKw ? matchText(item).toLowerCase().indexOf(effectiveKw.toLowerCase()) !== -1 : true;
+          });
+        } else {
+          effectiveKw = kw;
+          matched = plainFilter(kw);
+        }
+        aiState = { kw: kw, answer: buildAiAnswer(kw, matched), isQuestion: true, effectiveKw: effectiveKw, matched: matched };
+        renderResults(kw, effectiveKw, matched);
+      }, 650);
+      return;
+    }
+
+    if (isNewKw) {
+      // 普通关键词搜索：直接按字面匹配，不触发 AI 回答
+      aiState = { kw: kw, answer: '', isQuestion: false, effectiveKw: kw, matched: plainFilter(kw) };
+    }
+
+    renderResults(kw, aiState.effectiveKw, aiState.matched);
+  }
+
+  function openDialog(presetKeyword) {
+    mask.classList.add('is-open');
+    activeTab = '综合';
+    aiState = { kw: '', answer: '', isQuestion: false };
+    if (aiTimer) { clearTimeout(aiTimer); aiTimer = null; }
+    renderTabs();
+    input.value = presetKeyword || '';
+    if (presetKeyword) { runSearch(presetKeyword); } else { renderDefault(); }
+    setTimeout(function () { input.focus(); }, 0);
+  }
+
+  function closeDialog() {
+    mask.classList.remove('is-open');
+    if (aiTimer) { clearTimeout(aiTimer); aiTimer = null; }
+  }
+
+  trigger.addEventListener('click', function () { openDialog(''); });
+  triggerBtn.addEventListener('click', function () { openDialog(''); });
+  closeBtn.addEventListener('click', closeDialog);
+  mask.addEventListener('click', function (e) { if (e.target === mask) closeDialog(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && mask.classList.contains('is-open')) closeDialog();
+  });
+  input.addEventListener('input', function () { runSearch(input.value); });
+
+  // ---------- 我的申请：待办/已办 切换 + "查看全部"详情弹窗 ----------
+  // 我的申请：教职工本人提交、尚未结束的申请；已结束的申请在首页保留展示 7 天
+  var MY_APPLICATIONS = [
+    { id: 'leave', title: '年休假申请', status: 'progress', statusLabel: '进行中', borderClass: '',
+      lines: ['申请时间：2026.05.06 至 2026.05.08，共2天', '提交时间：2026.05.05 16:32:01'],
+      step: '待学院审批', detailUrl: './apply-detail-leave.html' },
+    { id: 'practice', title: '企业实践认定申请', status: 'returned', statusLabel: '被退回', borderClass: 'is-returned',
+      lines: ['深圳市智造科技有限公司，实践周期32天', '提交时间：2026.05.05 16:32:01'],
+      step: '待个人提交', reason: '退回原因：缺少企业导师评价附件，请补充重新提交。', detailUrl: './apply-detail-practice.html' },
+    { id: 'cert', title: '证明打印申请', status: 'approved', statusLabel: '已通过', borderClass: 'is-approved',
+      lines: ['证明类型：在职在编证明', '提交时间：2026.06.01 09:02:11'],
+      step: '已办结 · 人事处已盖章', note: '已于 3 天前办结，将于 4 天后从"我的申请"中自动移除', detailUrl: './certificate-print.html' }
+  ];
+
+  // 待办：系统需要教职工去做的事项（如提交职称申请、补充材料等），与本人已提交的申请是两类不同的数据
+  var TODO_ITEMS = [
+    { id: 'title-submit', title: '提交职称评审申报材料', urgent: true, deadline: '剩余 3 天',
+      desc: '根据《2026年度职称评审工作通知》，请于截止日期前完成评审材料填报与提交。',
+      actionLabel: '去提交', actionUrl: './title-review.html' },
+    { id: 'overseas-supplement', title: '补充出国（境）报备申请材料', urgent: false, deadline: '剩余 5 天',
+      desc: '您的出国（境）报备申请已被退回，需补充邀请函翻译件后重新提交审批。',
+      actionLabel: '去补充', actionUrl: './overseas-report.html' },
+    { id: 'perf-data', title: '登记本学期业绩数据', urgent: false, deadline: '剩余 10 天',
+      desc: '请完善本学期教学、科研等业绩数据登记，作为年度考核评定依据。',
+      actionLabel: '去登记', actionUrl: './performance-data.html' }
+  ];
+
+  function applyCardHtml(item) {
+    return '<article class="apply-card' + (item.borderClass ? ' ' + item.borderClass : '') + '">' +
+      '<div class="apply-head">' +
+        '<span class="apply-title">' + escapeHtml(item.title) + ' <span class="status-tag ' + item.status + '">' + escapeHtml(item.statusLabel) + '</span></span>' +
+        '<a class="detail" href="' + item.detailUrl + '">查看详情</a>' +
+      '</div>' +
+      item.lines.map(function (l) { return '<p>' + escapeHtml(l) + '</p>'; }).join('') +
+      '<p>当前环节：<span class="step">' + escapeHtml(item.step) + '</span></p>' +
+      (item.reason ? '<p class="reason">' + escapeHtml(item.reason) + '</p>' : '') +
+      (item.note ? '<p class="note">' + escapeHtml(item.note) + '</p>' : '') +
+    '</article>';
+  }
+
+  function todoCardHtml(item) {
+    return '<article class="todo-card' + (item.urgent ? ' is-urgent' : '') + '">' +
+      '<div class="todo-head">' +
+        '<span class="todo-title">' + escapeHtml(item.title) + '</span>' +
+        '<span class="todo-deadline' + (item.urgent ? ' urgent' : '') + '">' + escapeHtml(item.deadline) + '</span>' +
+      '</div>' +
+      '<p class="todo-desc">' + escapeHtml(item.desc) + '</p>' +
+      '<a class="todo-action" href="' + item.actionUrl + '">' + escapeHtml(item.actionLabel) + ' →</a>' +
+    '</article>';
+  }
+
+  function applyEmptyHtml(label) {
+    return '<div class="apply-empty">暂无' + escapeHtml(label || '相关') + '事项</div>';
+  }
+
+  // 面板内 我的申请/待办 切换
+  var myApplyGrid = document.getElementById('myApplyGrid');
+  var myApplyTabsWrap = document.getElementById('myApplyTabs');
+  var myApplyTabBtn = document.getElementById('myApplyTabBtn');
+  var myTodoTabBtn = document.getElementById('myTodoTabBtn');
+  var myApplyTab = 'apply';
+
+  myApplyTabBtn.textContent = '我的申请(' + MY_APPLICATIONS.length + ')';
+  myTodoTabBtn.textContent = '待办(' + TODO_ITEMS.length + ')';
+
+  function renderMyApply() {
+    if (myApplyTab === 'apply') {
+      myApplyGrid.innerHTML = MY_APPLICATIONS.length ? MY_APPLICATIONS.map(applyCardHtml).join('') : applyEmptyHtml('申请');
+    } else {
+      myApplyGrid.innerHTML = TODO_ITEMS.length ? TODO_ITEMS.map(todoCardHtml).join('') : applyEmptyHtml('待办');
+    }
+  }
+
+  myApplyTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.getAttribute('data-cat');
+      if (cat === myApplyTab) return;
+      myApplyTab = cat;
+      myApplyTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderMyApply();
+    });
+  });
+
+  // "查看全部"改为跳转独立详情页（任务中心），不再使用弹窗
+  renderMyApply();
+
+  // ------- 通知 / 消息：两个分类 tab，各自独立数据，支持已读未读状态 -------
+  var NOTICES = [
+    { id: 'n1', title: '深圳职业大学2026年人事处分工名单', time: '2026-05-12', pinned: true, read: false },
+    { id: 'n2', title: '关于启动 2025 年度教职工绩效考核填报工作的通知', time: '2026-05-12', pinned: false, read: false },
+    { id: 'n3', title: '关于组织 2026 新入职辅导员岗前素养培训的报名通知', time: '2026-05-12', pinned: false, read: true }
+  ];
+  var MESSAGES = [
+    { id: 'm1', title: '实验室设备采购计划编制：调研需求、编制采购计划、招标准备等事项', time: '2026-05-11', pinned: false, read: false },
+    { id: 'm2', title: '学生公寓电费缴纳通知：请及时缴费，避免停电影响正常生活', time: '2026-05-10', pinned: false, read: true }
+  ];
+
+  var noticeTabsWrap = document.getElementById('noticeTabs');
+  var noticeListEl = document.getElementById('noticeList');
+  var noticeMoreLink = document.getElementById('noticeMore');
+  var noticeTab = 'notice';
+
+  function noticeItemHtml(item, type) {
+    var unreadMark = item.pinned
+      ? '<span class="notice-pin">置顶</span>'
+      : '<span class="dot-mark' + (item.read ? ' normal' : '') + '"></span>';
+    return '<a class="notice-item' + (item.read ? ' is-read' : '') + '" href="./notice-detail.html?type=' + type + '&id=' + item.id + '">' +
+        '<span class="text">' + unreadMark + '<h3>' + escapeHtml(item.title) + '</h3></span>' +
+        '<time>' + (item.read ? '' : '<span class="notice-unread-badge"></span>') + escapeHtml(item.time) + '</time>' +
+      '</a>';
+  }
+
+  function renderNotice() {
+    var list = noticeTab === 'notice' ? NOTICES : MESSAGES;
+    noticeListEl.innerHTML = list.map(function (it) { return noticeItemHtml(it, noticeTab); }).join('');
+    noticeMoreLink.href = './notice-list.html?type=' + noticeTab;
+  }
+
+  noticeTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.getAttribute('data-cat');
+      if (cat === noticeTab) return;
+      noticeTab = cat;
+      noticeTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderNotice();
+    });
+  });
+
+  renderNotice();
+
+  // ------- 政策文件 / 资料下载：两个分类 tab，各自独立数据 -------
+  var POLICIES = [
+    { id: 'p1', title: '中共深圳职业技术大学委员会关于印发《深职大教职工职业发展三年行动计划（2026-2028年）》的通知', time: '2026-09-12 11:23:08', views: 2398, pinned: true },
+    { id: 'p2', title: '深圳职业技术大学绩效工资核算实施细则（试行）', time: '2026-09-12 11:23:08', views: 531, pinned: false },
+    { id: 'p3', title: '【劳资福利】教职工带薪休假与考勤管理制度', time: '2026-09-12 11:23:08', views: 64, pinned: false }
+  ];
+  var MATERIALS = [
+    { id: 'd1', title: '2026年度职称评审申报材料模板.docx', time: '2026-08-20 10:12:09', views: 1206, pinned: true },
+    { id: 'd2', title: '教职工因公出国（境）报备材料清单.xlsx', time: '2026-07-02 09:05:33', views: 842, pinned: false },
+    { id: 'd3', title: '新教师入职培训手册.pdf', time: '2026-03-15 14:30:02', views: 2031, pinned: false }
+  ];
+
+  var policyTabsWrap = document.getElementById('policyTabs');
+  var policyListEl = document.getElementById('policyList');
+  var policySearchInput = document.getElementById('policySearchInput');
+  var policyMoreLink = document.getElementById('policyMore');
+  var policyTab = 'policy';
+
+  function policyItemHtml(item, type) {
+    var metaLabel = type === 'material' ? '更新时间' : '发布时间';
+    var countLabel = type === 'material' ? '下载量' : '浏览量';
+    return '<a class="policy-item' + (item.pinned ? ' is-top' : '') + '" href="./policy-detail.html?type=' + type + '&id=' + item.id + '">' +
+        '<h3>' + (item.pinned ? '<span class="top-tag">置顶</span>' : '') + escapeHtml(item.title) + '</h3>' +
+        '<div class="policy-meta"><span>' + metaLabel + '：' + escapeHtml(item.time) + '</span><span>' + countLabel + '：' + item.views + '</span></div>' +
+      '</a>';
+  }
+
+  function renderPolicy() {
+    var list = policyTab === 'policy' ? POLICIES : MATERIALS;
+    policyListEl.innerHTML = list.map(function (it) { return policyItemHtml(it, policyTab); }).join('');
+    policySearchInput.placeholder = policyTab === 'material' ? '搜索资料、模板' : '搜索文件、政策';
+    policyMoreLink.href = './policy-list.html?type=' + policyTab;
+  }
+
+  policyTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.getAttribute('data-cat');
+      if (cat === policyTab) return;
+      policyTab = cat;
+      policyTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderPolicy();
+    });
+  });
+
+  renderPolicy();
+
+  renderTabs();
+  renderDefault();
+})();
+</script>
+</body>
+</html>

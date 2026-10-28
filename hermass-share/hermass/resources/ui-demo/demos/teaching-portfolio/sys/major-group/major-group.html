@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>专业权限管理</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+    .ds-page { padding: 0; }
+    .page-content { flex: 1; padding: 12px 16px 12px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { color: #fff; background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); }
+    .btn.danger { color: #fa5151; border-color: #fa5151; }
+    .btn.danger:hover { color: #fff; background: #fa5151; }
+
+    /* Tab导航 */
+    .tab-nav { display: flex; background: #fff; padding: 0 24px; border-bottom: 1px solid #eeeef0; }
+    .tab-item { padding: 12px 16px; font-size: 14px; color: #737585; cursor: pointer; border: none; border-bottom: 2px solid transparent; background: none; outline: none; }
+    .tab-item:hover { color: #505266; }
+    .tab-item.active { color: var(--ds-color-primary); border-bottom-color: var(--ds-color-primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 搜索区域 */
+    .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 0 12px; }
+    .filter-item { display: flex; align-items: center; gap: 8px; }
+    .filter-item label { color: #505266; font-size: 14px; white-space: nowrap; }
+    .filter-item input[type="text"] { height: 28px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; width: 200px; }
+    .filter-item input:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .filter-item select { height: 28px; padding: 0 24px 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; min-width: 140px; }
+
+    /* 工具栏 */
+    .toolbar { display: flex; align-items: center; gap: 8px; padding: 0 0 12px; }
+
+    /* Table */
+    .basic-table-wrap { position: relative; overflow: auto; background: #fff; border: 1px solid #eeeef0; }
+    .basic-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; color: #000; font-size: 14px; line-height: 22px; }
+    .basic-table th, .basic-table td { height: 46px; padding: 0 12px; background: #fff; border-bottom: 1px solid #eeeef0; white-space: nowrap; overflow: hidden; text-align: left; text-overflow: ellipsis; }
+    .basic-table th { position: sticky; top: 0; z-index: 5; height: 40px; background: #fafafa; font-weight: 600; }
+    .basic-table th + th, .basic-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+    .basic-table tbody tr:hover td { background: #f6f6f7; }
+    .basic-table tbody tr:last-child td { border-bottom: none; }
+    .col-index { width: 46px; text-align: center; }
+    .col-actions { width: 90px; text-align: center; }
+    .row-actions { display: inline-flex; align-items: center; gap: 12px; }
+    .text-action { padding: 0; color: #3167ff; background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .text-action:hover { color: var(--ds-color-primary-hover); }
+    .action-divider { width: 1px; height: 12px; background: #dcdce0; }
+    .empty-cell { color: #bcbecd; }
+
+    /* 标签 */
+    .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; font-size: 12px; background: #f2f3f5; color: #505266; }
+    .tag.success { background: #e8f7f1; color: #00B42A; }
+
+    .basic-pagination { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #505266; background: #fff; border-top: 1px solid #eeeef0; font-size: 12px; }
+    .basic-pagination .page-spacer { flex: 1; }
+
+    /* 弹窗 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 720px; max-width: 90vw; max-height: 90vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+    .modal__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eeeef0; flex-shrink: 0; }
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+    .modal__close { width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 18px; color: #737585; }
+    .modal__close:hover { background: #f5f5f5; }
+    .modal__body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; }
+    .modal__footer { display: flex; justify-content: center; gap: 12px; padding: 16px 20px; border-top: 1px solid #eeeef0; flex-shrink: 0; }
+
+    /* 表格式表单 - 两列布局 */
+    .form-table { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+    .form-row { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 8px; align-items: center; width: calc(50% - 12px); }
+    .form-row.full { width: 100%; }
+    .form-row__label { text-align: right; color: #505266; font-size: 14px; }
+    .form-row__label .required { color: #fa5151; margin-right: 2px; }
+    .form-row__control { min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .form-row__control input, .form-row__control select { width: 100%; box-sizing: border-box; height: 32px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; font-family: inherit; background: #fff; color: #000; }
+    .form-row__control select { cursor: pointer; }
+    .form-row__control input:focus, .form-row__control select:focus { outline: none; border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .form-row__control input:disabled { background: #f2f3f5; color: #c9cdd4; border-color: #e5e6eb; cursor: not-allowed; }
+
+    /* 下拉多选 */
+    .multi-select { position: relative; width: 100%; }
+    .multi-select__field { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; box-sizing: border-box; min-height: 32px; padding: 3px 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; font-family: inherit; background: #fff; color: #000; cursor: pointer; text-align: left; }
+    .multi-select__field:hover { border-color: #b9bac6; }
+    .multi-select__field.is-open { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .multi-select__text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #000; }
+    .multi-select__text.placeholder { color: #bcbecd; }
+    .multi-select__arrow { flex: none; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #8f91a3; transition: 0.2s; }
+    .multi-select__field.is-open .multi-select__arrow { transform: rotate(180deg); }
+    .multi-select__panel { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 1200; max-height: 208px; overflow-y: auto; padding: 4px 0; background: #fff; border: 1px solid #eeeef0; border-radius: 4px; box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+    .multi-select.is-open .multi-select__panel { display: block; }
+    .multi-select__option { display: flex; align-items: center; gap: 8px; padding: 7px 12px; font-size: 14px; color: #000; cursor: pointer; white-space: nowrap; }
+    .multi-select__option:hover { background: #f6f6f7; }
+    .multi-select__checkbox { flex: none; width: 14px; height: 14px; border: 1px solid #dcdce0; border-radius: 2px; background: #fff; display: inline-flex; align-items: center; justify-content: center; }
+    .multi-select__option.checked .multi-select__checkbox { background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .multi-select__option.checked .multi-select__checkbox::after { content: ""; width: 4px; height: 8px; border: solid #fff; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+    .multi-select__hint { font-size: 12px; color: #8f91a3; width: 100%; }
+
+    /* 开关 */
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex: none; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch-slider { position: absolute; inset: 0; border-radius: 11px; background: #ccc; transition: 0.2s; cursor: pointer; }
+    .switch-slider::before { content: ""; position: absolute; left: 2px; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: 0.2s; }
+    .switch input:checked + .switch-slider { background: var(--ds-color-primary); }
+    .switch input:checked + .switch-slider::before { transform: translateX(18px); }
+    .switch-text { font-size: 14px; color: #000; }
+
+    /* 导入区域 */
+    .import-box { border: 1px dashed #dcdce0; border-radius: 6px; padding: 24px; text-align: center; }
+    .import-title { font-size: 14px; font-weight: 600; color: #000; margin-bottom: 4px; }
+    .import-desc { font-size: 13px; color: #737585; margin-bottom: 12px; }
+    .import-link { color: #3167ff; font-size: 13px; cursor: pointer; }
+    .import-link:hover { text-decoration: underline; }
+    .import-file { margin: 12px 0; display: none; }
+
+    .modal__body p.muted { color: #737585; font-size: 14px; margin: 0 0 8px; }
+    .modal__body b { color: #000; }
+
+    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #20b486; color: #fff; padding: 10px 24px; border-radius: 6px; font-size: 14px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+  </style>
+</head>
+<body>
+<div class="ds-scope ds-page">
+  <nav class="tab-nav" aria-label="专业权限管理">
+    <button class="tab-item active" type="button" data-tab="major-group" onclick="switchTab('major-group')">专业群</button>
+    <button class="tab-item" type="button" data-tab="major" onclick="switchTab('major')">专业</button>
+  </nav>
+
+  <div class="page-content">
+    <!-- 专业群 tab -->
+    <div class="tab-content active" id="tab-major-group">
+      <section class="filter-bar" aria-label="查询条件">
+        <div class="filter-item">
+          <label>名称/编码</label>
+          <input type="text" id="groupKeyword" placeholder="搜索专业群或编码" />
+        </div>
+        <div class="filter-item">
+          <label>所属学院</label>
+          <select id="groupCollege">
+            <option>全部学院</option>
+            <option>电子与通信工程学院</option>
+            <option>人工智能学院</option>
+            <option>机电工程学院</option>
+          </select>
+        </div>
+        <button class="btn" type="button" onclick="resetGroupFilter()">重置</button>
+        <button class="btn primary" type="button" onclick="queryGroup()">查询</button>
+      </section>
+      <section class="toolbar">
+        <button class="btn primary" type="button" onclick="openGroupCreate()">新增</button>
+      </section>
+      <section class="basic-table-wrap">
+        <table class="basic-table">
+          <thead>
+            <tr>
+              <th class="col-index">序号</th>
+              <th style="width:200px">专业群名称</th>
+              <th style="width:140px">专业群编码</th>
+              <th style="width:190px">所属学院</th>
+              <th style="width:120px">专业群负责人</th>
+              <th style="width:300px">包含专业</th>
+              <th style="width:100px">状态</th>
+              <th style="width:120px">创建时间</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="groupTableBody"></tbody>
+        </table>
+      </section>
+      <div class="basic-pagination"><span class="page-spacer"></span><span id="groupPageInfo">共 0 条记录</span></div>
+    </div>
+
+    <!-- 专业 tab -->
+    <div class="tab-content" id="tab-major">
+      <section class="filter-bar" aria-label="查询条件">
+        <div class="filter-item">
+          <label>专业</label>
+          <input type="text" id="majorKeyword" placeholder="搜索专业名称" />
+        </div>
+        <button class="btn" type="button" onclick="resetMajorFilter()">重置</button>
+        <button class="btn primary" type="button" onclick="queryMajor()">查询</button>
+      </section>
+      <section class="toolbar">
+        <button class="btn primary" type="button" onclick="openMajorCreate()">新增</button>
+        <button class="btn" type="button" onclick="openImport()">导入名单</button>
+      </section>
+      <section class="basic-table-wrap">
+        <table class="basic-table">
+          <thead>
+            <tr>
+              <th class="col-index">序号</th>
+              <th style="width:220px">单位名称</th>
+              <th style="width:200px">专业名称</th>
+              <th style="width:120px">专业负责人</th>
+              <th style="width:240px">专业人员</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="majorTableBody"></tbody>
+        </table>
+      </section>
+      <div class="basic-pagination"><span class="page-spacer"></span><span id="majorPageInfo">共 0 条记录</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 专业群编辑弹窗 -->
+<div class="modal-overlay" id="groupModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="groupModalTitle">新增专业群</h3>
+      <button class="modal__close" onclick="closeModal('groupModal')">×</button>
+    </div>
+    <div class="modal__body" id="groupModalBody"></div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeModal('groupModal')">取消</button>
+      <button class="btn primary" onclick="saveGroup()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新增专业弹窗 -->
+<div class="modal-overlay" id="majorCreateModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">新增专业</h3>
+      <button class="modal__close" onclick="closeModal('majorCreateModal')">×</button>
+    </div>
+    <div class="modal__body" id="majorCreateBody"></div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeModal('majorCreateModal')">取消</button>
+      <button class="btn primary" onclick="saveMajorCreate()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑专业负责人弹窗 -->
+<div class="modal-overlay" id="leaderModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">编辑专业负责人</h3>
+      <button class="modal__close" onclick="closeModal('leaderModal')">×</button>
+    </div>
+    <div class="modal__body" id="leaderModalBody"></div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeModal('leaderModal')">取消</button>
+      <button class="btn primary" onclick="saveLeader()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 导入弹窗 -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">导入专业人员清单</h3>
+      <button class="modal__close" onclick="closeImport()">×</button>
+    </div>
+    <div class="modal__body">
+      <div class="import-box">
+        <div class="import-title">上传专业人员清单</div>
+        <div class="import-desc">支持 .xlsx / .xls 文件，单个文件不超过 20MB。</div>
+        <span class="import-link" onclick="notify('专业人员导入模板已下载')">下载专业人员导入模板</span>
+        <input type="file" class="import-file" id="importFile" />
+        <div style="margin-top:12px"><button class="btn" type="button" onclick="document.getElementById('importFile').click()">选择文件</button></div>
+        <div id="importFileName" style="margin-top:8px;font-size:13px;color:#505266"></div>
+      </div>
+      <p class="muted" style="margin-top:12px">请使用模板维护单位、专业、专业负责人及专业人员。</p>
+    </div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeImport()">取消</button>
+      <button class="btn primary" onclick="confirmImport()">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- 删除确认弹窗 -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="deleteTitle">确认删除专业群</h3>
+      <button class="modal__close" onclick="closeModal('deleteModal')">×</button>
+    </div>
+    <div class="modal__body" id="deleteBody"></div>
+    <div class="modal__footer" id="deleteFooter">
+      <button class="btn" id="deleteCancel">取消</button>
+      <button class="btn danger" id="deleteOk">确认删除</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var collegeOptions = ['电子与通信工程学院', '人工智能学院', '机电工程学院'];
+var majorDictionaryOptions = ['电子信息工程技术', '通信工程', '物联网应用技术', '人工智能技术应用', '大数据技术', '软件技术', '智能制造技术', '工业机器人技术', '机电一体化技术'];
+var leaderOptions = ['陈立群', '王晓东', '刘建国', '张明', '李华', '王强', '陈伟', '刘芳', '赵敏', '周涛', '吴刚', '孙丽', '钱学军', '孙志杰', '朱红梅', '杨光'];
+
+var groups = [
+  { id: 'mg-01', name: '电子信息专业群', code: 'MG-EI-2026', college: '电子与通信工程学院', leader: '陈立群', majors: '电子信息工程技术、通信工程、物联网应用技术', status: '已启用', createdAt: '2026-06-01', teachers: 86, courses: 4 },
+  { id: 'mg-02', name: '人工智能技术应用专业群', code: 'MG-AI-2026', college: '人工智能学院', leader: '王晓东', majors: '人工智能技术应用、大数据技术、软件技术', status: '已启用', createdAt: '2026-05-18', teachers: 54, courses: 4 },
+  { id: 'mg-03', name: '智能制造专业群', code: 'MG-IM-2026', college: '机电工程学院', leader: '刘建国', majors: '智能制造技术、工业机器人技术、数字化设计与制造技术', status: '已停用', createdAt: '2026-06-12', teachers: 0, courses: 0 }
+];
+
+var majors = [
+  { id: 'm-01', college: '电子与通信工程学院', major: '电子信息工程技术', leader: '张明', maintainers: ['李华', '王强'] },
+  { id: 'm-02', college: '电子与通信工程学院', major: '通信工程', leader: '李华', maintainers: ['张明'] },
+  { id: 'm-03', college: '电子与通信工程学院', major: '物联网应用技术', leader: '王强', maintainers: ['李华'] },
+  { id: 'm-04', college: '人工智能学院', major: '人工智能技术应用', leader: '陈伟', maintainers: ['刘芳', '赵敏'] },
+  { id: 'm-05', college: '人工智能学院', major: '大数据技术', leader: '刘芳', maintainers: ['陈伟'] },
+  { id: 'm-06', college: '人工智能学院', major: '软件技术', leader: '赵敏', maintainers: ['刘芳'] },
+  { id: 'm-07', college: '机电工程学院', major: '智能制造技术', leader: '周涛', maintainers: ['吴刚', '孙丽'] },
+  { id: 'm-08', college: '机电工程学院', major: '工业机器人技术', leader: '吴刚', maintainers: ['周涛'] },
+  { id: 'm-09', college: '机电工程学院', major: '机电一体化技术', leader: '孙丽', maintainers: ['吴刚'] }
+];
+
+var groupApplied = { keyword: '', college: '全部学院' };
+var majorApplied = { keyword: '' };
+var groupEditor = { mode: 'create', draft: null };
+var leaderDraft = null;
+var majorCreator = { college: '', major: '', leader: '', maintainers: [] };
+var deleteConfig = null;
+
+var toastTimer = null;
+function notify(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.style.display = 'none'; }, 1600);
+}
+function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+function closeModal(id) { document.getElementById(id).classList.remove('is-open'); }
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-item').forEach(function(b) { b.classList.toggle('active', b.dataset.tab === tab); });
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.toggle('active', c.id === 'tab-' + tab); });
+}
+
+// ============== 专业群列表 ==============
+function renderGroups() {
+  var rows = groups.filter(function(r) {
+    var kw = groupApplied.keyword.trim().toLowerCase();
+    if (kw && (r.name + r.code).toLowerCase().indexOf(kw) < 0) return false;
+    if (groupApplied.college !== '全部学院' && r.college !== groupApplied.college) return false;
+    return true;
+  });
+  var body = '';
+  rows.forEach(function(r, i) {
+    body += '<tr>' +
+      '<td class="col-index">' + (i + 1) + '</td>' +
+      '<td>' + esc(r.name) + '</td>' +
+      '<td>' + esc(r.code) + '</td>' +
+      '<td>' + esc(r.college) + '</td>' +
+      '<td>' + esc(r.leader) + '</td>' +
+      '<td>' + esc(r.majors) + '</td>' +
+      '<td><span class="tag' + (r.status === '已启用' ? ' success' : '') + '">' + r.status + '</span></td>' +
+      '<td>' + esc(r.createdAt) + '</td>' +
+      '<td class="col-actions"><span class="row-actions">' +
+        '<button class="text-action" onclick="openGroupEdit(\'' + r.id + '\')">编辑</button>' +
+        '<span class="action-divider"></span>' +
+        '<button class="text-action" onclick="requestGroupDelete(\'' + r.id + '\')">删除</button>' +
+      '</span></td></tr>';
+  });
+  if (!rows.length) body = '<tr><td colspan="9" style="text-align:center;color:#737585;padding:32px 0">暂无数据</td></tr>';
+  document.getElementById('groupTableBody').innerHTML = body;
+  document.getElementById('groupPageInfo').textContent = '共 ' + rows.length + ' 条记录';
+}
+function queryGroup() { groupApplied.keyword = document.getElementById('groupKeyword').value; groupApplied.college = document.getElementById('groupCollege').value; notify('已按当前条件查询'); renderGroups(); }
+function resetGroupFilter() { document.getElementById('groupKeyword').value = ''; document.getElementById('groupCollege').value = '全部学院'; groupApplied = { keyword: '', college: '全部学院' }; renderGroups(); }
+
+// 专业群弹窗
+function fieldRow(label, controlHtml, required, full) {
+  return '<div class="form-row' + (full ? ' full' : '') + '"><label class="form-row__label">' + (required ? '<span class="required">*</span>' : '') + label + '</label><div class="form-row__control">' + controlHtml + '</div></div>';
+}
+function selectHtml(id, options, selected, placeholder) {
+  var html = '<select id="' + id + '" onchange="onModalChange(\'' + id + '\',this.value)">';
+  if (placeholder) html += '<option value="">' + esc(placeholder) + '</option>';
+  html += options.map(function(o) { return '<option value="' + esc(o) + '"' + (o === selected ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('');
+  return html + '</select>';
+}
+function multiSelectHtml(id, options, selectedArr, placeholder) {
+  var text = selectedArr.length ? selectedArr.join('、') : '';
+  var html = '<div class="multi-select" id="' + id + '" data-placeholder="' + esc(placeholder || '') + '">';
+  html += '<div class="multi-select__field" onclick="toggleMultiSelect(\'' + id + '\')">';
+  html += '<span class="multi-select__text' + (!text ? ' placeholder' : '') + '">' + (text || '请选择') + '</span>';
+  html += '<span class="multi-select__arrow"></span></div>';
+  html += '<div class="multi-select__panel">';
+  options.forEach(function(o) {
+    var checked = selectedArr.indexOf(o) >= 0;
+    html += '<div class="multi-select__option' + (checked ? ' checked' : '') + '" onclick="toggleMultiOption(event,\'' + id + '\',\'' + esc(o) + '\')">';
+    html += '<span class="multi-select__checkbox"></span>' + esc(o) + '</div>';
+  });
+  html += '</div></div>';
+  return html;
+}
+function toggleMultiSelect(id) {
+  var el = document.getElementById(id);
+  var isOpen = el.classList.contains('is-open');
+  document.querySelectorAll('.multi-select.is-open').forEach(function(m) { m.classList.remove('is-open'); m.querySelector('.multi-select__field').classList.remove('is-open'); });
+  if (!isOpen) { el.classList.add('is-open'); el.querySelector('.multi-select__field').classList.add('is-open'); }
+}
+function toggleMultiOption(event, id, value) {
+  event.stopPropagation();
+  var el = document.getElementById(id);
+  var opt = event.target.closest('.multi-select__option');
+  var checked = opt.classList.toggle('checked');
+  var selected = [];
+  el.querySelectorAll('.multi-select__option.checked').forEach(function(o) { selected.push(o.textContent); });
+  el.querySelector('.multi-select__text').textContent = selected.length ? selected.join('、') : '请选择';
+  el.querySelector('.multi-select__text').classList.toggle('placeholder', !selected.length);
+  onModalMultiChange(id, selected);
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.multi-select')) {
+    document.querySelectorAll('.multi-select.is-open').forEach(function(m) { m.classList.remove('is-open'); m.querySelector('.multi-select__field').classList.remove('is-open'); });
+  }
+});
+function inputHtml(id, value, placeholder, disabled) {
+  return '<input id="' + id + '" value="' + esc(value) + '" placeholder="' + esc(placeholder || '') + '" ' + (disabled ? 'disabled' : '') + ' onchange="onModalChange(\'' + id + '\',this.value)">';
+}
+
+var modalCtx = 'group';
+function onModalChange(id, value) {
+  if (modalCtx === 'group' && groupEditor.draft) {
+    var map = { 'g-name': 'name', 'g-code': 'code', 'g-college': 'college', 'g-leader': 'leader' };
+    if (map[id]) groupEditor.draft[map[id]] = value;
+  } else if (modalCtx === 'majorCreate') {
+    var m = { 'mc-college': 'college', 'mc-major': 'major', 'mc-leader': 'leader' };
+    if (m[id]) majorCreator[m[id]] = value;
+  } else if (modalCtx === 'leader' && leaderDraft) {
+    var lm = { 'ld-leader': 'leader' };
+    if (lm[id]) leaderDraft[lm[id]] = value;
+  }
+}
+function onModalMultiChange(id, selected) {
+  if (modalCtx === 'group' && groupEditor.draft && id === 'g-majors') {
+    groupEditor.draft.majors = selected.join('、');
+  } else if (modalCtx === 'majorCreate' && id === 'mc-maintainers') {
+    majorCreator.maintainers = selected;
+  } else if (modalCtx === 'leader' && leaderDraft && id === 'ld-maintainers') {
+    leaderDraft.maintainers = selected;
+  }
+}
+
+function openGroupCreate() {
+  modalCtx = 'group';
+  groupEditor = { mode: 'create', draft: { id: 'mg-' + Date.now(), name: '新专业群', code: 'MG-NEW-' + String(groups.length + 1).padStart(2, '0'), college: collegeOptions[0], leader: '', majors: '', status: '已启用', createdAt: new Date().toISOString().slice(0, 10), teachers: 0, courses: 0 } };
+  renderGroupModal();
+}
+function openGroupEdit(id) {
+  modalCtx = 'group';
+  var r = groups.find(function(x){ return x.id === id; });
+  if (!r) return;
+  groupEditor = { mode: 'edit', draft: JSON.parse(JSON.stringify(r)) };
+  renderGroupModal();
+}
+function renderGroupModal() {
+  var d = groupEditor.draft;
+  document.getElementById('groupModalTitle').textContent = groupEditor.mode === 'edit' ? '编辑专业群' : '新增专业群';
+  var html = '<div class="form-table">';
+  html += fieldRow('专业群名称', inputHtml('g-name', d.name, '请输入专业群名称'), true);
+  html += fieldRow('专业群编码', inputHtml('g-code', d.code, '请输入专业群编码'), true);
+  html += fieldRow('所属学院', selectHtml('g-college', collegeOptions, d.college), true);
+  html += fieldRow('专业群负责人', selectHtml('g-leader', leaderOptions, d.leader || '', '请选择或筛选专业群负责人'));
+  html += fieldRow('包含专业', multiSelectHtml('g-majors', majorDictionaryOptions, d.majors ? d.majors.split('、') : []), false, true);
+  html += fieldRow('状态', '<label class="switch"><input type="checkbox" id="g-status"' + (d.status === '已启用' ? ' checked' : '') + ' onchange="groupEditor.draft.status=this.checked?\'已启用\':\'已停用\'"><span class="switch-slider"></span></label><span class="switch-text" id="g-status-text">' + d.status + '</span>');
+  html += '</div>';
+  document.getElementById('groupModalBody').innerHTML = html;
+  document.getElementById('g-status').addEventListener('change', function() {
+    document.getElementById('g-status-text').textContent = this.checked ? '已启用' : '已停用';
+  });
+  document.getElementById('groupModal').classList.add('is-open');
+}
+function saveGroup() {
+  var d = groupEditor.draft;
+  if (!d.name || !d.name.trim()) { notify('专业群名称不能为空'); return; }
+  if (!d.code || !d.code.trim()) { notify('专业群编码不能为空'); return; }
+  if (groupEditor.mode === 'create') groups.unshift(d);
+  else groups = groups.map(function(x){ return x.id === d.id ? d : x; });
+  closeModal('groupModal');
+  notify(groupEditor.mode === 'create' ? '专业群已新增' : '专业群已保存');
+  renderGroups();
+}
+
+function requestGroupDelete(id) {
+  var r = groups.find(function(x){ return x.id === id; });
+  if (!r) return;
+  var blocked = r.teachers > 0 || r.courses > 0;
+  deleteConfig = { mode: blocked ? 'blocked' : 'normal', record: r };
+  document.getElementById('deleteTitle').textContent = blocked ? '不可删除' : '确认删除专业群';
+  document.getElementById('deleteBody').innerHTML = blocked
+    ? '<p class="muted">专业群「<b>' + esc(r.name) + '</b>」已被教师或课程引用。</p><p class="muted">当前专业群存在教师归属或课程关联，只允许停用，不允许直接删除。</p>'
+    : '<p class="muted">删除「<b>' + esc(r.name) + '</b>」后不可恢复。</p><p class="muted">删除前会再次校验教师归属和课程引用。</p>';
+  var cancelBtn = document.getElementById('deleteCancel');
+  var okBtn = document.getElementById('deleteOk');
+  if (blocked) {
+    cancelBtn.style.display = 'none';
+    okBtn.textContent = '我知道了';
+    okBtn.className = 'btn primary';
+    okBtn.onclick = function() { closeModal('deleteModal'); deleteConfig = null; };
+  } else {
+    cancelBtn.style.display = '';
+    okBtn.textContent = '确认删除';
+    okBtn.className = 'btn danger';
+    okBtn.onclick = confirmGroupDelete;
+  }
+  document.getElementById('deleteModal').classList.add('is-open');
+}
+function confirmGroupDelete() {
+  if (deleteConfig && deleteConfig.mode === 'normal') {
+    groups = groups.filter(function(x){ return x.id !== deleteConfig.record.id; });
+    notify('专业群已删除');
+  }
+  deleteConfig = null;
+  closeModal('deleteModal');
+  renderGroups();
+}
+
+// ============== 专业列表 ==============
+function renderMajors() {
+  var rows = majors.filter(function(r) {
+    var kw = majorApplied.keyword.trim().toLowerCase();
+    if (kw && (r.major + r.college).toLowerCase().indexOf(kw) < 0) return false;
+    return true;
+  });
+  var body = '';
+  rows.forEach(function(r, i) {
+    body += '<tr>' +
+      '<td class="col-index">' + (i + 1) + '</td>' +
+      '<td>' + esc(r.college) + '</td>' +
+      '<td>' + esc(r.major) + '</td>' +
+      '<td>' + esc(r.leader) + '</td>' +
+      '<td>' + ((r.maintainers || []).join('、') || '<span class="empty-cell">-</span>') + '</td>' +
+      '<td class="col-actions"><button class="text-action" onclick="openLeaderEdit(\'' + r.id + '\')">编辑</button></td></tr>';
+  });
+  if (!rows.length) body = '<tr><td colspan="6" style="text-align:center;color:#737585;padding:32px 0">暂无数据</td></tr>';
+  document.getElementById('majorTableBody').innerHTML = body;
+  document.getElementById('majorPageInfo').textContent = '共 ' + rows.length + ' 条记录';
+}
+function queryMajor() { majorApplied.keyword = document.getElementById('majorKeyword').value; notify('已按当前条件查询'); renderMajors(); }
+function resetMajorFilter() { document.getElementById('majorKeyword').value = ''; majorApplied.keyword = ''; renderMajors(); }
+
+// 新增专业
+function openMajorCreate() {
+  modalCtx = 'majorCreate';
+  majorCreator = { college: '', major: '', leader: '', maintainers: [] };
+  var html = '<div class="form-table">';
+  html += fieldRow('单位名称', selectHtml('mc-college', collegeOptions, '', '请选择单位'), true);
+  html += fieldRow('专业名称', selectHtml('mc-major', majorDictionaryOptions, '', '请选择专业'), true);
+  html += fieldRow('专业负责人', selectHtml('mc-leader', leaderOptions, '', '请选择专业负责人'), true);
+  html += fieldRow('专业人员', multiSelectHtml('mc-maintainers', leaderOptions, []), false, true);
+  html += '</div>';
+  document.getElementById('majorCreateBody').innerHTML = html;
+  document.getElementById('majorCreateModal').classList.add('is-open');
+}
+function saveMajorCreate() {
+  if (!majorCreator.college) { notify('请选择单位'); return; }
+  if (!majorCreator.major) { notify('请选择专业'); return; }
+  if (!majorCreator.leader) { notify('请选择专业负责人'); return; }
+  if (majors.some(function(m){ return m.college === majorCreator.college && m.major === majorCreator.major; })) { notify('该单位已存在此专业'); return; }
+  majors.unshift({ id: 'm-' + Date.now(), college: majorCreator.college, major: majorCreator.major, leader: majorCreator.leader, maintainers: majorCreator.maintainers.filter(function(n){ return n !== majorCreator.leader; }) });
+  closeModal('majorCreateModal');
+  notify('专业已新增');
+  renderMajors();
+}
+
+// 编辑专业负责人
+function openLeaderEdit(id) {
+  modalCtx = 'leader';
+  var r = majors.find(function(x){ return x.id === id; });
+  if (!r) return;
+  leaderDraft = JSON.parse(JSON.stringify(r));
+  var html = '<div class="form-table">';
+  html += fieldRow('学院', inputHtml('ld-college', r.college, '', true));
+  html += fieldRow('专业', inputHtml('ld-major', r.major, '', true));
+  html += fieldRow('专业负责人', selectHtml('ld-leader', leaderOptions, r.leader, '请选择专业负责人'), true);
+  html += fieldRow('专业人员', multiSelectHtml('ld-maintainers', leaderOptions.filter(function(n){ return n !== r.leader; }), r.maintainers || []), false, true);
+  html += '</div>';
+  document.getElementById('leaderModalBody').innerHTML = html;
+  document.getElementById('leaderModal').classList.add('is-open');
+}
+function saveLeader() {
+  if (!leaderDraft) return;
+  leaderDraft.maintainers = (leaderDraft.maintainers || []).filter(function(n){ return n !== leaderDraft.leader; });
+  majors = majors.map(function(x){ return x.id === leaderDraft.id ? leaderDraft : x; });
+  closeModal('leaderModal');
+  notify('专业负责人已保存');
+  renderMajors();
+}
+
+// 导入
+function openImport() { document.getElementById('importModal').classList.add('is-open'); }
+function closeImport() { closeModal('importModal'); document.getElementById('importFile').value = ''; document.getElementById('importFileName').textContent = ''; }
+document.getElementById('importFile').addEventListener('change', function() {
+  document.getElementById('importFileName').textContent = this.files && this.files[0] ? '已选择：' + this.files[0].name : '';
+});
+function confirmImport() {
+  var f = document.getElementById('importFile').files[0];
+  if (!f) { notify('请先选择专业人员清单'); return; }
+  closeImport();
+  notify('专业人员清单导入成功，共更新 3 条记录');
+}
+
+renderGroups();
+renderMajors();
+</script>
+</body>
+</html>

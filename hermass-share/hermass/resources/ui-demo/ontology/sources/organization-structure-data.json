@@ -1,0 +1,88 @@
+{
+  "dataSourceId": "organization-structure-snapshot-20260904",
+  "title": "组织机构数据快照",
+  "capturedAt": "2026-09-04",
+  "description": "从 T_RS_JGGL_XZJG、T_RS_ZXBZ_DW、T_RS_ZXBZ_DWLB 三张表导出的组织机构完整数据",
+  "authority": "system-export",
+  "usedFor": [
+    "组织机构本体实例数据参考",
+    "组织层级关系验证",
+    "组织类别分类体系确认",
+    "字段映射和数据质量评估"
+  ],
+  "organizationCategories": [
+    {
+      "code": "1",
+      "name": "深圳职业技术大学",
+      "level": 1,
+      "parentCode": null,
+      "inUse": true,
+      "sortOrder": 1
+    },
+    {
+      "code": "100",
+      "name": "党政教辅机构",
+      "level": 2,
+      "parentCode": "1",
+      "inUse": true,
+      "sortOrder": 2
+    },
+    {
+      "code": "300",
+      "name": "教学单位",
+      "level": 2,
+      "parentCode": "1",
+      "inUse": true,
+      "sortOrder": 3
+    },
+    {
+      "code": "400",
+      "name": "产学研单位",
+      "level": 2,
+      "parentCode": "1",
+      "inUse": true,
+      "sortOrder": 4
+    },
+    {
+      "code": "900",
+      "name": "后勤服务企业",
+      "level": 2,
+      "parentCode": "1",
+      "inUse": true,
+      "sortOrder": 5
+    },
+    {
+      "code": "999",
+      "name": "其他",
+      "level": 2,
+      "parentCode": "1",
+      "inUse": true,
+      "sortOrder": 6
+    }
+  ],
+  "statistics": {
+    "totalOrganizations": 355,
+    "totalDepartments": 355,
+    "totalCategories": 6,
+    "levelDistribution": {
+      "level1": 0,
+      "level2": 0,
+      "level3": 0,
+      "level4": 0
+    },
+    "activeOrganizations": 0,
+    "inactiveOrganizations": 0
+  },
+  "dataFiles": {
+    "fullDataExport": "/tmp/org_data.json",
+    "schemaDefinition": "sources/legacy-schemas/organization-tables.json"
+  },
+  "notes": [
+    "完整数据已导出到 /tmp/org_data.json，包含所有 355 条组织记录",
+    "T_RS_JGGL_XZJG 和 T_RS_ZXBZ_DW 记录数相同，需确认两表关系和使用场景",
+    "组织类别采用三位数编码体系：1xx=党政教辅、3xx=教学单位、4xx=产学研、9xx=后勤及其他",
+    "层级结构最深4层，通过 CC 字段标识，通过 LS 字段引用上级",
+    "部分组织缺少成立日期、撤销日期等生命周期信息",
+    "本数据快照用于本体建模参考，实际使用时需重新从权威数据源获取"
+  ]
+}

@@ -1,0 +1,13 @@
+import { createRoot } from 'react-dom/client'
+import { DSStandardListTemplate } from '@wisedu/design-system'
+import { usePageConfig } from './{{PAGE_NAME}}.config.js'
+import './{{PAGE_NAME}}.css'
+
+export const PAGE_GENERATION_CONTRACT = 'v1'
+export const PAGE_TEMPLATE = 'standard-list-root'
+
+// 仅修改同目录业务配置；字段由 @wisedu/hr-domain/fields 生成。
+function StandardListPage() {
+  return <DSStandardListTemplate config={usePageConfig()} />
+}
+createRoot(document.getElementById('app')).render(<StandardListPage />)

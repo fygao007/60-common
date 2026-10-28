@@ -1,0 +1,33 @@
+@import '../tokens.css';
+
+.ds-audit-detail-drawer__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-4) var(--ds-space-6);
+  margin: 0;
+}
+
+.ds-audit-detail-drawer__item {
+  display: grid;
+  gap: var(--ds-space-1);
+  min-width: 0;
+}
+
+.ds-audit-detail-drawer__item dt {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-audit-detail-drawer__item dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+  overflow-wrap: anywhere;
+}
+
+.ds-audit-detail-drawer__extra {
+  margin-top: var(--ds-space-6);
+}

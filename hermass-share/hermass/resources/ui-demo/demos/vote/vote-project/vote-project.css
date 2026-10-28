@@ -1,0 +1,31 @@
+@import '../../../framework/react-page-host.css';
+
+.vote-project-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-container);
+}
+
+.vp-shell {
+  flex: 1;
+  min-height: 0;
+}
+
+.vp-card {
+  min-height: 168px;
+}
+
+.vp-toast {
+  position: fixed;
+  z-index: 80;
+  right: 24px;
+  bottom: 24px;
+  padding: 9px 16px;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-primary);
+  box-shadow: var(--ds-shadow-lg);
+  color: var(--ds-color-text-inverse);
+}

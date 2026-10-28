@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>树形配置页场景</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Tag/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/GroupTitle/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .tcp-page {
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .tcp-shell {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      width: min(1240px, 100%);
+      min-height: calc(100vh - 32px);
+      margin: 0 auto;
+      overflow: hidden;
+      background: var(--ds-color-bg-container);
+      border-radius: var(--ds-radius-xl);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .tcp-rail {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+      padding: 16px 12px;
+      border-right: 1px solid var(--ds-color-border-secondary);
+      align-content: start;
+    }
+
+    .tcp-rail__title {
+      margin: 0;
+      padding: 0 4px;
+      font-size: var(--ds-font-size-md);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    /* 静态示意树：业务页请使用 @wisedu/design-system 的 DSTree，勿复制此处 DOM */
+    .tcp-tree {
+      display: grid;
+      gap: 2px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      align-content: start;
+    }
+
+    .tcp-tree__group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      padding: 6px 8px;
+      background: transparent;
+      border: 0;
+      border-radius: var(--ds-radius-md);
+      font: inherit;
+      font-weight: var(--ds-font-weight-semibold);
+      cursor: pointer;
+    }
+
+    .tcp-tree__caret {
+      flex: none;
+      transition: transform .15s;
+    }
+
+    .tcp-tree__item[data-collapsed="true"] .tcp-tree__caret {
+      transform: rotate(-90deg);
+    }
+
+    .tcp-tree__children {
+      display: grid;
+      gap: 2px;
+      margin: 0;
+      padding: 0 0 0 22px;
+      list-style: none;
+    }
+
+    .tcp-tree__item[data-collapsed="true"] .tcp-tree__children {
+      display: none;
+    }
+
+    .tcp-tree__node {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      padding: 6px 8px;
+      background: transparent;
+      border: 0;
+      border-radius: var(--ds-radius-md);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .tcp-tree__node:hover {
+      background: var(--ds-color-bg-page);
+    }
+
+    .tcp-tree__node.is-active {
+      color: var(--ds-color-primary, #333fff);
+      background: #f0f2ff;
+    }
+
+    .tcp-tree__count {
+      color: var(--ds-color-text-secondary);
+      font-size: 12px;
+    }
+
+    .tcp-work {
+      display: grid;
+      min-width: 0;
+      gap: 12px;
+      padding: 16px;
+      align-content: start;
+    }
+
+    .tcp-work__head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tcp-work__head h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .tcp-work__head p {
+      margin: 4px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .tcp-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tcp-table {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .tcp-table ds-data-table {
+      width: 100%;
+      min-width: 0;
+      height: 460px;
+    }
+
+    .tcp-toast {
+      position: fixed;
+      z-index: 50;
+      right: 24px;
+      bottom: 24px;
+      padding: 9px 16px;
+      color: #fff;
+      background: rgba(31, 38, 153, .94);
+      border-radius: var(--ds-radius-md);
+      box-shadow: var(--ds-shadow-sm);
+    }
+
+    .tcp-toast[hidden] { display: none; }
+
+    @media (max-width: 900px) {
+      .tcp-shell { grid-template-columns: 1fr; }
+      .tcp-rail { border-right: 0; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    }
+  </style>
+</head>
+<body>
+  <main class="tcp-page ds-scope">
+    <div class="tcp-shell">
+      <aside class="tcp-rail" aria-label="配置目录">
+        <h2 class="tcp-rail__title">配置目录</h2>
+        <ul class="tcp-tree" data-tree></ul>
+      </aside>
+
+      <section class="tcp-work">
+        <header class="tcp-work__head">
+          <div>
+            <h1 data-work-title>—</h1>
+            <p data-work-desc>—</p>
+          </div>
+          <div class="tcp-actions">
+            <button class="ds-button ds-button--default ds-button--default-size" type="button" data-action="新增字段"><span class="ds-button__label">新增字段</span></button>
+            <button class="ds-button ds-button--primary ds-button--default-size" type="button" data-action="保存配置"><span class="ds-button__label">保存配置</span></button>
+          </div>
+        </header>
+
+        <div class="ds-group-title" role="heading" aria-level="2">
+          <div class="ds-group-title__main"><span class="ds-group-title__text">字段配置</span></div>
+          <div class="ds-group-title__extra" data-work-count></div>
+        </div>
+
+        <div class="tcp-table">
+          <ds-data-table id="fieldTable" row-key="id" show-index min-width="760" table-tools="false"></ds-data-table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="tcp-toast" role="status" data-toast hidden></div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "lit": "../node_modules/lit/index.js",
+      "lit/": "../node_modules/lit/",
+      "lit-html": "../node_modules/lit-html/lit-html.js",
+      "lit-html/": "../node_modules/lit-html/",
+      "lit-element/": "../node_modules/lit-element/",
+      "@lit/reactive-element": "../node_modules/@lit/reactive-element/reactive-element.js",
+      "@lit/reactive-element/": "../node_modules/@lit/reactive-element/"
+    }
+  }
+  </script>
+  <script type="module" src="../packages/design-system/web-components/DataTable/ds-data-table.js"></script>
+  <script type="module">
+    const TREE = [
+      {
+        key: 'basic',
+        title: '基础信息',
+        children: [
+          { key: 'profile', title: '个人信息', desc: '来源于人事主数据，仅可控制展示与必填。' },
+          { key: 'education', title: '学历信息', desc: '来源于人事主数据，仅可控制展示与必填。' },
+        ],
+      },
+      {
+        key: 'business',
+        title: '业务信息',
+        children: [
+          { key: 'record', title: '过程记录', desc: '业务自维护表，可增删字段并配置校验。' },
+          { key: 'achievement', title: '成果材料', desc: '业务自维护表，可增删字段并配置校验。' },
+        ],
+      },
+    ];
+
+    const FIELDS = {
+      profile: [
+        { id: 'p1', name: '姓名', type: '文本', source: '主数据同步', required: true, visible: true },
+        { id: 'p2', name: '工号', type: '文本', source: '主数据同步', required: true, visible: true },
+        { id: 'p3', name: '所属单位', type: '组织选择', source: '主数据同步', required: true, visible: true },
+        { id: 'p4', name: '联系电话', type: '文本', source: '主数据同步', required: false, visible: false },
+      ],
+      education: [
+        { id: 'e1', name: '最高学历', type: '字典', source: '主数据同步', required: true, visible: true },
+        { id: 'e2', name: '毕业院校', type: '文本', source: '主数据同步', required: false, visible: true },
+        { id: 'e3', name: '毕业时间', type: '日期', source: '主数据同步', required: false, visible: true },
+      ],
+      record: [
+        { id: 'r1', name: '记录标题', type: '文本', source: '本表维护', required: true, visible: true },
+        { id: 'r2', name: '记录日期', type: '日期', source: '本表维护', required: true, visible: true },
+        { id: 'r3', name: '过程描述', type: '长文本', source: '本表维护', required: true, visible: true },
+        { id: 'r4', name: '佐证附件', type: '附件', source: '本表维护', required: false, visible: true },
+      ],
+      achievement: [
+        { id: 'a1', name: '成果名称', type: '文本', source: '本表维护', required: true, visible: true },
+        { id: 'a2', name: '成果级别', type: '字典', source: '本表维护', required: true, visible: true },
+        { id: 'a3', name: '获得时间', type: '日期', source: '本表维护', required: false, visible: true },
+      ],
+    };
+
+    const NODE_MAP = new Map(TREE.flatMap((group) => group.children.map((node) => [node.key, node])));
+
+    const treeBox = document.querySelector('[data-tree]');
+    const table = document.getElementById('fieldTable');
+    const toast = document.querySelector('[data-toast]');
+    let activeKey = 'profile';
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.hidden = false;
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => { toast.hidden = true; }, 1600);
+    }
+
+    function renderTree() {
+      treeBox.innerHTML = TREE.map((group) => `
+        <li class="tcp-tree__item" data-group="${group.key}" data-collapsed="false">
+          <button class="tcp-tree__group" type="button" data-toggle="${group.key}">
+            <span class="tcp-tree__caret" aria-hidden="true">▾</span>
+            <span>${group.title}</span>
+          </button>
+          <ul class="tcp-tree__children">
+            ${group.children.map((node) => `
+              <li>
+                <button class="tcp-tree__node ${node.key === activeKey ? 'is-active' : ''}" type="button" data-node="${node.key}">
+                  <span>${node.title}</span>
+                  <span class="tcp-tree__count">${FIELDS[node.key].length}</span>
+                </button>
+              </li>`).join('')}
+          </ul>
+        </li>`).join('');
+    }
+
+    function renderWork() {
+      const node = NODE_MAP.get(activeKey);
+      const rows = FIELDS[activeKey];
+      document.querySelector('[data-work-title]').textContent = node.title;
+      document.querySelector('[data-work-desc]').textContent = node.desc;
+      document.querySelector('[data-work-count]').textContent = `共 ${rows.length} 个字段`;
+      table.columns = [
+        { key: 'name', title: '字段名称', width: 180, fixed: 'left' },
+        { key: 'type', title: '字段类型', width: 120 },
+        { key: 'source', title: '数据来源', width: 140 },
+        { key: 'requiredText', title: '必填', width: 90, type: 'tag' },
+        { key: 'visible', title: '前台展示', width: 110, type: 'switch' },
+      ];
+      table.data = rows.map((row) => ({ ...row, requiredText: row.required ? '必填' : '选填' }));
+    }
+
+    treeBox.addEventListener('click', (event) => {
+      const toggle = event.target.closest('[data-toggle]');
+      if (toggle) {
+        const item = treeBox.querySelector(`[data-group="${toggle.dataset.toggle}"]`);
+        item.dataset.collapsed = item.dataset.collapsed === 'true' ? 'false' : 'true';
+        return;
+      }
+      const node = event.target.closest('[data-node]');
+      if (!node) return;
+      activeKey = node.dataset.node;
+      renderTree();
+      renderWork();
+    });
+
+    document.querySelector('.tcp-actions').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-action]');
+      if (!button) return;
+      showToast(`演示：${button.dataset.action}`);
+    });
+
+    table.addEventListener('ds-cell-change', (event) => {
+      const { record, value } = event.detail;
+      const source = FIELDS[activeKey].find((row) => row.id === record.id);
+      if (source) source.visible = value;
+      showToast(`「${record.name}」已${value ? '设为展示' : '隐藏'}`);
+    });
+
+    renderTree();
+    renderWork();
+  </script>
+</body>
+</html>

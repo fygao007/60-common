@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>只读表单组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/ReadOnlyForm/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/GroupTitle/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .readonly-preview {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: var(--ds-space-5);
+    }
+
+    .readonly-preview__section {
+      display: grid;
+      min-width: 0;
+      gap: var(--ds-space-3);
+      padding: var(--ds-space-4);
+      background: var(--ds-color-bg-container);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: var(--ds-radius-xl);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .readonly-preview__section + .readonly-preview__section {
+      margin-top: var(--ds-space-4);
+    }
+
+    .readonly-preview__head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 20px;
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: 28px;
+    }
+
+    .readonly-preview__head p {
+      margin: var(--ds-space-1) 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .readonly-preview__body {
+      margin-top: var(--ds-space-1);
+    }
+
+    @media (max-width: 720px) {
+      .readonly-preview {
+        width: 100%;
+        padding: var(--ds-space-3);
+      }
+
+      .readonly-preview__section {
+        padding: var(--ds-space-3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="readonly-preview ds-scope">
+    <section class="readonly-preview__section readonly-preview__head">
+      <h1>只读表单组件</h1>
+      <p>DSReadOnlyForm / DSReadOnlyField：用于详情、审核查看和提交预览，只展示标签和值，不渲染输入控件。</p>
+    </section>
+
+    <section class="readonly-preview__section">
+      <div class="readonly-preview__body ds-readonly-form ds-readonly-form--2-column">
+        <div class="ds-readonly-form__grid">
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">此处是文本内容</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">此处是文本内容</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">选项</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">2025.03.04 00:00:00</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">14:35:05</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">14:35:05 - 14:35:05</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">2025.03.05</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">2025.03.09 - 2025.03.15</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">选项/选项/选项</div>
+          </div>
+          <div class="ds-readonly-field">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">2025.03.04 00:00:00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="readonly-preview__section">
+      <div class="readonly-preview__body ds-readonly-form ds-readonly-form--2-column">
+        <div class="ds-readonly-form__grid">
+          <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">此处是文本内容</div>
+          </div>
+          <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">此处是文本内容</div>
+          </div>
+          <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">选项/选项/选项</div>
+          </div>
+          <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">
+              <div class="ds-readonly-files">
+                <div class="ds-readonly-file">
+                  <span class="ds-readonly-file__icon" aria-hidden="true">□</span>
+                  <span class="ds-readonly-file__name">文件上传附件名称.zip</span>
+                  <span class="ds-readonly-file__actions" aria-hidden="true">
+                    <span class="ds-readonly-file__action">◉</span>
+                    <span class="ds-readonly-file__action">□</span>
+                    <span class="ds-readonly-file__action">↓</span>
+                  </span>
+                </div>
+                <div class="ds-readonly-file">
+                  <span class="ds-readonly-file__icon" aria-hidden="true">□</span>
+                  <span class="ds-readonly-file__name">文件上传附件名称.zip</span>
+                  <span class="ds-readonly-file__actions" aria-hidden="true">
+                    <span class="ds-readonly-file__action">◉</span>
+                    <span class="ds-readonly-file__action">□</span>
+                    <span class="ds-readonly-file__action">↓</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-readonly-field ds-readonly-field--full ds-readonly-field--start">
+            <span class="ds-readonly-field__label"><span>标题名称</span></span>
+            <div class="ds-readonly-field__content">
+              <div class="ds-readonly-images">
+                <img class="ds-readonly-image" alt="附件预览" src="../assets/upload-images/3937226a9b8a2cdc0d3ff68fdce83f0f.png" />
+                <img class="ds-readonly-image" alt="附件预览" src="../assets/upload-images/e455e4bccf26ac34d3ac6cf5f09c5cc9.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

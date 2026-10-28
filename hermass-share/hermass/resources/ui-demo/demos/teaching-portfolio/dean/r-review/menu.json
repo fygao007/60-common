@@ -1,0 +1,33 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "dean",
+    "label": "二级学院"
+  },
+  "menu": {
+    "key": "r-review",
+    "label": "教学档案审核",
+    "group": "教学档案审核",
+    "defaultFeature": "r-review"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-dean-r-review",
+      "label": "教学档案审核（二级学院）",
+      "type": "react-business-page",
+      "html": "r-review.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../l-dash/l-dash.html",
+          "../p-board/p-board.html"
+        ]
+      }
+    }
+  ]
+}

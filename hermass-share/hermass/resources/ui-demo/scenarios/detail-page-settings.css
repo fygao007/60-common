@@ -1,0 +1,9 @@
+html, body, #app { min-height: 100%; margin: 0; }
+.detail-settings-page { min-height: 100vh; padding: 12px; background: var(--ds-color-bg-page); }
+.detail-settings-page__shell { display: flex; min-height: calc(100vh - 24px); flex-direction: column; overflow: hidden; background: var(--ds-color-bg-container); border-radius: 8px; }
+.detail-settings-page__header { flex: none; padding-inline: 20px; border-bottom: 1px solid var(--ds-color-border-secondary); }
+.detail-settings-page__tabs { flex: none; padding-inline: 20px; }
+.detail-settings-page__content { flex: 1; min-height: 0; padding: 20px; overflow: auto; }
+.detail-settings-page__content .ds-form-group { max-width: 960px; }
+.detail-settings-page__footer { display: flex; flex: none; min-height: 64px; align-items: center; justify-content: center; padding: 12px 20px; border-top: 1px solid var(--ds-color-border-secondary); }
+@media (max-width: 640px) { .detail-settings-page { padding: 0; } .detail-settings-page__shell { min-height: 100vh; border-radius: 0; } .detail-settings-page__header, .detail-settings-page__tabs, .detail-settings-page__content { padding-inline: 12px; } }

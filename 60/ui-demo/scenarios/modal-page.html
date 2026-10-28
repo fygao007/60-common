@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>普通弹窗页面</title>
+  <link rel="stylesheet" href="../packages/design-system/src/tokens.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body,
+    button,
+    input {
+      font-family: var(--ds-font-family);
+      font-size: 14px;
+    }
+
+    body {
+      color: #000;
+      background: #f5f6f8;
+      overflow: hidden;
+    }
+
+    button { cursor: pointer; }
+
+    .demo-page {
+      min-height: 100%;
+      padding: 24px;
+    }
+
+    .demo-card {
+      min-height: calc(100vh - 48px);
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 12px;
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .demo-header h1 {
+      flex: 1;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-width: 72px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+      transition: color 120ms, border-color 120ms, background-color 120ms;
+    }
+
+    .button:hover {
+      color: #333fff;
+      border-color: #333fff;
+    }
+
+    .button.is-primary {
+      color: #fff;
+      background: #333fff;
+      border-color: #333fff;
+    }
+
+    .button.is-primary:hover {
+      color: #fff;
+      background: #202de8;
+      border-color: #202de8;
+    }
+
+    .demo-toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #fafafc 0%, rgba(255,255,255,0) 100%);
+      border-radius: 8px;
+    }
+
+    .demo-placeholder {
+      width: 220px;
+      height: 32px;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+    }
+
+    .demo-table {
+      height: 240px;
+      border: 1px solid #eeeef0;
+      background:
+        linear-gradient(#fafafa 40px, transparent 40px),
+        repeating-linear-gradient(0deg, transparent 0 45px, #eeeef0 45px 46px),
+        repeating-linear-gradient(90deg, transparent 0 180px, #eeeef0 180px 181px);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(0, 0, 0, .2);
+    }
+
+    .modal-overlay[hidden] { display: none; }
+
+    .modal {
+      display: flex;
+      width: 600px;
+      max-width: calc(100vw - 48px);
+      height: 560px;
+      max-height: calc(100vh - 48px);
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(31, 41, 55, .14);
+      animation: modal-enter 160ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    @keyframes modal-enter {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(.99);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      min-height: 56px;
+      flex: none;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 12px 12px 20px;
+      background: #fff;
+    }
+
+    .modal-title {
+      flex: 1;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .modal-close {
+      display: inline-grid;
+      width: 32px;
+      height: 32px;
+      padding: 8px;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+    }
+
+    .modal-close:hover { background: #f6f6f7; }
+
+    .modal-close img {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    .modal-body {
+      flex: 1;
+      min-height: 0;
+      padding: 0 20px;
+      overflow: auto;
+      scrollbar-color: #c9cdd4 transparent;
+      scrollbar-width: thin;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-item {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1fr);
+      align-items: start;
+      gap: 16px;
+      min-width: 370px;
+    }
+
+    .form-label {
+      display: flex;
+      min-height: 32px;
+      align-items: center;
+      justify-content: flex-end;
+      color: #505266;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: right;
+    }
+
+    .form-control {
+      position: relative;
+      min-width: 0;
+    }
+
+    .control,
+    .text-input {
+      display: flex;
+      width: 100%;
+      height: 32px;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      outline: none;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: left;
+      transition: border-color 120ms, box-shadow 120ms;
+    }
+
+    .control:hover,
+    .text-input:hover { border-color: #b7b9c6; }
+
+    .control:focus,
+    .text-input:focus,
+    .form-control.is-open .control {
+      border-color: #333fff;
+      box-shadow: 0 0 0 2px rgba(51, 63, 255, .12);
+    }
+
+    .text-input::placeholder { color: #9697a3; }
+
+    .control-value {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .control-value.is-placeholder { color: #9697a3; }
+
+    .control-icon {
+      display: block;
+      width: 14px;
+      height: 14px;
+      flex: none;
+    }
+
+    .range-value {
+      display: grid;
+      flex: 1;
+      min-width: 0;
+      grid-template-columns: minmax(0, 1fr) 12px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      color: #9697a3;
+    }
+
+    .range-value span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .range-value img {
+      width: 12px;
+      height: 12px;
+    }
+
+    .control-menu {
+      position: absolute;
+      top: 36px;
+      right: 0;
+      left: 0;
+      z-index: 12;
+      display: none;
+      padding: 4px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      box-shadow: 0 6px 16px rgba(70, 79, 105, .16);
+    }
+
+    .form-control.is-open .control-menu { display: block; }
+
+    .control-option {
+      display: flex;
+      width: 100%;
+      min-height: 32px;
+      align-items: center;
+      padding: 5px 8px;
+      color: #000;
+      background: #fff;
+      border: 0;
+      border-radius: 4px;
+      text-align: left;
+    }
+
+    .control-option:hover { background: #f6f6f7; }
+
+    .control-option.is-selected {
+      color: #333fff;
+      font-weight: 600;
+      background: #f5f5ff;
+    }
+
+    .switch-row {
+      display: flex;
+      height: 32px;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .switch {
+      display: inline-flex;
+      min-width: 48px;
+      height: 20px;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 2px 2px 6px;
+      color: #fff;
+      background: #333fff;
+      border: 0;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .switch-knob {
+      width: 16px;
+      height: 16px;
+      margin-left: auto;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0,0,0,.16);
+    }
+
+    .switch.is-off {
+      padding: 2px 6px 2px 2px;
+      color: #505266;
+      background: #eeeef0;
+    }
+
+    .switch.is-off .switch-knob {
+      order: -1;
+      margin-right: auto;
+      margin-left: 0;
+    }
+
+    .modal-footer {
+      display: flex;
+      min-height: 56px;
+      flex: none;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #fff;
+    }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      z-index: 200;
+      padding: 8px 16px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, .16);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -8px);
+      transition: opacity 160ms, transform 160ms;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 560px) {
+      .demo-page { padding: 12px; }
+      .demo-toolbar { flex-wrap: wrap; }
+      .demo-placeholder { width: 100%; }
+
+      .modal-overlay { padding: 12px; }
+
+      .modal {
+        max-width: calc(100vw - 24px);
+        max-height: calc(100vh - 24px);
+      }
+
+      .modal-header { padding-left: 16px; }
+      .modal-body { padding: 0 16px; }
+
+      .form-item {
+        min-width: 0;
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .form-label {
+        min-height: auto;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      .modal-footer {
+        padding-right: 16px;
+        padding-left: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page" aria-label="普通弹窗示例">
+    <section class="demo-card">
+      <header class="demo-header">
+        <h1>弹窗示例页面</h1>
+        <button class="button" id="openModal" type="button">打开弹窗</button>
+      </header>
+      <div class="demo-toolbar" aria-hidden="true">
+        <span class="demo-placeholder"></span>
+        <span class="demo-placeholder"></span>
+        <span class="demo-placeholder"></span>
+      </div>
+      <div class="demo-table" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <h2 class="modal-title" id="modalTitle">标题</h2>
+        <button class="modal-close" id="closeModal" type="button" aria-label="关闭弹窗">
+          <img src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_233b9b60.svg" alt="" />
+        </button>
+      </header>
+
+      <div class="modal-body">
+        <form class="modal-form" id="modalForm">
+          <div class="form-item">
+            <label class="form-label" for="titleName">标题名称</label>
+            <div class="form-control">
+              <input class="text-input" id="titleName" name="titleName" type="text" placeholder="请输入" />
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="selectLabel">标题名标</span>
+            <div class="form-control" data-popup-control>
+              <button class="control" type="button" aria-labelledby="selectLabel" aria-expanded="false">
+                <span class="control-value is-placeholder">请选择</span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_001956de.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option">选项一</button>
+                <button class="control-option" type="button" role="option">选项二</button>
+                <button class="control-option" type="button" role="option">选项三</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label">标题名标</span>
+            <div class="form-control switch-row">
+              <button class="switch" id="modalSwitch" type="button" role="switch" aria-checked="true">
+                <span class="switch-text">是</span>
+                <span class="switch-knob" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="timeLabel">标题名标</span>
+            <div class="form-control" data-popup-control>
+              <button class="control" type="button" aria-labelledby="timeLabel" aria-expanded="false">
+                <span class="control-value is-placeholder">请选择时间</span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_cce78013.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option">08:30</button>
+                <button class="control-option" type="button" role="option">12:00</button>
+                <button class="control-option" type="button" role="option">18:30</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="dateLabel">标题名标</span>
+            <div class="form-control" data-popup-control>
+              <button class="control" type="button" aria-labelledby="dateLabel" aria-expanded="false">
+                <span class="control-value is-placeholder">请选择日期</span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_9788d814.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option">2026-06-12</button>
+                <button class="control-option" type="button" role="option">2026-06-13</button>
+                <button class="control-option" type="button" role="option">2026-06-14</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="datetimeLabel">标题名标</span>
+            <div class="form-control" data-popup-control>
+              <button class="control" type="button" aria-labelledby="datetimeLabel" aria-expanded="false">
+                <span class="control-value is-placeholder">请选择日期</span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_cce78013.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option">2026-06-12 08:30</button>
+                <button class="control-option" type="button" role="option">2026-06-12 12:00</button>
+                <button class="control-option" type="button" role="option">2026-06-12 18:30</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="timeRangeLabel">标题名标</span>
+            <div class="form-control" data-popup-control data-range>
+              <button class="control" type="button" aria-labelledby="timeRangeLabel" aria-expanded="false">
+                <span class="range-value">
+                  <span>开始时间</span>
+                  <img src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_b7796298.svg" alt="" />
+                  <span>结束时间</span>
+                </span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_cce78013.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option" data-start="08:30" data-end="12:00">08:30 至 12:00</button>
+                <button class="control-option" type="button" role="option" data-start="14:00" data-end="18:30">14:00 至 18:30</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="dateRangeLabel">标题名标</span>
+            <div class="form-control" data-popup-control data-range>
+              <button class="control" type="button" aria-labelledby="dateRangeLabel" aria-expanded="false">
+                <span class="range-value">
+                  <span>开始日期</span>
+                  <img src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_b7796298.svg" alt="" />
+                  <span>结束日期</span>
+                </span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_9788d814.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option" data-start="2026-06-12" data-end="2026-06-18">2026-06-12 至 2026-06-18</button>
+                <button class="control-option" type="button" role="option" data-start="2026-07-01" data-end="2026-07-07">2026-07-01 至 2026-07-07</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <span class="form-label" id="dateRangeLabel2">标题名标</span>
+            <div class="form-control" data-popup-control data-range>
+              <button class="control" type="button" aria-labelledby="dateRangeLabel2" aria-expanded="false">
+                <span class="range-value">
+                  <span>开始日期</span>
+                  <img src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_b7796298.svg" alt="" />
+                  <span>结束日期</span>
+                </span>
+                <img class="control-icon" src="../../.mastergo/195991886967017-2-003301/asset/icons/svg_9788d814.svg" alt="" />
+              </button>
+              <div class="control-menu" role="listbox">
+                <button class="control-option" type="button" role="option" data-start="2026-08-01" data-end="2026-08-31">2026-08-01 至 2026-08-31</button>
+                <button class="control-option" type="button" role="option" data-start="2026-09-01" data-end="2026-09-30">2026-09-01 至 2026-09-30</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <footer class="modal-footer">
+        <button class="button" id="cancelModal" type="button">取消</button>
+        <button class="button is-primary" type="submit" form="modalForm">确定</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">提交成功</div>
+
+  <script>
+    const overlay = document.querySelector('#modalOverlay');
+    const modal = document.querySelector('#modal');
+    const openButton = document.querySelector('#openModal');
+    const closeButton = document.querySelector('#closeModal');
+    const cancelButton = document.querySelector('#cancelModal');
+    const form = document.querySelector('#modalForm');
+    const toast = document.querySelector('#toast');
+    const modalSwitch = document.querySelector('#modalSwitch');
+    let lastFocusedElement = openButton;
+    let toastTimer;
+
+    function openModal() {
+      lastFocusedElement = document.activeElement;
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => closeButton.focus());
+    }
+
+    function closeModal() {
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      lastFocusedElement?.focus();
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 1800);
+    }
+
+    function closeAllPopups(except) {
+      document.querySelectorAll('[data-popup-control].is-open').forEach((control) => {
+        if (control === except) return;
+        control.classList.remove('is-open');
+        control.querySelector('.control').setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    document.querySelectorAll('[data-popup-control]').forEach((control) => {
+      const trigger = control.querySelector('.control');
+      const options = control.querySelectorAll('.control-option');
+
+      trigger.addEventListener('click', () => {
+        const willOpen = !control.classList.contains('is-open');
+        closeAllPopups(control);
+        control.classList.toggle('is-open', willOpen);
+        trigger.setAttribute('aria-expanded', String(willOpen));
+      });
+
+      options.forEach((option) => {
+        option.addEventListener('click', () => {
+          options.forEach((item) => item.classList.toggle('is-selected', item === option));
+          if (control.hasAttribute('data-range')) {
+            const rangeParts = control.querySelectorAll('.range-value span');
+            rangeParts[0].textContent = option.dataset.start;
+            rangeParts[1].textContent = option.dataset.end;
+            control.querySelector('.range-value').style.color = '#000';
+          } else {
+            const value = control.querySelector('.control-value');
+            value.textContent = option.textContent;
+            value.classList.remove('is-placeholder');
+          }
+          control.classList.remove('is-open');
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.focus();
+        });
+      });
+    });
+
+    modalSwitch.addEventListener('click', () => {
+      const isOn = modalSwitch.getAttribute('aria-checked') === 'true';
+      modalSwitch.setAttribute('aria-checked', String(!isOn));
+      modalSwitch.classList.toggle('is-off', isOn);
+      modalSwitch.querySelector('.switch-text').textContent = isOn ? '否' : '是';
+    });
+
+    openButton.addEventListener('click', openModal);
+    closeButton.addEventListener('click', closeModal);
+    cancelButton.addEventListener('click', closeModal);
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) closeModal();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-popup-control]')) closeAllPopups();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !overlay.hidden) closeModal();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      showToast('提交成功');
+      window.setTimeout(closeModal, 500);
+    });
+
+    modal.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') return;
+      const focusable = [...modal.querySelectorAll(
+        'button:not([disabled]), input:not([disabled])'
+      )].filter((element) => element.offsetParent !== null);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  </script>
+</body>
+</html>

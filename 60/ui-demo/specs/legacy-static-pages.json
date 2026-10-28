@@ -1,0 +1,4 @@
+{
+  "description": "Legacy static demos are read-only. Any content change requires migration to a .page.jsx entry using @wisedu/design-system.",
+  "pages": {}
+}

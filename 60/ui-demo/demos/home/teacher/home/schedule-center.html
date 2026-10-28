@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>日程中心 - 框架2</title>
+<link rel="stylesheet" href="../../../../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../../../../framework/theme.css" />
+<style>
+body { margin: 0; }
+
+/* ---- 页面通用容器（与框架其它业务页一致）---- */
+.app-page-frame {
+  --ap-blue:#3565ea; --ap-blue-weak:#eaf1ff;
+  --ap-ink:#1f2937; --ap-text:#4b5563; --ap-muted:#9ca3af;
+  --ap-line:#e8eaef; --ap-line-strong:#e5e7eb;
+  --ap-orange:#f59e0b; --ap-green:#18b981; --ap-red:#ef4444;
+  --ap-purple:#8b5cf6; --ap-purple-weak:#ede9fe;
+}
+.app-page { min-height:100%; background:#fff; }
+.ap-wrap { padding:0; }
+.ap-panel { background:#fff; border:1px solid var(--ap-line); border-radius:10px; box-shadow:0 1px 2px rgba(20,40,90,.04); }
+.ap-panel-body { padding:18px 18px 22px; }
+
+/* 主按钮 */
+.ap-btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:6px; height:36px; padding:0 16px; border:0; border-radius:8px; background:var(--ds-color-primary, #3565ea); color:#fff; font-size:14px; font-weight:600; cursor:pointer; }
+.ap-btn-primary:hover { background:var(--ds-color-primary-hover, #2c58d4); }
+.ap-btn-primary .plus { font-size:16px; line-height:1; }
+
+/* ================= 日程中心布局 ================= */
+.sc-grid { display:flex; gap:18px; align-items:stretch; }
+.sc-cal { flex:1 1 auto; min-width:0; }
+.sc-side { flex:0 0 360px; width:360px; border-left:1px solid var(--ap-line); padding-left:18px; display:flex; flex-direction:column; }
+
+/* ---- 日历头部 ---- */
+.sc-cal-head { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; }
+.sc-cal-head-left { display:flex; align-items:center; gap:14px; }
+.sc-month-wrap { position:relative; }
+.sc-month { display:inline-flex; align-items:center; gap:6px; padding:4px 6px; border:0; background:none; font-size:18px; font-weight:700; color:var(--ap-ink); cursor:pointer; border-radius:6px; }
+.sc-month:hover { background:var(--ap-blue-weak); }
+.sc-month .caret { font-size:12px; color:var(--ap-muted); transition:transform .15s; }
+.sc-month[aria-expanded="true"] .caret { transform:rotate(180deg); }
+
+/* 月份下拉选择 */
+.sc-month-pop { position:absolute; top:calc(100% + 6px); left:0; z-index:50; width:248px; padding:10px; background:#fff; border:1px solid var(--ap-line-strong); border-radius:10px; box-shadow:0 8px 24px rgba(20,40,90,.14); }
+.sc-month-pop[hidden] { display:none; }
+.sc-pop-head { display:flex; align-items:center; justify-content:space-between; padding:2px 4px 10px; font-size:15px; font-weight:700; color:var(--ap-ink); }
+.sc-pop-arrow { border:0; background:none; cursor:pointer; font-size:16px; line-height:1; color:var(--ap-muted); padding:4px 10px; border-radius:6px; }
+.sc-pop-arrow:hover { color:var(--ap-blue); background:var(--ap-blue-weak); }
+.sc-pop-months { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.sc-pop-m { padding:9px 0; text-align:center; border:0; border-radius:6px; font-size:13px; color:var(--ap-text); background:#f4f6fa; cursor:pointer; }
+.sc-pop-m:hover { color:var(--ap-blue); background:var(--ap-blue-weak); }
+.sc-pop-m.active { color:#fff; background:var(--ds-color-primary, #3565ea); }
+.sc-nav { display:inline-flex; align-items:center; border:1px solid var(--ap-line-strong); border-radius:8px; overflow:hidden; }
+.sc-nav button { border:0; background:#fff; padding:7px 16px; font-size:13px; color:var(--ap-text); cursor:pointer; border-left:1px solid var(--ap-line-strong); }
+.sc-nav button:first-child { border-left:0; }
+.sc-nav button.sc-nav-arrow { padding:7px 12px; font-size:16px; line-height:1; color:var(--ap-muted); }
+.sc-nav button:hover { color:var(--ap-blue); background:var(--ap-blue-weak); }
+.sc-nav button.active { color:var(--ap-blue); background:var(--ap-blue-weak); font-weight:600; }
+
+/* ---- 周表头 ---- */
+.sc-week { display:grid; grid-template-columns:repeat(7,1fr); border:1px solid var(--ap-line); border-bottom:0; border-radius:8px 8px 0 0; overflow:hidden; }
+.sc-week span { padding:10px 0 10px 14px; font-size:13px; color:var(--ap-muted); background:#fafbfc; }
+
+/* ---- 月历网格 ---- */
+.sc-days { display:grid; grid-template-columns:repeat(7,1fr); grid-auto-rows:1fr; border:1px solid var(--ap-line); border-radius:0 0 8px 8px; overflow:hidden; }
+.sc-cell { position:relative; min-height:96px; padding:8px 10px 26px; border-right:1px solid var(--ap-line); border-top:1px solid var(--ap-line); cursor:pointer; overflow:hidden; }
+.sc-days > .sc-cell:nth-child(7n) { border-right:0; }
+.sc-days > .sc-cell:nth-child(-n+7) { border-top:0; }
+.sc-cell:hover { background:#f7faff; }
+.sc-cell.is-out { background:#fafbfc; }
+.sc-cell.is-out .sc-num { color:var(--ap-muted); }
+.sc-cell.is-selected { background:var(--ap-blue-weak); }
+.sc-cell.is-selected:hover { background:#e0eaff; }
+
+.sc-num { display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 5px; font-size:13px; font-weight:600; color:var(--ap-ink); border-radius:50%; }
+.sc-cell.is-today .sc-num { background:var(--ap-blue); color:#fff; }
+.sc-cell.is-month-first .sc-num { color:var(--ap-red); }
+
+.sc-evts { margin-top:5px; display:flex; flex-direction:column; gap:3px; }
+.sc-evt { font-size:12px; line-height:16px; padding:2px 7px; border-radius:4px; border-left:3px solid var(--ap-blue); background:var(--ap-blue-weak); color:var(--ap-ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sc-evt.t-custom { border-left-color:var(--ap-purple); background:var(--ap-purple-weak); }
+.sc-evt.is-done { border-left-color:#c4c9d4; background:#f1f2f5; color:var(--ap-muted); text-decoration:line-through; }
+.sc-more { font-size:12px; color:var(--ap-text); padding:0 2px; }
+.sc-addlink { position:absolute; right:10px; bottom:7px; font-size:12px; color:var(--ap-blue); opacity:0; transition:opacity .12s; }
+.sc-cell:hover .sc-addlink { opacity:1; }
+
+/* ---- 右侧详情 ---- */
+.sc-side-head { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.sc-datebadge { width:48px; height:48px; border-radius:9px; border:1px solid var(--ap-line); background:#fff; overflow:hidden; text-align:center; box-shadow:0 1px 2px rgba(20,40,90,.05); }
+.sc-datebadge .bar { height:9px; background:var(--ap-blue); }
+.sc-datebadge .d { display:block; line-height:38px; font-size:20px; font-weight:700; color:var(--ap-ink); }
+.sc-dateinfo .ym { font-size:13px; color:var(--ap-muted); }
+.sc-dateinfo .wd { font-size:17px; font-weight:700; color:var(--ap-ink); }
+
+.sc-tabs { display:flex; gap:8px; margin-bottom:12px; }
+.sc-tab { flex:1; padding:7px 0; border:1px solid var(--ap-line); border-radius:8px; background:#fff; font-size:13px; color:var(--ap-text); cursor:pointer; text-align:center; }
+.sc-tab b { font-weight:700; }
+.sc-tab:hover { color:var(--ap-blue); }
+.sc-tab.active { color:var(--ap-blue); background:var(--ap-blue-weak); border-color:transparent; font-weight:600; }
+
+.sc-list { display:flex; flex-direction:column; gap:12px; overflow:auto; max-height:560px; padding-right:2px; }
+.sc-empty { padding:48px 16px; text-align:center; color:var(--ap-muted); font-size:14px; }
+
+.sc-card { padding:14px; border:1px solid var(--ap-line); border-radius:9px; background:#fff; }
+.sc-card-top { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.sc-cat { flex:none; padding:2px 8px; border-radius:4px; font-size:12px; font-weight:600; }
+.sc-cat.cat-annual { color:var(--ap-purple); background:var(--ap-purple-weak); }
+.sc-cat.cat-app { color:#5f6b7d; background:#eef1f5; }
+.sc-card-title { flex:auto; font-size:14px; font-weight:600; color:var(--ap-ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+.sc-src { flex:none; padding:2px 8px; border-radius:4px; font-size:12px; }
+.sc-src.s-system { color:var(--ap-blue); background:var(--ap-blue-weak); }
+.sc-src.s-custom { color:var(--ap-purple); background:var(--ap-purple-weak); }
+.sc-mark { flex:none; width:16px; height:16px; border-radius:50%; border:1.5px solid var(--ap-line-strong); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:border-color .12s; }
+.sc-mark:hover { border-color:var(--ap-green); }
+.sc-mark.is-done { border:0; color:var(--ap-green); font-size:16px; line-height:16px; }
+.sc-card.is-done .sc-card-title { color:var(--ap-muted); text-decoration:line-through; }
+
+/* ---- 新增日程弹窗（复用设计系统 ds-card / ds-field / ds-input / ds-textarea）---- */
+.sc-modal[hidden] { display:none; }
+.sc-modal { position:fixed; inset:0; z-index:var(--ds-z-modal, 1200); display:flex; align-items:center; justify-content:center; }
+.sc-modal-mask { position:absolute; inset:0; background:rgba(17,24,39,.45); }
+.sc-modal-box { position:relative; width:480px; max-width:92vw; overflow:hidden; } /* 背景/边框/圆角/阴影由 .ds-card 提供 */
+.sc-modal-head { display:flex; align-items:center; justify-content:space-between; padding:var(--ds-space-4,16px) var(--ds-space-5,20px); border-bottom:1px solid var(--ds-color-border-secondary); color:var(--ds-color-text-heading); font-size:var(--ds-font-size-lg,16px); font-weight:var(--ds-font-weight-semibold,700); }
+.sc-modal-x { border:0; background:none; font-size:20px; line-height:1; color:var(--ds-color-text-tertiary); cursor:pointer; }
+.sc-modal-x:hover { color:var(--ds-color-text); }
+.sc-modal-body { padding:var(--ds-space-5,20px); display:flex; flex-direction:column; gap:var(--ds-space-4,16px); }
+.sc-modal-body .ds-field > .flab { font-size:var(--ds-font-size-sm,13px); color:var(--ds-color-text-secondary); }
+.sc-modal-body .ds-field > .flab i { color:var(--ds-color-danger); font-style:normal; margin-right:2px; }
+.sc-time-group { display:flex; align-items:center; gap:8px; }
+.sc-time-group .ds-date { flex:0 0 150px; }
+.sc-time-group .ds-tm { flex:1; min-width:0; }
+.sc-time-group .sep { color:var(--ds-color-text-tertiary); font-size:13px; }
+.sc-modal-foot { display:flex; justify-content:flex-end; gap:10px; padding:var(--ds-space-3,14px) var(--ds-space-5,20px); border-top:1px solid var(--ds-color-border-secondary); }
+.sc-btn-ghost { height:var(--ds-control-height-lg,36px); padding:0 16px; border:1px solid var(--ds-color-border); border-radius:var(--ds-radius-sm,8px); background:var(--ds-color-bg-container); font-size:14px; color:var(--ds-color-text-secondary); cursor:pointer; }
+.sc-btn-ghost:hover { color:var(--ds-color-primary); border-color:var(--ds-color-primary); }
+
+.sc-field { font-size:13px; line-height:22px; color:var(--ap-text); }
+.sc-field .k { color:var(--ap-muted); }
+.sc-meta { display:flex; align-items:center; gap:18px; margin-top:4px; font-size:13px; color:var(--ap-text); }
+.sc-meta .ico { color:var(--ap-muted); margin-right:4px; }
+.sc-card-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+.sc-card-btn { height:30px; padding:0 16px; border:1px solid var(--ap-line-strong); border-radius:6px; background:#fff; font-size:13px; color:var(--ap-text); cursor:pointer; }
+.sc-card-btn:hover { color:var(--ap-blue); border-color:var(--ap-blue); }
+.sc-card-btn.danger:hover { color:var(--ap-red); border-color:var(--ap-red); }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <section class="ap-panel">
+        <div class="ap-panel-body">
+          <div class="sc-grid">
+            <!-- 左：月历 -->
+            <div class="sc-cal">
+              <div class="sc-cal-head">
+                <div class="sc-cal-head-left">
+                  <div class="sc-nav">
+                    <button type="button" class="sc-nav-arrow" data-nav="prev" aria-label="上个月">‹</button>
+                    <button type="button" data-nav="today">今天</button>
+                    <button type="button" class="sc-nav-arrow" data-nav="next" aria-label="下个月">›</button>
+                  </div>
+                  <div class="sc-month-wrap">
+                    <button type="button" class="sc-month" id="scMonthBtn" aria-haspopup="true" aria-expanded="false">
+                      <span id="scMonthLabel">2026年5月</span><span class="caret">⌄</span>
+                    </button>
+                    <div class="sc-month-pop" id="scMonthPop" hidden>
+                      <div class="sc-pop-head">
+                        <button type="button" class="sc-pop-arrow" data-y="-1" aria-label="上一年">‹</button>
+                        <span id="scPopYear">2026</span>
+                        <button type="button" class="sc-pop-arrow" data-y="1" aria-label="下一年">›</button>
+                      </div>
+                      <div class="sc-pop-months" id="scPopMonths"></div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="ap-btn-primary" id="scAddTop"><span class="plus">+</span>新增日程</button>
+              </div>
+              <div class="sc-week">
+                <span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span><span>周六</span><span>周日</span>
+              </div>
+              <div class="sc-days" id="scDays"></div>
+            </div>
+            <!-- 右：当日详情 -->
+            <aside class="sc-side">
+              <div class="sc-side-head">
+                <div class="sc-datebadge"><span class="bar"></span><span class="d" id="scBadgeDay">08</span></div>
+                <div class="sc-dateinfo"><div class="ym" id="scBadgeYm">2026.05</div><div class="wd" id="scBadgeWd">周四</div></div>
+              </div>
+              <div class="sc-tabs" id="scTabs"></div>
+              <div class="sc-list" id="scList"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- 新增日程弹窗 -->
+<div class="sc-modal" id="scModal" hidden>
+  <div class="sc-modal-mask" data-close></div>
+  <div class="sc-modal-box ds-card ds-scope" role="dialog" aria-modal="true">
+    <div class="sc-modal-head"><span>新增日程</span><button type="button" class="sc-modal-x" data-close aria-label="关闭">×</button></div>
+    <div class="sc-modal-body">
+      <label class="ds-field">
+        <span class="flab"><i>*</i>日程主题</span>
+        <input id="mfTitle" class="ds-input" type="text" placeholder="请输入日程主题" maxlength="50" />
+      </label>
+      <label class="ds-field">
+        <span class="flab"><i>*</i>日程时间</span>
+        <span class="sc-time-group">
+          <input id="mfDate" class="ds-input ds-date" type="date" />
+          <input id="mfStart" class="ds-input ds-tm" type="time" />
+          <span class="sep">至</span>
+          <input id="mfEnd" class="ds-input ds-tm" type="time" />
+        </span>
+      </label>
+      <label class="ds-field">
+        <span class="flab">日程内容</span>
+        <textarea id="mfContent" class="ds-textarea" rows="3" placeholder="请输入日程内容"></textarea>
+      </label>
+    </div>
+    <div class="sc-modal-foot">
+      <button type="button" class="sc-btn-ghost" data-close>取消</button>
+      <button type="button" class="ap-btn-primary" id="mfSave">确定</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../../../assets/icon-registry.js"></script>
+<script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../../../../framework/framework-2.js?v=2.2.3"></script>
+<script>
+window.framework2Instance = WiseFramework2.mount({
+  activeApp:'home', activeFeature:'schedule-center',
+  versionLabel:'日程中心', userName:'金晓智', roleName:'教职工',
+  homeHref:'./staff-home.html',
+  secondaryNav:{items:[]},
+  workspaceVariant:'card',
+  tabs:[{key:'schedule-center',label:'日程中心',closable:true}]
+});
+</script>
+<script>
+(function () {
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function pad(n){ return n<10 ? '0'+n : ''+n; }
+  function ymd(y,m,d){ return y+'-'+pad(m)+'-'+pad(d); }
+  var WD = ['周日','周一','周二','周三','周四','周五','周六'];
+
+  // 演示用“今天”，与设计稿一致（实际可改为真实日期）
+  var TODAY = '2026-05-17';
+
+  // 日程数据：key 为日期，value 为当日日程列表
+  // type: system(系统日程) / custom(自建日程)；done: 已完成；mark:'radio'|'check'
+  var SCHEDULES = {
+    '2026-04-30': [
+      { type:'custom', title:'这里展示的是待办名称', mark:'radio', fields:[['备注','这里展示备注信息']] },
+      { type:'custom', title:'已完成的外办', mark:'check', done:true, fields:[['备注','已办结']] },
+      { type:'system', cat:'年度考核', catCls:'cat-annual', title:'材料补充提醒', fields:[['批次名称','2026年职称评审'],['填报时间','2026-05-30 08:00:00 至 2026-06-30 08:00:00']] },
+      { type:'system', cat:'应用名称', catCls:'cat-app', title:'职称评审待审核数据', fields:[['时间','2026-04-30 08:00:00'],['审批角色','人事处']] },
+      { type:'custom', title:'部门例会', mark:'radio', fields:[['备注','周例会'],['__meta__','09:30:00 - 10:30:00']] }
+    ],
+    '2026-05-08': [
+      { type:'system', cat:'年度考核', catCls:'cat-annual', title:'2026年年度考核申报', fields:[['批次名称','2026年职称评审'],['填报时间','2026-05-30 08:00:00 至 2026-06-30 08:00:00']] },
+      { type:'system', cat:'年度考核', catCls:'cat-annual', title:'2026年职称评审申报', fields:[['批次名称','2026年职称评审'],['填报时间','2026-05-30 08:00:00 至 2026-06-30 08:00:00']] },
+      { type:'custom', title:'自建日程名称自建日程名称', mark:'radio', fields:[['备注','这里展示备注信息'],['__meta__','09:00:00 - 12:00:00']] },
+      { type:'system', cat:'应用名称', catCls:'cat-app', title:'职称评审有32条待审核数据职称评审', fields:[['时间','2026-05-30 08:00:00'],['审批角色','人事处']] },
+      { type:'custom', title:'日程名称', mark:'check', done:true, fields:[['批次名称','2026年职称评审'],['填报时间','2026-05-30 08:00:00 至 2026-06-30 08:00:00']] }
+    ],
+    '2026-05-17': [
+      { type:'custom', title:'教研室教学研讨', mark:'radio', fields:[['备注','本学期课程建设研讨'],['__meta__','14:00:00 - 16:00:00']] }
+    ],
+    '2026-05-22': [
+      { type:'system', cat:'年度考核', catCls:'cat-annual', title:'年度考核材料截止提醒', fields:[['批次名称','2026年度考核'],['填报时间','2026-05-30 08:00:00 至 2026-06-30 08:00:00']] }
+    ]
+  };
+
+  var cur = { y:2026, m:5 };          // 当前展示月份
+  var selected = '2026-05-08';        // 当前选中日期
+  var activeTab = 'all';              // all / system / custom
+
+  var daysEl = document.getElementById('scDays');
+  var monthLabel = document.getElementById('scMonthLabel');
+  var tabsEl = document.getElementById('scTabs');
+  var listEl = document.getElementById('scList');
+
+  function itemsOf(date){ return SCHEDULES[date] || []; }
+
+  /* ---------------- 月历 ---------------- */
+  function renderCalendar(){
+    monthLabel.textContent = cur.y + '年' + cur.m + '月';
+    var first = new Date(cur.y, cur.m-1, 1);
+    var startOffset = (first.getDay() + 6) % 7; // 周一为一周起点
+    var gridStart = new Date(cur.y, cur.m-1, 1 - startOffset);
+
+    var html = '';
+    for (var i=0;i<42;i++){
+      var d = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate()+i);
+      var y=d.getFullYear(), m=d.getMonth()+1, day=d.getDate();
+      var ds = ymd(y,m,day);
+      var out = (m !== cur.m);
+      var cls = 'sc-cell';
+      if (out) cls += ' is-out';
+      if (ds === TODAY) cls += ' is-today';
+      if (ds === selected) cls += ' is-selected';
+      if (day === 1) cls += ' is-month-first';
+
+      var numText = day === 1 ? (m + '月') : day;
+      var evts = itemsOf(ds);
+      var evtHtml = '';
+      if (evts.length){
+        evts.slice(0,2).forEach(function(ev){
+          evtHtml += '<div class="sc-evt '+(ev.type==='custom'?'t-custom':'t-system')+(ev.done?' is-done':'')+'">'+esc(ev.title)+'</div>';
+        });
+        if (evts.length > 2) evtHtml += '<div class="sc-more">还有 '+(evts.length-2)+' 项</div>';
+      }
+
+      html += '<div class="'+cls+'" data-date="'+ds+'">'+
+                '<span class="sc-num">'+esc(numText)+'</span>'+
+                '<div class="sc-evts">'+evtHtml+'</div>'+
+                '<span class="sc-addlink">新增日程</span>'+
+              '</div>';
+    }
+    daysEl.innerHTML = html;
+    daysEl.querySelectorAll('.sc-cell').forEach(function(cell){
+      cell.addEventListener('click', function(e){
+        var date = cell.getAttribute('data-date');
+        if (e.target.classList.contains('sc-addlink')) { e.stopPropagation(); openModal(date); return; }
+        selected = date;
+        renderCalendar();
+        renderSide();
+      });
+    });
+  }
+
+  /* ---------------- 右侧详情 ---------------- */
+  function parseDate(ds){ var p=ds.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+
+  function renderBadge(){
+    var dt = parseDate(selected);
+    document.getElementById('scBadgeDay').textContent = pad(dt.getDate());
+    document.getElementById('scBadgeYm').textContent = dt.getFullYear()+'.'+pad(dt.getMonth()+1);
+    document.getElementById('scBadgeWd').textContent = WD[dt.getDay()];
+  }
+
+  function filteredItems(){
+    var items = itemsOf(selected);
+    if (activeTab === 'system') return items.filter(function(i){return i.type==='system';});
+    if (activeTab === 'custom') return items.filter(function(i){return i.type==='custom';});
+    return items;
+  }
+
+  function renderTabs(){
+    var items = itemsOf(selected);
+    var sys = items.filter(function(i){return i.type==='system';}).length;
+    var cus = items.filter(function(i){return i.type==='custom';}).length;
+    var defs = [
+      { key:'all', label:'全部', n:items.length },
+      { key:'system', label:'系统日程', n:sys },
+      { key:'custom', label:'自建日程', n:cus }
+    ];
+    tabsEl.innerHTML = defs.map(function(t){
+      return '<button type="button" class="sc-tab'+(t.key===activeTab?' active':'')+'" data-tab="'+t.key+'">'+esc(t.label)+' <b>'+t.n+'</b></button>';
+    }).join('');
+    tabsEl.querySelectorAll('.sc-tab').forEach(function(b){
+      b.addEventListener('click', function(){ activeTab=b.getAttribute('data-tab'); renderTabs(); renderList(); });
+    });
+  }
+
+  function cardHtml(item, idx){
+    var head = '';
+    if (item.mark === 'check' || item.done) head += '<span class="sc-mark is-done" data-idx="'+idx+'" title="标记为未完成">✓</span>';
+    else if (item.mark === 'radio') head += '<span class="sc-mark" data-idx="'+idx+'" title="标记为完成"></span>';
+    if (item.cat) head += '<span class="sc-cat '+(item.catCls||'')+'">'+esc(item.cat)+'</span>';
+    head += '<span class="sc-card-title">'+esc(item.title)+'</span>';
+    head += '<span class="sc-src '+(item.type==='system'?'s-system':'s-custom')+'">'+(item.type==='system'?'系统日程':'自建日程')+'</span>';
+
+    var body = '';
+    (item.fields||[]).forEach(function(f){
+      if (f[0] === '__meta__'){
+        body += '<div class="sc-meta">'+
+                  '<span><span class="ico">🕐</span>'+esc(f[1]||'')+'</span>'+
+                '</div>';
+      } else {
+        body += '<div class="sc-field"><span class="k">'+esc(f[0])+'：</span>'+esc(f[1])+'</div>';
+      }
+    });
+
+    if (item.type === 'custom' && !item.done){
+      body += '<div class="sc-card-actions">'+
+                '<button type="button" class="sc-card-btn danger" data-act="del" data-idx="'+idx+'">删除</button>'+
+                '<button type="button" class="sc-card-btn" data-act="edit" data-idx="'+idx+'">编辑</button>'+
+              '</div>';
+    }
+    return '<article class="sc-card'+(item.done?' is-done':'')+'"><div class="sc-card-top">'+head+'</div>'+body+'</article>';
+  }
+
+  function renderList(){
+    var items = filteredItems();
+    if (!items.length){ listEl.innerHTML = '<div class="sc-empty">当日暂无日程</div>'; return; }
+    listEl.innerHTML = items.map(function(it,i){ return cardHtml(it,i); }).join('');
+    listEl.querySelectorAll('.sc-mark[data-idx]').forEach(function(m){
+      m.addEventListener('click', function(e){
+        e.stopPropagation();
+        var it = items[+m.getAttribute('data-idx')];
+        it.done = !it.done;
+        it.mark = it.done ? 'check' : 'radio';
+        renderCalendar();
+        renderTabs();
+        renderList();
+      });
+    });
+    listEl.querySelectorAll('[data-act]').forEach(function(b){
+      b.addEventListener('click', function(e){
+        e.stopPropagation();
+        var it = items[+b.getAttribute('data-idx')];
+        if (b.getAttribute('data-act') === 'del'){
+          if (!confirm('确定删除该日程？')) return;
+          var arr = SCHEDULES[selected] || [];
+          var ix = arr.indexOf(it);
+          if (ix > -1) arr.splice(ix, 1);
+          renderCalendar(); renderSide();
+        } else {
+          openModal(selected, it);
+        }
+      });
+    });
+  }
+
+  function renderSide(){ renderBadge(); renderTabs(); renderList(); }
+
+  /* ---------------- 顶部导航 ---------------- */
+  document.querySelectorAll('.sc-nav [data-nav]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var nav = btn.getAttribute('data-nav');
+      if (nav === 'prev'){ cur.m--; if(cur.m<1){cur.m=12;cur.y--;} }
+      else if (nav === 'next'){ cur.m++; if(cur.m>12){cur.m=1;cur.y++;} }
+      else { var t=parseDate(TODAY); cur.y=t.getFullYear(); cur.m=t.getMonth()+1; selected=TODAY; renderSide(); }
+      renderCalendar();
+    });
+  });
+  /* ---------------- 新增 / 编辑日程弹窗 ---------------- */
+  var modal = document.getElementById('scModal');
+  var modalTitleEl = modal.querySelector('.sc-modal-head span');
+  var editingItem = null;
+  function $(id){ return document.getElementById(id); }
+  function fieldVal(item, key){ var f = (item.fields||[]).find(function(x){ return x[0]===key; }); return f ? f[1] : ''; }
+  function hhmm(s){ return s ? String(s).slice(0,5) : ''; }
+
+  function openModal(date, item){
+    editingItem = item || null;
+    modalTitleEl.textContent = item ? '编辑日程' : '新增日程';
+    $('mfDate').value = date || selected;
+    if (item){
+      $('mfTitle').value = item.title || '';
+      $('mfContent').value = fieldVal(item, '备注');
+      var parts = String(fieldVal(item, '__meta__')).split(' - ');
+      $('mfStart').value = hhmm(parts[0]) || '09:00';
+      $('mfEnd').value = hhmm(parts[1]) || '10:00';
+    } else {
+      $('mfTitle').value = '';
+      $('mfContent').value = '';
+      $('mfStart').value = '09:00';
+      $('mfEnd').value = '10:00';
+    }
+    modal.hidden = false;
+    setTimeout(function(){ $('mfTitle').focus(); }, 0);
+  }
+  function closeModal(){ modal.hidden = true; editingItem = null; }
+  modal.querySelectorAll('[data-close]').forEach(function(el){ el.addEventListener('click', closeModal); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  $('mfSave').addEventListener('click', function(){
+    var title = $('mfTitle').value.trim();
+    var date = $('mfDate').value;
+    var s = $('mfStart').value, e = $('mfEnd').value;
+    var content = $('mfContent').value.trim();
+    if (!title){ alert('请填写日程主题'); $('mfTitle').focus(); return; }
+    if (!date){ alert('请选择日程日期'); return; }
+
+    var timeStr = (s && e) ? (s + ':00 - ' + e + ':00') : (s ? s + ':00' : '');
+    var fields = [];
+    if (content) fields.push(['备注', content]);
+    if (timeStr) fields.push(['__meta__', timeStr]);
+
+    if (editingItem){
+      editingItem.title = title;
+      editingItem.fields = fields;
+      if (date !== selected){ // 日期被修改，移动到新日期
+        var arr = SCHEDULES[selected] || [];
+        var ix = arr.indexOf(editingItem);
+        if (ix > -1) arr.splice(ix, 1);
+        (SCHEDULES[date] = SCHEDULES[date] || []).push(editingItem);
+      }
+    } else {
+      var item = { type:'custom', title:title, mark:'radio', fields:fields };
+      (SCHEDULES[date] = SCHEDULES[date] || []).push(item);
+    }
+
+    selected = date;
+    var dt = parseDate(date); cur.y = dt.getFullYear(); cur.m = dt.getMonth()+1;
+    closeModal();
+    renderCalendar();
+    renderSide();
+  });
+
+  document.getElementById('scAddTop').addEventListener('click', function(){ openModal(selected); });
+
+  /* ---------------- 月份下拉选择 ---------------- */
+  var monthBtn = document.getElementById('scMonthBtn');
+  var monthPop = document.getElementById('scMonthPop');
+  var popYearEl = document.getElementById('scPopYear');
+  var popMonthsEl = document.getElementById('scPopMonths');
+  var popYear = cur.y;
+
+  function renderPicker(){
+    popYearEl.textContent = popYear + '年';
+    var html = '';
+    for (var i=1;i<=12;i++){
+      var on = (popYear === cur.y && i === cur.m);
+      html += '<button type="button" class="sc-pop-m'+(on?' active':'')+'" data-m="'+i+'">'+i+'月</button>';
+    }
+    popMonthsEl.innerHTML = html;
+  }
+  function openPicker(){ popYear = cur.y; renderPicker(); monthPop.hidden = false; monthBtn.setAttribute('aria-expanded','true'); }
+  function closePicker(){ monthPop.hidden = true; monthBtn.setAttribute('aria-expanded','false'); }
+
+  monthBtn.addEventListener('click', function(e){ e.stopPropagation(); monthPop.hidden ? openPicker() : closePicker(); });
+  monthPop.addEventListener('click', function(e){ e.stopPropagation(); });
+  popMonthsEl.addEventListener('click', function(e){
+    var b = e.target.closest('[data-m]'); if (!b) return;
+    cur.y = popYear; cur.m = +b.getAttribute('data-m');
+    closePicker(); renderCalendar();
+  });
+  monthPop.querySelectorAll('[data-y]').forEach(function(b){
+    b.addEventListener('click', function(){ popYear += +b.getAttribute('data-y'); renderPicker(); });
+  });
+  document.addEventListener('click', function(){ if (!monthPop.hidden) closePicker(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !monthPop.hidden) closePicker(); });
+
+  renderCalendar();
+  renderSide();
+})();
+</script>
+</body>
+</html>

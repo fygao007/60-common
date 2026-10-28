@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>教学档案袋（全功能演示） - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+  body{margin:0}
+  /* ============ 教学档案袋业务样式（tp- 命名空间） ============ */
+  .tp-view{display:none}
+  .tp-view.is-visible{display:grid;gap:12px}
+
+  /* 进度条 */
+  .tp-bar{height:8px;border-radius:4px;background:var(--ap-line);overflow:hidden}
+  .tp-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#5b8cff,#3565ea)}
+  .tp-bar.green i{background:linear-gradient(90deg,#2fd49b,#18b981)}
+  .tp-bar.orange i{background:linear-gradient(90deg,#ffb061,#ff7d35)}
+
+  /* 完整度环形 */
+  .tp-ring-wrap{display:flex;align-items:center;gap:28px}
+  .tp-ring{position:relative;width:120px;height:120px;flex:none}
+  .tp-ring svg{transform:rotate(-90deg)}
+  .tp-ring .num{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:800;color:var(--ap-blue)}
+  .tp-ring .num small{font-size:12px;font-weight:400;color:var(--ap-muted)}
+
+  /* 必选项清单 */
+  .tp-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;flex:1}
+  .tp-check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ap-text)}
+  .tp-check .st{display:grid;place-items:center;width:16px;height:16px;border-radius:50%;font-size:11px;color:#fff;background:var(--ap-green);flex:none}
+  .tp-check.miss .st{background:var(--ap-orange)}
+  .tp-check.miss{color:var(--ap-orange);font-weight:600}
+
+  /* 待办 */
+  .tp-todo{display:grid;gap:10px}
+  .tp-todo-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--ap-line);border-radius:6px;background:#fafcff}
+  .tp-todo-item .ico{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;font-size:14px;flex:none;background:#e8f1ff;color:var(--ap-blue)}
+  .tp-todo-item.warn .ico{background:#fff1e6;color:var(--ap-orange)}
+  .tp-todo-item h5{margin:0 0 2px;font-size:13.5px;font-weight:700;color:var(--ap-ink)}
+  .tp-todo-item p{margin:0;font-size:12px;color:var(--ap-muted)}
+
+  /* 课程卡 */
+  .tp-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tp-course{padding:18px 20px;border:1px solid var(--ap-line);border-radius:6px;background:#fafcff;display:grid;gap:12px}
+  .tp-course-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .tp-course-head h4{margin:0 0 4px;font-size:16px;font-weight:700;color:var(--ap-ink)}
+  .tp-course-head p{margin:0;font-size:12.5px;color:var(--ap-muted)}
+  .tp-course-meta{display:flex;gap:18px;font-size:12.5px;color:var(--ap-text)}
+  .tp-course-meta b{color:var(--ap-blue)}
+
+  /* 同步提示条 */
+  .tp-sync{display:flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid #b5d0ff;background:#f0f6ff;border-radius:6px;font-size:13px;color:#2349c4}
+  .tp-sync .tp-sync-act{margin-left:auto;color:var(--ap-blue);font-weight:600;cursor:pointer;white-space:nowrap}
+
+  /* 上传区 */
+  .tp-dragger{display:grid;place-items:center;gap:6px;padding:38px 20px;border:2px dashed #b5d0ff;border-radius:8px;background:#f7faff;text-align:center}
+  .tp-dragger .big{font-size:15px;font-weight:700;color:var(--ap-ink)}
+  .tp-dragger p{margin:0;font-size:12.5px;color:var(--ap-muted)}
+  .tp-dragger .fake-btn{margin-top:6px;display:inline-flex;align-items:center;height:34px;padding:0 20px;border-radius:4px;background:var(--ap-blue);color:#fff;font-size:13.5px;font-weight:600}
+
+  /* 标签 chips */
+  .tp-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .tp-chip{display:inline-flex;align-items:center;height:28px;padding:0 14px;border-radius:14px;font-size:13px;font-weight:600;color:var(--ap-text);background:#f0f2f5;cursor:pointer}
+  .tp-chip.on{color:#fff;background:var(--ap-blue)}
+  .tp-chip.gold{color:#8a5a0f;background:#fdf0d5}
+
+  /* KPI 目标卡 */
+  .tp-kpi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .tp-kpi{padding:18px 20px;border:1px solid var(--ap-line);border-radius:6px;background:#fff;display:grid;gap:10px;align-content:start}
+  .tp-kpi h4{margin:0;font-size:14.5px;font-weight:700;color:var(--ap-ink);line-height:22px}
+  .tp-kpi .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ap-muted)}
+  .tp-kpi .pct{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ap-text)}
+  .tp-kpi .pct b{color:var(--ap-blue)}
+  .tp-kpi.done{border-color:#bdebd8;background:#f4fdf9}
+  .tp-kpi.done .pct b{color:var(--ap-green)}
+
+  /* 画像 */
+  .tp-portrait-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start}
+  .tp-radar text{font-size:12px;fill:var(--ap-text);font-weight:600}
+  .tp-radar .val{fill:var(--ap-blue);font-weight:800}
+  .tp-score-line{display:flex;align-items:baseline;gap:10px}
+  .tp-score-line .score{font-size:34px;font-weight:800;color:var(--ap-blue)}
+  .tp-score-line .delta{font-size:12.5px;color:var(--ap-green);font-weight:600}
+  .tp-trend text{font-size:11px;fill:var(--ap-muted)}
+  .tp-trend .v{fill:var(--ap-blue);font-weight:700}
+
+  /* 维度明细小表行内对比条 */
+  .tp-dim-bar{display:flex;align-items:center;gap:10px}
+  .tp-dim-bar .tp-bar{flex:1}
+  .tp-dim-bar span{font-size:12.5px;color:var(--ap-muted);white-space:nowrap}
+
+  /* 统计条形 */
+  .tp-rank{display:grid;gap:14px}
+  .tp-rank-row{display:grid;grid-template-columns:130px 1fr 52px;align-items:center;gap:12px;font-size:13px;color:var(--ap-text)}
+  .tp-rank-row .tp-bar{height:10px}
+  .tp-rank-row b{text-align:right;color:var(--ap-ink)}
+
+  /* 可见性 radio 行 */
+  .tp-visib{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--ap-text)}
+  .tp-visib label{display:flex;align-items:center;gap:6px;cursor:pointer}
+
+  @media (max-width:1200px){
+    .tp-course-grid,.tp-kpi-grid,.tp-portrait-cols{grid-template-columns:1fr}
+    .tp-checklist{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+
+      <!-- ===================== 视图：档案总览 ===================== -->
+      <section class="tp-view is-visible" data-view="tp-overview">
+        <div class="ap-title-row">
+          <h1><span class="badge">档</span>教学档案袋 · 档案总览</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">导出我的档案</button><button class="ap-btn primary" type="button">+ 上传材料</button></div>
+        </div>
+        <div class="ap-stat-row">
+          <div class="ap-stat accent"><p>档案完整度（2025-2026学年）</p><h3>86<small>%</small></h3></div>
+          <div class="ap-stat"><p>累计归档材料</p><h3>61<small>份 · 本学年 +23</small></h3></div>
+          <div class="ap-stat"><p>待办事项</p><h3>3<small>项 · 1 条反馈未读</small></h3></div>
+          <div class="ap-stat"><p>教学画像综合分</p><h3>86.5<small>分 · 较上年 +3.2</small></h3></div>
+        </div>
+        <div class="ap-cols-2">
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>档案完整度 · 必选材料清单</h2><span class="ap-tag blue">必选 12 / 14 项</span></div>
+            <div class="ap-panel-body tp-ring-wrap">
+              <div class="tp-ring">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#edf1f7" stroke-width="10"/>
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="#3565ea" stroke-width="10" stroke-linecap="round" stroke-dasharray="280.9 326.7"/>
+                </svg>
+                <div class="num">86%<small>完整度</small></div>
+              </div>
+              <div class="tp-checklist">
+                <div class="tp-check"><span class="st">✓</span>课程标准（2门课程）</div>
+                <div class="tp-check"><span class="st">✓</span>课程大纲（2门课程）</div>
+                <div class="tp-check"><span class="st">✓</span>教学进度表（2门课程）</div>
+                <div class="tp-check"><span class="st">✓</span>教案（2门课程）</div>
+                <div class="tp-check"><span class="st">✓</span>课件（2门课程）</div>
+                <div class="tp-check"><span class="st">✓</span>试卷与试卷分析</div>
+                <div class="tp-check"><span class="st">✓</span>学生评教结果（教务同步）</div>
+                <div class="tp-check"><span class="st">✓</span>督导评教记录（质保同步）</div>
+                <div class="tp-check miss"><span class="st">!</span>教学反思 ·《嵌入式系统开发》缺</div>
+                <div class="tp-check miss"><span class="st">!</span>同行听课评议 · 本学期缺 1 次</div>
+              </div>
+            </div>
+          </section>
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>待办与提醒</h2></div>
+            <div class="ap-panel-body tp-todo">
+              <div class="tp-todo-item warn">
+                <span class="ico">!</span>
+                <div><h5>补传《嵌入式系统开发》教学反思</h5><p>必选材料缺项，影响学年档案审核 · 建议本周完成</p></div>
+              </div>
+              <div class="tp-todo-item">
+                <span class="ico">评</span>
+                <div><h5>专业主任反馈待查看（1 条未读）</h5><p>陈立群 06-05 对 2025-2026 学年档案提出反馈建议</p></div>
+              </div>
+              <div class="tp-todo-item">
+                <span class="ico">标</span>
+                <div><h5>目标节点提醒：教学能力比赛校赛材料</h5><p>所属团队目标 · 截止 2026-06-20，距今 9 天</p></div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>最近动态</h2><span class="ap-tag gray">近 30 天</span></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>时间</th><th>动态</th><th>来源</th><th>归属</th></tr></thead>
+              <tbody>
+                <tr><td>2026-06-08</td><td>学生王梓萌上传「循迹算法测试数据（第7轮）」，待确认</td><td><span class="ap-tag orange">学生上传</span></td><td>智能小车协会</td></tr>
+                <tr><td>2026-06-05</td><td>专业主任陈立群提交学年档案反馈建议</td><td><span class="ap-tag blue">审核反馈</span></td><td>2025-2026 学年审核</td></tr>
+                <tr><td>2026-05-28</td><td>《单片机应用技术》期中试卷分析归档</td><td><span class="ap-tag gray">本人上传</span></td><td>课程教学档案</td></tr>
+                <tr><td>2026-05-20</td><td>2025-2026-2 学期课表、开课信息自动同步</td><td><span class="ap-tag green">教务同步</span></td><td>课程教学档案</td></tr>
+                <tr><td>2026-04-26</td><td>「省技能大赛一等奖（指导教师）」自动回填团队目标进度</td><td><span class="ap-tag green">目标回填</span></td><td>我的目标</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== 视图：课程教学档案 ===================== -->
+      <section class="tp-view" data-view="tp-courses">
+        <div class="ap-title-row">
+          <h1><span class="badge">课</span>课程教学档案</h1>
+          <div class="ap-actions">
+            <select style="height:36px;padding:0 12px;border:1px solid var(--ap-line);border-radius:4px;background:#fff;color:var(--ap-text);font-size:14px">
+              <option>2025-2026 学年第二学期</option><option>2025-2026 学年第一学期</option><option>2024-2025 学年第二学期</option>
+            </select>
+            <button class="ap-btn primary" type="button">+ 上传课程材料</button>
+          </div>
+        </div>
+        <div class="tp-sync">⟳ 已从教务系统自动同步：开课信息 2 门、课表、学生评教结果（最近同步 2026-06-10 02:00）<span class="tp-sync-act">手动同步</span></div>
+        <div class="tp-course-grid">
+          <div class="tp-course">
+            <div class="tp-course-head">
+              <div><h4>嵌入式系统开发</h4><p>2025-2026 学年第一学期 · 专业核心课 · 通信工程 2023 级 1-2 班</p></div>
+              <span class="ap-tag orange">材料 9 / 10</span>
+            </div>
+            <div class="tp-course-meta"><span>学分 <b>4</b></span><span>学时 <b>72</b></span><span>学生评教 <b>94.1</b></span><span>督导评分 <b>92</b></span></div>
+            <div class="tp-bar orange"><i style="width:90%"></i></div>
+          </div>
+          <div class="tp-course">
+            <div class="tp-course-head">
+              <div><h4>单片机应用技术</h4><p>2025-2026 学年第二学期 · 专业基础课 · 电子信息工程 2024 级 1-3 班</p></div>
+              <span class="ap-tag blue">进行中 7 / 10</span>
+            </div>
+            <div class="tp-course-meta"><span>学分 <b>3</b></span><span>学时 <b>56</b></span><span>学生评教 <b>学期末生成</b></span><span>督导评分 <b>—</b></span></div>
+            <div class="tp-bar"><i style="width:70%"></i></div>
+          </div>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>材料明细 ·《嵌入式系统开发》</h2><span class="ap-tag orange">缺 1 项必选材料</span></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>材料名称</th><th>材料类型</th><th>来源</th><th>可见范围</th><th>更新时间</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>《嵌入式系统开发》课程标准（2025版）.pdf</td><td><span class="ap-tag blue">必选</span></td><td>教务同步</td><td>全校可见</td><td>2025-09-02</td><td><span class="ap-tag green">已归档</span></td><td class="link">预览</td></tr>
+                <tr><td>课程大纲与教学进度表.docx</td><td><span class="ap-tag blue">必选</span></td><td>教务同步</td><td>全校可见</td><td>2025-09-02</td><td><span class="ap-tag green">已归档</span></td><td class="link">预览</td></tr>
+                <tr><td>单元教案（共16单元）.zip</td><td><span class="ap-tag blue">必选</span></td><td>本人上传</td><td>教研室可见</td><td>2025-12-30</td><td><span class="ap-tag green">已归档</span></td><td class="link">预览</td></tr>
+                <tr><td>课程课件（理论+实训）.zip</td><td><span class="ap-tag blue">必选</span></td><td>本人上传</td><td>教研室可见</td><td>2025-12-30</td><td><span class="ap-tag green">已归档</span></td><td class="link">预览</td></tr>
+                <tr><td>期末试卷及试卷分析报告.pdf</td><td><span class="ap-tag blue">必选</span></td><td>本人上传</td><td>对专业主任开放</td><td>2026-01-12</td><td><span class="ap-tag green">已归档</span></td><td class="link">预览</td></tr>
+                <tr><td>学期教学反思</td><td><span class="ap-tag blue">必选</span></td><td>—</td><td>私有（默认）</td><td>—</td><td><span class="ap-tag red">缺项</span></td><td class="link">去补传</td></tr>
+                <tr><td>课程思政案例集（自选）.docx</td><td><span class="ap-tag gray">可选</span></td><td>本人上传</td><td>全校可见</td><td>2025-11-18</td><td><span class="ap-tag green">已归档</span></td><td class="link">预览</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== 视图：教学文件上传 ===================== -->
+      <section class="tp-view" data-view="tp-upload">
+        <div class="ap-title-row">
+          <h1><span class="badge">传</span>教学文件上传</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">批量导入（教务材料）</button></div>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-body" style="display:grid;gap:16px">
+            <div class="tp-dragger">
+              <div class="big">将文件拖拽到此处，或点击选择文件</div>
+              <p>支持 doc / ppt / pdf / 图纸 / 音视频等格式，单文件 ≤ 500MB，支持批量与断点续传</p>
+              <p>上传后按「学期 + 课程 + 材料类型」自动归位；智能识别归档为 AI 预留能力，当前按命名规则匹配</p>
+              <span class="fake-btn">选择文件</span>
+            </div>
+            <div>
+              <p style="margin:0 0 10px;font-size:14px;font-weight:600;color:var(--ap-text)">本次上传默认可见范围（单份材料可在归档后单独调整）</p>
+              <div class="tp-visib">
+                <label><input type="radio" name="tpv" checked />私有（仅本人）</label>
+                <label><input type="radio" name="tpv" />教研室内可见</label>
+                <label><input type="radio" name="tpv" />对专业主任开放</label>
+                <label><input type="radio" name="tpv" />全校可见</label>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>上传队列</h2><span class="ap-tag blue">2 个完成 · 1 个进行中</span></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>文件名</th><th>自动归位结果</th><th>大小</th><th>进度</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>单片机应用技术-期中试卷分析.pdf</td><td>2025-2026-2 ·《单片机应用技术》· 试卷分析</td><td>2.1 MB</td><td><div class="tp-bar green" style="width:120px"><i style="width:100%"></i></div></td><td><span class="ap-tag green">已归档</span></td></tr>
+                <tr><td>嵌入式课程思政案例-补充篇.docx</td><td>2025-2026-1 ·《嵌入式系统开发》· 课程思政（可选）</td><td>860 KB</td><td><div class="tp-bar green" style="width:120px"><i style="width:100%"></i></div></td><td><span class="ap-tag green">已归档</span></td></tr>
+                <tr><td>实训室安全教育视频.mp4</td><td>待确认归属（建议：实践教学记录）</td><td>312 MB</td><td><div class="tp-bar" style="width:120px"><i style="width:64%"></i></div></td><td><span class="ap-tag blue">上传中 64%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>最近归档记录</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>材料名称</th><th>归属分类</th><th>可见范围</th><th>归档时间</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>《单片机应用技术》期中试卷分析.pdf</td><td>课程教学档案</td><td>对专业主任开放</td><td>2026-05-28</td><td class="link">预览</td></tr>
+                <tr><td>智能硬件现场工程师班实训任务书（第4批）.pdf</td><td>现场工程师班档案</td><td>教研室可见</td><td>2026-05-16</td><td class="link">预览</td></tr>
+                <tr><td>2026 省教学能力比赛参赛教案.pdf</td><td>荣誉与成果 · 佐证材料</td><td>私有</td><td>2026-05-06</td><td class="link">预览</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== 视图：荣誉与成果 ===================== -->
+      <section class="tp-view" data-view="tp-achievements">
+        <div class="ap-title-row">
+          <h1><span class="badge">果</span>荣誉与成果</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">生成申报材料包</button><button class="ap-btn primary" type="button">+ 登记成果</button></div>
+        </div>
+        <div class="tp-sync">ⓘ 成果一次登记、多处调用：可被「职称评审」「项目申报」直接引用，并自动回填团队目标进度、计入成长画像赋分。</div>
+        <div class="tp-chips">
+          <span class="tp-chip on">全部（9）</span><span class="tp-chip">教学竞赛（2）</span><span class="tp-chip">指导学生（3）</span><span class="tp-chip">教材与课程（2）</span><span class="tp-chip">教研项目（2）</span>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>成果名称</th><th>类别</th><th>等级 / 角色</th><th>取得时间</th><th>赋分</th><th>佐证</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>全国职业院校技能大赛「嵌入式系统应用开发」赛项 省级一等奖</td><td>指导学生</td><td>A类 · 省级一等 · 指导教师</td><td>2026-04</td><td><b style="color:var(--ap-blue)">12</b></td><td class="link">证书+名单</td><td><span class="ap-tag green">已核验 · 已回填目标</span></td></tr>
+                <tr><td>广东省职业院校教学能力比赛 二等奖</td><td>教学竞赛</td><td>A类 · 省级二等 · 第一完成人</td><td>2025-09</td><td><b style="color:var(--ap-blue)">8</b></td><td class="link">证书</td><td><span class="ap-tag green">已核验</span></td></tr>
+                <tr><td>《嵌入式系统开发实践教程》（高等教育出版社）</td><td>教材与课程</td><td>主编</td><td>2024-08</td><td><b style="color:var(--ap-blue)">6</b></td><td class="link">封面+CIP</td><td><span class="ap-tag green">已核验</span></td></tr>
+                <tr><td>校级教改课题「岗课赛证融通的嵌入式课程重构」</td><td>教研项目</td><td>校级 · 主持</td><td>2025-03 立项</td><td><b style="color:var(--ap-blue)">4</b></td><td class="link">立项书</td><td><span class="ap-tag blue">在研</span></td></tr>
+                <tr><td>指导学生发明专利「一种低功耗循迹小车控制电路」</td><td>指导学生</td><td>授权 · 第一指导教师</td><td>2025-12</td><td><b style="color:var(--ap-blue)">3</b></td><td class="link">专利证书</td><td><span class="ap-tag green">已核验</span></td></tr>
+                <tr><td>双师型教师（中级）认定</td><td>资格认定</td><td>校级认定</td><td>2024-11</td><td><b style="color:var(--ap-blue)">—</b></td><td class="link">认定文件</td><td><span class="ap-tag green">已核验 · 计入双师维度</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>赋分说明</h2></div>
+          <div class="ap-panel-body">
+            <p style="margin:0;font-size:13px;color:var(--ap-muted);line-height:22px">竞赛赋分直接采用学校已发布的 A/B 类赛事分级与国家级/省级等级标准，由校级「评价标准管理」统一维护，本人不可修改；成果经学院核验后生效，画像与团队目标共用同一套赋分结果，确保口径一致。</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== 视图：学生社团档案 ===================== -->
+      <section class="tp-view" data-view="tp-club">
+        <div class="ap-title-row">
+          <h1><span class="badge">团</span>学生社团档案</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">导出社团年度档案</button><button class="ap-btn primary" type="button">+ 上传材料</button></div>
+        </div>
+        <div class="tp-chips">
+          <span class="tp-chip on">智能小车协会（指导教师）</span><span class="tp-chip">方程式赛车队</span>
+        </div>
+        <div class="ap-stat-row">
+          <div class="ap-stat"><p>在册成员</p><h3>32<small>人 · 2026 届 9 人</small></h3></div>
+          <div class="ap-stat accent"><p>本学年过程材料</p><h3>48<small>份 · 学生上传占 81%</small></h3></div>
+          <div class="ap-stat"><p>获奖证书（按赛项归档）</p><h3>11<small>份 · 本学年 +4</small></h3></div>
+          <div class="ap-stat"><p>问题解决案例</p><h3>26<small>条 · 供下届检索复用</small></h3></div>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>档案分类</h2><span class="ap-tag gray">解决数据散落个人电脑、毕业即失传的问题</span></div>
+          <div class="ap-panel-body ap-card-grid">
+            <div class="ap-mini-card"><h4>社团管理制度</h4><p>章程、设备管理、实验室安全制度</p><p>已收录 6 份</p></div>
+            <div class="ap-mini-card"><h4>赛前测试数据</h4><p>循迹 / 避障 / 速度标定各轮次记录</p><p>已收录 17 份</p></div>
+            <div class="ap-mini-card"><h4>设计方案与图纸</h4><p>车模结构、PCB 原理图、软件架构</p><p>已收录 12 份</p></div>
+            <div class="ap-mini-card"><h4>调试日志</h4><p>问题现象、定位过程、解决方案</p><p>已收录 26 条（结构化）</p></div>
+            <div class="ap-mini-card"><h4>获奖证书</h4><p>按赛项细分：竞速 / 创意设计 / 最佳技术</p><p>已收录 11 份</p></div>
+            <div class="ap-mini-card"><h4>学生成果</h4><p>专利、论文、学术会议参与</p><p>专利 1 项 · 论文 2 篇</p></div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>学生上传待确认</h2><span class="ap-tag orange">2 条待确认</span></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>材料名称</th><th>上传学生</th><th>分类</th><th>上传时间</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>循迹算法测试数据（第7轮，含对比曲线）.csv</td><td>王梓萌（2024级）</td><td>赛前测试数据</td><td>2026-06-08</td><td><span class="ap-tag orange">待确认</span></td><td class="link">确认入档</td></tr>
+                <tr><td>电磁组车模摄像头支架图纸 v2.dwg</td><td>陈嘉豪（2024级）</td><td>设计方案与图纸</td><td>2026-06-06</td><td><span class="ap-tag orange">待确认</span></td><td class="link">确认入档</td></tr>
+                <tr><td>主控板 PCB 原理图 v3（修复电源纹波）.pdf</td><td>李航（2023级）</td><td>设计方案与图纸</td><td>2026-05-30</td><td><span class="ap-tag green">已入档</span></td><td class="link">预览</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>问题解决案例库（节选）</h2><span class="ap-tag gray">传承知识 · 供后续学生参考</span></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>问题</th><th>解决方案摘要</th><th>贡献者</th><th>引用次数</th></tr></thead>
+              <tbody>
+                <tr><td>高速过弯丢线，摄像头采样抖动</td><td>提高曝光优先级 + 增加图像滤波窗口，过弯限速分段标定</td><td>李航 · 2023级</td><td>14</td></tr>
+                <tr><td>电机驱动板过流烧毁（比赛前夜）</td><td>更换 MOS 选型并增加软启动；备板清单制度化</td><td>张一鸣 · 2022届（已毕业）</td><td>21</td></tr>
+                <tr><td>电池电压跌落导致主控复位</td><td>主控独立 LDO 供电 + 上电延时；记录入出车检查表</td><td>王梓萌 · 2024级</td><td>9</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== 视图：现场工程师班 ===================== -->
+      <section class="tp-view" data-view="tp-coop">
+        <div class="ap-title-row">
+          <h1><span class="badge">企</span>现场工程师班档案</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">导出班级档案</button><button class="ap-btn primary" type="button">+ 上传材料</button></div>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>班级信息</h2><span class="ap-tag blue">校企协同 · 定向培养</span></div>
+          <div class="ap-panel-body ap-info-grid">
+            <div class="ap-info-item"><p>班级名称</p><h4>2024 级智能硬件现场工程师班</h4></div>
+            <div class="ap-info-item"><p>合作企业（示例数据）</p><h4>联科精密电子股份有限公司</h4></div>
+            <div class="ap-info-item"><p>培养规模</p><h4>35 人 · 学制 3 年</h4></div>
+            <div class="ap-info-item"><p>校内负责人</p><h4>金晓智（课程负责人）</h4></div>
+            <div class="ap-info-item"><p>企业导师</p><h4>4 人（已开通上传权限）</h4></div>
+            <div class="ap-info-item"><p>实践教学场所</p><h4>校内实训室 + 企业产线（按课程内容安排）</h4></div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>档案分类</h2></div>
+          <div class="ap-panel-body ap-card-grid">
+            <div class="ap-mini-card"><h4>校企合作协议</h4><p>合作协议、优先录用承诺函</p><p>已收录 3 份</p></div>
+            <div class="ap-mini-card"><h4>人才培养方案</h4><p>校企共同研制方案与课程标准</p><p>已收录 5 份</p></div>
+            <div class="ap-mini-card"><h4>企业授课材料</h4><p>企业工程师课件、产线案例、视频（可公开部分）</p><p>已收录 14 份</p></div>
+            <div class="ap-mini-card"><h4>实训任务书</h4><p>校内 / 企业实践任务单</p><p>已收录 8 份</p></div>
+            <div class="ap-mini-card"><h4>学生实践报告</h4><p>实训实践报告单、过程困难与解决记录</p><p>已收录 62 份</p></div>
+            <div class="ap-mini-card"><h4>就业数据</h4><p>优先录用兑现、就业去向跟踪</p><p>持续更新</p></div>
+          </div>
+        </section>
+        <div class="ap-cols-2">
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>企业导师最近上传</h2><span class="ap-tag gray">产业导师贡献留痕</span></div>
+            <div class="ap-panel-body" style="padding:0">
+              <table class="ap-table">
+                <thead><tr><th>材料名称</th><th>上传人</th><th>时间</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr><td>SMT 产线品质管控案例集（脱密版）.pptx</td><td>企业导师 · 周工</td><td>2026-06-03</td><td><span class="ap-tag green">已入档</span></td></tr>
+                  <tr><td>智能硬件测试岗实训任务书（第5批）.pdf</td><td>企业导师 · 刘工</td><td>2026-05-27</td><td><span class="ap-tag green">已入档</span></td></tr>
+                  <tr><td>产线设备点检授课视频（45min）.mp4</td><td>企业导师 · 周工</td><td>2026-05-12</td><td><span class="ap-tag blue">脱密审核中</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>就业数据（2023 级首届）</h2></div>
+            <div class="ap-panel-body" style="display:grid;gap:14px">
+              <div class="tp-kpi" style="border:none;padding:0">
+                <div class="pct"><span>合作企业优先录用兑现</span><b>21 / 24 人</b></div>
+                <div class="tp-bar green"><i style="width:87.5%"></i></div>
+              </div>
+              <div class="tp-kpi" style="border:none;padding:0">
+                <div class="pct"><span>毕业去向落实率</span><b>97.1%</b></div>
+                <div class="tp-bar green"><i style="width:97.1%"></i></div>
+              </div>
+              <div class="tp-kpi" style="border:none;padding:0">
+                <div class="pct"><span>对口岗位就业占比</span><b>82.4%</b></div>
+                <div class="tp-bar"><i style="width:82.4%"></i></div>
+              </div>
+              <p style="margin:0;font-size:12.5px;color:var(--ap-muted)">就业数据作为高质量就业佐证，自动汇入学院统计分析与双高指标。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ===================== 视图：审核与反馈 ===================== -->
+      <section class="tp-view" data-view="tp-review">
+        <div class="ap-title-row">
+          <h1><span class="badge">审</span>审核与反馈</h1>
+          <div class="ap-actions"><button class="ap-btn primary" type="button">提交学年档案审核</button></div>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>2025-2026 学年档案审核流程</h2><span class="ap-tag blue">柔性审核 · 重反馈轻评分</span></div>
+          <div class="ap-panel-body">
+            <div class="ap-steps">
+              <div class="ap-step done"><span class="num">✓</span>教师提交档案</div>
+              <div class="ap-step-line"></div>
+              <div class="ap-step current"><span class="num">2</span>专业主任审核（完整性 + 质量）</div>
+              <div class="ap-step-line"></div>
+              <div class="ap-step"><span class="num">3</span>反馈建议与整改</div>
+              <div class="ap-step-line"></div>
+              <div class="ap-step"><span class="num">4</span>闭环归档</div>
+            </div>
+            <p style="margin:14px 0 0;font-size:12.5px;color:var(--ap-muted)">审核以「反馈建议」形式给出，不打分；院领导可查看专业层面汇总并按需给出指导意见。</p>
+          </div>
+        </section>
+        <div class="ap-cols-2">
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>我收到的反馈</h2><span class="ap-tag orange">1 条未读</span></div>
+            <div class="ap-panel-body">
+              <div class="ap-timeline">
+                <div class="ap-tl-item current">
+                  <span class="ap-tl-dot">建</span>
+                  <div class="ap-tl-body">
+                    <h4>专业主任 · 陈立群 <span class="ap-tag orange" style="margin-left:6px">未读</span></h4>
+                    <p>2026-06-05 · 学年档案完整度较好。建议：① 补充《嵌入式系统开发》学期教学反思；② 补 1 次同行听课评议；③「课程思政案例集」质量较高，建议将可见范围调整为全校可见，供教研室共享借鉴。</p>
+                  </div>
+                </div>
+                <div class="ap-tl-item done">
+                  <span class="ap-tl-dot">督</span>
+                  <div class="ap-tl-body">
+                    <h4>教学督导 · 王慧敏（听课评阅）</h4>
+                    <p>2026-04-18 · 评分 92。文字反馈：课堂任务驱动设计完整，学生参与度高；建议增加过程性考核占比，并在实训环节补充安全规范讲解记录。</p>
+                  </div>
+                </div>
+                <div class="ap-tl-item done">
+                  <span class="ap-tl-dot">改</span>
+                  <div class="ap-tl-body">
+                    <h4>整改记录（本人）</h4>
+                    <p>2026-04-22 · 已根据督导建议上传「期中试卷分析 + 过程性考核方案修订说明」，关联课程《单片机应用技术》。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>开放范围设置</h2></div>
+            <div class="ap-panel-body" style="display:grid;gap:14px">
+              <p style="margin:0;font-size:13px;color:var(--ap-muted);line-height:22px">「必选 + 可选」组合：必选材料默认对专业主任开放用于基本评估；可选成果由本人勾选展示。</p>
+              <table class="ap-table">
+                <thead><tr><th>材料 / 模块</th><th>当前可见范围</th></tr></thead>
+                <tbody>
+                  <tr><td>课程标准、大纲（规定公开）</td><td><span class="ap-tag green">全校可见</span></td></tr>
+                  <tr><td>教案、课件</td><td><span class="ap-tag blue">教研室可见</span></td></tr>
+                  <tr><td>教学反思</td><td><span class="ap-tag gray">私有</span></td></tr>
+                  <tr><td>试卷分析（必选）</td><td><span class="ap-tag blue">对专业主任开放</span></td></tr>
+                  <tr><td>课程思政案例集（可选）</td><td><span class="ap-tag blue">全校可见（已采纳建议）</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ===================== 视图：我的目标 ===================== -->
+      <section class="tp-view" data-view="tp-kpi">
+        <div class="ap-title-row">
+          <h1><span class="badge">标</span>我的目标（2026 年度）</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">查看团队看板</button></div>
+        </div>
+        <div class="tp-sync">ⓘ 目标来源：校「双高建设任务书」→ 电子与通信工程学院 → <b style="margin:0 4px">嵌入式技术教学创新团队</b>（负责人：陈立群）→ 本人。档案袋新增成果命中指标后自动回填进度。</div>
+        <div class="tp-kpi-grid">
+          <div class="tp-kpi">
+            <h4>省职业院校教学能力比赛 二等奖及以上</h4>
+            <div class="meta"><span>指标类别：竞赛类（A类）</span><span>个人权重 30%</span><span>节点：校赛 06-20 · 省赛 09 月</span></div>
+            <div class="pct"><span>进度（校赛材料准备中）</span><b>40%</b></div>
+            <div class="tp-bar"><i style="width:40%"></i></div>
+            <div class="meta"><span class="ap-tag orange">节点临近 · 距校赛截止 9 天</span></div>
+          </div>
+          <div class="tp-kpi done">
+            <h4>指导学生获省职业院校技能大赛 一等奖</h4>
+            <div class="meta"><span>指标类别：竞赛类（A类）</span><span>个人权重 40%</span><span>节点：2026-04</span></div>
+            <div class="pct"><span>已完成 · 成果自动回填</span><b>100%</b></div>
+            <div class="tp-bar green"><i style="width:100%"></i></div>
+            <div class="meta"><span class="ap-tag green">✓ 2026-04-26 由「荣誉与成果」自动回填</span></div>
+          </div>
+          <div class="tp-kpi">
+            <h4>完成企业实践锻炼 ≥ 30 天（双师素质）</h4>
+            <div class="meta"><span>指标类别：师资结构</span><span>个人权重 30%</span><span>节点：2026-12</span></div>
+            <div class="pct"><span>进度（已完成 18 天）</span><b>60%</b></div>
+            <div class="tp-bar"><i style="width:60%"></i></div>
+            <div class="meta"><span class="ap-tag blue">暑期企业实践已排期 · 预计 8 月完成</span></div>
+          </div>
+        </div>
+        <div class="ap-cols-2">
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>成果回填记录</h2><span class="ap-tag gray">档案沉淀即目标证据</span></div>
+            <div class="ap-panel-body" style="padding:0">
+              <table class="ap-table">
+                <thead><tr><th>时间</th><th>档案成果</th><th>命中指标</th><th>回填结果</th></tr></thead>
+                <tbody>
+                  <tr><td>2026-04-26</td><td>省技能大赛一等奖（指导教师，已核验）</td><td>指导学生省赛一等奖</td><td><span class="ap-tag green">进度 100% · 贡献分 +12</span></td></tr>
+                  <tr><td>2026-05-06</td><td>省教学能力比赛参赛教案（佐证归档）</td><td>教学能力比赛二等奖以上</td><td><span class="ap-tag blue">材料就绪 · 进度 40%</span></td></tr>
+                  <tr><td>2026-02-28</td><td>寒假企业实践记录 18 天（经企业确认）</td><td>企业实践 ≥30 天</td><td><span class="ap-tag blue">累计 18/30 天 · 进度 60%</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>团队整体达成</h2></div>
+            <div class="ap-panel-body" style="display:grid;gap:14px">
+              <div class="tp-kpi" style="border:none;padding:0">
+                <div class="pct"><span>嵌入式技术教学创新团队 · 年度目标完成率</span><b>68%</b></div>
+                <div class="tp-bar"><i style="width:68%"></i></div>
+              </div>
+              <table class="ap-table">
+                <thead><tr><th>成员</th><th>承担权重</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr><td>陈立群（负责人）</td><td>25%</td><td><span class="ap-tag green">正常</span></td></tr>
+                  <tr><td>金晓智（本人）</td><td>30%</td><td><span class="ap-tag orange">1 项节点临近</span></td></tr>
+                  <tr><td>吴蔚 等 3 人</td><td>45%</td><td><span class="ap-tag green">正常</span></td></tr>
+                </tbody>
+              </table>
+              <p style="margin:0;font-size:12.5px;color:var(--ap-muted)">目标达成后按权重折算个人贡献分，计入成长画像「团队贡献」维度。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ===================== 视图：成长画像 ===================== -->
+      <section class="tp-view" data-view="tp-portrait">
+        <div class="ap-title-row">
+          <h1><span class="badge">像</span>教学成长画像</h1>
+          <div class="ap-actions"><button class="ap-btn" type="button">导出画像报告</button></div>
+        </div>
+        <div class="tp-portrait-cols">
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>六维能力雷达</h2><span class="ap-tag gray">每一分可溯源到原始材料</span></div>
+            <div class="ap-panel-body" style="display:grid;gap:14px;justify-items:center">
+              <div class="tp-score-line"><span style="font-size:13px;color:var(--ap-muted)">画像综合分</span><span class="score">86.5</span><span class="delta">▲ 较上年 +3.2</span></div>
+              <svg class="tp-radar" width="100%" viewBox="0 0 360 246" style="max-width:420px">
+                <g stroke="#e5eaf3" fill="none">
+                  <polygon points="180,40 256.2,84 256.2,172 180,216 103.8,172 103.8,84"/>
+                  <polygon points="180,62 237.2,95 237.2,161 180,194 122.8,161 122.8,95"/>
+                  <polygon points="180,84 218.1,106 218.1,150 180,172 141.9,150 141.9,106"/>
+                  <polygon points="180,106 199.1,117 199.1,139 180,150 160.9,139 160.9,117"/>
+                  <line x1="180" y1="128" x2="180" y2="40"/><line x1="180" y1="128" x2="256.2" y2="84"/><line x1="180" y1="128" x2="256.2" y2="172"/>
+                  <line x1="180" y1="128" x2="180" y2="216"/><line x1="180" y1="128" x2="103.8" y2="172"/><line x1="180" y1="128" x2="103.8" y2="84"/>
+                </g>
+                <polygon points="180,47 252.4,86.2 226.5,154.8 180,205.4 117.5,164.1 122.1,94.6" fill="rgba(53,101,234,.18)" stroke="#3565ea" stroke-width="2"/>
+                <g fill="#3565ea">
+                  <circle cx="180" cy="47" r="3.5"/><circle cx="252.4" cy="86.2" r="3.5"/><circle cx="226.5" cy="154.8" r="3.5"/>
+                  <circle cx="180" cy="205.4" r="3.5"/><circle cx="117.5" cy="164.1" r="3.5"/><circle cx="122.1" cy="94.6" r="3.5"/>
+                </g>
+                <text x="180" y="28" text-anchor="middle">教学实绩 <tspan class="val">92</tspan></text>
+                <text x="262" y="80" text-anchor="start">育人成效 <tspan class="val">95</tspan></text>
+                <text x="262" y="180" text-anchor="start">科研与服务 <tspan class="val">61</tspan></text>
+                <text x="180" y="236" text-anchor="middle">双师素质 <tspan class="val">88</tspan></text>
+                <text x="98" y="180" text-anchor="end">团队贡献 <tspan class="val">82</tspan></text>
+                <text x="98" y="80" text-anchor="end">荣誉影响力 <tspan class="val">76</tspan></text>
+              </svg>
+              <div class="tp-chips">
+                <span class="tp-chip gold">竞赛指导专家</span><span class="tp-chip gold">双师型骨干</span><span class="tp-chip gold">教学能手</span>
+              </div>
+            </div>
+          </section>
+          <div style="display:grid;gap:12px">
+            <section class="ap-panel">
+              <div class="ap-panel-head"><h2><span class="dot"></span>学生评教趋势</h2></div>
+              <div class="ap-panel-body" style="display:grid;justify-items:center">
+                <svg class="tp-trend" width="100%" viewBox="0 0 320 150" style="max-width:380px">
+                  <line x1="32" y1="125" x2="300" y2="125" stroke="#e5eaf3"/>
+                  <polyline points="40,85 120,68 200,46 280,29" fill="none" stroke="#3565ea" stroke-width="2.5" stroke-linecap="round"/>
+                  <g fill="#3565ea"><circle cx="40" cy="85" r="4"/><circle cx="120" cy="68" r="4"/><circle cx="200" cy="46" r="4"/><circle cx="280" cy="29" r="4"/></g>
+                  <text x="40" y="72" text-anchor="middle" class="v">88.5</text><text x="120" y="55" text-anchor="middle" class="v">90.2</text>
+                  <text x="200" y="33" text-anchor="middle" class="v">92.4</text><text x="280" y="16" text-anchor="middle" class="v">94.1</text>
+                  <text x="40" y="142" text-anchor="middle">2022-23</text><text x="120" y="142" text-anchor="middle">2023-24</text>
+                  <text x="200" y="142" text-anchor="middle">2024-25</text><text x="280" y="142" text-anchor="middle">2025-26</text>
+                </svg>
+              </div>
+            </section>
+            <section class="ap-panel">
+              <div class="ap-panel-head"><h2><span class="dot"></span>成长里程碑</h2></div>
+              <div class="ap-panel-body">
+                <div class="ap-timeline">
+                  <div class="ap-tl-item current"><span class="ap-tl-dot">26</span><div class="ap-tl-body"><h4>指导学生获省技能大赛一等奖</h4><p>2026-04 · A类省级一等 · 赋分 12 · 已回填团队目标</p></div></div>
+                  <div class="ap-tl-item done"><span class="ap-tl-dot">25</span><div class="ap-tl-body"><h4>省教学能力比赛二等奖</h4><p>2025-09 · A类省级二等 · 第一完成人</p></div></div>
+                  <div class="ap-tl-item done"><span class="ap-tl-dot">24</span><div class="ap-tl-body"><h4>双师型教师（中级）认定 · 主编教材出版</h4><p>2024 · 双师素质维度关键事件</p></div></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>维度明细与同侪对比</h2><span class="ap-tag gray">对比锚点为专业内同职称教师均值（匿名）</span></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th style="width:140px">维度</th><th>本人得分</th><th style="width:42%">与专业均值对比</th><th>主要数据来源</th></tr></thead>
+              <tbody>
+                <tr><td>教学实绩</td><td><b style="color:var(--ap-blue)">92</b></td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:92%"></i></div><span>均值 81</span></div></td><td>课时量、评教 94.1、督导 92、课程标准/教材</td></tr>
+                <tr><td>育人成效</td><td><b style="color:var(--ap-blue)">95</b></td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:95%"></i></div><span>均值 72</span></div></td><td>省一等奖（指导）、学生专利、社团育人</td></tr>
+                <tr><td>科研与社会服务</td><td><b style="color:var(--ap-orange)">61</b></td><td><div class="tp-dim-bar"><div class="tp-bar orange"><i style="width:61%"></i></div><span>均值 68 · 低于均值</span></div></td><td>校级教改在研；建议关注横向技术服务</td></tr>
+                <tr><td>双师素质</td><td><b style="color:var(--ap-blue)">88</b></td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:88%"></i></div><span>均值 70</span></div></td><td>双师认定、企业实践 18 天（进行中）</td></tr>
+                <tr><td>团队贡献</td><td><b style="color:var(--ap-blue)">82</b></td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:82%"></i></div><span>均值 75</span></div></td><td>团队目标承担 30%、回填贡献分</td></tr>
+                <tr><td>荣誉影响力</td><td><b style="color:var(--ap-blue)">76</b></td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:76%"></i></div><span>均值 66</span></div></td><td>省级奖项 2 项、校级称号</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================== 视图：统计分析 ===================== -->
+      <section class="tp-view" data-view="tp-stats">
+        <div class="ap-title-row">
+          <h1><span class="badge">析</span>统计分析（学院视角）</h1>
+          <div class="ap-actions">
+            <select style="height:36px;padding:0 12px;border:1px solid var(--ap-line);border-radius:4px;background:#fff;color:var(--ap-text);font-size:14px">
+              <option>电子与通信工程学院</option>
+            </select>
+            <button class="ap-btn" type="button">导出报表</button>
+          </div>
+        </div>
+        <div class="ap-stat-row">
+          <div class="ap-stat"><p>纳入统计教师</p><h3>246<small>人</small></h3></div>
+          <div class="ap-stat accent"><p>学院平均档案完整度</p><h3>83<small>% · 环比 +6%</small></h3></div>
+          <div class="ap-stat"><p>本学年归档材料</p><h3>4,820<small>份 · 自动归集占 52%</small></h3></div>
+          <div class="ap-stat"><p>双高指标关联成果</p><h3>137<small>项 · 已回填目标 89%</small></h3></div>
+        </div>
+        <div class="ap-cols-2">
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>各专业档案完整度</h2><span class="ap-tag gray">逐级下钻：学院 → 专业 → 教师</span></div>
+            <div class="ap-panel-body tp-rank">
+              <div class="tp-rank-row"><span>通信工程</span><div class="tp-bar green"><i style="width:92%"></i></div><b>92%</b></div>
+              <div class="tp-rank-row"><span>电子信息工程</span><div class="tp-bar green"><i style="width:88%"></i></div><b>88%</b></div>
+              <div class="tp-rank-row"><span>物联网应用技术</span><div class="tp-bar"><i style="width:84%"></i></div><b>84%</b></div>
+              <div class="tp-rank-row"><span>微电子技术</span><div class="tp-bar"><i style="width:79%"></i></div><b>79%</b></div>
+              <div class="tp-rank-row"><span>集成电路技术</span><div class="tp-bar orange"><i style="width:71%"></i></div><b>71%</b></div>
+            </div>
+          </section>
+          <section class="ap-panel">
+            <div class="ap-panel-head"><h2><span class="dot"></span>待关注教师（完整度 &lt; 60%）</h2><span class="ap-tag orange">8 人</span></div>
+            <div class="ap-panel-body" style="padding:0">
+              <table class="ap-table">
+                <thead><tr><th>教师</th><th>教研室</th><th>必选完成</th><th>完整度</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr><td>李 *</td><td>集成电路教研室</td><td>7 / 14</td><td><span class="ap-tag red">50%</span></td><td class="link">提醒</td></tr>
+                  <tr><td>赵 * *</td><td>微电子教研室</td><td>8 / 14</td><td><span class="ap-tag red">57%</span></td><td class="link">提醒</td></tr>
+                  <tr><td>钱 *</td><td>集成电路教研室</td><td>8 / 14</td><td><span class="ap-tag red">57%</span></td><td class="link">提醒</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>双高指标完成情况（与目标管理联动）</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>指标</th><th>年度目标</th><th>当前完成</th><th>进度</th><th>责任团队</th></tr></thead>
+              <tbody>
+                <tr><td>省级及以上教学能力比赛获奖</td><td>4 项</td><td>2 项</td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:50%"></i></div><span>50%</span></div></td><td>3 个教学创新团队</td></tr>
+                <tr><td>学生技能大赛省级一等奖及以上</td><td>6 项</td><td>5 项</td><td><div class="tp-dim-bar"><div class="tp-bar green"><i style="width:83%"></i></div><span>83%</span></div></td><td>赛项指导团队</td></tr>
+                <tr><td>双师型教师比例</td><td>≥ 75%</td><td>71.5%</td><td><div class="tp-dim-bar"><div class="tp-bar"><i style="width:95%"></i></div><span>95%</span></div></td><td>各教研室</td></tr>
+                <tr><td>现场工程师班开班数</td><td>3 个</td><td>3 个</td><td><div class="tp-dim-bar"><div class="tp-bar green"><i style="width:100%"></i></div><span>已达成</span></div></td><td>校企合作团队</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+  function tpShowView(key) {
+    var views = document.querySelectorAll('.tp-view');
+    var matched = false;
+    views.forEach(function (v) {
+      var hit = v.dataset.view === key;
+      v.classList.toggle('is-visible', hit);
+      if (hit) matched = true;
+    });
+    if (!matched) {
+      // 非业务视图（如分组键）时保持当前视图不变
+      var current = document.querySelector('.tp-view.is-visible');
+      if (!current && views[0]) views[0].classList.add('is-visible');
+    }
+  }
+
+  WiseFramework2.mount({
+    roleName: '人事处领导（决策视角）',
+    activeApp: 'teaching-portfolio',
+    activeFeature: 'tp-overview',
+    userName: '金晓智',
+    versionLabel: '教学档案袋',
+    appMenus: {
+      'teaching-portfolio': [
+        { key: 'tp-overview', label: '档案总览', icon: 'home' },
+        { key: 'tp-mine', label: '我的教学档案', icon: 'prepare', children: [
+          { key: 'tp-courses', label: '课程教学档案' },
+          { key: 'tp-upload', label: '教学文件上传' },
+          { key: 'tp-achievements', label: '荣誉与成果' }
+        ] },
+        { key: 'tp-special', label: '特色档案', icon: 'camp', children: [
+          { key: 'tp-club', label: '学生社团档案' },
+          { key: 'tp-coop', label: '现场工程师班' }
+        ] },
+        { key: 'tp-review', label: '审核与反馈', icon: 'recommend' },
+        { key: 'tp-growth', label: '目标与画像', icon: 'exam', children: [
+          { key: 'tp-kpi', label: '我的目标' },
+          { key: 'tp-portrait', label: '成长画像' }
+        ] },
+        { key: 'tp-stats', label: '统计分析', icon: 'flow' }
+      ]
+    },
+    tabs: [
+      { key: 'tp-overview', label: '档案总览', closable: true }
+    ],
+    onFeatureChange: tpShowView
+  });
+
+  tpShowView('tp-overview');
+</script>
+</body>
+</html>

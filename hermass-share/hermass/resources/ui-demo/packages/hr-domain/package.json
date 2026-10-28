@@ -1,0 +1,26 @@
+{
+  "name": "@wisedu/hr-domain",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./contracts": "./src/contracts.js",
+    "./privacy": "./src/privacy.js",
+    "./identifiers": "./src/identifiers.js",
+    "./models": "./src/entity-models.js",
+    "./fields": "./src/field-registry.js",
+    "./basic-information": "./src/basic-information.js",
+    "./resume-fields": "./src/resume-fields.js",
+    "./data/basic-information-fields.json": "./data/basic-information-fields.json",
+    "./data/resume-fields.json": "./data/resume-fields.json",
+    "./data/dictionary-catalog.json": "./data/dictionary-catalog.json",
+    "./data/field-dictionary-bindings.json": "./data/field-dictionary-bindings.json",
+    "./data/basic-information-field-set.schema.json": "./data/basic-information-field-set.schema.json",
+    "./data/dictionary-catalog.schema.json": "./data/dictionary-catalog.schema.json",
+    "./data/field-dictionary-bindings.schema.json": "./data/field-dictionary-bindings.schema.json",
+    "./data/business-field-extensions.json": "./data/business-field-extensions.json",
+    "./data/business-field-extensions.schema.json": "./data/business-field-extensions.schema.json"
+  }
+}

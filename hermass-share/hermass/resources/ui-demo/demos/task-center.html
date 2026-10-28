@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>任务中心 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+body{margin:0}
+
+/* 筛选 tab */
+.tc-tabs { display:flex; gap:26px; padding:0 2px 14px; border-bottom:1px solid var(--ap-line); margin-bottom:16px; }
+.tc-tab { flex:none; padding:6px 1px 12px; font-size:14px; color:var(--ap-muted); background:none; border:0; border-bottom:2px solid transparent; cursor:pointer; }
+.tc-tab.active { color:var(--ap-blue); font-weight:600; border-bottom-color:var(--ap-blue); }
+
+/* 业务类型筛选 */
+.tc-biz { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px; }
+.tc-biz-label { flex:none; font-size:13px; color:var(--ap-muted); margin-right:2px; }
+.tc-chip {
+  flex:none; padding:5px 14px; border-radius:14px; font-size:13px; color:var(--ap-text);
+  background:#f4f6fa; border:1px solid transparent; cursor:pointer;
+}
+.tc-chip:hover { color:var(--ap-blue); background:#eaf1ff; }
+.tc-chip.active { color:#fff; background:var(--ap-blue); }
+
+/* 任务列表 */
+.tc-list { display:flex; flex-direction:column; gap:12px; }
+.tc-empty { padding:60px 20px; text-align:center; color:var(--ap-muted); font-size:14px; }
+
+.task-card { position:relative; padding:16px 20px 16px 22px; border:1px solid var(--ap-line); border-left:3px solid var(--ap-blue); border-radius:6px; background:#fff; }
+.task-card.is-returned { border-left-color:var(--ap-orange); }
+.task-card.is-approved { border-left-color:var(--ap-green); }
+.task-card.is-rejected { border-left-color:var(--ap-red); }
+.task-card.is-todo { border-left-color:var(--ap-blue); background:#fafcff; }
+.task-card.is-todo.is-urgent { border-left-color:var(--ap-red); }
+.task-card.is-done { border-left-color:#9aa4b6; }
+
+.task-top { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.task-kind { flex:none; padding:2px 9px; border-radius:3px; font-size:12px; font-weight:600; }
+.task-kind.k-apply { color:var(--ap-blue); background:#eaf1ff; }
+.task-kind.k-todo { color:var(--ap-orange); background:#fff1e8; }
+.task-kind.k-done { color:#5f6b7d; background:#eef1f5; }
+.task-title { flex:auto; font-size:16px; font-weight:700; color:var(--ap-ink); display:flex; align-items:center; gap:8px; min-width:0; }
+.task-title .name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.task-time { flex:none; font-size:12px; color:var(--ap-muted); }
+
+.task-tag { flex:none; display:inline-flex; align-items:center; height:22px; padding:0 9px; border-radius:3px; font-size:12px; font-weight:600; }
+.task-tag.progress { color:var(--ap-blue); background:#eaf1ff; }
+.task-tag.returned { color:var(--ap-orange); background:#fff1e8; }
+.task-tag.approved { color:var(--ap-green); background:#e3f8ef; }
+.task-tag.rejected { color:var(--ap-red); background:#ffe8e8; }
+.task-tag.done { color:#5f6b7d; background:#eef1f5; }
+.task-tag.urgent { color:var(--ap-red); background:#ffe8e8; }
+.task-tag.normal { color:var(--ap-blue); background:#eaf1ff; }
+
+.task-desc { margin:0 0 6px; color:var(--ap-text); font-size:14px; line-height:22px; }
+.task-step { margin:0; color:var(--ap-text); font-size:13px; line-height:20px; }
+.task-step .v { color:var(--ap-blue); font-weight:600; }
+.task-reason { margin:8px 0 0; padding:8px 12px; color:var(--ap-orange); background:#fff4ec; border-radius:4px; font-size:13px; line-height:20px; }
+.task-note { margin:8px 0 0; color:var(--ap-muted); font-size:12px; line-height:18px; }
+.task-foot { margin-top:12px; display:flex; align-items:center; justify-content:flex-end; }
+.task-link { color:var(--ap-blue); font-size:13px; font-weight:600; text-decoration:none; }
+.task-link:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">任务中心</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">任</span>任务中心</h1>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head">
+          <h2><span class="dot"></span>我的事项</h2>
+        </div>
+        <div class="ap-panel-body">
+          <p class="hint">汇总展示「我的申请」「待办」「已办」三类事项，按时间倒序排列：我的申请为本人提交且尚未结束的申请（已结束的申请将保留展示7天）；待办为系统需要您处理的事项；已办为已完成归档的历史记录。</p>
+          <div class="tc-tabs" id="tcTabs"></div>
+          <div class="tc-biz" id="tcBiz"></div>
+          <div class="tc-list" id="tcList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'task-center', versionLabel:'任务中心', userName:'金晓智',
+  secondaryNav:{items:[]},
+  workspaceVariant:'card',
+  tabs:[{key:'task-center',label:'任务中心',closable:true}]
+});
+</script>
+<script>
+(function () {
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // 统一的事项列表：我的申请 / 待办 / 已办，time 用于按倒序排序
+  var TASK_ITEMS = [
+    { kind: 'apply', business: '证明打印', time: '2026-06-01 09:02', title: '证明打印申请', status: 'approved', statusLabel: '已通过',
+      desc: '证明类型：在职在编证明 · 提交时间：2026.06.01 09:02:11',
+      step: '已办结 · 人事处已盖章', note: '已于 3 天前办结，将于 4 天后从「我的申请」中自动移除', detailUrl: './certificate-print.html' },
+    { kind: 'todo', business: '职称评审', time: '2026-06-05 10:00', title: '提交职称评审申报材料', urgent: true, deadline: '剩余 3 天',
+      desc: '根据《2026年度职称评审工作通知》，请于截止日期前完成评审材料填报与提交。', actionLabel: '去提交', actionUrl: './title-review.html' },
+    { kind: 'todo', business: '出国境报备', time: '2026-06-03 14:20', title: '补充出国（境）报备申请材料', urgent: false, deadline: '剩余 5 天',
+      desc: '您的出国（境）报备申请已被退回，需补充邀请函翻译件后重新提交审批。', actionLabel: '去补充', actionUrl: './overseas-report.html' },
+    { kind: 'apply', business: '企业实践认定', time: '2026-05-05 16:40', title: '企业实践认定申请', status: 'returned', statusLabel: '被退回',
+      desc: '深圳市智造科技有限公司，实践周期32天 · 提交时间：2026.05.05 16:32:01',
+      step: '待个人提交', reason: '退回原因：缺少企业导师评价附件，请补充重新提交。', detailUrl: './apply-detail-practice.html' },
+    { kind: 'apply', business: '请假', time: '2026-05-05 16:32', title: '年休假申请', status: 'progress', statusLabel: '进行中',
+      desc: '申请时间：2026.05.06 至 2026.05.08，共2天 · 提交时间：2026.05.05 16:32:01',
+      step: '待学院审批', detailUrl: './apply-detail-leave.html' },
+    { kind: 'todo', business: '业绩数据登记', time: '2026-05-28 09:15', title: '登记本学期业绩数据', urgent: false, deadline: '剩余 10 天',
+      desc: '请完善本学期教学、科研等业绩数据登记，作为年度考核评定依据。', actionLabel: '去登记', actionUrl: './performance-data.html' },
+    { kind: 'done', business: '教职工信息变更', time: '2026-05-20 11:08', title: '教职工信息变更申请', resultLabel: '已办结',
+      desc: '变更类型：联系方式变更 · 提交时间：2026.05.18 10:02:36', step: '已归档 · 人事处已审核', detailUrl: './my-info.html' },
+    { kind: 'done', business: '年度考核', time: '2026-05-15 16:45', title: '年度考核材料提交', resultLabel: '已办结',
+      desc: '2025学年度考核材料已提交并完成审核 · 提交时间：2026.05.12 09:40:02', step: '已归档 · 学院已确认', detailUrl: './annual-assessment.html' },
+    { kind: 'done', business: '工资查询', time: '2026-04-30 09:30', title: '工资异议申诉', resultLabel: '已办结',
+      desc: '反馈的工资条数据异议已核实并完成处理回复 · 提交时间：2026.04.26 15:18:47', step: '已归档 · 财务处已回复', detailUrl: './my-salary.html' }
+  ];
+
+  TASK_ITEMS.sort(function (a, b) { return a.time < b.time ? 1 : (a.time > b.time ? -1 : 0); });
+
+  var KIND_META = {
+    apply: { label: '我的申请', cls: 'k-apply' },
+    todo: { label: '待办', cls: 'k-todo' },
+    done: { label: '已办', cls: 'k-done' }
+  };
+
+  function applyBodyHtml(item) {
+    return '<p class="task-desc">' + escapeHtml(item.desc) + '</p>' +
+      '<p class="task-step">当前环节：<span class="v">' + escapeHtml(item.step) + '</span></p>' +
+      (item.reason ? '<p class="task-reason">' + escapeHtml(item.reason) + '</p>' : '') +
+      (item.note ? '<p class="task-note">' + escapeHtml(item.note) + '</p>' : '') +
+      '<div class="task-foot"><a class="task-link" href="' + item.detailUrl + '">查看详情 →</a></div>';
+  }
+
+  function todoBodyHtml(item) {
+    return '<p class="task-desc">' + escapeHtml(item.desc) + '</p>' +
+      '<div class="task-foot"><a class="task-link" href="' + item.actionUrl + '">' + escapeHtml(item.actionLabel) + ' →</a></div>';
+  }
+
+  function doneBodyHtml(item) {
+    return '<p class="task-desc">' + escapeHtml(item.desc) + '</p>' +
+      '<p class="task-step">办理结果：<span class="v">' + escapeHtml(item.step) + '</span></p>' +
+      '<div class="task-foot"><a class="task-link" href="' + item.detailUrl + '">查看详情 →</a></div>';
+  }
+
+  function taskCardHtml(item) {
+    var meta = KIND_META[item.kind];
+    var borderCls = '';
+    var rightTagHtml = '';
+
+    if (item.kind === 'apply') {
+      borderCls = item.borderClassOverride || ('is-' + (item.status === 'progress' ? 'progress' : item.status));
+      rightTagHtml = '<span class="task-tag ' + item.status + '">' + escapeHtml(item.statusLabel) + '</span>';
+    } else if (item.kind === 'todo') {
+      borderCls = 'is-todo' + (item.urgent ? ' is-urgent' : '');
+      rightTagHtml = '<span class="task-tag ' + (item.urgent ? 'urgent' : 'normal') + '">' + escapeHtml(item.deadline) + '</span>';
+    } else {
+      borderCls = 'is-done';
+      rightTagHtml = '<span class="task-tag done">' + escapeHtml(item.resultLabel || '已办结') + '</span>';
+    }
+    // “进行中”没有专门的边框色变体，统一沿用蓝色主色（默认即可）
+    if (borderCls === 'is-progress') borderCls = '';
+
+    var body = item.kind === 'apply' ? applyBodyHtml(item) : (item.kind === 'todo' ? todoBodyHtml(item) : doneBodyHtml(item));
+
+    return '<article class="task-card' + (borderCls ? ' ' + borderCls : '') + '">' +
+      '<div class="task-top">' +
+        '<span class="task-kind ' + meta.cls + '">' + meta.label + '</span>' +
+        '<span class="task-title"><span class="name">' + escapeHtml(item.title) + '</span></span>' +
+        rightTagHtml +
+        '<span class="task-time">' + escapeHtml(item.time.replace(' ', ' · ')) + '</span>' +
+      '</div>' +
+      body +
+    '</article>';
+  }
+
+  var TABS = [
+    { key: 'all', label: '全部' },
+    { key: 'apply', label: '我的申请' },
+    { key: 'todo', label: '待办' },
+    { key: 'done', label: '已办' }
+  ];
+  var activeTab = 'all';
+  var activeBiz = 'all';
+
+  // 业务类型筛选项：从全部事项中提取去重后的业务分类
+  var BIZ_OPTIONS = ['all'].concat(
+    TASK_ITEMS.reduce(function (acc, it) {
+      if (it.business && acc.indexOf(it.business) === -1) acc.push(it.business);
+      return acc;
+    }, [])
+  );
+
+  var tabsEl = document.getElementById('tcTabs');
+  var bizEl = document.getElementById('tcBiz');
+  var listEl = document.getElementById('tcList');
+
+  function itemsByKind(key) {
+    if (key === 'all') return TASK_ITEMS;
+    return TASK_ITEMS.filter(function (it) { return it.kind === key; });
+  }
+
+  function visibleItems() {
+    var items = itemsByKind(activeTab);
+    if (activeBiz !== 'all') items = items.filter(function (it) { return it.business === activeBiz; });
+    return items;
+  }
+
+  function renderTabs() {
+    tabsEl.innerHTML = TABS.map(function (t) {
+      var count = itemsByKind(t.key).length;
+      return '<button type="button" class="tc-tab' + (t.key === activeTab ? ' active' : '') + '" data-key="' + t.key + '">' +
+        escapeHtml(t.label) + (t.key === 'all' ? '' : '(' + count + ')') +
+      '</button>';
+    }).join('');
+    tabsEl.querySelectorAll('.tc-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.getAttribute('data-key');
+        if (key === activeTab) return;
+        activeTab = key;
+        renderTabs();
+        renderList();
+      });
+    });
+  }
+
+  function renderBizFilter() {
+    bizEl.innerHTML =
+      '<span class="tc-biz-label">业务类型</span>' +
+      BIZ_OPTIONS.map(function (key) {
+        var label = key === 'all' ? '全部业务' : key;
+        return '<button type="button" class="tc-chip' + (key === activeBiz ? ' active' : '') + '" data-key="' + escapeHtml(key) + '">' +
+          escapeHtml(label) +
+        '</button>';
+      }).join('');
+    bizEl.querySelectorAll('.tc-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.getAttribute('data-key');
+        if (key === activeBiz) return;
+        activeBiz = key;
+        renderBizFilter();
+        renderList();
+      });
+    });
+  }
+
+  function renderList() {
+    var items = visibleItems();
+    listEl.innerHTML = items.length
+      ? items.map(taskCardHtml).join('')
+      : '<div class="tc-empty">暂无相关事项</div>';
+  }
+
+  renderTabs();
+  renderBizFilter();
+  renderList();
+})();
+</script>
+</body>
+</html>

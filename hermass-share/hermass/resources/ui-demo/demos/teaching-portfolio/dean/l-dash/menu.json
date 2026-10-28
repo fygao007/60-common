@@ -1,0 +1,33 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "dean",
+    "label": "二级学院"
+  },
+  "menu": {
+    "key": "l-dash",
+    "label": "首页",
+    "group": "教师教学画像",
+    "defaultFeature": "l-dash"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-dean-l-dash",
+      "label": "教师教学画像（二级学院首页）",
+      "type": "react-business-page",
+      "html": "l-dash.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../p-board/p-board.html",
+          "../r-review/r-review.html"
+        ]
+      }
+    }
+  ]
+}

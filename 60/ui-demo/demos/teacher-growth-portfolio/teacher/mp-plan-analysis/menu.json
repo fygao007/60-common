@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teacher-growth-portfolio",
+    "label": "教师成长档案袋"
+  },
+  "role": {
+    "key": "teacher",
+    "label": "管理部门"
+  },
+  "menu": {
+    "key": "mp-plan-analysis",
+    "label": "发展规划分析",
+    "group": "发展规划与目标",
+    "defaultFeature": "mp-plan-analysis"
+  },
+  "pages": [
+    {
+      "key": "growth-management-mp-plan-analysis",
+      "label": "发展规划分析（发展规划与目标）",
+      "type": "react-business-page",
+      "html": "mp-plan-analysis.html",
+      "related": {
+        "upstream": [
+          "../mp-plan-list/mp-plan-list.html"
+        ],
+        "secondary": [],
+        "siblingMenus": [
+          "../mp-plan-list/mp-plan-list.html",
+          "../mp-requirement-list/mp-requirement-list.html",
+          "../mp-plan-audit/mp-plan-audit.html"
+        ]
+      }
+    }
+  ]
+}

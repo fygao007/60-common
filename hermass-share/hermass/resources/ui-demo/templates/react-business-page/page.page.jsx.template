@@ -1,0 +1,44 @@
+import { createRoot } from 'react-dom/client'
+
+export const PAGE_GENERATION_CONTRACT = 'v1'
+export const PAGE_TEMPLATE = '{{PAGE_TEMPLATE}}'
+import {
+  DSButton,
+  DSCard,
+  DSDataTable,
+  DSPageHeader,
+} from '@wisedu/design-system'
+import './{{PAGE_NAME}}.css'
+
+const columns = [
+  { key: 'name', dataIndex: 'name', title: '名称', width: 320 },
+  { key: 'status', dataIndex: 'status', title: '状态', width: 120 },
+]
+
+const data = [
+  { id: 1, name: '示例数据', status: '进行中' },
+]
+
+function BusinessPage() {
+  return (
+    <main className="{{PAGE_PREFIX}}-page" data-ds-business-page="{{PAGE_NAME}}">
+      <DSPageHeader
+        title="{{PAGE_TITLE}}"
+        actions={<DSButton>新增</DSButton>}
+      />
+      <DSCard layout="long" title="业务内容">
+        这里只编写业务组合，不复制组件内部结构。
+      </DSCard>
+      <DSDataTable
+        columns={columns}
+        data={data}
+        rowKey="id"
+        selectable={false}
+        tableTools={false}
+        title="数据列表"
+      />
+    </main>
+  )
+}
+
+createRoot(document.getElementById('app')).render(<BusinessPage />)

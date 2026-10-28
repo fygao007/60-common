@@ -1,0 +1,33 @@
+ontology: szpu-hr
+version: 0.1.0
+questions:
+  - id: CQ-001
+    question: 某位人员当前在哪个组织、担任哪个主要岗位？
+    requires: [Person, EmploymentAssignment, Organization, Position, 时间有效性]
+  - id: CQ-002
+    question: 某位人员在指定日期的组织和岗位是什么？
+    requires: [任职历史, 生效日期, 结束日期]
+  - id: CQ-003
+    question: 某组织当前有多少核定岗位编制、在岗人数和空缺？
+    requires: [Organization, PositionSlot, EmploymentAssignment]
+  - id: CQ-004
+    question: 某候选人通过哪次申请和录用事件转化为正式人员？
+    requires: [Candidate, Application, OnboardingCase, Person, HREvent]
+  - id: CQ-005
+    question: 招聘岗位对应哪个正式岗位，录用后应进入哪个组织？
+    requires: [RecruitmentPosition, Position, Organization]
+  - id: CQ-006
+    question: 某次进校报到目前处于什么阶段，阻塞在哪项材料或审批？
+    requires: [OnboardingCase, Process, Task, Document]
+  - id: CQ-007
+    question: 当前人员状态是由哪些生效事件计算得到的？
+    requires: [Person, HREvent, 数据来源, 证据]
+  - id: CQ-008
+    question: 某字段由哪个系统负责，发生冲突时以哪个来源为准？
+    requires: [字段映射, 来源登记, 权威顺序]
+  - id: CQ-009
+    question: 查询者能否查看某个人员字段，为什么？
+    requires: [数据分级, 角色, 组织范围, 字段权限, 业务目的]
+  - id: CQ-010
+    question: 某岗位的任职条件与候选人材料之间有哪些满足项和缺口？
+    requires: [Position, RecruitmentPosition, Candidate, Qualification, Document]

@@ -1,0 +1,426 @@
+ontology: szpu-hr
+version: 0.1.0
+source: rsjxdad-current-tables
+sourceAuthority: system-export
+scope: 教学档案袋应用（rsjxdad）19 张现网物理表到本体标准实体的映射草案。
+statement: >-
+  本文件只记录现网物理表与本体概念的对应关系和差异，不定义字段。
+  物理列原样保存在 sources/legacy-schemas/rsjxdad-table-inventory.json；
+  标准字段定义以 model-library/entity-field-models.json 为准。
+
+dispositions:
+  - id: mapped-to-standard
+    definition: 该表语义已被现有标准实体覆盖，可直接建立映射。
+  - id: split-across-entities
+    definition: 该表混合了多个本体概念，必须拆分后分别映射。
+  - id: pending-standard-entity
+    definition: 该表承载真实业务概念但本体尚无对应实体，需评审后新增。
+  - id: product-view-config
+    definition: 该表属于产品展示配置，不进入本体领域模型，对应 teaching-portfolio/portfolio-view.json。
+  - id: application-permission
+    definition: 该表属于应用权限与流程配置，不进入本体领域模型。
+  - id: structural-defect
+    definition: 该表存在结构缺陷，映射前需产品先拍板去留。
+
+tableMappings:
+
+  # ---------- 档案树配置 ----------
+  - table: T_RS_JXDAD_DAB
+    label: 档案表
+    disposition: product-view-config
+    correspondsTo: teaching-portfolio/portfolio-view.json
+    columns:
+      - { column: lx, concept: view.groups/view.sections, status: structural-equivalent, note: group 组节点对应 groups，table 叶子对应 sections }
+      - { column: mc, concept: view.group.label/view.section.label, status: mapped }
+      - { column: bmc, concept: view.section.entityType, status: not-equivalent, note: 现网存物理表名，本体要求存标准实体 ID }
+      - { column: zslx, concept: view.section.displayType, status: partially-mapped }
+      - { column: px, concept: view.section 排序, status: mapped }
+      - { column: ls, concept: view.group 层级, status: mapped }
+      - { column: cc, concept: view.group 层级, status: mapped }
+      - { column: sfsy, concept: view.section 显隐, status: mapped }
+      - { column: sjly, concept: sources/source-registry.yaml, status: candidate, note: 数据来源应登记到来源注册表，不散落在配置行上 }
+      - { column: sjly_url, concept: sources/source-registry.yaml, status: candidate }
+      - { column: glzd, concept: null, status: application-specific }
+      - { column: zssx, concept: null, status: application-specific }
+      - { column: wjdx, concept: null, status: application-specific, note: 附件大小限制属于上传控件约束 }
+      - { column: wjlx, concept: null, status: application-specific }
+      - { column: xrmb, concept: null, status: application-specific }
+      - { column: nrsm, concept: null, status: application-specific }
+      - { column: ms, concept: null, status: application-specific }
+    defects:
+      - id: zslx-file-type-missing
+        detail: zslx=6（文件）在 portfolio-view.schema.json 的 displayType 枚举 [form, table, card, timeline, document] 中没有对应值。
+      - id: bmc-physical-table-name
+        detail: 叶子节点指向物理表名，违反 model-library/README.md 接入规则第 5 条（标准引用保存目标实体 ID）。
+
+  - table: T_RS_JXDAD_DAZD
+    label: 档案字段
+    disposition: product-view-config
+    correspondsTo: teaching-portfolio/portfolio-view.json → sections[].fieldRefs
+    columns:
+      - { column: dabid, concept: view.section, status: mapped }
+      - { column: zdid, concept: view.section.fieldRefs, status: not-equivalent, note: 现网存业务表物理列名，本体要求 fieldRef（如 StaffBasicInformation.xm） }
+      - { column: zdmc, concept: field.label, status: redundant, note: 展示名应从标准字段库取，不在视图配置中重复维护 }
+      - { column: sfzs, concept: view 显隐, status: mapped }
+      - { column: zdsx, concept: null, status: application-specific }
+      - { column: px, concept: view 排序, status: mapped }
+    defects:
+      - id: zdid-not-fieldref
+        detail: >-
+          zdid 存物理列名，直接违反 governance/field-reuse-policy.md 第 7 条
+          （业务库列名可用物理命名，但模型、接口和事件必须保留 fieldId 引用）。
+          档案字段配置需增加 fieldRef 列或建立列名到 fieldId 的转换表。
+
+  # ---------- 批次考核 ----------
+  - table: T_RS_JXDAD_PC
+    label: 批次
+    disposition: pending-standard-entity
+    proposedEntity: PortfolioAssessmentBatch
+    proposedDomain: teaching-portfolio
+    rationale: >-
+      考核批次是教学档案域的一等业务概念，决定考核周期、圈人范围和提交窗口。
+      本体现有 PortfolioSubmission 只表达单次提交，无法表达批次。
+    columns:
+      - { column: pcmc, proposedField: name, status: pending }
+      - { column: khxq, proposedField: assessmentTerm, status: pending, note: 与 PCXNXQ 多学期表口径重叠，需先定单值还是多值 }
+      - { column: tjkssj, proposedField: submissionOpenAt, status: pending }
+      - { column: tjjzsj, proposedField: submissionCloseAt, status: pending }
+      - { column: zt, proposedField: batchStatus, status: pending, proposedVocabulary: PortfolioBatchStatus }
+      - { column: fbfw, proposedField: publishScope, status: pending }
+      - { column: zdxy, concept: Organization.organizationId, status: label-only, note: 指定学院应引用组织主数据 }
+      - { column: zdzy, concept: Organization.organizationId, status: label-only, note: 指定专业应引用组织主数据（OrganizationType=专业） }
+      - { column: gltj, concept: null, status: application-specific, note: 长文本过滤条件，不建模 }
+      - { column: lc, concept: null, status: external-workflow, note: 飞龙流程 KEY，属外部流程引擎 }
+      - { column: dfhj, concept: null, status: external-workflow }
+      - { column: pfmf, proposedField: scoreMax, status: pending, note: 本体当前无任何评分概念 }
+
+  - table: T_RS_JXDAD_PCXNXQ
+    label: 批次学年学期
+    disposition: pending-standard-entity
+    proposedEntity: PortfolioAssessmentBatch
+    note: 作为批次的多值学期关联，随 PortfolioAssessmentBatch 一并评审。
+    columns:
+      - { column: pcid, proposedField: batchId, status: pending }
+      - { column: xnxqdm, concept: AcademicTermPeriod.termCode, status: pending, note: 依赖新增学年学期实体 }
+
+  - table: T_RS_JXDAD_PCDAB
+    label: 批次档案表
+    disposition: structural-defect
+    columns:
+      - { column: dabid, concept: view.section, status: blocked }
+      - { column: sfxs, concept: view 显隐, status: blocked }
+    defects:
+      - id: pcdab-missing-pcid
+        detail: 表中无 pcid，无法表达「哪个批次显示哪些表」；当前实现已改走 YHZBQX / YHZZDQX（lx=pc）。
+        decision: 需产品拍板废表或补批次 ID，未决前不建立本体映射。
+
+  - table: T_RS_JXDAD_GRZB
+    label: 个人主表
+    disposition: split-across-entities
+    splitRule: lx=2（提交单）映射到 PortfolioSubmission；lx=1（活档案）本体无对应实体。
+    columns:
+      - { column: jzgbh, concept: Person.employeeNumber, status: legacy-identifier, note: 经 LegacyIdentifier 解析为 personId，不得直接充当 personId }
+      - { column: zgh, concept: Person.employeeNumber, status: legacy-identifier, note: 与 jzgbh 并存，需确认哪个是业务主键口径 }
+      - { column: pcid, concept: null, status: gap, note: PortfolioSubmission 无批次字段，见 gaps.submission-has-no-batch }
+      - { column: shzt, concept: PortfolioSubmission.status, status: code-mismatch }
+      - { column: df, concept: null, status: gap, note: PortfolioReview 无评分字段 }
+      - { column: py, concept: PortfolioReview.comment, status: partially-mapped }
+      - { column: dfr, concept: PortfolioReview.reviewerPersonId, status: legacy-identifier }
+      - { column: dfsj, concept: PortfolioReview.reviewedAt, status: partially-mapped }
+      - { column: pfzt, concept: null, status: not-in-use, note: 一期暂不用 }
+      - { column: lx, concept: null, status: discriminator, note: 类型判别列，本体按实体拆分后不需要 }
+    codeMismatch:
+      field: shzt → PortfolioSubmissionStatus
+      legacy: { "0": 草稿, "-1": 退回, 流程节点码: 审批中, "99": 通过 }
+      standard: [草稿, 已提交, 审核中, 已通过, 已退回, 已撤回]
+      detail: >-
+        现网无「已提交」与「已撤回」两态；「审批中」用流程节点码承载，取值不固定。
+        标准词表与现网码值需双向对照表才能互转。
+
+  # ---------- 教师填写内容 ----------
+  - table: T_RS_JXDAD_TXDWB
+    label: 填写大文本
+    disposition: split-across-entities
+    columns:
+      - { column: jzgbh, concept: Person.employeeNumber, status: legacy-identifier }
+      - { column: zgh, concept: Person.employeeNumber, status: legacy-identifier }
+      - { column: kcdm, concept: Course.courseCode, status: legacy-identifier }
+      - { column: xqdm, concept: TeachingAssignment.term, status: partially-mapped, note: 现网为学年学期合码，本体拆为 academicYear + term }
+      - { column: dabid, concept: null, status: discriminator, note: 决定这段文本属于哪块档案 }
+      - { column: txnr, concept: CoursePortfolio.teachingObjectives/teachingDesign/implementationSummary/reflection, status: paradigm-conflict }
+      - { column: pcid, concept: null, status: gap, note: 本体无活数据与批次存档的双态区分 }
+      - { column: zbid, concept: PortfolioSubmission.portfolioSubmissionId, status: partially-mapped }
+    defects:
+      - id: generic-text-vs-named-fields
+        detail: >-
+          现网用「dabid + txnr」通用键值表承载全部长文本，本体用具名字段
+          （CoursePortfolio.teachingObjectives 等）。二者为范式冲突：
+          通用表无法做字段级类型校验和权限分级，具名字段无法在不改模型的前提下加档案块。
+          需产品与研发共同决定以哪一侧为准。
+
+  - table: T_RS_JXDAD_TXFJ
+    label: 填写附件
+    disposition: split-across-entities
+    columns:
+      - { column: fj, concept: "<各实体>.evidence", status: partially-mapped, note: 对应 CoursePortfolio/EnterprisePractice/TeachingAchievement/TrainingExperience/ProfessionalAppointment 的 evidence 字段 }
+      - { column: dabid, concept: null, status: discriminator }
+      - { column: pcid, concept: null, status: gap }
+      - { column: jzgbh, concept: Person.employeeNumber, status: legacy-identifier }
+      - { column: zgh, concept: Person.employeeNumber, status: legacy-identifier }
+      - { column: kcdm, concept: Course.courseCode, status: legacy-identifier }
+      - { column: xqdm, concept: TeachingAssignment.term, status: partially-mapped }
+      - { column: zbid, concept: PortfolioSubmission.portfolioSubmissionId, status: partially-mapped }
+
+  - table: T_RS_JXDAD_LN
+    label: 档案袋理念
+    disposition: pending-standard-entity
+    proposedEntity: TeachingPhilosophy
+    proposedDomain: teaching-portfolio
+    rationale: >-
+      教育初心与育人理念是教师档案的独立内容块，与课程、成果、培训都不同源，
+      本体现有 8 个教学档案实体均无法承载。教学档案袋首页的「教学理念」完整度分项直接依赖此表。
+    columns:
+      - { column: jzgbh, concept: Person.employeeNumber, status: legacy-identifier }
+      - { column: lnbt, proposedField: title, status: pending }
+      - { column: lnnr, proposedField: content, status: pending }
+      - { column: lx, proposedField: philosophyType, status: pending, proposedVocabulary: TeachingPhilosophyType }
+      - { column: bb, proposedField: version, status: pending }
+      - { column: lnbh, proposedField: philosophyNumber, status: pending }
+    defects:
+      - id: ln-missing-pcid
+        detail: 理念表无 pcid，不进批次存档。理念是否纳入考核包需产品确认。
+
+  # ---------- 课程与教学 ----------
+  - table: T_RS_JXDAD_KCXX
+    label: 课程信息
+    disposition: split-across-entities
+    splitRule: 课程主数据属性映射到 Course，开课班次属性映射到 TeachingAssignment。
+    columns:
+      - { column: kch, concept: Course.courseCode, status: mapped }
+      - { column: kcm, concept: Course.name, status: mapped }
+      - { column: xf, concept: Course.credit, status: mapped }
+      - { column: kclb, concept: Course.courseType, status: candidate, note: 需确认现网课程类别码值与 CourseType 词表六值的对应 }
+      - { column: cddw, concept: Course.owningOrganizationId, status: label-only }
+      - { column: xsxq, concept: TeachingAssignment.academicYear + TeachingAssignment.term, status: split-required, note: 现网为学年学期合码，本体拆为两列 }
+      - { column: skbj, concept: TeachingAssignment.className, status: mapped }
+      - { column: xs, concept: TeachingAssignment.plannedHours, status: candidate, note: 需确认是计划学时还是总学时；Course.totalHours 亦为候选 }
+      - { column: kxh, concept: null, status: gap, note: 课序号，本体 TeachingAssignment 无此字段 }
+      - { column: xkrs, concept: null, status: gap, note: 选课人数，本体无。见 gaps.no-student-entity }
+      - { column: skxs, concept: null, status: gap, note: 授课形式，本体无 }
+      - { column: kcxz, concept: null, status: gap, note: 课程性质，与 kclb 并存需辨析 }
+      - { column: kslx, concept: null, status: gap, note: 考试类型，本体无 }
+      - { column: dm, concept: null, status: application-specific }
+      - { column: mc, concept: null, status: application-specific, note: 与 kcm 重复 }
+      - { column: fj, concept: null, status: application-specific }
+    defects:
+      - id: kcxx-mixes-course-and-offering
+        detail: >-
+          同一张表混合课程主数据（课程号、课程名、学分）与开课班次（学年学期、课序号、授课班级、选课人数），
+          违反 ontology/README.md 设计原则中 Course 与 TeachingAssignment 分离的约定。
+      - id: kcxx-missing-teacher
+        detail: 表中无 jzgbh，人课关系依赖 JZGKC；本体 TeachingAssignment.personId 为必填。
+
+  - table: T_RS_JXDAD_JZGKC
+    label: 教职工课程
+    disposition: mapped-to-standard
+    targetEntity: TeachingAssignment
+    columns:
+      - { column: jzgbh, concept: TeachingAssignment.personId, status: legacy-identifier }
+      - { column: kcxxid, concept: TeachingAssignment.courseId, status: legacy-identifier }
+      - { column: kcdm, concept: Course.courseCode, status: legacy-identifier }
+    defects:
+      - id: jzgkc-no-status-no-hours
+        detail: >-
+          本体 TeachingAssignment 的 status（必填，词表 TeachingAssignmentStatus）与
+          completedHours 在现网无对应列，授课状态和完成学时无法从现有表得出。
+
+  - table: T_RS_JZG_JXSS
+    label: 教学实施
+    disposition: pending-standard-entity
+    proposedEntity: TeachingSession
+    proposedDomain: teaching-portfolio
+    rationale: >-
+      按周次与日期记录的上课明细是比 TeachingAssignment 更细一层的事实，
+      是教学工作量学时的真实来源，本体缺失该粒度。
+    columns:
+      - { column: jzgbh, concept: Person.employeeNumber, status: legacy-identifier }
+      - { column: kcdm, concept: Course.courseCode, status: legacy-identifier }
+      - { column: xqdm, concept: TeachingAssignment.term, status: partially-mapped }
+      - { column: xs, proposedField: hours, status: pending, note: 教学工作量统计的可信来源 }
+      - { column: zc, proposedField: weekIndex, status: pending }
+      - { column: xq, proposedField: dayOfWeek, status: pending }
+      - { column: skrq, proposedField: sessionDate, status: pending }
+      - { column: jxlx, proposedField: teachingType, status: pending }
+      - { column: jxfs, proposedField: teachingMethod, status: pending }
+      - { column: sknr, proposedField: sessionContent, status: pending }
+      - { column: skdd, proposedField: location, status: pending }
+      - { column: xxhjxgj, proposedField: digitalTools, status: pending }
+      - { column: kczy, proposedField: courseResources, status: pending }
+      - { column: jxsb, proposedField: teachingNotes, status: pending }
+      - { column: kcsz, proposedField: ideologicalContent, status: pending, note: 课程思政 }
+    defects:
+      - id: jxss-missing-pcid
+        detail: 无 pcid，上课记录进不了批次存档。
+
+  - table: T_RS_JXDAD_XNXQ
+    label: 学年学期
+    disposition: pending-standard-entity
+    proposedEntity: AcademicTermPeriod
+    proposedDomain: teaching-portfolio
+    rationale: >-
+      本体现有 AcademicTerm 只是词表（春/夏/秋/冬四值），没有学期主数据实体，
+      无起止时间，无法支撑「本学期」「近三学期」这类按周期的统计口径。
+    columns:
+      - { column: dm, proposedField: termCode, status: pending }
+      - { column: mc, proposedField: name, status: pending }
+      - { column: kssj, proposedField: startDate, status: pending }
+      - { column: jssj, proposedField: endDate, status: pending }
+
+  # ---------- 组织归属 ----------
+  - table: T_RS_JXDAD_ZYQ
+    label: 专业群
+    disposition: mapped-to-standard
+    targetEntity: Organization
+    targetDiscriminator: organizationType = 专业群
+    columns:
+      - { column: zyqdm, concept: Organization.organizationCode, status: mapped }
+      - { column: zyqmc, concept: Organization.name, status: mapped }
+      - { column: szdwdm, concept: Organization.parentOrganizationId, status: legacy-identifier }
+      - { column: zyqfzr, concept: EmploymentAssignment, status: assignment-subtype, note: assignmentType = 专业群负责人，词表已有该值 }
+      - { column: bhzy, concept: Organization.parentOrganizationId, status: redundant, note: 与 ZYQZY 关联表重复表达 }
+      - { column: zt, concept: Organization.validFrom/validTo, status: not-equivalent, note: 本体用生效期表达有效性，不用状态列 }
+
+  - table: T_RS_JXDAD_ZY
+    label: 专业
+    disposition: mapped-to-standard
+    targetEntity: Organization
+    targetDiscriminator: organizationType = 专业
+    columns:
+      - { column: zydm, concept: Organization.organizationCode, status: mapped }
+      - { column: szdwdm, concept: Organization.parentOrganizationId, status: legacy-identifier }
+      - { column: zyfzr, concept: EmploymentAssignment, status: assignment-subtype, note: assignmentType = 专业负责人，词表已有该值 }
+    defects:
+      - id: zy-missing-name
+        detail: 无专业名称字段，而 Organization.name 为必填。名称需从标准专业字典（RS.ZXBZ.ZY）翻译，翻译失败时无法建档。
+
+  - table: T_RS_JXDAD_ZYQZY
+    label: 专业群专业
+    disposition: mapped-to-standard
+    targetEntity: Organization
+    columns:
+      - { column: zyqid, concept: Organization.parentOrganizationId, status: mapped }
+      - { column: zydm, concept: Organization.organizationCode, status: legacy-identifier }
+
+  - table: T_RS_JXDAD_JZGZY
+    label: 教职工专业
+    disposition: mapped-to-standard
+    targetEntity: EmploymentAssignment
+    columns:
+      - { column: jzgbh, concept: EmploymentAssignment.personId, status: legacy-identifier }
+      - { column: zgh, concept: EmploymentAssignment.personId, status: legacy-identifier }
+      - { column: zydm, concept: EmploymentAssignment.organizationId, status: legacy-identifier }
+    defects:
+      - id: jzgzy-no-validity-period
+        detail: >-
+          无起止日期，而 EmploymentAssignment.validFrom 为必填，且 relationships.yaml 的
+          assignment-valid-period 约束要求可比较起止。人与专业的归属历史当前不可追溯。
+
+  # ---------- 权限配置 ----------
+  - table: T_RS_JXDAD_YHZBQX
+    label: 用户组表权限
+    disposition: application-permission
+    note: 角色对档案表的增删控制属应用授权，不进入本体领域模型。
+    columns:
+      - { column: role_id, concept: null, status: application-specific }
+      - { column: app_code, concept: null, status: application-specific }
+      - { column: dabid, concept: null, status: application-specific }
+      - { column: pcid, concept: null, status: application-specific }
+      - { column: sfxz, concept: null, status: application-specific }
+      - { column: sfsc, concept: null, status: application-specific }
+
+  - table: T_RS_JXDAD_YHZZDQX
+    label: 用户组字段权限
+    disposition: application-permission
+    note: >-
+      字段级授权本身不进本体，但 sfbt（是否必填）是「档案完整度」统计的唯一分母来源，
+      需要在完整度规则中显式引用，见 governance/data-classification.yaml 的后续补充。
+    columns:
+      - { column: zdid, concept: view.section.fieldRefs, status: not-equivalent, note: 同 DAZD.zdid，存物理列名而非 fieldRef }
+      - { column: sfbt, concept: null, status: completeness-denominator }
+      - { column: sfck, concept: null, status: application-specific }
+      - { column: sfxg, concept: null, status: application-specific }
+      - { column: lx, concept: null, status: application-specific }
+      - { column: role_id, concept: null, status: application-specific }
+      - { column: app_code, concept: null, status: application-specific }
+      - { column: dabid, concept: null, status: application-specific }
+      - { column: pcid, concept: null, status: application-specific }
+
+gaps:
+  - id: submission-has-no-batch
+    detail: >-
+      现网 GRZB.pcid 与 TXDWB.pcid / TXFJ.pcid 表达「这次提交属于哪个考核批次」，
+      本体 PortfolioSubmission 没有批次字段，也没有 academicYear / term。
+      本体侧无法回答「2026 春季学期考核我提交了什么」。
+    resolution: 随 PortfolioAssessmentBatch 一并新增 PortfolioSubmission.batchId。
+  - id: no-review-score
+    detail: GRZB 的 df（得分）、py（评语）、dfr（打分人）、dfsj（打分时间）与 PC.pfmf（满分）在本体无对应；PortfolioReview 只有 decision 和 comment，无评分。
+    resolution: 需评审是否在 PortfolioReview 增加 score，或新增独立评分实体。
+  - id: no-live-vs-archived-duality
+    detail: >-
+      现网用 pcid 是否为空区分「活数据」与「批次存档」，同一条内容有两份物理行。
+      本体没有这个双态概念，也没有快照语义。
+    resolution: 需在本体中显式建模档案快照，或声明存档只存在于应用层。
+  - id: no-student-entity
+    detail: KCXX.xkrs（选课人数）是现网唯一与学生相关的数值，仍无法支撑教学档案袋首页的「指导学生 18 人」和指导学生环形图。
+    resolution: 本体范围内无解，需教务系统提供学生与指导关系数据。
+  - id: no-course-construction-level
+    detail: 现网 KCXX 无课程建设级别列，首页「课程建设统计」的国家级/省部级/校级/院级四档在现网同样无来源。
+    resolution: 与上一轮页面分析结论一致，需产品确认改用 TeachingAchievement.level 按项统计。
+  - id: no-evaluation-no-funding
+    detail: 19 张表中无学生评教、无科研经费相关列，首页「学生评教均分」「科研经费」在现网亦无来源。
+    resolution: 属教务系统与科研系统，需按集成需求另行登记来源。
+  - id: dual-employee-key
+    detail: jzgbh（教职工编号）与 zgh（职工号）在 GRZB、TXDWB、TXFJ、JZGZY 四张表中并存。
+    resolution: >-
+      需确认哪个是业务主键口径。StaffBasicInformation 侧两者均存在
+      （jzgbh → Person.employeeNumber，zgh → Person.employeeNumber），语义目标相同但字段不同，
+      必须通过 LegacyIdentifier 建立唯一解析规则。
+
+proposedEntities:
+  - id: PortfolioAssessmentBatch
+    label: 档案考核批次
+    source: T_RS_JXDAD_PC + T_RS_JXDAD_PCXNXQ
+    blocks: 首页考核横幅、提交窗口校验、按批次归档
+  - id: TeachingPhilosophy
+    label: 教学理念
+    source: T_RS_JXDAD_LN
+    blocks: 首页「教学理念」完整度分项
+  - id: TeachingSession
+    label: 教学实施记录
+    source: T_RS_JZG_JXSS
+    blocks: 教学工作量学时统计
+  - id: AcademicTermPeriod
+    label: 学年学期
+    source: T_RS_JXDAD_XNXQ
+    blocks: 所有按学期口径的统计
+
+proposedEntitiesStatus: >-
+  以上四个实体均未进入模型库，仅为提案。确认后先在 ontology/model-library/entity-field-models.json 定义，
+  再执行 npm run sync:field-ontology 和 npm run validate:field-ontology。
+  不得先在页面或运行时代码中创建字段。
+
+proposedVocabularies:
+  - id: PortfolioBatchStatus
+    concepts: [待发布, 已发布, 已结束]
+    source: PC.zt（字典 JXDAD-PC-ZT）
+  - id: TeachingPhilosophyType
+    concepts: [教育初心, 育人理念]
+    source: LN.lx（字典 JXDAD-DADLNLX）
+
+unresolved:
+  - 需确认 jzgbh 与 zgh 的主键口径，并给出到 Person.personId 的唯一解析规则。
+  - 需确认 TXDWB 通用长文本表与 CoursePortfolio 具名字段以哪一侧为准。
+  - 需确认 PCDAB 废表还是补 pcid。
+  - 需确认理念、课程、教学实施是否纳入批次存档（三表均无 pcid）。
+  - 需确认 KCXX.kclb（课程类别）与 kcxz（课程性质）分别对应本体哪个概念。
+  - 需提供专业代码到专业名称的标准字典，否则 ZY 无法满足 Organization.name 必填。

@@ -1,0 +1,50 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 预警规则配置页：DSRegularListTemplate 组合，仅写页面专属样式 */
+.wrc-page {
+  display: grid;
+  min-height: 100%;
+}
+
+/* 状态：圆点 + 文字（规范：禁止彩色标签块） */
+.wrc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.wrc-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.wrc-status.is-done i {
+  background: #52c41a;
+}
+
+.wrc-status.is-neutral i {
+  background: #98a1b3;
+}
+
+.wrc-delete-tip {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--ds-color-text);
+}
+
+.wrc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  background: #1f2329;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  padding: 10px 16px;
+  border-radius: 4px;
+  z-index: 20;
+}

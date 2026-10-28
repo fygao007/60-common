@@ -1,0 +1,23 @@
+/* 统一状态展示：圆点 + 状态文字（需求说明书第 10 章 / AGENTS.md 状态展示规则） */
+.ds-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.ds-status-dot > i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ds-color-text-tertiary);
+}
+
+.ds-status-dot--process > i { background: var(--ds-color-primary); }
+.ds-status-dot--done > i { background: var(--ds-color-success); }
+.ds-status-dot--warn > i { background: var(--ds-color-warning); }
+.ds-status-dot--neutral > i { background: var(--ds-color-text-tertiary); }

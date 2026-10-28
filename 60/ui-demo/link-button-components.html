@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>链接按钮组件</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/LinkButton/index.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/LinkButtonGroup/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .link-page {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .link-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1120px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .link-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .link-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .link-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .link-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .link-section {
+      width: min(1120px, 100%);
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .link-section + .link-section {
+      margin-top: 16px;
+    }
+
+    .link-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .link-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+    }
+
+    .link-card {
+      min-height: 148px;
+      padding: 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .link-card:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .link-card h3 {
+      margin: 0 0 12px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .state-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .state-row {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+    }
+
+    .state-name {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .state-row > .ds-link-button {
+      justify-self: start;
+    }
+
+    .table-demo {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .table-demo th,
+    .table-demo td {
+      height: 48px;
+      padding: 0 12px;
+      text-align: left;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .table-demo th {
+      background: #fafafa;
+      color: #000;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1100px) {
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .link-card,
+      .link-card:nth-child(2n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="link-page">
+    <header class="link-head">
+      <div>
+        <h1 class="link-title"><span>链接按钮组件</span></h1>
+        <p class="link-desc">从 MasterGo 链接样式提取出的独立组件：用于表格操作列、轻量文本操作和危险链接操作。</p>
+      </div>
+    </header>
+
+    <section class="link-section">
+      <div class="link-section-head">
+        <h2 class="link-section-title">LinkButton</h2>
+      </div>
+      <div class="link-grid">
+        <article class="link-card">
+          <h3>基础状态</h3>
+          <div class="state-list">
+            <div class="state-row">
+              <span class="state-name">默认</span>
+              <button class="ds-button ds-button--link ds-link-button" type="button">编辑</button>
+            </div>
+            <div class="state-row">
+              <span class="state-name">悬浮</span>
+              <button class="ds-button ds-button--link ds-link-button is-hover" type="button">编辑</button>
+            </div>
+            <div class="state-row">
+              <span class="state-name">按下</span>
+              <button class="ds-button ds-button--link ds-link-button is-active" type="button">编辑</button>
+            </div>
+            <div class="state-row">
+              <span class="state-name">聚焦</span>
+              <button class="ds-button ds-button--link ds-link-button is-focus" type="button">编辑</button>
+            </div>
+          </div>
+        </article>
+        <article class="link-card">
+          <h3>禁用与危险操作</h3>
+          <div class="state-list">
+            <div class="state-row">
+              <span class="state-name">禁用</span>
+              <button class="ds-button ds-button--link ds-link-button" type="button" disabled>编辑</button>
+            </div>
+            <div class="state-row">
+              <span class="state-name">危险</span>
+              <button class="ds-button ds-button--link ds-button--danger ds-link-button" type="button">删除</button>
+            </div>
+            <div class="state-row">
+              <span class="state-name">悬浮</span>
+              <button class="ds-button ds-button--link ds-button--danger ds-link-button is-hover" type="button">删除</button>
+            </div>
+            <div class="state-row">
+              <span class="state-name">按下</span>
+              <button class="ds-button ds-button--link ds-button--danger ds-link-button is-active" type="button">删除</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="link-section">
+      <div class="link-section-head">
+        <h2 class="link-section-title">LinkButtonGroup</h2>
+      </div>
+      <div class="link-grid">
+        <article class="link-card">
+          <h3>默认间距</h3>
+          <div class="ds-link-button-group" role="group" aria-label="链接按钮组">
+            <button class="ds-button ds-button--link ds-link-button" type="button">编辑</button>
+            <button class="ds-button ds-button--link ds-link-button" type="button">详情</button>
+            <button class="ds-button ds-button--link ds-button--danger ds-link-button" type="button">删除</button>
+          </div>
+        </article>
+        <article class="link-card">
+          <h3>表格操作列</h3>
+          <table class="table-demo">
+            <thead>
+              <tr>
+                <th>标题</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>年度招生计划配置</td>
+                <td>
+                  <div class="ds-link-button-group" role="group" aria-label="行操作">
+                    <button class="ds-button ds-button--link ds-link-button" type="button">编辑</button>
+                    <button class="ds-button ds-button--link ds-link-button" type="button">详情</button>
+                    <button class="ds-button ds-button--link ds-button--danger ds-link-button" type="button">删除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>导师资格审核规则</td>
+                <td>
+                  <div class="ds-link-button-group" role="group" aria-label="行操作">
+                    <button class="ds-button ds-button--link ds-link-button" type="button">编辑</button>
+                    <button class="ds-button ds-button--link ds-link-button" type="button">详情</button>
+                    <button class="ds-button ds-button--link ds-button--danger ds-link-button" type="button">删除</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

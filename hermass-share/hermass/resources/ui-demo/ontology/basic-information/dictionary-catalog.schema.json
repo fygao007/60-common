@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://szpu.example/schemas/dictionary-catalog-1.0.0.json",
+  "type": "object",
+  "required": ["library", "version", "dictionaryCount", "sourceRowCount", "dictionaries"],
+  "properties": {
+    "dictionaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dictionaryId", "sourceTable", "shortCode", "status", "valueCount", "sourceRowCount", "duplicateCodes", "values"],
+        "properties": {
+          "dictionaryId": { "type": "string", "pattern": "^RS\\.ZXBZ\\.[A-Z0-9_]+$" },
+          "status": { "enum": ["ready", "review-required"] },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code", "label", "enabled", "sourceIds"]
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

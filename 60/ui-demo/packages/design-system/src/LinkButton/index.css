@@ -1,0 +1,56 @@
+@import '../tokens.css';
+@import '../Button/index.css';
+
+.ds-link-button.ds-button {
+  min-width: auto;
+  height: var(--ds-control-height-sm);
+  padding: 0 4px;
+  color: var(--ds-color-primary);
+  background: transparent;
+  border-color: transparent;
+  border-radius: var(--ds-radius-sm);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-link-button.ds-button:hover:not(:disabled),
+.ds-link-button.ds-button.is-hover:not(:disabled) {
+  color: var(--ds-color-primary-hover);
+  background: var(--ds-color-primary-light);
+  border-color: transparent;
+}
+
+.ds-link-button.ds-button:active:not(:disabled),
+.ds-link-button.ds-button.is-active:not(:disabled) {
+  color: var(--ds-color-primary-active);
+  background: var(--ds-color-primary-selected);
+  border-color: transparent;
+}
+
+.ds-link-button.ds-button:focus-visible,
+.ds-link-button.ds-button.is-focus {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+  box-shadow: 0 0 0 2px var(--ds-color-focus-ring-strong);
+}
+
+.ds-link-button.ds-button--danger {
+  color: var(--ds-color-danger);
+}
+
+.ds-link-button.ds-button--danger:hover:not(:disabled),
+.ds-link-button.ds-button--danger.is-hover:not(:disabled) {
+  color: var(--ds-color-danger-hover);
+  background: var(--ds-color-danger-light);
+}
+
+.ds-link-button.ds-button--danger:active:not(:disabled),
+.ds-link-button.ds-button--danger.is-active:not(:disabled) {
+  color: var(--ds-color-danger-active);
+  background: var(--ds-color-danger-light);
+}
+
+.ds-link-button.ds-button:disabled {
+  color: var(--ds-color-text-disabled);
+  background: transparent;
+  border-color: transparent;
+}

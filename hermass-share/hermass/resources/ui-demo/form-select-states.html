@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>下拉选择状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Field/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .select-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: var(--ds-color-white); }
+    .select-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .select-content { display: grid; gap: 24px; width: min(1120px, 100%); }
+    .select-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .select-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .select-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .select-title span { position: relative; z-index: 1; }
+    .select-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .select-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .select-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .select-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .select-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .select-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .select-card { min-width: 0; min-height: 128px; padding: 16px; border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .select-section--dropdown .select-card { min-height: 292px; }
+    .select-card h3 { margin: 0 0 12px; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .select-card .ds-select { width: 100%; }
+    .select-card p { margin: 10px 0 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .select-row { display: grid; grid-template-columns: 108px minmax(0, 360px); gap: 16px; align-items: start; padding: 16px; border-top: 1px solid var(--ds-color-border-secondary); }
+    .select-label { height: 32px; display: flex; align-items: center; justify-content: flex-end; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 20px; text-align: right; }
+    .select-panel { position: relative; }
+    .select-panel .ds-select { width: 100%; }
+    @media (max-width: 1100px) {
+      .select-grid { grid-template-columns: 1fr; }
+      .select-row { grid-template-columns: 1fr; }
+      .select-label { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="select-page">
+    <section class="select-stage">
+      <div class="select-content">
+        <header class="select-head">
+          <div>
+            <h1 class="select-title"><span>下拉选择</span></h1>
+            <p class="select-desc">基于 MasterGo 选择器设计稿扩展 DSSelect，覆盖单选、多选、搜索、清除、下拉面板、禁用、错误和空数据状态。</p>
+          </div>
+        </header>
+
+        <section class="select-section select-section--dropdown">
+          <div class="select-section-head">
+            <h2 class="select-section-title">基础状态</h2>
+            <span class="select-section-meta">Default / Hover / Focus / Disabled / Error</span>
+          </div>
+          <div class="select-grid">
+            <article class="select-card">
+              <h3>未选择</h3>
+              <div class="ds-select ds-select--custom">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="ds-select__value"><span class="ds-select__placeholder">请选择</span></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+              </div>
+              <p>默认使用占位文字和下拉箭头。</p>
+            </article>
+            <article class="select-card">
+              <h3>已选择</h3>
+              <div class="ds-select ds-select--custom has-value">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="ds-select__value"><span class="ds-select__text">招生配置</span></span>
+                  <span class="ds-select__clear">×</span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+              </div>
+              <p>有值时展示正文色，可显示清除按钮。</p>
+            </article>
+            <article class="select-card">
+              <h3>聚焦</h3>
+              <div class="ds-select ds-select--custom is-open has-value">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="true">
+                  <span class="ds-select__value"><span class="ds-select__text">人才项目</span></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+              </div>
+              <p>聚焦态使用主色边框和浅主色投影。</p>
+            </article>
+            <article class="select-card">
+              <h3>禁用</h3>
+              <div class="ds-select ds-select--custom is-disabled">
+                <button class="ds-select__trigger" type="button" disabled>
+                  <span class="ds-select__value"><span class="ds-select__placeholder">请选择</span></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+              </div>
+              <p>禁用态不可点击，背景和文字置灰。</p>
+            </article>
+            <article class="select-card">
+              <h3>错误</h3>
+              <div class="ds-select ds-select--custom is-error">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="ds-select__value"><span class="ds-select__placeholder">请选择项目类型</span></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+              </div>
+              <p>错误态使用危险色边框，可配合字段错误提示。</p>
+            </article>
+            <article class="select-card">
+              <h3>搜索输入</h3>
+              <div class="ds-select ds-select--custom ds-select--searchable is-open">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="true">
+                  <span class="ds-select__value"><input class="ds-select__search" value="人才" aria-label="搜索" /></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+              </div>
+              <p>搜索态在触发器内输入关键词。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="select-section">
+          <div class="select-section-head">
+            <h2 class="select-section-title">下拉面板</h2>
+            <span class="select-section-meta">Single / Multiple / Empty</span>
+          </div>
+          <div class="select-grid">
+            <article class="select-card">
+              <h3>单选展开</h3>
+              <div class="ds-select ds-select--custom is-open has-value">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="true">
+                  <span class="ds-select__value"><span class="ds-select__text">招生配置</span></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+                <div class="ds-select__dropdown" role="listbox">
+                  <button class="ds-select__option is-selected" type="button"><span>招生配置</span><span class="ds-select__check">✓</span></button>
+                  <button class="ds-select__option" type="button"><span>岗位管理</span></button>
+                  <button class="ds-select__option" type="button"><span>考核评价</span></button>
+                  <button class="ds-select__option is-disabled" type="button" disabled><span>已停用分类</span></button>
+                </div>
+              </div>
+            </article>
+            <article class="select-card">
+              <h3>多选展开</h3>
+              <div class="ds-select ds-select--custom ds-select--multiple is-open has-value">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="true">
+                  <span class="ds-select__value">
+                    <span class="ds-select__tags">
+                      <span class="ds-select__tag"><span>重点</span><span>×</span></span>
+                      <span class="ds-select__tag"><span>启用</span><span>×</span></span>
+                    </span>
+                  </span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+                <div class="ds-select__dropdown" role="listbox" aria-multiselectable="true">
+                  <button class="ds-select__option is-selected" type="button"><span>重点</span><span class="ds-select__check">✓</span></button>
+                  <button class="ds-select__option is-selected" type="button"><span>启用</span><span class="ds-select__check">✓</span></button>
+                  <button class="ds-select__option" type="button"><span>待审核</span></button>
+                </div>
+              </div>
+            </article>
+            <article class="select-card">
+              <h3>空数据</h3>
+              <div class="ds-select ds-select--custom is-open">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="true">
+                  <span class="ds-select__value"><span class="ds-select__placeholder">请选择</span></span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+                <div class="ds-select__dropdown" role="listbox">
+                  <div class="ds-select__empty">无匹配数据</div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="select-section">
+          <div class="select-section-head">
+            <h2 class="select-section-title">表单行示例</h2>
+            <span class="select-section-meta">Form Field</span>
+          </div>
+          <div class="select-row">
+            <span class="select-label">标题名称</span>
+            <div class="select-panel">
+              <div class="ds-select ds-select--custom js-select-demo">
+                <button class="ds-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="ds-select__value"><span class="ds-select__placeholder">请选择</span></span>
+                  <span class="ds-select__clear" hidden>×</span>
+                  <span class="ds-select__arrow">⌄</span>
+                </button>
+                <div class="ds-select__dropdown" role="listbox" hidden>
+                  <button class="ds-select__option" type="button" data-value="人才项目"><span>人才项目</span></button>
+                  <button class="ds-select__option" type="button" data-value="岗位聘任"><span>岗位聘任</span></button>
+                  <button class="ds-select__option" type="button" data-value="考核评价"><span>考核评价</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const defaultSelectOptions = ['人才项目', '招生配置', '岗位聘任', '考核评价', '申报审核'];
+
+  function readOptionLabel(option) {
+    return option.dataset.value || option.querySelector('span')?.textContent?.trim() || option.textContent.trim();
+  }
+
+  function ensureSelectClear(select, trigger) {
+    let clearNode = select.querySelector('.ds-select__clear');
+    if (!clearNode) {
+      clearNode = document.createElement('span');
+      clearNode.className = 'ds-select__clear';
+      clearNode.textContent = '×';
+      trigger.insertBefore(clearNode, trigger.querySelector('.ds-select__arrow'));
+    }
+    clearNode.hidden = !select.classList.contains('has-value');
+    return clearNode;
+  }
+
+  function ensureSelectDropdown(select) {
+    let dropdown = select.querySelector('.ds-select__dropdown');
+    if (!dropdown) {
+      dropdown = document.createElement('div');
+      dropdown.className = 'ds-select__dropdown';
+      dropdown.setAttribute('role', 'listbox');
+      defaultSelectOptions.forEach((label) => {
+        const option = document.createElement('button');
+        option.className = 'ds-select__option';
+        option.type = 'button';
+        option.dataset.value = label;
+        option.innerHTML = `<span>${label}</span>`;
+        dropdown.appendChild(option);
+      });
+      select.appendChild(dropdown);
+    }
+    return dropdown;
+  }
+
+  function renderSelectValue(select, state) {
+    const valueNode = select.querySelector('.ds-select__value');
+    const clearNode = select.querySelector('.ds-select__clear');
+    const multiple = select.classList.contains('ds-select--multiple');
+    const hasValue = state.values.length > 0;
+
+    select.classList.toggle('has-value', hasValue);
+    if (clearNode) clearNode.hidden = !hasValue;
+
+    if (!hasValue) {
+      valueNode.innerHTML = '<span class="ds-select__placeholder">请选择</span>';
+      return;
+    }
+
+    if (multiple) {
+      valueNode.innerHTML = `<span class="ds-select__tags">${state.values
+        .map((value) => `<span class="ds-select__tag"><span>${value}</span><span>×</span></span>`)
+        .join('')}</span>`;
+      return;
+    }
+
+    valueNode.innerHTML = `<span class="ds-select__text">${state.values[0]}</span>`;
+  }
+
+  function renderSelectOptions(select, state) {
+    const dropdown = select.querySelector('.ds-select__dropdown');
+    const options = Array.from(dropdown.querySelectorAll('.ds-select__option'));
+    const query = state.query.trim().toLowerCase();
+    let visibleCount = 0;
+
+    dropdown.querySelectorAll('.ds-select__empty').forEach((node) => node.remove());
+    options.forEach((option) => {
+      const label = readOptionLabel(option);
+      const selected = state.values.includes(label);
+      const matched = !query || label.toLowerCase().includes(query);
+
+      option.hidden = !matched;
+      visibleCount += matched ? 1 : 0;
+      option.classList.toggle('is-selected', selected);
+      option.setAttribute('aria-selected', String(selected));
+      option.querySelectorAll('.ds-select__check').forEach((node) => node.remove());
+      if (selected) option.insertAdjacentHTML('beforeend', '<span class="ds-select__check">✓</span>');
+    });
+
+    if (visibleCount === 0) {
+      const emptyNode = document.createElement('div');
+      emptyNode.className = 'ds-select__empty';
+      emptyNode.textContent = '无匹配数据';
+      dropdown.appendChild(emptyNode);
+    }
+  }
+
+  function setSelectOpen(select, open) {
+    if (select.classList.contains('is-disabled')) return;
+    const trigger = select.querySelector('.ds-select__trigger');
+    const dropdown = ensureSelectDropdown(select);
+    select.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', String(open));
+    dropdown.hidden = !open;
+
+    if (open && select.classList.contains('ds-select--searchable')) {
+      const searchNode = select.querySelector('.ds-select__search');
+      searchNode?.focus();
+    }
+  }
+
+  function initInteractiveSelect(select) {
+    if (select.dataset.interactiveReady === 'true') return;
+    select.dataset.interactiveReady = 'true';
+
+    const trigger = select.querySelector('.ds-select__trigger');
+    const dropdown = ensureSelectDropdown(select);
+    const clearNode = ensureSelectClear(select, trigger);
+    if (select.classList.contains('is-disabled')) {
+      dropdown.hidden = true;
+      clearNode.hidden = true;
+      return;
+    }
+
+    const multiple = select.classList.contains('ds-select--multiple');
+    const searchable = select.classList.contains('ds-select--searchable');
+    const initialSelected = Array.from(dropdown.querySelectorAll('.ds-select__option.is-selected')).map(readOptionLabel);
+    const initialText = select.querySelector('.ds-select__text')?.textContent?.trim();
+    const initialTags = Array.from(select.querySelectorAll('.ds-select__tag span:first-child')).map((node) => node.textContent.trim());
+    const state = {
+      values: initialSelected.length ? initialSelected : (multiple ? initialTags : (initialText ? [initialText] : [])),
+      query: searchable ? select.querySelector('.ds-select__search')?.value || '' : ''
+    };
+
+    if (dropdown.querySelectorAll('.ds-select__option').length === 0 && !dropdown.querySelector('.ds-select__empty')) {
+      defaultSelectOptions.forEach((label) => {
+        const option = document.createElement('button');
+        option.className = 'ds-select__option';
+        option.type = 'button';
+        option.dataset.value = label;
+        option.innerHTML = `<span>${label}</span>`;
+        dropdown.insertBefore(option, dropdown.querySelector('.ds-select__empty'));
+      });
+    }
+
+    if (searchable) {
+      select.querySelector('.ds-select__value').innerHTML = '<input class="ds-select__search" aria-label="搜索" placeholder="请输入关键词" />';
+      const searchNode = select.querySelector('.ds-select__search');
+      searchNode.value = state.query;
+      select.classList.toggle('has-value', state.values.length > 0);
+      clearNode.hidden = state.values.length === 0;
+      searchNode.addEventListener('click', (event) => event.stopPropagation());
+      searchNode.addEventListener('input', () => {
+        state.query = searchNode.value;
+        renderSelectOptions(select, state);
+        setSelectOpen(select, true);
+      });
+    } else {
+      renderSelectValue(select, state);
+    }
+    renderSelectOptions(select, state);
+    setSelectOpen(select, select.classList.contains('is-open'));
+
+    trigger.addEventListener('click', () => setSelectOpen(select, !select.classList.contains('is-open')));
+    clearNode.addEventListener('click', (event) => {
+      event.stopPropagation();
+      state.values = [];
+      state.query = '';
+      if (searchable) {
+        select.querySelector('.ds-select__search').value = '';
+        select.classList.remove('has-value');
+        clearNode.hidden = true;
+      } else {
+        renderSelectValue(select, state);
+      }
+      renderSelectOptions(select, state);
+      setSelectOpen(select, false);
+    });
+
+    dropdown.addEventListener('click', (event) => {
+      const option = event.target.closest('.ds-select__option');
+      if (!option || option.disabled) return;
+
+      const label = readOptionLabel(option);
+      if (multiple) {
+        state.values = state.values.includes(label)
+          ? state.values.filter((value) => value !== label)
+          : [...state.values, label];
+      } else {
+        state.values = [label];
+      }
+
+      if (searchable) {
+        state.query = label;
+        select.querySelector('.ds-select__search').value = label;
+        select.classList.add('has-value');
+        clearNode.hidden = false;
+      } else {
+        renderSelectValue(select, state);
+      }
+      renderSelectOptions(select, state);
+      if (!multiple) setSelectOpen(select, false);
+    });
+  }
+
+  document.querySelectorAll('.ds-select--custom').forEach(initInteractiveSelect);
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll('.ds-select--custom.is-open').forEach((select) => {
+      if (!select.contains(event.target)) setSelectOpen(select, false);
+    });
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "sourceId": "organization-structure-tables",
+  "title": "组织机构表结构",
+  "capturedAt": "2026-09-04",
+  "application": "hr-organization-management",
+  "authority": "system-export",
+  "tables": [
+    {
+      "tableName": "T_RS_JGGL_XZJG",
+      "label": "行政机构",
+      "purpose": "存储学校行政组织机构的层级结构和基本信息",
+      "recordCount": 355,
+      "fields": [
+        {"name": "ID", "label": "主键", "type": "string", "purpose": "唯一标识"},
+        {"name": "DM", "label": "代码", "type": "string", "purpose": "组织代码"},
+        {"name": "MC", "label": "名称", "type": "string", "purpose": "组织全称"},
+        {"name": "YWMC", "label": "英文名称", "type": "string", "purpose": "组织英文名称"},
+        {"name": "CC", "label": "层次", "type": "integer", "purpose": "组织层级深度"},
+        {"name": "LS", "label": "隶属", "type": "string", "purpose": "上级组织代码"},
+        {"name": "JC", "label": "简称", "type": "string", "purpose": "组织简称"},
+        {"name": "CLRQ", "label": "成立日期", "type": "date", "purpose": "组织成立时间"},
+        {"name": "CLWH", "label": "成立文号", "type": "string", "purpose": "成立文件编号"},
+        {"name": "CXRQ", "label": "撤销日期", "type": "date", "purpose": "组织撤销时间"},
+        {"name": "CXWH", "label": "撤销文号", "type": "string", "purpose": "撤销文件编号"},
+        {"name": "DWZZ", "label": "单位职责", "type": "text", "purpose": "组织职责描述"},
+        {"name": "SFQY", "label": "是否启用", "type": "string", "purpose": "启用状态标志"},
+        {"name": "PX", "label": "排序", "type": "integer", "purpose": "显示顺序"},
+        {"name": "FWWJ", "label": "范围文件", "type": "string", "purpose": "管辖范围文件"},
+        {"name": "LB", "label": "类别", "type": "string", "purpose": "组织类别代码"},
+        {"name": "JB", "label": "级别", "type": "string", "purpose": "组织级别"},
+        {"name": "GKGX", "label": "挂靠关系", "type": "string", "purpose": "挂靠上级关系"},
+        {"name": "SFGK", "label": "是否挂靠", "type": "string", "purpose": "挂靠标志"},
+        {"name": "CREATE_BY", "label": "创建人", "type": "string", "purpose": "记录创建人"},
+        {"name": "CREATE_TIME", "label": "创建时间", "type": "datetime", "purpose": "记录创建时间"},
+        {"name": "UPDATE_BY", "label": "更新人", "type": "string", "purpose": "记录更新人"},
+        {"name": "UPDATE_TIME", "label": "更新时间", "type": "datetime", "purpose": "记录更新时间"},
+        {"name": "DRWJ", "label": "导入文件", "type": "string", "purpose": "数据导入来源"}
+      ]
+    },
+    {
+      "tableName": "T_RS_ZXBZ_DW",
+      "label": "执行标准-单位",
+      "purpose": "存储单位（部门）信息，作为行政机构的补充或独立使用",
+      "recordCount": 355,
+      "fields": [
+        {"name": "ID", "label": "主键", "type": "string", "purpose": "唯一标识"},
+        {"name": "DM", "label": "代码", "type": "string", "purpose": "单位代码"},
+        {"name": "MC", "label": "名称", "type": "string", "purpose": "单位全称"},
+        {"name": "JC", "label": "简称", "type": "string", "purpose": "单位简称"},
+        {"name": "CC", "label": "层次", "type": "string", "purpose": "单位层级"},
+        {"name": "LS", "label": "隶属", "type": "string", "purpose": "上级单位代码"},
+        {"name": "PX", "label": "排序", "type": "integer", "purpose": "显示顺序"},
+        {"name": "SFSY", "label": "是否使用", "type": "string", "purpose": "使用状态标志"},
+        {"name": "BZLY", "label": "标准来源", "type": "string", "purpose": "标准数据来源"},
+        {"name": "MC_EN", "label": "英文名称", "type": "string", "purpose": "单位英文名称"},
+        {"name": "LBDM", "label": "类别代码", "type": "string", "purpose": "单位类别代码"},
+        {"name": "CREATE_BY", "label": "创建人", "type": "string", "purpose": "记录创建人"},
+        {"name": "CREATE_TIME", "label": "创建时间", "type": "datetime", "purpose": "记录创建时间"},
+        {"name": "UPDATE_BY", "label": "更新人", "type": "string", "purpose": "记录更新人"},
+        {"name": "UPDATE_TIME", "label": "更新时间", "type": "datetime", "purpose": "记录更新时间"}
+      ]
+    },
+    {
+      "tableName": "T_RS_ZXBZ_DWLB",
+      "label": "执行标准-单位类别",
+      "purpose": "定义单位分类体系，如党政教辅机构、教学单位等",
+      "recordCount": 6,
+      "fields": [
+        {"name": "ID", "label": "主键", "type": "string", "purpose": "唯一标识"},
+        {"name": "DM", "label": "代码", "type": "string", "purpose": "类别代码"},
+        {"name": "MC", "label": "名称", "type": "string", "purpose": "类别名称"},
+        {"name": "JC", "label": "简称", "type": "string", "purpose": "类别简称"},
+        {"name": "CC", "label": "层次", "type": "string", "purpose": "类别层级"},
+        {"name": "LS", "label": "隶属", "type": "string", "purpose": "上级类别代码"},
+        {"name": "PX", "label": "排序", "type": "integer", "purpose": "显示顺序"},
+        {"name": "SFSY", "label": "是否使用", "type": "string", "purpose": "使用状态标志"},
+        {"name": "BZLY", "label": "标准来源", "type": "string", "purpose": "标准数据来源"},
+        {"name": "MC_EN", "label": "英文名称", "type": "string", "purpose": "类别英文名称"},
+        {"name": "CREATE_BY", "label": "创建人", "type": "string", "purpose": "记录创建人"},
+        {"name": "CREATE_TIME", "label": "创建时间", "type": "datetime", "purpose": "记录创建时间"},
+        {"name": "UPDATE_BY", "label": "更新人", "type": "string", "purpose": "记录更新人"},
+        {"name": "UPDATE_TIME", "label": "更新时间", "type": "datetime", "purpose": "记录更新时间"}
+      ]
+    }
+  ],
+  "notes": [
+    "T_RS_JGGL_XZJG 与 T_RS_ZXBZ_DW 存在数据重叠，记录数相同（355条），需明确两表的使用边界",
+    "组织层级通过 CC（层次）和 LS（隶属）字段表达，最深层级为4层",
+    "T_RS_ZXBZ_DWLB 为分类字典表，包含学校（代码1）、党政教辅机构（代码100）、教学单位（代码300）等顶级分类",
+    "SFQY/SFSY 字段值为字符串 '1'/'0'，需映射为布尔值",
+    "成立日期、撤销日期支持组织生命周期管理，但当前数据中多为空值",
+    "本快照为物理表结构，字段名为数据库列名，不得直接作为本体字段定义引用"
+  ]
+}

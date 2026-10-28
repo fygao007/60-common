@@ -1,0 +1,120 @@
+{
+  "library": "szpu-hr-basic-information",
+  "version": "1.0.0",
+  "sources": [
+    {
+      "file": "基本信息确认字段.xlsx",
+      "sheet": "教职工基本信息表 及顺序",
+      "role": "field-definition"
+    },
+    {
+      "file": "V1.0.0_20260610_1501__rsmodelpubZxbz.sql",
+      "role": "dictionary-values"
+    }
+  ],
+  "fieldCount": 158,
+  "groupCounts": [
+    {
+      "group": "01基本信息",
+      "count": 29
+    },
+    {
+      "group": "02人事信息",
+      "count": 13
+    },
+    {
+      "group": "03进出校信息",
+      "count": 3
+    },
+    {
+      "group": "04政治面貌",
+      "count": 4
+    },
+    {
+      "group": "05最高学历学位信息",
+      "count": 6
+    },
+    {
+      "group": "06专业技术职务信息",
+      "count": 3
+    },
+    {
+      "group": "07岗位职务信息",
+      "count": 19
+    },
+    {
+      "group": "08工人技术信息",
+      "count": 3
+    },
+    {
+      "group": "09党政职务职级信息",
+      "count": 3
+    },
+    {
+      "group": "10资质信息",
+      "count": 12
+    },
+    {
+      "group": "11双师信息",
+      "count": 4
+    },
+    {
+      "group": "12导师信息",
+      "count": 2
+    },
+    {
+      "group": "13薪酬信息",
+      "count": 5
+    },
+    {
+      "group": "14工龄信息",
+      "count": 4
+    },
+    {
+      "group": "15通讯信息",
+      "count": 8
+    },
+    {
+      "group": "16其他信息",
+      "count": 25
+    },
+    {
+      "group": "17证明材料",
+      "count": 10
+    },
+    {
+      "group": "系统字段",
+      "count": 5
+    }
+  ],
+  "dictionaryCount": 145,
+  "dictionaryValueCount": 6583,
+  "sourceDictionaryRowCount": 6592,
+  "bindingCounts": [
+    {
+      "status": "bound",
+      "count": 59
+    },
+    {
+      "status": "external-master-data",
+      "count": 7
+    },
+    {
+      "status": "review-required",
+      "count": 11
+    }
+  ],
+  "dictionaryConflicts": [
+    {
+      "dictionaryId": "RS.ZXBZ.CGLY",
+      "duplicateCodeCount": 4
+    },
+    {
+      "dictionaryId": "RS.ZXBZ.QDFS",
+      "duplicateCodeCount": 2
+    }
+  ],
+  "formulaWarnings": [
+    "Excel 对照区 H:L 存在 #NAME?，未作为字段定义来源"
+  ]
+}

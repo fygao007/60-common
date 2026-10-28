@@ -1,0 +1,138 @@
+ontology: szpu-hr
+version: 0.2.0
+vocabularies:
+  - id: EntityType
+    label: 标准实体类型
+    concepts: [Person, PersonIdentity, Candidate, Organization, Position, PositionSlot, EmploymentAssignment, RecruitmentPlan, RecruitmentPosition, Application, OnboardingCase, Contract, Course, TeachingAssignment, CoursePortfolio, EnterprisePractice, TeachingAchievement, TrainingExperience, ProfessionalAppointment, PortfolioSubmission, PortfolioReview, LegacyIdentifier, HREvent]
+  - id: DocumentType
+    label: 身份证件类型
+    confirmation: required
+    concepts: [中华人民共和国居民身份证, 港澳居民居住证, 台湾居民居住证, 护照, 外国人永久居留身份证, 其他]
+  - id: PersonnelCategory
+    label: 人员类别
+    definition: 人员在人事统计与管理中的业务类别，不等同于用人方式、岗位类别或教师类型。
+    confirmation: required
+    concepts: [专任教师, 行政人员, 教辅人员, 专职研究人员, 外聘教师, 其他]
+  - id: EmploymentMode
+    label: 用人方式
+    definition: 学校与人员建立用工或聘用关系的制度方式。
+    confirmation: required
+    concepts: [职员, 雇员, 聘任制, 校内聘用, 劳务派遣, 项目聘用, 其他]
+  - id: EmploymentStatus
+    label: 人员状态
+    concepts: [拟入职, 在职, 离岗, 退休, 离职, 终止]
+  - id: OrganizationType
+    label: 组织类型
+    confirmation: required
+    concepts: [学校, 党政部门, 教学单位, 科研机构, 教辅单位, 附属单位, 专业, 专业群, 虚拟组织]
+  - id: OrganizationCategory
+    label: 组织大类
+    definition: 学校一级组织分类，用于顶层机构分组
+    authority: system-confirmed
+    source: T_RS_ZXBZ_DWLB
+    concepts: [深圳职业技术大学, 党政教辅机构, 教学单位, 产学研单位, 后勤服务企业, 其他]
+  - id: OrganizationLevel
+    label: 组织层级
+    definition: 组织在学校治理层级中的位置
+    confirmation: required
+    concepts: [校级, 院级/部门级, 专业群/科室级, 专业/小组级]
+  - id: OrganizationStatus
+    label: 组织状态
+    definition: 组织当前生命周期状态
+    concepts: [在用, 暂停, 已撤销]
+  - id: PositionCategory
+    label: 岗位类别
+    definition: 岗位自身的管理类别，不表达人员类别或职称资格。
+    confirmation: required
+    concepts: [管理岗, 专业技术岗, 工勤技能岗, 特设岗位]
+  - id: PositionLevel
+    label: 岗位等级
+    definition: 岗位聘用等级，必须与职称资格等级分开。
+    confirmation: required
+    concepts: []
+  - id: AssignmentType
+    label: 任职类型
+    concepts: [主要岗位, 兼任岗位, 党政职务, 专业负责人, 专业群负责人, 挂职, 借调]
+  - id: AssignmentStatus
+    label: 任职状态
+    concepts: [待生效, 在任聘, 暂停, 已结束, 已撤销]
+  - id: CandidateStatus
+    label: 候选人状态
+    concepts: [已注册, 已报名, 审核中, 进入考核, 拟录用, 已录用, 未录用, 已转人才库, 已转人员]
+  - id: ApplicationStatus
+    label: 应聘申请状态
+    concepts: [草稿, 已提交, 资格审核中, 审核通过, 审核不通过, 已撤回, 考核中, 拟录用, 已录用, 已关闭]
+  - id: RecruitmentType
+    label: 招聘种类
+    confirmation: required
+    concepts: [高层次人才, 博士及副高选聘, 公开招考, 博士后, 辅导员, 行政教辅, 柔性引进]
+  - id: RecruitmentPlanStatus
+    label: 招聘计划状态
+    concepts: [草稿, 申报中, 审核中, 已批准, 已发布, 执行中, 已完成, 已终止]
+  - id: RecruitmentPublishStatus
+    label: 招聘岗位发布状态
+    concepts: [草稿, 待发布, 已发布, 已暂停, 已关闭]
+  - id: OnboardingType
+    label: 进校方式
+    confirmation: required
+    concepts: [正常入校, 快捷入校, 实习入校]
+  - id: OnboardingStatus
+    label: 报到状态
+    concepts: [待报备, 待审核, 待报到, 办理中, 延期, 已放弃, 已完成, 已终止]
+  - id: SlotStatus
+    label: 岗位编制状态
+    concepts: [有效, 冻结, 撤销]
+  - id: ContractType
+    label: 合同类型
+    confirmation: required
+    concepts: [聘用合同, 劳动合同, 劳务协议, 项目聘用协议, 其他]
+  - id: ContractStatus
+    label: 合同状态
+    concepts: [草稿, 待签署, 生效中, 即将到期, 已到期, 已解除, 已终止]
+  - id: HREventType
+    label: 人事领域事件类型
+    concepts: [CandidateSelected, OnboardingInitiated, OnboardingDeferred, OnboardingWaived, OnboardingCompleted, PersonCreated, EmployeeNumberAssigned, AssignmentStarted]
+  - id: CourseType
+    label: 课程类型
+    concepts: [公共基础课, 专业基础课, 专业核心课, 专业拓展课, 实践课, 其他]
+  - id: AcademicTerm
+    label: 学期
+    concepts: [春季学期, 夏季学期, 秋季学期, 冬季学期]
+  - id: TeachingAssignmentStatus
+    label: 授课任务状态
+    concepts: [计划中, 进行中, 已完成, 已取消]
+  - id: PortfolioArchiveStatus
+    label: 课程档案归档状态
+    concepts: [草稿, 待提交, 审核中, 已归档, 已退回]
+  - id: EvidenceReviewStatus
+    label: 证据认定状态
+    concepts: [草稿, 待审核, 审核中, 已认定, 已退回, 已撤销]
+  - id: TeachingAchievementType
+    label: 教学成果类型
+    concepts: [教研项目, 论文, 教材, 教学成果奖, 学生竞赛指导, 荣誉称号, 专利, 其他]
+  - id: AchievementLevel
+    label: 成果级别
+    concepts: [国际级, 国家级, 省级, 市级, 校级, 院级, 其他]
+  - id: TrainingType
+    label: 培训类型
+    concepts: [进修, 访学, 专业培训, 企业培训, 学历提升, 在线研修, 其他]
+  - id: ProfessionalAppointmentType
+    label: 专业任职类型
+    concepts: [行业组织任职, 学术组织任职, 企业兼职, 专家聘任, 社会服务任职, 其他]
+  - id: PortfolioSubjectType
+    label: 档案对象类型
+    concepts: [CoursePortfolio, EnterprisePractice, TeachingAchievement, TrainingExperience, ProfessionalAppointment]
+  - id: PortfolioSubmissionType
+    label: 档案提交类型
+    concepts: [新增, 变更, 补充材料, 申请撤销]
+  - id: PortfolioSubmissionStatus
+    label: 档案提交状态
+    concepts: [草稿, 已提交, 审核中, 已通过, 已退回, 已撤回]
+  - id: PortfolioReviewDecision
+    label: 档案审核决定
+    concepts: [通过, 退回修改, 驳回]
+
+dimensionRules:
+  - 人员类别、用人方式、岗位类别、教师类型必须作为四个独立维度保存。
+  - 职称资格描述人员取得的专业技术资格，岗位等级描述实际聘用岗位，不得互相覆盖。
+  - 当前值必须能追溯到带生效期的历史事实或任职事件。

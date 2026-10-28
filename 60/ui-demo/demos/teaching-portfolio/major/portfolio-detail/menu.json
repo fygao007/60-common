@@ -1,0 +1,29 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "p-board",
+    "label": "教学档案管理",
+    "group": "教学档案管理",
+    "defaultFeature": "p-board"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-portfolio-detail",
+      "label": "教师档案详情（专业群带头人）",
+      "type": "react-business-page",
+      "html": "portfolio-detail.html",
+      "related": {
+        "upstream": [
+          "../p-board/p-board.html"
+        ]
+      }
+    }
+  ]
+}

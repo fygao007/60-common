@@ -1,0 +1,34 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "dean",
+    "label": "二级学院"
+  },
+  "menu": {
+    "key": "audit-batch",
+    "label": "考核批次管理",
+    "group": "考核批次管理",
+    "defaultFeature": "audit-batch"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-dean-audit-batch",
+      "label": "考核批次管理（二级学院）",
+      "type": "react-business-page",
+      "html": "audit-batch.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../l-dash/l-dash.html",
+          "../p-board/p-board.html",
+          "../r-review/r-review.html"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "t-overview",
+    "label": "教学档案管理",
+    "group": "教学档案管理",
+    "defaultFeature": "t-overview"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-t-overview",
+      "label": "教学档案管理（专业群带头人）",
+      "type": "static-prototype-menu",
+      "html": "t-overview.html",
+      "related": {
+        "upstream": [
+          "../t-home/t-home.html"
+        ],
+        "siblingMenus": [
+          "../t-home/t-home.html",
+          "../p-review/p-review.html",
+          "../a-integration/a-integration.html",
+          "../p-major-group/p-major-group.html",
+          "../p-board/p-board.html"
+        ]
+      }
+    }
+  ]
+}

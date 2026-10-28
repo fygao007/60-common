@@ -1,0 +1,150 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-page);
+  font-family: var(--ds-font-family);
+}
+
+.preview-page {
+  width: min(1180px, 100%);
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.preview-page__head h1 {
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.preview-page__head p {
+  margin: 6px 0 0;
+  color: var(--ds-color-text-secondary);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.preview-template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.preview-card,
+.preview-spec-panel {
+  padding: 20px;
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: 8px;
+}
+
+.preview-card h2,
+.preview-spec-panel h2 {
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.preview-card p {
+  min-height: 44px;
+  margin: 6px 0 16px;
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.preview-spec-panel {
+  margin-top: 16px;
+}
+
+.preview-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.preview-metric {
+  padding: 12px 16px;
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-sm);
+}
+
+.preview-metric strong,
+.preview-metric span {
+  display: block;
+}
+
+.preview-metric strong {
+  color: var(--ds-color-text-heading);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.preview-metric span {
+  color: var(--ds-color-text-tertiary);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.preview-range-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+  align-items: center;
+  min-width: 0;
+}
+
+.preview-range-control > span {
+  color: var(--ds-color-text-tertiary);
+  text-align: center;
+}
+
+.preview-range-control .ds-input {
+  min-width: 0;
+}
+
+.preview-richtext {
+  min-height: 250px;
+}
+
+.preview-richtext .ds-richtext__editor {
+  min-height: 154px;
+}
+
+.preview-toast {
+  position: fixed;
+  z-index: calc(var(--ds-z-modal) + 2);
+  top: 24px;
+  left: 50%;
+  min-width: 220px;
+  padding: 10px 16px;
+  color: var(--ds-color-success-active);
+  background: #f0fff8;
+  border: 1px solid #b7ebd0;
+  border-radius: var(--ds-radius-md);
+  box-shadow: var(--ds-shadow-md);
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 860px) {
+  .preview-template-grid,
+  .preview-metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .preview-page {
+    padding: 12px;
+  }
+}

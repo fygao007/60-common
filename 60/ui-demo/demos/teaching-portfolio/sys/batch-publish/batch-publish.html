@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>考核批次管理</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+    .ds-page { padding: 0; }
+    .page-content { flex: 1; padding: 12px 16px 12px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { color: #fff; background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); }
+    .btn.danger { color: #fa5151; border-color: #fa5151; }
+    .btn.danger:hover { color: #fff; background: #fa5151; }
+
+    /* 搜索区域 */
+    .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 0 12px; }
+    .filter-item { display: flex; align-items: center; gap: 8px; }
+    .filter-item label { color: #505266; font-size: 14px; white-space: nowrap; }
+    .filter-item input[type="text"] { height: 28px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; width: 200px; }
+    .filter-item input:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .filter-item select { height: 28px; padding: 0 24px 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; min-width: 140px; }
+
+    /* 工具栏 */
+    .toolbar { display: flex; align-items: center; gap: 8px; padding: 0 0 12px; }
+
+    /* Table */
+    .basic-table-wrap { position: relative; overflow: auto; background: #fff; border: 1px solid #eeeef0; }
+    .basic-table { width: 100%; border-collapse: separate; border-spacing: 0; color: #000; font-size: 14px; line-height: 22px; }
+    .basic-table th, .basic-table td { height: 46px; padding: 0 12px; background: #fff; border-bottom: 1px solid #eeeef0; white-space: nowrap; overflow: hidden; text-align: left; text-overflow: ellipsis; }
+    .basic-table th { position: sticky; top: 0; z-index: 5; height: 40px; background: #fafafa; font-weight: 600; }
+    .basic-table th + th, .basic-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+    .basic-table tbody tr:hover td { background: #f6f6f7; }
+    .basic-table tbody tr:last-child td { border-bottom: none; }
+    .col-actions { width: 130px; text-align: center; }
+    .row-actions { display: inline-flex; align-items: center; gap: 12px; }
+    .text-action { padding: 0; color: #3167ff; background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .text-action:hover { color: var(--ds-color-primary-hover); }
+    .text-action:disabled { color: #bcbecd; cursor: not-allowed; }
+    .action-divider { width: 1px; height: 12px; background: #dcdce0; }
+
+    /* 标签 */
+    .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; font-size: 12px; background: #f2f3f5; color: #505266; }
+    .tag.primary { background: #e8f0ff; color: #3167ff; }
+    .tag.success { background: #e8f7f1; color: #00B42A; }
+    .tag.danger { background: #ffebee; color: #F53F3F; }
+    .scope-tags { display: inline-flex; gap: 4px; }
+
+    .basic-pagination { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #505266; background: #fff; border-top: 1px solid #eeeef0; font-size: 12px; }
+    .basic-pagination .page-spacer { flex: 1; }
+
+    /* ============ 详情二级页 ============ */
+    .list-view { }
+    .detail-view { display: none; }
+    .sub-header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid #eeeef0; background: #fff; }
+    .back-btn { display: inline-flex; align-items: center; gap: 4px; color: #000; font-size: 14px; cursor: pointer; background: none; border: none; padding: 0; }
+    .back-btn:hover { color: var(--ds-color-primary); }
+    .back-btn svg { width: 20px; height: 20px; }
+    .sub-header-divider { width: 1px; height: 20px; background: #eeeef0; }
+    .sub-header-title { margin: 0; font-size: 20px; font-weight: 600; color: #000; flex: 1; }
+
+    /* 步骤条 - 参考 field-setting */
+    .steps-bar { display: flex; align-items: flex-start; gap: 16px; padding: 12px 24px; background: #fff; border-bottom: 1px solid #eeeef0; }
+    .step-item { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .step-item .step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 8px; font-size: 14px; font-weight: 400; background: #fff; border: 1px solid #dcdce0; color: #505266; flex-shrink: 0; }
+    .step-item .step-content { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .step-item .step-content strong { font-size: 14px; font-weight: 400; color: #505266; }
+    .step-item .step-content .step-desc { font-size: 12px; color: #9094a6; }
+    .step-item .step-content::after { content: ""; flex: 1; min-width: 24px; height: 1px; background: #eeeef0; }
+    .step-item:last-child .step-content::after { display: none; }
+    .step-item.done .step-num { background: #fff; border-color: var(--ds-color-primary); color: var(--ds-color-primary); }
+    .step-item.done .step-content::after { background: var(--ds-color-primary); }
+    .step-item.active .step-num { background: var(--ds-color-primary); border-color: var(--ds-color-primary); color: #fff; }
+    .step-item.active .step-content strong { color: var(--ds-color-primary); font-weight: 600; }
+
+    /* 表格式表单 */
+    .detail-body { padding: 16px 24px 72px; }
+    .form-table { display: grid; gap: 12px; max-width: 920px; }
+    .form-row { display: grid; grid-template-columns: 120px minmax(0, 360px); gap: 16px; align-items: center; }
+    .form-row.full { grid-template-columns: 120px minmax(0, 1fr); }
+    .form-row__label { text-align: right; color: #505266; font-size: 14px; }
+    .form-row__label .required { color: #fa5151; margin-right: 2px; }
+    .form-row__control { min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .form-row__control input, .form-row__control select, .form-row__control textarea { width: 100%; box-sizing: border-box; height: 32px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; font-family: inherit; background: #fff; color: #000; }
+    .form-row__control input:focus, .form-row__control select:focus { outline: none; border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .form-row__control input:disabled { background: #f2f3f5; color: #c9cdd4; border-color: #e5e6eb; cursor: not-allowed; }
+
+    /* 只读视图 */
+    .readonly-grid { display: grid; grid-template-columns: repeat(2, minmax(280px, 1fr)); gap: 12px 40px; max-width: 920px; }
+    .readonly-item { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 12px; align-items: center; }
+    .readonly-item > span { color: #737585; font-size: 13px; }
+    .readonly-item > strong { color: #000; font-size: 14px; font-weight: 500; }
+
+    /* 批次信息步骤内容居中 */
+    #stepInfo .form-table, #stepInfo .readonly-grid { margin: 0 auto; }
+
+    /* 条件构造器 */
+    .condition-row { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .condition-row select { flex: 1; min-width: 0; }
+    .link-btn { color: #3167ff; background: none; border: none; font-size: 13px; cursor: pointer; padding: 0; white-space: nowrap; }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* 权限矩阵 - 参考 field-setting 设置用户组权限 */
+    .archive-permission-layout { flex: 1; display: flex; overflow: hidden; }
+    .archive-permission-sidebar { width: 200px; background: #fff; border-right: 1px solid #eeeef0; display: flex; flex-direction: column; flex-shrink: 0; }
+    .archive-permission-sidebar h3 { margin: 0; padding: 14px 16px 10px; font-size: 14px; font-weight: 600; color: #000; border-bottom: 1px solid #f0f0f0; }
+    .archive-permission-groups { flex: 1; padding: 8px 0; overflow-y: auto; list-style: none; margin: 0; }
+    .archive-permission-groups__item { padding: 10px 20px; cursor: pointer; font-size: 14px; color: #000; display: flex; align-items: center; gap: 8px; }
+    .archive-permission-groups__item:hover { background: #f0f5ff; color: var(--ds-color-primary); }
+    .archive-permission-groups__item.is-active { background: #e8f0ff; color: var(--ds-color-primary); font-weight: 600; }
+
+    .archive-permission-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .archive-permission-tabs { display: flex; gap: 0; padding: 0 16px; border-bottom: 1px solid #eeeef0; background: #fff; }
+    .archive-permission-tabs__item { padding: 12px 16px; font-size: 14px; color: #505266; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .archive-permission-tabs__item:hover { color: #000; }
+    .archive-permission-tabs__item.is-active { color: var(--ds-color-primary); font-weight: 500; border-bottom-color: var(--ds-color-primary); }
+    .archive-permission-tab-content { flex: 1; overflow-y: auto; padding: 8px; }
+
+    .archive-permission-section { margin-bottom: 12px; border-radius: 8px; border: 1px solid #eeeef0; background: #fff; overflow: hidden; }
+    .archive-permission-section__header { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; cursor: pointer; gap: 12px; background: #f9fafb; border-bottom: 1px solid transparent; }
+    .archive-permission-section__header:hover { opacity: 0.92; }
+    .archive-permission-section__header.expanded { border-bottom-color: #eeeef0; }
+    .archive-permission-section__toggle { display: flex; align-items: center; gap: 8px; background: transparent; border: 0; padding: 0; cursor: pointer; font-size: 14px; color: #000; }
+    .archive-permission-section__arrow { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; transition: transform 0.2s; }
+    .archive-permission-section__arrow.is-expanded { transform: rotate(90deg); }
+    .archive-permission-type-tag { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 2px; font-size: 12px; }
+    .archive-permission-type-tag.is-table { background: #e8f3ff; color: #1677ff; }
+    .archive-permission-type-tag.is-form { background: #fff7e6; color: #fa8c16; }
+    .archive-permission-type-tag.is-card { background: #f6ffed; color: #52c41a; }
+    .archive-permission-type-tag.is-timeline { background: #f9f0ff; color: #722ed1; }
+    .archive-permission-type-tag.is-text { background: #f5f5f5; color: #595959; }
+    .archive-permission-type-tag.is-file { background: #fff1f0; color: #f5222d; }
+    .archive-permission-section__batch { display: flex; gap: 12px; flex-wrap: wrap; margin-left: auto; }
+    .archive-permission-section__batch label { font-size: 13px; color: #666; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .archive-permission-section__batch input { width: 16px; height: 16px; accent-color: var(--ds-color-primary); }
+
+    .archive-permission-section__detail { display: none; padding: 0; }
+    .archive-permission-section__detail.show { display: block; }
+    .archive-permission-field-columns { display: flex; }
+    .archive-permission-field-column { flex: 1; }
+    .archive-permission-field-column + .archive-permission-field-column { border-left: 2px solid #eeeef0; }
+    .archive-permission-field-column__header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fafafa; font-size: 14px; color: #000; font-weight: 600; border-bottom: 1px solid #eeeef0; }
+    .archive-permission-field-column__permission-labels { display: flex; gap: 16px; }
+    .archive-permission-field-column__permission-labels span { width: 40px; text-align: center; }
+    .archive-permission-field { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; border-bottom: 1px solid #eeeef0; font-size: 13px; }
+    .archive-permission-field:last-child { border-bottom: none; }
+    .archive-permission-field:hover { background: #f6f6f7; }
+    .archive-permission-field__name { flex: 1; font-weight: 500; color: #000; }
+    .archive-permission-field__perms { display: flex; gap: 16px; }
+    .archive-permission-field__perms input { width: 16px; height: 16px; accent-color: var(--ds-color-primary); }
+
+    /* 底部按钮 - 固定并居中（参考 field-setting） */
+    .detail-footer { position: fixed; bottom: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 24px; border-top: 1px solid #eeeef0; background: #fff; z-index: 100; }
+
+    /* 弹窗 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 480px; max-width: 90vw; max-height: 90vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+    .modal__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eeeef0; flex-shrink: 0; }
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+    .modal__close { width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 18px; color: #737585; }
+    .modal__close:hover { background: #f5f5f5; }
+    .modal__body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; font-size: 14px; color: #737585; }
+    .modal__body b { color: #000; }
+    .modal__footer { display: flex; justify-content: center; gap: 12px; padding: 16px 20px; border-top: 1px solid #eeeef0; flex-shrink: 0; }
+
+    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #20b486; color: #fff; padding: 10px 24px; border-radius: 6px; font-size: 14px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+  </style>
+</head>
+<body>
+<div class="ds-scope ds-page">
+
+  <!-- ==================== 列表视图 ==================== -->
+  <div id="listView">
+    <div class="page-content">
+      <section class="filter-bar" aria-label="查询条件">
+        <div class="filter-item">
+          <label>批次名称</label>
+          <input type="text" id="filterName" placeholder="搜索批次名称" />
+        </div>
+        <div class="filter-item">
+          <label>发起范围</label>
+          <select id="filterScope">
+            <option>全部</option>
+            <option>全校</option>
+            <option>电子与通信工程学院</option>
+            <option>人工智能学院</option>
+            <option>机电工程学院</option>
+            <option>电子信息专业群</option>
+            <option>人工智能技术应用专业群</option>
+            <option>智能制造专业群</option>
+          </select>
+        </div>
+        <button class="btn" type="button" onclick="resetFilter()">重置</button>
+        <button class="btn primary" type="button" onclick="queryList()">查询</button>
+      </section>
+
+      <section class="toolbar" aria-label="操作按钮">
+        <button class="btn primary" type="button" onclick="openCreate()">新增</button>
+      </section>
+
+      <section class="basic-table-wrap">
+        <table class="basic-table" aria-label="批次列表">
+          <thead>
+            <tr>
+              <th style="width:260px">批次名称</th>
+              <th style="width:180px">发起范围</th>
+              <th style="width:170px">考核学期</th>
+              <th style="width:200px">审核范围</th>
+              <th style="width:96px">状态</th>
+              <th style="width:190px">起止时间</th>
+              <th style="width:130px">提交率</th>
+              <th style="width:140px">评分完成率</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </section>
+      <div class="basic-pagination">
+        <span class="page-spacer"></span>
+        <span id="pageInfo">共 0 条记录</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 详情二级页 ==================== -->
+  <div class="detail-view" id="detailView">
+    <header class="sub-header">
+      <button class="back-btn" type="button" onclick="backToList()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        返回
+      </button>
+      <span class="sub-header-divider"></span>
+      <h1 class="sub-header-title" id="detailTitle">新建批次</h1>
+    </header>
+
+    <div class="steps-bar" id="stepsWrap"></div>
+
+    <!-- 第一步：批次信息 -->
+    <div class="detail-body" id="stepInfo"></div>
+    <!-- 第二步：设置用户组权限 -->
+    <div class="detail-body" id="stepUsers" style="display:none"></div>
+
+    <div class="detail-footer" id="detailFooter"></div>
+  </div>
+</div>
+
+<!-- 确认弹窗 -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="confirmTitle">确认</h3>
+      <button class="modal__close" onclick="closeConfirm()">×</button>
+    </div>
+    <div class="modal__body" id="confirmBody"></div>
+    <div class="modal__footer">
+      <button class="btn" id="confirmCancelBtn" onclick="closeConfirm()">取消</button>
+      <button class="btn danger" id="confirmOkBtn" onclick="applyConfirm()">确认</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============== 常量数据 ==============
+var scopeTypeOptions = ['全校', '学院', '专业群'];
+var batchCollegeOptions = ['电子与通信工程学院', '人工智能学院', '机电工程学院'];
+var batchMajorGroupOptions = ['电子信息专业群', '人工智能技术应用专业群', '智能制造专业群'];
+var CONDITION_FIELDS = [{ value: 'college', label: '学院' }, { value: 'majorGroup', label: '专业群' }, { value: 'title', label: '职称' }];
+var CONDITION_OPERATORS = [{ value: 'eq', label: '等于' }, { value: 'ne', label: '不等于' }, { value: 'in', label: '属于' }];
+var CONDITION_VALUES = {
+  college: batchCollegeOptions,
+  majorGroup: batchMajorGroupOptions,
+  title: ['教授', '副教授', '讲师', '助理教授']
+};
+var semesterOptions = ['2025-2026学年 春季学期', '2025-2026学年 秋季学期', '2024-2025学年 春季学期'];
+
+var AUDIT_TEMPLATES = [
+  { id: 'tpl-term', name: '学期教学档案考核（标准）', nodes: ['系初审', '院评审', '校终审'] },
+  { id: 'tpl-double-high', name: '双高专业群支撑材料考核', nodes: ['专业群初评', '院评审', '校终审'] },
+  { id: 'tpl-new-teacher', name: '青年教师教学成长考核', nodes: ['指导教师评', '院评审'] }
+];
+
+var PERMISSION_USER_GROUPS = ['全部用户', '教师', '专业主任', '专业群带头人', '学院管理员', '系统管理员'];
+
+// 档案结构（用于权限矩阵）
+var ARCHIVE_GROUPS = [
+  { id: 'basic-info', name: '基本信息', children: [
+    { id: 'table-profile', name: '个人信息', displayType: '表单', fields: ['姓名', '职工号', '性别', '出生日期', '民族', '政治面貌', '职称', '联系电话'] },
+    { id: 'table-education', name: '学历信息', displayType: '表格', fields: ['学历', '学位', '毕业院校', '毕业专业', '毕业时间'] },
+    { id: 'table-certificates', name: '资格证书', displayType: '表格', fields: ['证书名称', '证书类型', '发证机关', '获得时间'] }
+  ]},
+  { id: 'teaching-info', name: '教学信息', children: [
+    { id: 'table-courses', name: '课程清单', displayType: '表格', fields: ['课程名称', '课程号', '学期', '授课班级', '学时', '学分'] },
+    { id: 'table-course-design', name: '课程设计与实施', displayType: '大文本', fields: ['教学方式', '教学目标', '教学实施', '学情分析'] },
+    { id: 'table-reflection', name: '课程反思', displayType: '大文本', fields: ['教学反思', '优化措施'] }
+  ]},
+  { id: 'enterprise-practice', name: '企业实践', children: [
+    { id: 'table-practice-records', name: '实践经历', displayType: '时间轴', fields: ['企业名称', '实践岗位', '开始时间', '结束时间', '实践内容'] }
+  ]},
+  { id: 'achievements-honors', name: '成果与荣誉', children: [
+    { id: 'table-achievements', name: '教学科研成果', displayType: '卡片', fields: ['成果名称', '成果类型', '级别', '获得时间'] },
+    { id: 'table-training-records', name: '培训记录', displayType: '表格', fields: ['培训名称', '举办单位', '开始时间', '结束时间'] }
+  ]},
+  { id: 'social-service', name: '社会服务', children: [
+    { id: 'table-service-records', name: '社会服务', displayType: '表格', fields: ['服务名称', '服务单位', '时间', '内容'] }
+  ]},
+  { id: 'appointment', name: '任职情况', children: [
+    { id: 'table-appointment-records', name: '任职记录', displayType: '表格', fields: ['任职名称', '任职单位', '开始时间', '结束时间'] }
+  ]},
+  { id: 'other-education', name: '其他教育工作', children: [
+    { id: 'table-other-records', name: '教育工作记录', displayType: '表格', fields: ['工作名称', '工作内容', '开始时间', '结束时间'] }
+  ]}
+];
+
+var batchScopeUnits = {
+  全校: [
+    { id: 'unit-eie', name: '电子与通信工程学院', total: 43 },
+    { id: 'unit-ai', name: '人工智能学院', total: 31 },
+    { id: 'unit-im', name: '机电工程学院', total: 27 }
+  ]
+};
+
+function makeBatch(name, semester, status, submitted, scored) {
+  return {
+    id: 'batch-' + Math.random().toString(36).slice(2, 8),
+    name: name, scopeType: '全校', scopeTargets: [], scopeCondition: [],
+    semester: semester, startDate: '2026-06-15', endDate: '2026-07-10',
+    fullScore: 100, flowId: 'tpl-term', scoreStage: '系初审',
+    status: status, wasPublished: status !== '待发布',
+    progress: batchScopeUnits.全校.map(function(u) { return { depId: u.id, submitted: submitted, scored: scored, total: u.total }; })
+  };
+}
+
+var batches = [
+  makeBatch('2026 春季学期教学档案考核（全校）', '2025-2026学年 春季学期', '已发布', 8, 0),
+  makeBatch('2025 秋季学期教学档案评审（全校）', '2025-2026学年 秋季学期', '已发布', 30, 18),
+  makeBatch('2025 春季学期教学档案考核（全校）', '2024-2025学年 春季学期', '已结束', 25, 25),
+  makeBatch('2026 秋季学期教学档案考核（全校）', '2025-2026学年 秋季学期', '待发布', 0, 0)
+];
+
+var DETAIL_STEPS = [
+  { key: 'info', title: '批次信息', description: '设定批次范围与考核周期' },
+  { key: 'users', title: '设置用户组权限', description: '配置参与批次的用户组' }
+];
+
+// ============== 状态 ==============
+var state = {
+  applied: { name: '', scope: '全部' },
+  view: 'list',
+  draft: null,
+  currentStep: 0,
+  permUserGroup: PERMISSION_USER_GROUPS[0],
+  permActiveGroupTab: null,
+  permExpanded: [],
+  confirmConfig: null
+};
+
+var toastTimer = null;
+function notify(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.style.display = 'none'; }, 1800);
+}
+function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+function statusTag(status) {
+  var cls = status === '已发布' ? 'primary' : status === '已结束' ? 'success' : status === '已关闭' ? 'danger' : '';
+  return '<span class="tag ' + cls + '">' + esc(status) + '</span>';
+}
+function batchTotals(b) {
+  var submitted = 0, scored = 0, total = 0;
+  b.progress.forEach(function(p) { submitted += p.submitted; scored += p.scored; total += p.total; });
+  return { submitted: submitted, scored: scored, total: total };
+}
+function ratio(a, b) { return b ? Math.round(a / b * 100) : 0; }
+
+// ============== 列表 ==============
+function getFiltered() {
+  return batches.filter(function(b) {
+    if (state.applied.name && b.name.toLowerCase().indexOf(state.applied.name.toLowerCase()) < 0) return false;
+    if (state.applied.scope !== '全部') {
+      if (b.scopeType === '全校') return state.applied.scope === '全校';
+      if ((b.scopeTargets || []).indexOf(state.applied.scope) < 0) return false;
+    }
+    return true;
+  });
+}
+
+function renderList() {
+  var rows = getFiltered();
+  var body = '';
+  rows.forEach(function(b) {
+    var t = batchTotals(b);
+    var submitRate = ratio(t.submitted, t.total);
+    var scoreRate = ratio(t.scored, t.submitted);
+    var canDelete = b.status === '待发布';
+    body += '<tr>' +
+      '<td>' + esc(b.name) + '</td>' +
+      '<td><span class="scope-tags"><span class="tag primary">' + esc(b.scopeType) + '</span>' + (b.scopeTargets || []).map(function(s){ return '<span class="tag">' + esc(s) + '</span>'; }).join('') + '</span></td>' +
+      '<td>' + esc(b.semester) + '</td>' +
+      '<td><span class="scope-tags">' + ARCHIVE_GROUPS.slice(0, 3).map(function(g){ return '<span class="tag">' + g.name + '</span>'; }).join('') + '</span></td>' +
+      '<td>' + statusTag(b.status) + '</td>' +
+      '<td>' + b.startDate + ' ~ ' + b.endDate + '</td>' +
+      '<td>' + submitRate + '%（' + t.submitted + '/' + t.total + '）</td>' +
+      '<td>' + (t.submitted ? scoreRate + '%（' + t.scored + '/' + t.submitted + '）' : '-') + '</td>' +
+      '<td class="col-actions"><span class="row-actions">' +
+        '<button class="text-action" onclick="enterDetail(\'' + b.id + '\')">' + (canDelete ? '编辑' : '详情') + '</button>' +
+        '<span class="action-divider"></span>' +
+        '<button class="text-action" onclick="copyBatch(\'' + b.id + '\')">复制</button>' +
+        '<span class="action-divider"></span>' +
+        '<button class="text-action" ' + (canDelete ? '' : 'disabled') + ' onclick="askConfirm(\'' + b.id + '\',\'delete\')">删除</button>' +
+      '</span></td></tr>';
+  });
+  if (!rows.length) body = '<tr><td colspan="9" style="text-align:center;color:#737585;padding:32px 0">暂无数据</td></tr>';
+  document.getElementById('tableBody').innerHTML = body;
+  document.getElementById('pageInfo').textContent = '共 ' + rows.length + ' 条记录';
+}
+
+function queryList() { state.applied.name = document.getElementById('filterName').value; state.applied.scope = document.getElementById('filterScope').value; notify('已按当前条件查询'); renderList(); }
+function resetFilter() { document.getElementById('filterName').value = ''; document.getElementById('filterScope').value = '全部'; state.applied = { name: '', scope: '全部' }; renderList(); }
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('is-open'); state.confirmConfig = null; }
+
+function askConfirm(batchId, mode) {
+  var b = batches.find(function(x){ return x.id === batchId; });
+  if (!b) return;
+  if (mode === 'delete' && b.status !== '待发布') { notify('仅待发布批次支持删除'); return; }
+  var texts = {
+    delete: { title: '确认删除批次', desc: '删除后无法恢复，仅待发布批次可删除。', ok: '删除' },
+    unpublish: { title: '确认取消发布', desc: '取消发布后将停止本批次的提交入口，批次可重新发布或结束。', ok: '确认取消' },
+    'end-batch': { title: '确认结束批次', desc: '结束后本批次将不能再次发布或继续提交。', ok: '确认结束' }
+  };
+  var t = texts[mode];
+  state.confirmConfig = { batchId: batchId, mode: mode };
+  document.getElementById('confirmTitle').textContent = t.title;
+  document.getElementById('confirmBody').innerHTML = '<p><b>' + esc(b.name) + '</b></p><p>' + t.desc + '</p>';
+  var ok = document.getElementById('confirmOkBtn');
+  ok.textContent = t.ok;
+  ok.className = 'btn ' + (mode === 'delete' || mode === 'end-batch' ? 'danger' : 'primary');
+  document.getElementById('confirmCancelBtn').style.display = '';
+  document.getElementById('confirmModal').classList.add('is-open');
+}
+
+function applyConfirm() {
+  var cfg = state.confirmConfig;
+  if (!cfg) return;
+  var b = batches.find(function(x){ return x.id === cfg.batchId; });
+  if (cfg.mode === 'delete') { batches = batches.filter(function(x){ return x.id !== cfg.batchId; }); notify('批次已删除'); }
+  if (cfg.mode === 'unpublish' && b) { b.status = '待发布'; b.wasPublished = true; if (state.draft && state.draft.id === b.id) state.draft.status = '待发布'; notify('已取消发布，可重新发布或结束批次'); }
+  if (cfg.mode === 'end-batch' && b) { b.status = '已结束'; if (state.draft && state.draft.id === b.id) state.draft.status = '已结束'; notify('批次已结束'); }
+  closeConfirm();
+  if (state.view === 'list') renderList(); else renderDetail();
+}
+
+function copyBatch(batchId) {
+  var b = batches.find(function(x){ return x.id === batchId; });
+  if (!b) return;
+  var copy = JSON.parse(JSON.stringify(b));
+  copy.id = 'batch-' + Math.random().toString(36).slice(2, 8);
+  copy.name = b.name + '（副本）';
+  copy.status = '待发布';
+  copy.wasPublished = false;
+  batches.unshift(copy);
+  notify('已复制为待发布批次');
+  renderList();
+}
+
+// ============== 详情 ==============
+function openCreate() {
+  var draft = {
+    id: 'batch-' + Math.random().toString(36).slice(2, 8),
+    name: '', scopeType: '全校', scopeTargets: [], scopeCondition: [],
+    semester: semesterOptions[0], startDate: '2026-06-15', endDate: '2026-07-05',
+    fullScore: 100, flowId: 'tpl-term', scoreStage: '系初审', status: '待发布', wasPublished: false,
+    userGroups: PERMISSION_USER_GROUPS.slice(), userGroupPerms: {},
+    progress: batchScopeUnits.全校.map(function(u){ return { depId: u.id, submitted: 0, scored: 0, total: u.total }; })
+  };
+  state.draft = draft;
+  state.currentStep = 0;
+  state.permUserGroup = PERMISSION_USER_GROUPS[0];
+  state.permActiveGroupTab = ARCHIVE_GROUPS[0].id;
+  state.permExpanded = [];
+  showDetail();
+}
+
+function enterDetail(batchId) {
+  var b = batches.find(function(x){ return x.id === batchId; });
+  if (!b) return;
+  var draft = JSON.parse(JSON.stringify(b));
+  if (!draft.userGroups) draft.userGroups = PERMISSION_USER_GROUPS.slice();
+  if (!draft.userGroupPerms) draft.userGroupPerms = {};
+  state.draft = draft;
+  state.currentStep = 0;
+  state.permUserGroup = PERMISSION_USER_GROUPS[0];
+  state.permActiveGroupTab = ARCHIVE_GROUPS[0].id;
+  state.permExpanded = [];
+  showDetail();
+}
+
+function showDetail() {
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'block';
+  renderDetail();
+}
+
+function backToList() {
+  state.draft = null;
+  document.getElementById('detailView').style.display = 'none';
+  document.getElementById('listView').style.display = 'block';
+  renderList();
+}
+
+function isEditable() { return state.draft && state.draft.status === '待发布'; }
+
+function setStep(step) { state.currentStep = step; renderDetail(); }
+
+function renderDetail() {
+  var d = state.draft;
+  document.getElementById('detailTitle').textContent = d.name || '新建批次';
+
+  // 步骤条
+  var steps = '';
+  DETAIL_STEPS.forEach(function(s, i) {
+    var cls = i < state.currentStep ? 'done' : i === state.currentStep ? 'active' : '';
+    steps += '<div class="step-item ' + cls + '" onclick="setStep(' + i + ')">' +
+      '<span class="step-num">' + (i < state.currentStep ? '✓' : (i + 1)) + '</span>' +
+      '<span class="step-content"><strong>' + s.title + '</strong></span></div>';
+  });
+  document.getElementById('stepsWrap').innerHTML = steps;
+
+  if (state.currentStep === 0) renderStepInfo(d);
+  else renderStepUsers(d);
+
+  // 底部按钮
+  var footer = '';
+  if (isEditable() || d.status === '已发布') {
+    if (d.status === '已发布') {
+      footer = '<button class="btn" onclick="askConfirm(\'' + d.id + '\',\'unpublish\')">取消发布</button>';
+    } else {
+      if (state.currentStep > 0) footer += '<button class="btn" onclick="setStep(' + (state.currentStep - 1) + ')">上一步</button>';
+      if (state.currentStep < DETAIL_STEPS.length - 1) footer += '<button class="btn primary" onclick="setStep(' + (state.currentStep + 1) + ')">下一步</button>';
+      if (state.currentStep === DETAIL_STEPS.length - 1) {
+        footer += '<button class="btn primary" onclick="saveDetail()">保存</button>';
+        footer += '<button class="btn primary" onclick="publishDetail()">发布</button>';
+      }
+      if (d.wasPublished) footer += '<button class="btn danger" onclick="askConfirm(\'' + d.id + '\',\'end-batch\')">结束批次</button>';
+    }
+  }
+  document.getElementById('detailFooter').innerHTML = footer;
+}
+
+function fieldRow(label, controlHtml, required, full) {
+  return '<div class="form-row' + (full ? ' full' : '') + '"><label class="form-row__label">' + (required ? '<span class="required">*</span>' : '') + label + '</label><div class="form-row__control">' + controlHtml + '</div></div>';
+}
+function selectHtml(id, options, selected) {
+  return '<select id="' + id + '" onchange="onDraftChange(\'' + id + '\',this.value)">' + options.map(function(o) {
+    var v = typeof o === 'string' ? o : o.value;
+    var l = typeof o === 'string' ? o : o.label;
+    return '<option value="' + esc(v) + '"' + (v === selected ? ' selected' : '') + '>' + esc(l) + '</option>';
+  }).join('') + '</select>';
+}
+function inputHtml(id, value, placeholder, type) {
+  return '<input type="' + (type || 'text') + '" id="' + id + '" value="' + esc(value) + '" placeholder="' + esc(placeholder || '') + '" onchange="onDraftChange(\'' + id + '\',this.value)">';
+}
+
+function renderStepInfo(d) {
+  document.getElementById('stepInfo').style.display = '';
+  document.getElementById('stepUsers').style.display = 'none';
+  var html;
+  if (isEditable()) {
+    html = '<div class="form-table">';
+    html += fieldRow('批次名称', inputHtml('f-name', d.name, '请输入批次名称'), true);
+    html += fieldRow('发起范围', selectHtml('f-scopeType', scopeTypeOptions, d.scopeType), true);
+    if (d.scopeType !== '全校') {
+      var opts = d.scopeType === '学院' ? batchCollegeOptions : batchMajorGroupOptions;
+      html += fieldRow('指定' + d.scopeType, selectHtml('f-scopeTarget', ['请选择'].concat(opts), d.scopeTargets[0] || '请选择'), true);
+    }
+    // 条件构造器
+    var condHtml = '<div style="display:flex;flex-direction:column;gap:8px;width:100%">';
+    (d.scopeCondition || []).forEach(function(c, i) {
+      condHtml += '<div class="condition-row">' +
+        selectHtml('cond-field-' + i, CONDITION_FIELDS, c.field) +
+        selectHtml('cond-op-' + i, CONDITION_OPERATORS, c.op) +
+        selectHtml('cond-value-' + i, CONDITION_VALUES[c.field] || [], c.value) +
+        '<button class="link-btn" type="button" onclick="removeCondition(' + i + ')">删除</button></div>';
+    });
+    condHtml += '<button class="link-btn" type="button" style="align-self:flex-start" onclick="addCondition()">添加条件</button></div>';
+    html += fieldRow('选择范围', condHtml, false, true);
+    html += fieldRow('考核学期', selectHtml('f-semester', semesterOptions, d.semester), true);
+    html += fieldRow('提交开始时间', inputHtml('f-startDate', d.startDate, '', 'date'), true);
+    html += fieldRow('提交截止时间', inputHtml('f-endDate', d.endDate, '', 'date'), true);
+    var flowOpts = AUDIT_TEMPLATES.map(function(t){ return { value: t.id, label: t.name }; });
+    html += fieldRow('设置流程', selectHtml('f-flowId', flowOpts, d.flowId), true);
+    html += fieldRow('评分满分', inputHtml('f-fullScore', d.fullScore, '', 'number'), true);
+    var currentFlow = AUDIT_TEMPLATES.find(function(t){ return t.id === d.flowId; });
+    var nodes = currentFlow ? currentFlow.nodes : [];
+    html += fieldRow('打分环节', selectHtml('f-scoreStage', nodes.length ? nodes : ['请选择'], d.scoreStage), true);
+    html += fieldRow('发布状态', statusTag(d.status));
+    html += '</div>';
+  } else {
+    // 只读
+    var scopeLabel = d.scopeType === '全校' ? '全校' : d.scopeType + '：' + (d.scopeTargets || []).join('、');
+    var condText = (d.scopeCondition || []).length ? d.scopeCondition.map(function(c) {
+      return c.field + ' ' + c.op + ' ' + c.value;
+    }).join(' 且 ') : '全部';
+    var flowName = (AUDIT_TEMPLATES.find(function(t){ return t.id === d.flowId; }) || {}).name || '-';
+    html = '<div class="readonly-grid">' +
+      '<div class="readonly-item"><span>考核学期</span><strong>' + esc(d.semester) + '</strong></div>' +
+      '<div class="readonly-item"><span>发起范围</span><strong>' + esc(scopeLabel) + '</strong></div>' +
+      '<div class="readonly-item"><span>选择范围</span><strong>' + esc(condText) + '</strong></div>' +
+      '<div class="readonly-item"><span>起止时间</span><strong>' + d.startDate + ' ~ ' + d.endDate + '</strong></div>' +
+      '<div class="readonly-item"><span>设置流程</span><strong>' + esc(flowName) + '</strong></div>' +
+      '<div class="readonly-item"><span>评分满分</span><strong>' + d.fullScore + '</strong></div>' +
+      '<div class="readonly-item"><span>打分环节</span><strong>' + esc(d.scoreStage) + '</strong></div>' +
+      '<div class="readonly-item"><span>发布状态</span><strong>' + statusTag(d.status) + '</strong></div>' +
+      '</div>';
+  }
+  document.getElementById('stepInfo').innerHTML = html;
+}
+
+function onDraftChange(id, value) {
+  var d = state.draft;
+  if (!d || !isEditable()) return;
+  var map = {
+    'f-name': 'name', 'f-semester': 'semester', 'f-startDate': 'startDate', 'f-endDate': 'endDate',
+    'f-flowId': 'flowId', 'f-fullScore': 'fullScore', 'f-scoreStage': 'scoreStage'
+  };
+  if (id === 'f-scopeType') { d.scopeType = value; d.scopeTargets = []; renderDetail(); return; }
+  if (id === 'f-scopeTarget') { if (value !== '请选择') d.scopeTargets = [value]; return; }
+  if (id === 'f-flowId') {
+    d.flowId = value;
+    var tpl = AUDIT_TEMPLATES.find(function(t){ return t.id === value; });
+    d.scoreStage = tpl && tpl.nodes[0] || '';
+    renderDetail(); return;
+  }
+  if (map[id]) d[map[id]] = value;
+}
+
+function addCondition() {
+  if (!isEditable()) return;
+  state.draft.scopeCondition.push({ field: 'college', op: 'eq', value: '' });
+  renderDetail();
+}
+function removeCondition(index) {
+  if (!isEditable()) return;
+  state.draft.scopeCondition.splice(index, 1);
+  renderDetail();
+}
+// 条件行选择变更（事件委托）
+document.addEventListener('change', function(e) {
+  var id = e.target.id;
+  if (!id || id.indexOf('cond-') !== 0) return;
+  var parts = id.split('-');
+  var idx = Number(parts[2]);
+  var key = parts[1];
+  var d = state.draft;
+  if (!d || !d.scopeCondition[idx]) return;
+  if (key === 'field') { d.scopeCondition[idx].field = e.target.value; d.scopeCondition[idx].value = ''; renderDetail(); }
+  if (key === 'op') d.scopeCondition[idx].op = e.target.value;
+  if (key === 'value') d.scopeCondition[idx].value = e.target.value;
+});
+
+// ============== 第二步：用户组权限（参考 field-setting 设置用户组权限） ==============
+function renderStepUsers(d) {
+  document.getElementById('stepInfo').style.display = 'none';
+  document.getElementById('stepUsers').style.display = '';
+
+  var tabsHtml = ARCHIVE_GROUPS.map(function(g) {
+    return '<div class="archive-permission-tabs__item' + (g.id === state.permActiveGroupTab ? ' is-active' : '') + '" onclick="switchPermTab(\'' + g.id + '\')">' + esc(g.name) + '</div>';
+  }).join('');
+
+  var activeGroup = ARCHIVE_GROUPS.find(function(g){ return g.id === state.permActiveGroupTab; }) || ARCHIVE_GROUPS[0];
+  var contentHtml = activeGroup.children.map(function(table) {
+    return renderPermTable(table);
+  }).join('');
+
+  document.getElementById('stepUsers').innerHTML =
+    '<section class="archive-permission-layout">' +
+      '<aside class="archive-permission-sidebar"><h3>用户组</h3><ul class="archive-permission-groups">' +
+        PERMISSION_USER_GROUPS.map(function(g) {
+          return '<li class="archive-permission-groups__item' + (g === state.permUserGroup ? ' is-active' : '') + '" onclick="switchPermGroup(\'' + g + '\')">' + g + '</li>';
+        }).join('') +
+      '</ul></aside>' +
+      '<div class="archive-permission-main"><div class="archive-permission-tabs">' + tabsHtml + '</div>' +
+      '<div class="archive-permission-tab-content">' + (contentHtml || '<div style="color:#737585;font-size:14px;text-align:center;padding:40px">该分组下暂无表</div>') + '</div></div>' +
+    '</section>';
+}
+
+function renderPermTable(table) {
+  var expanded = state.permExpanded.indexOf(table.id) >= 0;
+  var displayType = table.displayType || '表格';
+  var typeTagClass = ({ '表格':'is-table', '表单':'is-form', '卡片':'is-card', '时间轴':'is-timeline', '大文本':'is-text', '文件':'is-file' })[displayType] || 'is-table';
+  var perms = getTablePerms(table.id);
+  var fields = table.fields.map(function(f) {
+    var fp = getFieldPerm(table.id, f);
+    return '<div class="archive-permission-field"><span class="archive-permission-field__name">' + esc(f) + '</span>' +
+      '<span class="archive-permission-field__perms">' +
+        '<input type="checkbox" ' + (fp.view ? 'checked' : '') + ' onchange="setFieldPerm(\'' + table.id + '\',\'' + esc(f) + '\',\'view\',this.checked)">' +
+        '<input type="checkbox" ' + (fp.edit ? 'checked' : '') + ' onchange="setFieldPerm(\'' + table.id + '\',\'' + esc(f) + '\',\'edit\',this.checked)">' +
+        '<input type="checkbox" ' + (fp.required ? 'checked' : '') + ' onchange="setFieldPerm(\'' + table.id + '\',\'' + esc(f) + '\',\'required\',this.checked)">' +
+      '</span></div>';
+  });
+
+  var html = '<div class="archive-permission-section">';
+  html += '<div class="archive-permission-section__header' + (expanded ? ' expanded' : '') + '" onclick="togglePermExpand(\'' + table.id + '\')">';
+  html += '<button class="archive-permission-section__toggle" type="button">';
+  html += '<span class="archive-permission-section__arrow' + (expanded ? ' is-expanded' : '') + '">▶</span>';
+  html += '<span class="archive-permission-section__title">' + esc(table.name) + '<span class="archive-permission-type-tag ' + typeTagClass + '">' + displayType + '</span></span>';
+  html += '</button>';
+  html += '<span class="archive-permission-section__batch">';
+  html += '<label><input type="checkbox" ' + (perms.view ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="setAllPerm(\'' + table.id + '\',\'view\',this.checked)"> 全部查看</label>';
+  html += '<label><input type="checkbox" ' + (perms.edit ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="setAllPerm(\'' + table.id + '\',\'edit\',this.checked)"> 全部编辑</label>';
+  html += '<label><input type="checkbox" ' + (perms.required ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="setAllPerm(\'' + table.id + '\',\'required\',this.checked)"> 全部必填</label>';
+  html += '</span></div>';
+  if (expanded && fields.length) {
+    html += '<div class="archive-permission-section__detail show">';
+    html += '<div class="archive-permission-field-columns">';
+    var half = Math.ceil(fields.length / 2);
+    var col1 = fields.slice(0, half);
+    var col2 = fields.slice(half);
+    [col1, col2].forEach(function(col) {
+      if (!col.length) return;
+      html += '<div class="archive-permission-field-column">';
+      html += '<div class="archive-permission-field-column__header"><span>字段名</span><span class="archive-permission-field-column__permission-labels"><span>查看</span><span>编辑</span><span>必填</span></span></div>';
+      html += col.join('');
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function getPermMap() {
+  var d = state.draft;
+  var m = d.userGroupPerms || {};
+  return m[state.permUserGroup] || {};
+}
+function getTablePerms(tableId) { return getPermMap()[tableId] || { view: true, edit: false, required: false }; }
+function getFieldPerm(tableId, fieldName) { return (getPermMap()[tableId + '::' + fieldName]) || { view: true, edit: false, required: false }; }
+
+function setFieldPerm(tableId, fieldName, permKey, value) {
+  var d = state.draft;
+  if (!d.userGroupPerms) d.userGroupPerms = {};
+  var m = d.userGroupPerms;
+  if (!m[state.permUserGroup]) m[state.permUserGroup] = {};
+  var key = tableId + '::' + fieldName;
+  var perm = m[state.permUserGroup][key] || { view: true, edit: false, required: false };
+  if (permKey === 'edit' && value) perm.view = true;
+  if (permKey === 'required' && value) { perm.view = true; perm.edit = true; }
+  perm[permKey] = value;
+  m[state.permUserGroup][key] = perm;
+  if (!isEditable()) { renderStepUsers(d); }
+}
+
+function setAllPerm(tableId, permKey, value) {
+  var d = state.draft;
+  if (!d.userGroupPerms) d.userGroupPerms = {};
+  var m = d.userGroupPerms;
+  if (!m[state.permUserGroup]) m[state.permUserGroup] = {};
+  m[state.permUserGroup][tableId] = { view: permKey === 'view' ? value : true, edit: permKey === 'edit' ? value : false, required: permKey === 'required' ? value : false };
+  renderStepUsers(d);
+}
+
+function togglePermExpand(tableId) {
+  var i = state.permExpanded.indexOf(tableId);
+  if (i >= 0) state.permExpanded.splice(i, 1); else state.permExpanded.push(tableId);
+  renderStepUsers(state.draft);
+}
+function switchPermGroup(group) { state.permUserGroup = group; renderStepUsers(state.draft); }
+function switchPermTab(tabId) { state.permActiveGroupTab = tabId; renderStepUsers(state.draft); }
+
+// ============== 保存/发布 ==============
+function validateDetail() {
+  var d = state.draft;
+  if (!d.name || !d.name.trim()) { notify('批次名称不能为空'); return false; }
+  if ((d.scopeType === '学院' || d.scopeType === '专业群') && !(d.scopeTargets || []).length) { notify('请选择指定的' + d.scopeType); return false; }
+  if (!d.startDate || !d.endDate) { notify('请选择提交时间'); return false; }
+  if (d.endDate < d.startDate) { notify('截止时间需晚于或等于开始时间'); return false; }
+  if (!d.fullScore || Number(d.fullScore) < 1) { notify('评分满分需 ≥ 1'); return false; }
+  if (!d.flowId) { notify('请选择设置流程'); return false; }
+  if (!d.scoreStage) { notify('请选择打分环节'); return false; }
+  return true;
+}
+
+function saveDetail() {
+  if (!validateDetail()) return;
+  var next = state.draft;
+  next.fullScore = Number(next.fullScore);
+  var exists = batches.some(function(x){ return x.id === next.id; });
+  if (exists) batches = batches.map(function(x){ return x.id === next.id ? Object.assign({}, x, next) : x; });
+  else batches.unshift(next);
+  state.draft = next;
+  notify('已保存');
+  renderDetail();
+}
+
+function publishDetail() {
+  if (!validateDetail()) return;
+  var next = state.draft;
+  next.fullScore = Number(next.fullScore);
+  next.status = '已发布';
+  next.wasPublished = true;
+  var exists = batches.some(function(x){ return x.id === next.id; });
+  if (exists) batches = batches.map(function(x){ return x.id === next.id ? Object.assign({}, x, next) : x; });
+  else batches.unshift(next);
+  notify('批次已发布，范围内教师待办已生成');
+  backToList();
+}
+
+// ============== 初始化 ==============
+state.permActiveGroupTab = ARCHIVE_GROUPS[0].id;
+renderList();
+</script>
+</body>
+</html>

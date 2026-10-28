@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>证明打印 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+  body{margin:0}
+  .cert-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .cert-tile{padding:20px 18px;border:1px solid var(--ap-line);border-radius:6px;background:#fafcff;cursor:pointer}
+  .cert-tile:hover{border-color:var(--ap-blue)}
+  .cert-tile h4{margin:0 0 6px;font-size:15px;font-weight:700;color:var(--ap-ink)}
+  .cert-tile p{margin:0;color:var(--ap-muted);font-size:13px;line-height:20px}
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">证明打印</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">证</span>证明打印</h1>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>选择证明类型</h2></div>
+        <div class="ap-panel-body">
+          <div class="cert-grid">
+            <div class="cert-tile"><h4>在职证明</h4><p>用于办理信用卡、贷款、签证等</p></div>
+            <div class="cert-tile"><h4>收入证明</h4><p>需关联近12个月工资数据</p></div>
+            <div class="cert-tile"><h4>工作年限证明</h4><p>自动计算入职至今工作年限</p></div>
+            <div class="cert-tile"><h4>无违纪证明</h4><p>需人事处审核留痕</p></div>
+            <div class="cert-tile"><h4>职称证明</h4><p>注明现有专业技术职称信息</p></div>
+            <div class="cert-tile"><h4>社保缴纳证明</h4><p>对接社保系统自动取数</p></div>
+            <div class="cert-tile"><h4>党组织关系证明</h4><p>用于党组织关系转接</p></div>
+            <div class="cert-tile"><h4>自定义证明</h4><p>填写用途，由人事处人工核定</p></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>开具信息确认</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-form-grid">
+              <div class="ap-field"><label><span class="req">*</span>证明类型</label><input type="text" value="在职证明" /></div>
+              <div class="ap-field"><label><span class="req">*</span>用途</label><select><option>办理信用卡</option><option>贷款审批</option><option>出国签证</option><option>其他</option></select></div>
+              <div class="ap-field"><label><span class="req">*</span>抬头单位</label><input type="text" placeholder="如：中国银行深圳分行" /></div>
+              <div class="ap-field"><label><span class="req">*</span>份数</label><input type="text" value="1" /></div>
+              <div class="ap-field full"><label>领取方式</label>
+                <select><option>在线打印（电子签章版）</option><option>人事处窗口领取（加盖公章）</option><option>邮寄到付</option></select>
+              </div>
+            </div>
+            <div class="ap-form-actions">
+              <button class="ap-btn" type="button">预览证明内容</button>
+              <button class="ap-btn primary" type="button">提交开具申请</button>
+            </div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>开具记录</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>证明类型</th><th>用途</th><th>申请时间</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>收入证明</td><td>贷款审批</td><td>2026-04-18</td><td><span class="ap-tag green">已开具</span></td><td class="link">下载</td></tr>
+                <tr><td>在职证明</td><td>出国签证</td><td>2026-02-09</td><td><span class="ap-tag green">已开具</span></td><td class="link">下载</td></tr>
+                <tr><td>工作年限证明</td><td>子女入学</td><td>2025-09-02</td><td><span class="ap-tag green">已开具</span></td><td class="link">下载</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'certificate-print', versionLabel:'证明打印', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'certificate-print',label:'证明打印',closable:true}]
+});
+</script>
+</body>
+</html>

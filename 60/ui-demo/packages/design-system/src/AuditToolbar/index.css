@@ -1,0 +1,34 @@
+@import '../tokens.css';
+
+.ds-audit-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-4) var(--ds-card-padding);
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+}
+
+.ds-audit-toolbar__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ds-space-2);
+}
+
+.ds-audit-toolbar__title strong {
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-audit-toolbar__title span {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ds-audit-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}

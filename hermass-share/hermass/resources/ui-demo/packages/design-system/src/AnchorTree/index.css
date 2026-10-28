@@ -1,0 +1,185 @@
+@import '../tokens.css';
+
+.ds-anchor-tree {
+  --ds-anchor-tree-indent: 16px;
+  position: relative;
+  display: inline-flex;
+  width: 220px;
+  color: var(--ds-color-text-secondary);
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-anchor-tree--bordered::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 1px;
+  background: var(--ds-color-border-secondary);
+}
+
+.ds-anchor-tree__list {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ===== 父节点（分组） ===== */
+.ds-anchor-tree__group {
+  min-width: 0;
+}
+
+.ds-anchor-tree__group-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 32px;
+  padding: 5px 12px;
+  color: var(--ds-color-text);
+  border-radius: var(--ds-radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--ds-motion-duration) var(--ds-motion-ease),
+    background var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-anchor-tree__group-link:hover {
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-anchor-tree__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+ flex-shrink: 0;
+  color: #505266;
+  font-size: 8px;
+  cursor: pointer;
+  transition: transform .2s ease;
+  user-select: none;
+  
+}
+
+.ds-anchor-tree__group.is-collapsed > .ds-anchor-tree__group-link .ds-anchor-tree__toggle {
+  transform: rotate(-90deg);
+}
+
+.ds-anchor-tree__group-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.ds-anchor-tree__group-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: var(--ds-color-primary-light);
+  color: var(--ds-color-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ===== 子节点列表 ===== */
+.ds-anchor-tree__sub {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ds-anchor-tree__group.is-collapsed > .ds-anchor-tree__sub {
+  display: none;
+}
+
+/* ===== 子节点（锚点） ===== */
+.ds-anchor-tree__item {
+  min-width: 0;
+}
+
+.ds-anchor-tree__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px 12px 4px 34px;
+  color: var(--ds-color-text-secondary);
+  border-radius: var(--ds-radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--ds-motion-duration) var(--ds-motion-ease),
+    background var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-anchor-tree__link span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.ds-anchor-tree__link:hover {
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-anchor-tree__item.is-active > .ds-anchor-tree__link {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+}
+
+.ds-anchor-tree--bordered .ds-anchor-tree__item.is-active > .ds-anchor-tree__link::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  width: 2px;
+  background: var(--ds-color-primary);
+  border-radius: var(--ds-radius-pill);
+}
+
+.ds-anchor-tree__item.is-disabled > .ds-anchor-tree__link {
+  color: var(--ds-color-text-disabled);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+/* ===== 尺寸变体 ===== */
+.ds-anchor-tree--small {
+  width: 180px;
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ds-anchor-tree--small .ds-anchor-tree__group-link {
+  min-height: 28px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.ds-anchor-tree--small .ds-anchor-tree__link {
+  min-height: 24px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}

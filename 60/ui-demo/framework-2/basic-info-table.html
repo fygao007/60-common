@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 基本信息表格</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShellV2/app-shell-v2.css" />
+  <style>
+    body { margin: 0; }
+
+    .info-page {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .info-search {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--ds-space-3) var(--ds-space-4);
+      padding: var(--ds-space-4);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .info-field {
+      display: grid;
+      gap: var(--ds-space-1);
+      min-width: 0;
+    }
+
+    .info-field label {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .info-input,
+    .info-select {
+      width: 100%;
+      height: 32px;
+      padding: 0 var(--ds-space-3);
+      color: var(--ds-color-text);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      outline: none;
+    }
+
+    .info-input:focus,
+    .info-select:focus {
+      border-color: var(--ds-color-primary);
+      box-shadow: 0 0 0 2px var(--ds-color-primary-focus);
+    }
+
+    .info-search-actions {
+      display: flex;
+      align-items: end;
+      gap: var(--ds-space-2);
+    }
+
+    .info-toolbar {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: var(--ds-space-2);
+      padding: var(--ds-space-3) var(--ds-space-4);
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .info-toolbar-title {
+      margin-right: auto;
+      color: var(--ds-color-text);
+      font-size: var(--ds-font-size-lg);
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: var(--ds-line-height-lg);
+    }
+
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 var(--ds-space-3);
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border);
+      border-radius: var(--ds-radius-sm);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .info-btn:hover {
+      color: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .info-btn.primary {
+      color: var(--ds-color-white);
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .info-table-wrap {
+      flex: 1;
+      min-height: 0;
+      padding: 0 var(--ds-space-4);
+      overflow: auto;
+    }
+
+    .info-table {
+      width: 100%;
+      min-width: 1120px;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .info-table th,
+    .info-table td {
+      height: 40px;
+      padding: 0 var(--ds-space-3);
+      overflow: hidden;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .info-table th {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-subtle);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .info-table tbody tr:hover td {
+      background: var(--ds-color-bg-hover);
+    }
+
+    .info-check {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      vertical-align: middle;
+    }
+
+    .info-status {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 var(--ds-space-2);
+      border-radius: var(--ds-radius-pill);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .info-status.active {
+      color: var(--ds-color-success-active);
+      background: var(--ds-color-success-light);
+    }
+
+    .info-status.pending {
+      color: var(--ds-color-primary);
+      background: var(--ds-color-primary-selected);
+    }
+
+    .info-status.closed {
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-bg-disabled);
+    }
+
+    .info-link {
+      margin-right: var(--ds-space-2);
+      color: var(--ds-color-primary);
+      text-decoration: none;
+    }
+
+    .info-pagination {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: var(--ds-space-2);
+      height: 52px;
+      padding: 0 var(--ds-space-4);
+      color: var(--ds-color-text-secondary);
+      border-top: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .info-pagination span:first-child {
+      margin-right: auto;
+    }
+
+    .page-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 var(--ds-space-1);
+      color: var(--ds-color-text-secondary);
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: var(--ds-radius-sm);
+    }
+
+    .page-num.active {
+      color: var(--ds-color-white);
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    @media (max-width: 1280px) {
+      .info-search { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <header class="frame2-page-head">
+    <div class="frame2-page-title">
+      <h1 data-frame2-title>基本信息表格</h1>
+      <p>框架2业务页面示例，包含基础筛选、批量操作、状态展示和分页。</p>
+    </div>
+    <div class="frame2-action-row">
+      <button class="info-btn" type="button">导出</button>
+      <button class="info-btn primary" type="button">新增信息</button>
+    </div>
+  </header>
+
+  <main class="info-page">
+    <section class="info-search" aria-label="查询条件">
+      <div class="info-field">
+        <label for="keyword">关键词</label>
+        <input class="info-input" id="keyword" type="text" placeholder="请输入姓名、编号或手机号" />
+      </div>
+      <div class="info-field">
+        <label for="college">所属学院</label>
+        <select class="info-select" id="college">
+          <option>全部学院</option>
+          <option>信息学院</option>
+          <option>经济管理学院</option>
+          <option>材料科学学院</option>
+        </select>
+      </div>
+      <div class="info-field">
+        <label for="status">状态</label>
+        <select class="info-select" id="status">
+          <option>全部状态</option>
+          <option>已启用</option>
+          <option>待完善</option>
+          <option>已停用</option>
+        </select>
+      </div>
+      <div class="info-search-actions">
+        <button class="info-btn" type="button" data-reset>重置</button>
+        <button class="info-btn primary" type="button" data-search>查询</button>
+      </div>
+    </section>
+
+    <section class="info-toolbar" aria-label="表格操作">
+      <span class="info-toolbar-title">基本信息列表</span>
+      <button class="info-btn primary" type="button">新增</button>
+      <button class="info-btn" type="button">批量启用</button>
+      <button class="info-btn" type="button">批量停用</button>
+      <button class="info-btn" type="button">导入</button>
+      <button class="info-btn" type="button">删除</button>
+    </section>
+
+    <div class="info-table-wrap">
+      <table class="info-table" aria-label="基本信息表格">
+        <colgroup>
+          <col style="width: 48px" />
+          <col style="width: 120px" />
+          <col style="width: 120px" />
+          <col style="width: 160px" />
+          <col style="width: 180px" />
+          <col style="width: 150px" />
+          <col style="width: 110px" />
+          <col style="width: 150px" />
+          <col style="width: 160px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th><input class="info-check" type="checkbox" aria-label="全选" /></th>
+            <th>人员编号</th>
+            <th>姓名</th>
+            <th>所属学院</th>
+            <th>专业方向</th>
+            <th>联系电话</th>
+            <th>状态</th>
+            <th>更新时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input class="info-check" type="checkbox" aria-label="选择 2026001" /></td>
+            <td>2026001</td>
+            <td>陈若然</td>
+            <td>信息学院</td>
+            <td>计算机科学与技术</td>
+            <td>138****9021</td>
+            <td><span class="info-status active">已启用</span></td>
+            <td>2026-05-21 09:42</td>
+            <td><a class="info-link" href="#">查看</a><a class="info-link" href="#">编辑</a><a class="info-link" href="#">更多</a></td>
+          </tr>
+          <tr>
+            <td><input class="info-check" type="checkbox" aria-label="选择 2026002" /></td>
+            <td>2026002</td>
+            <td>林嘉宁</td>
+            <td>经济管理学院</td>
+            <td>工商管理</td>
+            <td>139****6708</td>
+            <td><span class="info-status pending">待完善</span></td>
+            <td>2026-05-20 16:18</td>
+            <td><a class="info-link" href="#">查看</a><a class="info-link" href="#">编辑</a><a class="info-link" href="#">更多</a></td>
+          </tr>
+          <tr>
+            <td><input class="info-check" type="checkbox" aria-label="选择 2026003" /></td>
+            <td>2026003</td>
+            <td>周昱辰</td>
+            <td>材料科学学院</td>
+            <td>材料工程</td>
+            <td>137****5219</td>
+            <td><span class="info-status active">已启用</span></td>
+            <td>2026-05-19 11:06</td>
+            <td><a class="info-link" href="#">查看</a><a class="info-link" href="#">编辑</a><a class="info-link" href="#">更多</a></td>
+          </tr>
+          <tr>
+            <td><input class="info-check" type="checkbox" aria-label="选择 2026004" /></td>
+            <td>2026004</td>
+            <td>许知远</td>
+            <td>信息学院</td>
+            <td>软件工程</td>
+            <td>136****2840</td>
+            <td><span class="info-status closed">已停用</span></td>
+            <td>2026-05-18 14:35</td>
+            <td><a class="info-link" href="#">查看</a><a class="info-link" href="#">编辑</a><a class="info-link" href="#">更多</a></td>
+          </tr>
+          <tr>
+            <td><input class="info-check" type="checkbox" aria-label="选择 2026005" /></td>
+            <td>2026005</td>
+            <td>王一禾</td>
+            <td>经济管理学院</td>
+            <td>会计学</td>
+            <td>135****7786</td>
+            <td><span class="info-status pending">待完善</span></td>
+            <td>2026-05-17 10:20</td>
+            <td><a class="info-link" href="#">查看</a><a class="info-link" href="#">编辑</a><a class="info-link" href="#">更多</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="info-pagination" aria-label="分页">
+      <span>共 128 条</span>
+      <button class="info-btn" type="button">上一页</button>
+      <span class="page-num active">1</span>
+      <span class="page-num">2</span>
+      <span class="page-num">3</span>
+      <button class="info-btn" type="button">下一页</button>
+      <span>10 条/页</span>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js"></script>
+<script>
+  WiseAppShellV2.init({
+    activeModule: 'doctor',
+    activeApp: 'selected',
+    systemName: '人力资源管理系统',
+    versionLabel: '框架2',
+    assetBase: '../assets',
+    frameworkAssetBase: './assets',
+    topTools: [
+      { key: 'search', label: '搜索', icon: './assets/top-search.svg' },
+      { key: 'skin', label: '换肤', icon: './assets/top-skin.svg' },
+      { key: 'language', label: '语言', icon: './assets/top-language.svg' }
+    ],
+    appGroups: [
+      { key: 'home', label: '首页' },
+      { key: 'task', label: '任务中心' },
+      { key: 'selected', label: '选择的应用', apps: [
+        { key: 'selected-main', label: '人事服务' },
+        { key: 'selected-archive', label: '档案管理' }
+      ] },
+      { key: 'daily', label: '日常管理', apps: [
+        { key: 'attendance', label: '考勤管理' },
+        { key: 'approval', label: '流程审批' }
+      ] },
+      { key: 'ai', label: 'AI观察室' },
+      { key: 'stats', label: '数据统计' }
+    ],
+    secondaryNav: {
+      title: '组件库',
+      items: [
+        { key: '工作台', label: '工作台', icon: 'home', children: [
+          { key: '框架2首页', label: '框架2首页' },
+          { key: '基本信息页面', label: '基本信息页面' },
+          { key: '基本信息表格', label: '基本信息表格' },
+          { key: '页面配置', label: '页面配置' }
+        ] },
+        { key: '业务管理', label: '业务管理', icon: 'flow', expanded: false, children: [
+          { key: '业务列表', label: '业务列表' },
+          { key: '数据维护', label: '数据维护' }
+        ] },
+        { key: '系统设置', label: '系统设置', icon: 'settings', expanded: false, children: [
+          { key: '角色权限', label: '角色权限' },
+          { key: '操作日志', label: '操作日志' }
+        ] }
+      ]
+    },
+    activeFeature: '基本信息表格',
+    tabs: ['框架2首页', '基本信息页面', '基本信息表格', '页面配置'],
+    onFeatureChange(feature) {
+      const routes = {
+        '框架2首页': './index.html',
+        '基本信息页面': './basic-info.html',
+        '基本信息表格': './basic-info-table.html',
+        '页面配置': './index.html'
+      };
+      if (routes[feature] && feature !== '基本信息表格') window.location.href = routes[feature];
+    }
+  });
+
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    document.querySelectorAll('.info-input').forEach((item) => { item.value = ''; });
+    document.querySelectorAll('.info-select').forEach((item) => { item.selectedIndex = 0; });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+/* AIInsight 共享样式（全站统一 AI 洞察条）*/
+.aii-card{
+  position: relative;
+  padding: 12px 16px;
+  border-radius: var(--ds-radius-lg, 12px);
+  background: color-mix(in srgb, var(--growth-accent) 5%, var(--ds-color-bg-container));
+  border-left: 3px solid var(--growth-accent) !important;
+  overflow: hidden;
+}.aii-card .aii-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aii-text {
+  flex: 1;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-secondary);
+  line-height: 1.6;
+}
+
+.aii-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.aii-conclusion,
+.aii-refs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aii-conclusion-label,
+.aii-refs-label {
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-text-heading);
+}
+
+.aii-conclusion p {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-secondary);
+  line-height: 1.6;
+  padding: 12px;
+  background: var(--ds-color-bg-page);
+  border-radius: var(--ds-radius-md);
+}
+
+.aii-refs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aii-ref-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--ds-color-border-tertiary);
+  border-radius: var(--ds-radius-md);
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-secondary);
+}
+
+.aii-note {
+  font-size: var(--ds-font-size-xs);
+  color: var(--ds-color-text-tertiary);
+  line-height: 1.6;
+}

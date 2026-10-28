@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>社会服务与影响力</title>
+  <link rel="stylesheet" href="../../../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../../../assets/base.css" />
+  <link rel="stylesheet" href="../../../../assets/theme.css" />
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+
+    .ah-page { height: 100%; min-height: 0; background: var(--ds-color-bg-container); }
+    .ah-content-card { width: 100%; height: calc(100vh - 92px); min-height: 0; overflow: hidden; background: var(--ds-color-bg-container); }
+
+    .ah-top-header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .ah-back-btn { display: inline-flex; align-items: center; gap: 4px; color: #000; font-size: 14px; cursor: pointer; background: none; border: none; padding: 0; }
+    .ah-back-btn:hover { color: var(--ds-color-primary); }
+    .ah-back-btn svg { width: 20px; height: 20px; }
+    .ah-header-divider { width: 1px; height: 20px; background: #eeeef0; }
+    .ah-header-title { margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+
+    .ah-detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 180px; height: calc(100vh - 144px); min-height: 0; overflow: hidden; }
+
+    .ah-main { display: flex; flex-direction: column; gap: 28px; overflow-y: auto; overscroll-behavior: contain; padding: 24px 24px 40px; scroll-behavior: smooth; }
+
+    .ah-anchor-panel { width: 100%; min-width: 150px; max-width: 220px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 0; background: var(--ds-color-bg-container); border-left: 1px solid var(--ds-color-border-secondary); }
+    .ah-anchor-item { display: block; padding: 8px 16px; color: #505266; font-size: 13px; text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: color 0.2s, background 0.2s; }
+    .ah-anchor-item:hover { color: var(--ds-color-primary); background: var(--ds-color-primary-light); }
+    .ah-anchor-item.is-active { color: var(--ds-color-primary); background: var(--ds-color-primary-light); border-left-color: var(--ds-color-primary); }
+
+    .ah-section { display: grid; gap: 10px; min-width: 0; scroll-margin-top: 16px; }
+    .ah-section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; }
+    .ah-section-title { margin: 0; padding-left: 8px; color: #000; font-size: 16px; font-weight: 600; line-height: 22px; border-left: 3px solid var(--ds-color-primary); }
+    .ah-source-note { display: inline-flex; align-items: center; color: var(--ds-color-text-secondary); font-size: 13px; white-space: nowrap; }
+    .ah-source-note strong { color: #000; font-weight: 600; }
+
+    /* 数据表格（6.0规范） */
+    .ah-table-wrap { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; color: #000; font-size: 14px; line-height: 22px; border: 1px solid #eeeef0; background: #fff; }
+    .data-table th, .data-table td { height: 40px; padding: 0 12px; background: #fff; border-bottom: 1px solid #eeeef0; white-space: nowrap; overflow: hidden; text-align: left; text-overflow: ellipsis; }
+    .data-table th { position: sticky; top: 0; z-index: 5; background: #fafafa; font-weight: 600; }
+    .data-table th + th, .data-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+    .data-table tbody tr:hover td { background: #f6f6f7; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table .action-cell { text-align: right; position: sticky; right: 0; background: #fff; }
+    .data-table .text-action { padding: 0; color: var(--ds-color-primary); background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .data-table .text-action:hover { color: var(--ds-color-primary-hover); }
+    .data-table .attachment-link { color: var(--ds-color-primary); text-decoration: none; }
+    .data-table .attachment-link:hover { text-decoration: underline; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { background: var(--ds-color-primary-hover); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 960px; max-width: 90vw; max-height: 90vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+    .modal__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eeeef0; flex-shrink: 0; }
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+    .modal__close { width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+    .modal__close:hover { background: #f5f5f5; }
+    .modal__body { flex: 1; overflow-y: auto; padding: 20px; }
+    .modal__footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; border-top: 1px solid #eeeef0; flex-shrink: 0; }
+
+    /* 只读表单 - 表格式（6.0规范） */
+    .info-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #eeeef0; background: #fff; table-layout: fixed; }
+    .info-table th, .info-table td { padding: 10px 12px; border-bottom: 1px solid #eeeef0; border-left: 1px solid #eeeef0; font-size: 13px; line-height: 20px; }
+    .info-table th:first-child, .info-table td:first-child { border-left: none; }
+    .info-table th { background: #fafafa; color: #505266; font-weight: 400; text-align: right; white-space: nowrap; width: 140px; }
+    .info-table td { color: #000; word-break: break-all; }
+    .info-table tbody tr:last-child th, .info-table tbody tr:last-child td { border-bottom: none; }
+
+    @media (max-width: 1100px) { .ah-detail-layout { grid-template-columns: minmax(0, 1fr) 170px; } }
+    @media (max-width: 860px) {
+      .ah-detail-layout { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      .ah-anchor-panel { order: -1; overflow: visible; padding: 12px; border-bottom: 1px solid var(--ds-color-border-secondary); border-left: 0; max-width: none; display: flex; flex-wrap: wrap; gap: 4px; }
+      .ah-anchor-item { display: inline-block; padding: 4px 8px; border-left: none; }
+      .ah-main { overflow: visible; }
+    }
+    @media (max-width: 640px) { .ah-main { padding: 16px; } .ah-readonly-form { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="ds-scope ah-page" id="app">
+    <div class="ah-content-card">
+      <div class="ah-top-header">
+        <button class="ah-back-btn" id="backBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+        <div class="ah-header-divider"></div>
+        <h1 class="ah-header-title">社会服务与影响力</h1>
+      </div>
+      <div class="ah-detail-layout">
+        <div class="ah-main" id="mainContent"></div>
+        <aside class="ah-anchor-panel" aria-label="社会服务与影响力锚点" id="anchorPanel"></aside>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title" id="detailModalTitle">详情</h3>
+        <button class="modal__close" id="detailModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body" id="detailModalBody"></div>
+      <div class="modal__footer">
+        <button class="btn primary" id="detailModalOk" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SECTIONS = [
+      {
+        key: 'tech-transfer', title: '科技成果转化', source: '科研系统',
+        columns: ['成果名称', '成果所属单位', '合同编号', '合同名称', '转化方式', '受让单位', '合同金额', '签约日期'],
+        rows: [
+          ['职业教育智能学习分析平台', '深圳职业技术大学', 'ZH20250031', '技术成果转化协议', '转让', '深圳智教科技有限公司', '80万元', '2025-05-18'],
+          ['课程画像数据采集装置', '深圳职业技术大学', 'ZH20240042', '专利实施许可合同', '许可', '广州数智教育研究院', '40万元', '2024-09-10'],
+        ],
+      },
+      {
+        key: 'school-enterprise', title: '校企合作（产教融合）', source: '教务系统',
+        columns: ['项目名称', '合作类型', '合作级别', '状态', '合作开始日期', '合作结束日期', '备注', '附件'],
+        rows: [
+          ['人工智能专业产教融合基地建设', '共建实训基地', '省级', '进行中', '2024-03-01', '2026-12-31', '共建课程与师资', '合作协议.pdf'],
+          ['华为ICT学院合作项目', '共建专业', '校级', '已完成', '2022-09-01', '2024-08-31', '联合培养学生120人', '验收报告.pdf'],
+        ],
+      },
+      {
+        key: 'academic-position', title: '重要学术任职情况', source: '教务系统',
+        columns: ['任职机构名称', '任职类型', '任职级别', '任职职务', '任职开始日期', '任职结束时间', '备注', '附件'],
+        rows: [
+          ['广东省高等职业教育教学指导委员会', '学术团体', '省级', '委员', '2023-06-01', '2026-05-31', '计算机类专业分委会', '聘书.pdf'],
+          ['中国职业技术教育学会', '学术团体', '国家级', '会员', '2022-01-01', '2025-12-31', '-', '会员证.pdf'],
+        ],
+      },
+      {
+        key: 'expert-pool', title: '入选专家库情况', source: '人事系统',
+        columns: ['专家库名称', '领域', '级别', '入选日期', '审批单位', '专家编号', '参与评审次数', '附件'],
+        rows: [
+          ['广东省科技计划项目评审专家库', '教育技术', '省级', '2023-03-15', '广东省科技厅', 'GD20231105', '12', '专家证.pdf'],
+          ['深圳市职业教育智库', '计算机教育', '市级', '2022-09-01', '深圳市教育局', 'SZ20220887', '3', '聘书.pdf'],
+        ],
+      },
+      {
+        key: 'training-lecture', title: '对外培训、讲座情况', source: '人事系统',
+        columns: ['活动名称', '类型', '主办单位', '地点', '对象人群', '时间', '时长', '参与人数', '备注', '附件'],
+        rows: [
+          ['职业教育数字化转型专题讲座', '学术讲座', '深圳市教育局', '深圳', '职业院校教师', '2025-04-20 14:00', '3小时', '120', '主题报告', '课件.pdf'],
+          ['人工智能赋能教学应用培训', '社会培训', '广东省教育厅', '广州', '企业培训师', '2024-11-12 09:00', '3小时', '60', '实操工作坊', '培训资料.pdf'],
+        ],
+      },
+      {
+        key: 'competition-judge', title: '担任大赛裁判情况', source: '人事系统',
+        columns: ['赛事名称', '赛事级别', '担任角色', '主办单位', '时间', '地点', '参赛规模', '备注', '附件'],
+        rows: [
+          ['全国职业院校技能大赛软件测试赛项', '国家级', '裁判', '教育部', '2025-08-20', '成都', '800人', '执裁裁判', '聘书.pdf'],
+          ['广东省大学生程序设计竞赛', '省级', '技术裁判', '广东省教育厅', '2024-11-10', '深圳', '500人', '技术裁判', '聘书.pdf'],
+        ],
+      },
+    ];
+
+    const mainContent = document.getElementById('mainContent');
+    const anchorPanel = document.getElementById('anchorPanel');
+    const backBtn = document.getElementById('backBtn');
+    const detailModal = document.getElementById('detailModal');
+    const detailModalTitle = document.getElementById('detailModalTitle');
+    const detailModalBody = document.getElementById('detailModalBody');
+    const detailModalClose = document.getElementById('detailModalClose');
+    const detailModalOk = document.getElementById('detailModalOk');
+
+
+    function renderSections() {
+      mainContent.innerHTML = SECTIONS.map(section =>
+        '<section class="ah-section" id="' + section.key + '" data-section-key="' + section.key + '">' +
+          '<div class="ah-section-head"><h3 class="ah-section-title">' + section.title + '</h3>' +
+          '<span class="ah-source-note">数据来源于<strong>' + section.source + '</strong></span></div>' +
+          '<div class="ah-table-wrap"><table class="data-table"><thead><tr>' +
+            section.columns.map(c => '<th>' + c + '</th>').join('') + '<th></th>' +
+          '</tr></thead><tbody>' +
+            section.rows.map((row, ri) =>
+              '<tr data-section="' + section.key + '" data-row="' + ri + '">' +
+                row.map((v, ci) => {
+                  const isAttachment = section.columns[ci] === '附件';
+                  return '<td>' + (isAttachment && v ? '<a class="attachment-link" href="#">' + v + '</a>' : (v || '-')) + '</td>';
+                }).join('') +
+                '<td class="action-cell"><button class="text-action" type="button">详情</button></td>' +
+              '</tr>'
+            ).join('') +
+          '</tbody></table></div>' +
+        '</section>'
+      ).join('');
+    }
+
+    anchorPanel.innerHTML = SECTIONS.map((s, i) =>
+      '<a class="ah-anchor-item' + (i === 0 ? ' is-active' : '') + '" href="#' + s.key + '">' + s.title + '</a>'
+    ).join('');
+
+    const anchorItems = Array.from(anchorPanel.querySelectorAll('.ah-anchor-item'));
+
+    anchorItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(item.getAttribute('href').slice(1));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    mainContent.addEventListener('click', (e) => {
+      const btn = e.target.closest('.text-action');
+      if (!btn) return;
+      const tr = btn.closest('tr');
+      const sectionKey = tr.dataset.section;
+      const rowIndex = parseInt(tr.dataset.row, 10);
+      const section = SECTIONS.find(s => s.key === sectionKey);
+      if (!section) return;
+      const row = section.rows[rowIndex];
+
+      detailModalTitle.textContent = section.title + '详情';
+      const fields = section.columns.map((title, ci) => ({ title, value: row[ci] || '-' }));
+      const rows = [];
+      let pair = [];
+      fields.forEach(f => {
+        pair.push(f);
+        if (pair.length === 2) { rows.push(pair); pair = []; }
+      });
+      if (pair.length) rows.push(pair);
+
+      detailModalBody.innerHTML = '<table class="info-table"><tbody>' +
+        rows.map(r =>
+          '<tr>' + r.map(f =>
+            '<th>' + f.title + '</th><td>' +
+            (f.title === '附件' && f.value !== '-' ? '<a class="attachment-link" href="#">' + f.value + '</a>' : f.value) +
+            '</td>'
+          ).join('') + '</tr>'
+        ).join('') +
+      '</tbody></table>';
+      detailModal.classList.add('is-open');
+    });
+
+    function updateFromScroll() {
+      const sections = Array.from(mainContent.querySelectorAll('[data-section-key]'));
+      if (!sections.length) return;
+      const mainBox = mainContent.getBoundingClientRect();
+      const scrollable = mainContent.scrollHeight > mainContent.clientHeight + 1;
+      const atBottom = scrollable && mainContent.scrollTop + mainContent.clientHeight >= mainContent.scrollHeight - 2;
+      let current = sections[0];
+      if (atBottom) {
+        current = sections[sections.length - 1];
+      } else {
+        sections.forEach(section => {
+          const sectionTop = section.getBoundingClientRect().top - mainBox.top;
+          if (sectionTop <= 64) current = section;
+        });
+      }
+      const nextKey = current && current.getAttribute('data-section-key');
+      if (nextKey) {
+        anchorItems.forEach(item => item.classList.toggle('is-active', item.getAttribute('href') === '#' + nextKey));
+      }
+    }
+
+    mainContent.addEventListener('scroll', updateFromScroll, { passive: true });
+
+    detailModalClose.addEventListener('click', () => detailModal.classList.remove('is-open'));
+    detailModalOk.addEventListener('click', () => detailModal.classList.remove('is-open'));
+    detailModal.addEventListener('click', (e) => { if (e.target === detailModal) detailModal.classList.remove('is-open'); });
+
+    renderSections();
+    updateFromScroll();
+  </script>
+</body>
+</html>

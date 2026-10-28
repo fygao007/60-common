@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://szpu.example/schemas/hr-entity-model-library-1.0.0.json",
+  "title": "标准实体字段模型库",
+  "type": "object",
+  "required": ["library", "version", "entities"],
+  "properties": {
+    "library": { "const": "szpu-hr-standard-entity-field-models" },
+    "version": { "type": "string" },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "domain", "description", "identifier", "version", "fields"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]+$" },
+          "label": { "type": "string", "minLength": 1 },
+          "domain": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "identifier": { "type": "string", "minLength": 1 },
+          "version": { "type": "string" },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "type", "required", "nullable", "classification", "mutable", "searchable"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z][A-Za-z0-9]+$" },
+                "label": { "type": "string", "minLength": 1 },
+                "type": { "enum": ["id", "string", "text", "integer", "number", "boolean", "date", "datetime", "concept", "reference", "object"] },
+                "required": { "type": "boolean" },
+                "nullable": { "type": "boolean" },
+                "classification": { "enum": ["public", "internal", "sensitive", "restricted"] },
+                "mutable": { "type": "boolean" },
+                "searchable": { "enum": ["none", "exact", "facet", "fulltext", "controlled", "exact-encrypted"] },
+                "target": { "type": "string" },
+                "vocabulary": { "type": "string" }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": true
+}

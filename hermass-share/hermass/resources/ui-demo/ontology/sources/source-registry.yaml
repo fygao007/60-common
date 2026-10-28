@@ -1,0 +1,122 @@
+ontology: szpu-hr
+version: 0.3.0
+sources:
+  - id: staff-basic-information-confirmed-fields-202606
+    title: 基本信息确认字段
+    type: workbook
+    file: 基本信息确认字段.xlsx
+    authority: business-confirmed-draft
+    usedFor:
+      - StaffBasicInformation 字段编码、名称、顺序、分组和表单控件
+    notes:
+      - 以“教职工基本信息表 及顺序”工作表 A:G 为正式字段来源。
+      - H:L 对照区存在 #NAME?，未作为 ontology 输入。
+  - id: rs-model-public-dictionaries-20260610
+    title: 人事模型公共校标字典 V1.0.0
+    type: sql-seed
+    file: V1.0.0_20260610_1501__rsmodelpubZxbz.sql
+    authority: system-export
+    usedFor:
+      - RS.ZXBZ 字典代码、名称、层级、启用状态和标准来源
+    notes:
+      - 原始 6592 行归一为 6583 个唯一代码值。
+      - CGLY 与 QDFS 存在同码异义，必须评审后才能作为无歧义字典使用。
+  - id: staff-basic-data-structure
+    path: /Volumes/WD/claude工程/项目/深职大/业务/基本信息/教职工基本信息数据结构整理.xlsx
+    domains: [人员, 任职, 合同, 资格, 经历, 考核]
+    authority: working-data-dictionary
+    notes: 包含学校字段、产品字段、字典值和部分派生规则；待学校提供的字典值不得视为最终标准。
+  - id: recruitment-field-requirements
+    path: /Volumes/WD/claude工程/项目/深职大/业务/招聘/字段级需求明细.xlsx
+    domains: [候选人, 应聘申请, 招聘岗位]
+    authority: product-requirement
+  - id: recruitment-prd
+    path: /Volumes/WD/claude工程/项目/深职大/业务/招聘/招聘内网管理端PRD.docx
+    domains: [招聘计划, 招聘岗位, 审核, 评审, 录用]
+    authority: product-requirement
+  - id: recruitment-requirement-spec
+    path: /Volumes/WD/claude工程/项目/深职大/业务/招聘/智慧人事一体化服务系统（2026）--招聘说明书V1.0.docx
+    domains: [招聘, 数据贯通]
+    authority: requirement-specification
+  - id: onboarding-requirement-spec
+    path: /Volumes/WD/claude工程/项目/深职大/业务/进校/智慧人事一体化服务系统（2026）--教职工进校报到需求说明书.docx
+    domains: [进校, 报到, 合同, 建档, 任职]
+    authority: requirement-specification
+  - id: role-application-matrix
+    path: /Volumes/WD/claude工程/项目/深职大/业务/首页/产品角色、分组、应用_整理版.xlsx
+    domains: [角色, 应用, 权限]
+    authority: working-matrix
+  - id: teaching-portfolio-data-demand
+    path: /Volumes/WD/claude工程/项目/深职大/业务/教师发展档案袋/数据需求20260716.xlsx
+    domains: [教师, 课程, 教务数据, 评教]
+    authority: integration-requirement
+  - id: rsjxdad-current-tables
+    title: 教学档案袋应用现有物理表结构
+    type: schema-export
+    file: legacy-schemas/rsjxdad-table-inventory.json
+    application: rsjxdad
+    capturedAt: 2026-08-18
+    authority: system-export
+    domains: [档案树配置, 考核批次, 教师填报, 课程, 教学实施, 专业归属, 字段权限]
+    usedFor:
+      - 19 张现网表、138 个业务字段的原样快照
+      - 现网码值与本体词表的差异对照
+      - mappings/rsjxdad-table-mappings.yaml 的映射输入
+    notes:
+      - 来自现网代码已落地的 PO 模型，不是规划表；列名为物理列名，不得直接作为字段定义引用。
+      - 快照含 18 张 T_RS_JXDAD_* 表与 1 张教学实施表 T_RS_JZG_JXSS。
+      - 映射结论、缺口和待确认项集中在 mappings/rsjxdad-table-mappings.yaml。
+  - id: procurement-requirement
+    path: /Volumes/WD/claude工程/项目/深职大/[SZDL2026000445-A]智慧人事一体化服务系统（2026）.docx
+    domains: [建设范围, 技术约束, 验收]
+    authority: contractual
+  - id: organization-structure-tables
+    title: 组织机构表结构快照
+    type: schema-export
+    file: legacy-schemas/organization-tables.json
+    application: hr-organization-management
+    capturedAt: 2026-09-04
+    authority: system-export
+    domains: [组织, 组织层级, 组织类别]
+    usedFor:
+      - 3 张现网表（T_RS_JGGL_XZJG、T_RS_ZXBZ_DW、T_RS_ZXBZ_DWLB）的原样快照
+      - 组织机构字段定义和数据类型参考
+      - 组织层级关系和编码规则分析
+      - mappings/organization-field-mappings.yaml 的映射输入
+    notes:
+      - 来自现网人事系统的组织机构管理模块
+      - T_RS_JGGL_XZJG（行政机构）和 T_RS_ZXBZ_DW（单位）记录数相同（355条），需明确两表区别
+      - T_RS_ZXBZ_DWLB 为组织类别字典表，定义党政教辅、教学单位等6大类
+      - 完整数据快照存储在 sources/organization-structure-data.json
+  - id: organization-structure-data
+    title: 组织机构数据快照
+    type: data-snapshot
+    file: organization-structure-data.json
+    application: hr-organization-management
+    capturedAt: 2026-09-04
+    authority: system-export
+    domains: [组织, 组织层级]
+    usedFor:
+      - 组织机构本体实例数据参考
+      - 组织层级关系验证
+      - 数据质量评估和完整性检查
+    notes:
+      - 包含 355 条组织记录和 6 个组织类别
+      - 组织层级最深4层，采用层级编码体系
+      - 部分记录缺少成立日期、撤销日期等生命周期信息
+
+authorityOrder:
+  - contractual
+  - approved-policy
+  - approved-data-standard
+  - requirement-specification
+  - business-confirmed-draft
+  - system-export
+  - integration-requirement
+  - product-requirement
+  - working-data-dictionary
+  - working-matrix
+
+excluded:
+  - pattern: '*账号*.txt'
+    reason: 可能包含凭据，不得读取或纳入知识库。

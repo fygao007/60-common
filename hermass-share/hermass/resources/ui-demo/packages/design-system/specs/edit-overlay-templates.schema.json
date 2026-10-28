@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WiseDU edit overlay templates",
+  "type": "object",
+  "required": ["id", "version", "sources", "shared", "templates", "interaction", "generation", "visualRegression"],
+  "properties": {
+    "id": { "const": "wisedu.edit-overlay-templates" },
+    "version": { "type": "string" },
+    "sources": {
+      "type": "object",
+      "required": ["singleModal", "doubleModal", "groupedDrawer"],
+      "additionalProperties": { "type": "string", "pattern": "^(mastergo://getd2c/|https://mastergo\\.com/goto/)" }
+    },
+    "shared": {
+      "type": "object",
+      "required": ["headerHeight", "footerHeight", "surfacePaddingX", "labelWidth", "labelControlGap", "fieldGap", "controlHeight"],
+      "additionalProperties": true
+    },
+    "templates": {
+      "type": "object",
+      "required": ["singleModal", "doubleModal", "groupedDrawer"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["component", "container", "width", "columns"]
+      }
+    },
+    "interaction": { "type": "object" },
+    "generation": { "type": "object" },
+    "visualRegression": { "type": "object" }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "application": {
+    "key": "teacher-growth-portfolio",
+    "label": "教师成长档案袋"
+  },
+  "role": {
+    "key": "teacher",
+    "label": "管理部门"
+  },
+  "menu": {
+    "key": "mp-plan-list",
+    "label": "发展方案台账",
+    "group": "发展规划与目标",
+    "defaultFeature": "mp-plan-list"
+  },
+  "pages": [
+    {
+      "key": "growth-management-mp-plan-list",
+      "label": "发展方案台账（发展规划与目标）",
+      "type": "react-business-page",
+      "html": "mp-plan-list.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "secondary": [
+          {
+            "key": "mp-plan-config",
+            "label": "方案配置与发布预览",
+            "html": "../mp-plan-config/mp-plan-config.html"
+          }
+        ],
+        "siblingMenus": []
+      }
+    }
+  ]
+}

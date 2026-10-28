@@ -1,0 +1,15 @@
+@import '../edit-overlay-spec.generated.css';
+
+.ds-single-edit-modal .ds-modal__body {
+  padding-top: var(--ds-edit-modal-single-padding-y);
+  padding-bottom: var(--ds-edit-modal-single-padding-y);
+}
+
+.ds-double-edit-modal .ds-modal__body {
+  padding-top: var(--ds-edit-modal-double-padding-y);
+  padding-bottom: var(--ds-edit-modal-double-padding-y);
+}
+
+.ds-grouped-edit-drawer__groups {
+  padding-bottom: var(--ds-edit-field-gap);
+}

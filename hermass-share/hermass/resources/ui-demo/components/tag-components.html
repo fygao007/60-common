@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>流程状态标签组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Tag/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+    }
+
+    button { font: inherit; }
+
+    .tag-page {
+      width: min(1180px, 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .tag-head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 24px;
+      line-height: 34px;
+    }
+
+    .tag-head p {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .tag-section {
+      margin-top: 16px;
+      padding: 20px;
+      background: var(--ds-color-bg-container);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+    }
+
+    .tag-section h2 {
+      margin: 0 0 6px;
+      color: var(--ds-color-black);
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .tag-section__desc {
+      margin: 0 0 16px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .rule-table {
+      width: 100%;
+      border-spacing: 0;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .rule-table th,
+    .rule-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+      font-size: 14px;
+      line-height: 22px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .rule-table th {
+      color: var(--ds-color-text-secondary);
+      background: #fafafa;
+      font-weight: 500;
+    }
+
+    .rule-table tr:last-child td { border-bottom: 0; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tag-choice {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .tag-choice:focus-visible,
+    .tag-choice.is-selected {
+      outline: 2px solid var(--ds-color-primary);
+      outline-offset: 3px;
+    }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .context-card {
+      min-height: 150px;
+      padding: 16px;
+      background: #fafafc;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+    }
+
+    .context-card h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .context-card p {
+      margin: 0 0 24px;
+      color: var(--ds-color-text-secondary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .todo-card {
+      display: flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+    }
+
+    .todo-card strong,
+    .table-status {
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .im-card {
+      position: relative;
+      min-height: 64px;
+      padding: 12px 68px 12px 12px;
+      background: #fff;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .im-card .ds-process-tag--stamp {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+
+    .interaction-rules {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .interaction-rule {
+      padding: 12px;
+      background: #fafafc;
+      border-radius: 6px;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .interaction-rule strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ds-color-text);
+    }
+
+    @media (max-width: 820px) {
+      .tag-page { padding: 12px; }
+      .context-grid,
+      .interaction-rules { grid-template-columns: 1fr; }
+      .rule-table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="tag-page ds-scope">
+    <header class="tag-head">
+      <h1>流程状态标签</h1>
+      <p>DSTag：统一流程前、流程中、流程后和失效状态，并适配待办卡片、已结表格和 IM 卡片。</p>
+    </header>
+
+    <section class="tag-section">
+      <h2>流程状态映射</h2>
+      <p class="tag-section__desc">点击任一示例，可在下方三个业务容器中同步查看该状态。</p>
+      <table class="rule-table">
+        <thead>
+          <tr><th>流程阶段</th><th>语义</th><th>状态示例</th></tr>
+        </thead>
+        <tbody id="statusRules"></tbody>
+      </table>
+    </section>
+
+    <section class="tag-section">
+      <h2>三种使用场景</h2>
+      <p class="tag-section__desc">当前状态：<strong id="currentStatus">进行中</strong></p>
+      <div class="context-grid">
+        <article class="context-card">
+          <h3>待办面板与待办列表卡片</h3>
+          <p>使用 24px 填充标签，标签色直接表达流程语义。</p>
+          <div class="todo-card">
+            <strong>教师资格认定申请</strong>
+            <span id="filledPreview"></span>
+          </div>
+        </article>
+        <article class="context-card">
+          <h3>已结事项表格</h3>
+          <p>使用 16px 状态图标加 14px 黑色文本，避免大面积色块干扰表格阅读。</p>
+          <div class="todo-card">
+            <span class="table-status">办理结果</span>
+            <span id="iconPreview"></span>
+          </div>
+        </article>
+        <article class="context-card">
+          <h3>IM 聊天卡片</h3>
+          <p>使用 48px 斜章，放置在消息卡片右侧，不覆盖正文。</p>
+          <div class="im-card">
+            您提交的流程状态已更新，请进入详情查看办理记录。
+            <span id="stampPreview"></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tag-section">
+      <h2>交互规则</h2>
+      <div class="interaction-rules">
+        <div class="interaction-rule"><strong>只读展示</strong>标签不承担跳转、删除或筛选操作，悬浮和按下不改变语义色。</div>
+        <div class="interaction-rule"><strong>状态驱动</strong>标签内容和颜色由业务状态同步更新，不允许用户直接修改标签状态。</div>
+        <div class="interaction-rule"><strong>操作分离</strong>需要查看详情或处理流程时，使用独立按钮、链接或整卡点击区域。</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const groups = [
+      { key: 'before', stage: '流程前', semantic: '默认', tone: 'neutral', statuses: ['未开始', '未提交', '草稿'] },
+      { key: 'active', stage: '流程中', semantic: '默认', tone: 'primary', statuses: ['进行中', '处理中', '待审核', '待审批', '待处理'] },
+      { key: 'positive', stage: '流程后', semantic: '正向', tone: 'success', statuses: ['已完成', '已转发', '已移交', '已委派', '已跳转', '补正发起', '补正回复', '已通过'] },
+      { key: 'negative', stage: '流程后', semantic: '负向', tone: 'danger', statuses: ['已退回', '已驳回', '已终止', '强行终止', '待重新提交', '不通过'] },
+      { key: 'cancelled', stage: '流程后', semantic: '负向取消', tone: 'neutral', statuses: ['已撤回', '已取消', '已撤销'] },
+      { key: 'invalid', stage: '失效', semantic: '默认', tone: 'neutral', statuses: ['已作废', '已失效', '已过期', '报名已结束'] }
+    ];
+
+    const toneByStatus = new Map(groups.flatMap((group) => group.statuses.map((status) => [status, group.tone])));
+    const statusRules = document.getElementById('statusRules');
+    const currentStatus = document.getElementById('currentStatus');
+    const filledPreview = document.getElementById('filledPreview');
+    const iconPreview = document.getElementById('iconPreview');
+    const stampPreview = document.getElementById('stampPreview');
+    let selectedStatus = '进行中';
+
+    function tagMarkup(status, tone, variant) {
+      if (variant === 'stamp') {
+        return `<span class="ds-tag ds-process-tag ds-process-tag--stamp ds-tag--${tone}">
+          <span class="ds-process-tag__stamp-shape" aria-hidden="true"></span>
+          <span class="ds-process-tag__stamp-text">${status}</span>
+        </span>`;
+      }
+      return `<span class="ds-tag ds-process-tag ds-process-tag--${variant} ds-tag--${tone}">
+        ${variant === 'icon' ? '<span class="ds-process-tag__icon" aria-hidden="true"></span>' : ''}
+        <span class="ds-process-tag__label">${status}</span>
+      </span>`;
+    }
+
+    function renderRules() {
+      statusRules.innerHTML = groups.map((group) => `
+        <tr>
+          <td>${group.stage}</td>
+          <td>${group.semantic}</td>
+          <td><div class="tag-list">${group.statuses.map((status) => `
+            <button class="tag-choice${status === selectedStatus ? ' is-selected' : ''}" type="button" data-status="${status}" aria-pressed="${status === selectedStatus}">
+              ${tagMarkup(status, group.tone, 'filled')}
+            </button>`).join('')}</div></td>
+        </tr>`).join('');
+    }
+
+    function updateChoiceStates() {
+      statusRules.querySelectorAll('[data-status]').forEach((choice) => {
+        const selected = choice.dataset.status === selectedStatus;
+        choice.classList.toggle('is-selected', selected);
+        choice.setAttribute('aria-pressed', String(selected));
+      });
+    }
+
+    function renderPreview() {
+      const tone = toneByStatus.get(selectedStatus) || 'neutral';
+      currentStatus.textContent = selectedStatus;
+      filledPreview.innerHTML = tagMarkup(selectedStatus, tone, 'filled');
+      iconPreview.innerHTML = tagMarkup(selectedStatus, tone, 'icon');
+      stampPreview.innerHTML = tagMarkup(selectedStatus, tone, 'stamp');
+      updateChoiceStates();
+    }
+
+    statusRules.addEventListener('click', (event) => {
+      const choice = event.target.closest('[data-status]');
+      if (!choice) return;
+      selectedStatus = choice.dataset.status;
+      renderPreview();
+    });
+
+    renderRules();
+    renderPreview();
+  </script>
+</body>
+</html>

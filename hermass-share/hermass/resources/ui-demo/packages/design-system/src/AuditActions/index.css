@@ -1,0 +1,7 @@
+@import '../tokens.css';
+
+.ds-audit-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}

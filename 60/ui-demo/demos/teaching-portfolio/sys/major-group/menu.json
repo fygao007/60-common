@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "sys",
+    "label": "系统管理员"
+  },
+  "menu": {
+    "key": "major-group",
+    "label": "专业权限管理",
+    "group": "专业权限管理",
+    "defaultFeature": "major-group"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-sys-major-group",
+      "label": "专业权限管理",
+      "type": "react-business-page",
+      "html": "major-group.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../form-management/form-management.html",
+          "../audit-config/audit-config.html",
+          "../batch-publish/batch-publish.html",
+          "../chart-designer/chart-designer.html"
+        ]
+      }
+    }
+  ]
+}

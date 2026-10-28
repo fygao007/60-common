@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>单选组件状态</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/Radio/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .radio-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: var(--ds-color-white); }
+    .radio-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .radio-content { display: grid; gap: 24px; width: min(1120px, 100%); }
+    .radio-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .radio-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .radio-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .radio-title span { position: relative; z-index: 1; }
+    .radio-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .radio-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .radio-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .radio-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .radio-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .radio-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .radio-card { min-width: 0; min-height: 132px; padding: 16px; border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .radio-card h3 { margin: 0 0 12px; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .radio-card p { margin: 10px 0 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .radio-row { display: grid; grid-template-columns: 108px minmax(0, 520px); gap: 16px; align-items: start; padding: 16px; border-top: 1px solid var(--ds-color-border-secondary); }
+    .radio-label { height: 32px; display: flex; align-items: center; justify-content: flex-end; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 20px; text-align: right; }
+    .radio-panel { min-width: 0; }
+    .radio-message { margin-top: 4px; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .radio-message.is-error { color: var(--ds-color-danger); }
+    @media (max-width: 1100px) {
+      .radio-grid { grid-template-columns: 1fr; }
+      .radio-row { grid-template-columns: 1fr; }
+      .radio-label { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="radio-page">
+    <section class="radio-stage">
+      <div class="radio-content">
+        <header class="radio-head">
+          <div>
+            <h1 class="radio-title"><span>单选组件</span></h1>
+            <p class="radio-desc">基于 MasterGo 单选设计稿优化 DSRadioGroup，覆盖默认、选中、聚焦、禁用、错误、横向、纵向和表单行场景。</p>
+          </div>
+        </header>
+
+        <section class="radio-section">
+          <div class="radio-section-head">
+            <h2 class="radio-section-title">基础状态</h2>
+            <span class="radio-section-meta">Default / Checked / Focus / Disabled / Error</span>
+          </div>
+          <div class="radio-grid">
+            <article class="radio-card">
+              <h3>未选中</h3>
+              <div class="ds-radio-group js-radio-group" role="radiogroup">
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-empty" value="a" /><span class="ds-radio__mark"></span><span class="ds-radio__label">单选项</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-empty" value="b" /><span class="ds-radio__mark"></span><span class="ds-radio__label">单选项</span></label>
+              </div>
+              <p>默认使用 14px 圆形外框，文字保持正文色。</p>
+            </article>
+            <article class="radio-card">
+              <h3>已选中</h3>
+              <div class="ds-radio-group js-radio-group" role="radiogroup">
+                <label class="ds-radio is-checked"><input class="ds-radio__input" type="radio" name="basic-checked" value="a" checked /><span class="ds-radio__mark"></span><span class="ds-radio__label">公开</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-checked" value="b" /><span class="ds-radio__mark"></span><span class="ds-radio__label">内部</span></label>
+              </div>
+              <p>选中态使用主色填充，内部白色圆点。</p>
+            </article>
+            <article class="radio-card">
+              <h3>聚焦</h3>
+              <div class="ds-radio-group js-radio-group" role="radiogroup">
+                <label class="ds-radio is-checked"><input class="ds-radio__input" type="radio" name="basic-focus" value="a" checked autofocus /><span class="ds-radio__mark"></span><span class="ds-radio__label">人才项目</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-focus" value="b" /><span class="ds-radio__mark"></span><span class="ds-radio__label">岗位聘任</span></label>
+              </div>
+              <p>键盘聚焦时显示浅主色焦点环。</p>
+            </article>
+            <article class="radio-card">
+              <h3>禁用</h3>
+              <div class="ds-radio-group js-radio-group is-disabled" role="radiogroup">
+                <label class="ds-radio is-disabled"><input class="ds-radio__input" type="radio" name="basic-disabled" value="a" disabled /><span class="ds-radio__mark"></span><span class="ds-radio__label">禁用项</span></label>
+                <label class="ds-radio is-disabled is-checked"><input class="ds-radio__input" type="radio" name="basic-disabled" value="b" checked disabled /><span class="ds-radio__mark"></span><span class="ds-radio__label">禁用选中</span></label>
+              </div>
+              <p>禁用态不可点击，文字和标记整体置灰。</p>
+            </article>
+            <article class="radio-card">
+              <h3>错误</h3>
+              <div class="ds-radio-group js-radio-group is-error" role="radiogroup">
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-error" value="a" /><span class="ds-radio__mark"></span><span class="ds-radio__label">需要确认</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-error" value="b" /><span class="ds-radio__mark"></span><span class="ds-radio__label">暂不确认</span></label>
+              </div>
+              <p class="radio-message is-error">请选择一个单选项。</p>
+            </article>
+            <article class="radio-card">
+              <h3>纵向排列</h3>
+              <div class="ds-radio-group ds-radio-group--vertical js-radio-group" role="radiogroup">
+                <label class="ds-radio is-checked"><input class="ds-radio__input" type="radio" name="basic-vertical" value="a" checked /><span class="ds-radio__mark"></span><span class="ds-radio__label">按学院展示</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-vertical" value="b" /><span class="ds-radio__mark"></span><span class="ds-radio__label">按专业展示</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="basic-vertical" value="c" /><span class="ds-radio__mark"></span><span class="ds-radio__label">按导师展示</span></label>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="radio-section">
+          <div class="radio-section-head">
+            <h2 class="radio-section-title">表单行示例</h2>
+            <span class="radio-section-meta">Form Field</span>
+          </div>
+          <div class="radio-row">
+            <span class="radio-label">标题名称</span>
+            <div class="radio-panel">
+              <div class="ds-radio-group js-radio-group" role="radiogroup">
+                <label class="ds-radio is-checked"><input class="ds-radio__input" type="radio" name="form-radio" value="公开" checked /><span class="ds-radio__mark"></span><span class="ds-radio__label">公开</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="form-radio" value="内部" /><span class="ds-radio__mark"></span><span class="ds-radio__label">内部</span></label>
+                <label class="ds-radio"><input class="ds-radio__input" type="radio" name="form-radio" value="仅管理员" /><span class="ds-radio__mark"></span><span class="ds-radio__label">仅管理员</span></label>
+              </div>
+              <p class="radio-message">点击任意选项可切换选中态，支持键盘方向键。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  function setRadioChecked(group, target) {
+    if (target.closest('.is-disabled') || target.querySelector('.ds-radio__input')?.disabled) return;
+    group.querySelectorAll('.ds-radio').forEach((item) => {
+      const input = item.querySelector('.ds-radio__input');
+      const checked = item === target;
+      item.classList.toggle('is-checked', checked);
+      input.checked = checked;
+    });
+  }
+
+  document.querySelectorAll('.js-radio-group').forEach((group) => {
+    const radios = Array.from(group.querySelectorAll('.ds-radio'));
+    radios.forEach((radio, index) => {
+      const input = radio.querySelector('.ds-radio__input');
+      radio.addEventListener('click', () => setRadioChecked(group, radio));
+      input.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(event.key)) return;
+        event.preventDefault();
+        const step = ['ArrowRight', 'ArrowDown'].includes(event.key) ? 1 : -1;
+        const enabled = radios.filter((item) => !item.classList.contains('is-disabled') && !item.querySelector('.ds-radio__input').disabled);
+        const currentIndex = enabled.indexOf(radio);
+        const nextRadio = enabled[(currentIndex + step + enabled.length) % enabled.length];
+        nextRadio.querySelector('.ds-radio__input').focus();
+        setRadioChecked(group, nextRadio);
+      });
+      if (!input.checked && index > 0) input.tabIndex = -1;
+    });
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

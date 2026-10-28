@@ -1,0 +1,537 @@
+{
+  "meta": {
+    "dataSource": "深职大基础数据和扩展信息数据/教职工基本信息 (17).xlsx",
+    "capturedAt": "2026-09-04",
+    "totalRecords": 4512,
+    "activeRecords": 3262,
+    "note": "统计数据为脱敏聚合结果，不含任何个人身份信息"
+  },
+  "headcount": {
+    "total": 4512,
+    "active": 3262,
+    "byStatus": [
+      {
+        "value": "在职",
+        "count": 3262,
+        "ratio": 72.3
+      },
+      {
+        "value": "离职",
+        "count": 632,
+        "ratio": 14.01
+      },
+      {
+        "value": "退休",
+        "count": 590,
+        "ratio": 13.08
+      },
+      {
+        "value": "其他",
+        "count": 19,
+        "ratio": 0.42
+      },
+      {
+        "value": "死亡",
+        "count": 9,
+        "ratio": 0.2
+      }
+    ]
+  },
+  "activeProfile": {
+    "byStaffCategory": [
+      {
+        "value": "专任教师",
+        "count": 1522,
+        "ratio": 46.66
+      },
+      {
+        "value": "行政人员",
+        "count": 570,
+        "ratio": 17.47
+      },
+      {
+        "value": "教辅人员",
+        "count": 407,
+        "ratio": 12.48
+      },
+      {
+        "value": "工勤人员",
+        "count": 242,
+        "ratio": 7.42
+      },
+      {
+        "value": "辅导员",
+        "count": 152,
+        "ratio": 4.66
+      },
+      {
+        "value": "科研助理",
+        "count": 125,
+        "ratio": 3.83
+      },
+      {
+        "value": "专职研究人员",
+        "count": 118,
+        "ratio": 3.62
+      },
+      {
+        "value": "(未填)",
+        "count": 93,
+        "ratio": 2.85
+      },
+      {
+        "value": "思政人员",
+        "count": 28,
+        "ratio": 0.86
+      },
+      {
+        "value": "双肩挑",
+        "count": 5,
+        "ratio": 0.15
+      }
+    ],
+    "byIdentity": [
+      {
+        "value": "职员",
+        "count": 1222,
+        "ratio": 37.46
+      },
+      {
+        "value": "预聘长聘",
+        "count": 746,
+        "ratio": 22.87
+      },
+      {
+        "value": "聘任制",
+        "count": 427,
+        "ratio": 13.09
+      },
+      {
+        "value": "校内聘用",
+        "count": 321,
+        "ratio": 9.84
+      },
+      {
+        "value": "劳务派遣",
+        "count": 250,
+        "ratio": 7.66
+      },
+      {
+        "value": "博士后（全职）",
+        "count": 86,
+        "ratio": 2.64
+      },
+      {
+        "value": "高层次人才",
+        "count": 83,
+        "ratio": 2.54
+      },
+      {
+        "value": "雇员",
+        "count": 82,
+        "ratio": 2.51
+      },
+      {
+        "value": "返聘",
+        "count": 26,
+        "ratio": 0.8
+      },
+      {
+        "value": "外籍教师",
+        "count": 18,
+        "ratio": 0.55
+      },
+      {
+        "value": "博士后（兼职）",
+        "count": 1,
+        "ratio": 0.03
+      }
+    ],
+    "byGender": [
+      {
+        "value": "男",
+        "count": 1716,
+        "ratio": 52.61
+      },
+      {
+        "value": "女",
+        "count": 1533,
+        "ratio": 47.0
+      },
+      {
+        "value": "(未填)",
+        "count": 13,
+        "ratio": 0.4
+      }
+    ],
+    "byTitleLevel": [
+      {
+        "value": "中级",
+        "count": 1045,
+        "ratio": 32.04
+      },
+      {
+        "value": "未评定",
+        "count": 981,
+        "ratio": 30.07
+      },
+      {
+        "value": "副高级",
+        "count": 707,
+        "ratio": 21.67
+      },
+      {
+        "value": "(未填)",
+        "count": 233,
+        "ratio": 7.14
+      },
+      {
+        "value": "正高级",
+        "count": 196,
+        "ratio": 6.01
+      },
+      {
+        "value": "初级",
+        "count": 100,
+        "ratio": 3.07
+      }
+    ],
+    "byEducation": [
+      {
+        "value": "硕士研究生",
+        "count": 1274,
+        "ratio": 39.06
+      },
+      {
+        "value": "博士研究生",
+        "count": 1102,
+        "ratio": 33.78
+      },
+      {
+        "value": "本科",
+        "count": 517,
+        "ratio": 15.85
+      },
+      {
+        "value": "大专",
+        "count": 130,
+        "ratio": 3.99
+      },
+      {
+        "value": "(未填)",
+        "count": 93,
+        "ratio": 2.85
+      },
+      {
+        "value": "高中",
+        "count": 63,
+        "ratio": 1.93
+      },
+      {
+        "value": "初中",
+        "count": 37,
+        "ratio": 1.13
+      },
+      {
+        "value": "中专",
+        "count": 37,
+        "ratio": 1.13
+      },
+      {
+        "value": "其他",
+        "count": 9,
+        "ratio": 0.28
+      }
+    ],
+    "byDegree": [
+      {
+        "value": "硕士",
+        "count": 1396,
+        "ratio": 42.8
+      },
+      {
+        "value": "博士",
+        "count": 1102,
+        "ratio": 33.78
+      },
+      {
+        "value": "无",
+        "count": 428,
+        "ratio": 13.12
+      },
+      {
+        "value": "学士",
+        "count": 234,
+        "ratio": 7.17
+      },
+      {
+        "value": "(未填)",
+        "count": 102,
+        "ratio": 3.13
+      }
+    ],
+    "byMainPost": [
+      {
+        "value": "专业技术岗",
+        "count": 2237,
+        "ratio": 68.58
+      },
+      {
+        "value": "(未填)",
+        "count": 292,
+        "ratio": 8.95
+      },
+      {
+        "value": "管理岗",
+        "count": 194,
+        "ratio": 5.95
+      },
+      {
+        "value": "专业辅助岗",
+        "count": 194,
+        "ratio": 5.95
+      },
+      {
+        "value": "管理辅助岗",
+        "count": 107,
+        "ratio": 3.28
+      },
+      {
+        "value": "技术技能岗",
+        "count": 86,
+        "ratio": 2.64
+      },
+      {
+        "value": "特聘岗位",
+        "count": 82,
+        "ratio": 2.51
+      },
+      {
+        "value": "技能服务岗",
+        "count": 50,
+        "ratio": 1.53
+      },
+      {
+        "value": "综合服务岗",
+        "count": 13,
+        "ratio": 0.4
+      },
+      {
+        "value": "工勤技能岗",
+        "count": 7,
+        "ratio": 0.21
+      }
+    ],
+    "byDepartment": [
+      {
+        "value": "校卫队",
+        "count": 219,
+        "ratio": 6.71
+      },
+      {
+        "value": "人工智能学院",
+        "count": 209,
+        "ratio": 6.41
+      },
+      {
+        "value": "商务外语学院",
+        "count": 183,
+        "ratio": 5.61
+      },
+      {
+        "value": "数字传媒学院",
+        "count": 163,
+        "ratio": 5.0
+      },
+      {
+        "value": "机电工程学院",
+        "count": 139,
+        "ratio": 4.26
+      },
+      {
+        "value": "医学技术与护理学院",
+        "count": 137,
+        "ratio": 4.2
+      },
+      {
+        "value": "管理学院",
+        "count": 131,
+        "ratio": 4.02
+      },
+      {
+        "value": "汽车与交通学院",
+        "count": 121,
+        "ratio": 3.71
+      },
+      {
+        "value": "创新创意设计学院",
+        "count": 120,
+        "ratio": 3.68
+      },
+      {
+        "value": "电子与通信工程学院",
+        "count": 117,
+        "ratio": 3.59
+      },
+      {
+        "value": "建筑工程学院",
+        "count": 102,
+        "ratio": 3.13
+      },
+      {
+        "value": "材料与环境工程学院",
+        "count": 98,
+        "ratio": 3.0
+      },
+      {
+        "value": "食品药品学院",
+        "count": 96,
+        "ratio": 2.94
+      },
+      {
+        "value": "经济学院",
+        "count": 94,
+        "ratio": 2.88
+      },
+      {
+        "value": "马克思主义学院",
+        "count": 92,
+        "ratio": 2.82
+      },
+      {
+        "value": "本科教育学院",
+        "count": 86,
+        "ratio": 2.64
+      },
+      {
+        "value": "后勤基建处",
+        "count": 78,
+        "ratio": 2.39
+      },
+      {
+        "value": "集成电路学院",
+        "count": 77,
+        "ratio": 2.36
+      },
+      {
+        "value": "工业训练中心（创新创业学院）",
+        "count": 70,
+        "ratio": 2.15
+      },
+      {
+        "value": "图书馆",
+        "count": 69,
+        "ratio": 2.12
+      },
+      {
+        "value": "职业技术教育学院",
+        "count": 64,
+        "ratio": 1.96
+      },
+      {
+        "value": "体育部",
+        "count": 63,
+        "ratio": 1.93
+      },
+      {
+        "value": "教育技术与信息中心",
+        "count": 50,
+        "ratio": 1.53
+      },
+      {
+        "value": "集成电路关键材料研究院",
+        "count": 44,
+        "ratio": 1.35
+      },
+      {
+        "value": "碳中和技术研究院",
+        "count": 38,
+        "ratio": 1.16
+      },
+      {
+        "value": "教务处",
+        "count": 37,
+        "ratio": 1.13
+      },
+      {
+        "value": "计划财务处",
+        "count": 37,
+        "ratio": 1.13
+      },
+      {
+        "value": "未来技术学院",
+        "count": 37,
+        "ratio": 1.13
+      },
+      {
+        "value": "继续教育与培训学院（对口支援办公室）",
+        "count": 34,
+        "ratio": 1.04
+      },
+      {
+        "value": "霍夫曼先进材料研究院",
+        "count": 32,
+        "ratio": 0.98
+      },
+      {
+        "value": "质量保障中心",
+        "count": 30,
+        "ratio": 0.92
+      },
+      {
+        "value": "技术与职业教育研究所（新时代中国职业教育研究院）",
+        "count": 26,
+        "ratio": 0.8
+      },
+      {
+        "value": "人事处（党委教师工作部）",
+        "count": 23,
+        "ratio": 0.71
+      },
+      {
+        "value": "国际交流与合作处",
+        "count": 22,
+        "ratio": 0.67
+      },
+      {
+        "value": "智能科学与工程研究院",
+        "count": 21,
+        "ratio": 0.64
+      },
+      {
+        "value": "党政办公室",
+        "count": 20,
+        "ratio": 0.61
+      },
+      {
+        "value": "学生处（党委学生工作部、武装部）",
+        "count": 20,
+        "ratio": 0.61
+      },
+      {
+        "value": "智能制造技术研究院超声技术研究所",
+        "count": 20,
+        "ratio": 0.61
+      },
+      {
+        "value": "智能制造技术研究院",
+        "count": 18,
+        "ratio": 0.55
+      },
+      {
+        "value": "物联网研究院",
+        "count": 17,
+        "ratio": 0.52
+      }
+    ]
+  },
+  "keyIndicators": {
+    "fullTimeTeacher": 1522,
+    "counselor": 151,
+    "classAdvisor": 8,
+    "dualQualified": 1095,
+    "phd": 1102,
+    "master": 1396,
+    "seniorTitle": 903
+  }
+}

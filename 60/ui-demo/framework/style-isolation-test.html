@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 样式隔离回归</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <style>
+    body {
+      margin: 0;
+    }
+
+    /* 模拟引用方常见的全局样式污染。框架内部必须完全不受影响。 */
+    body button {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      width: 100%;
+      min-height: 96px;
+      padding: 28px;
+      color: #7f1d1d;
+      background: #fee2e2;
+      border: 8px solid #ef4444;
+      font-size: 32px;
+      letter-spacing: 16px;
+    }
+
+    body span {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      font-size: 30px;
+      line-height: 48px;
+    }
+
+    body nav {
+      display: block;
+      width: 100%;
+      padding: 40px;
+      background: #fef3c7;
+    }
+
+    .isolation-test-page {
+      height: 100%;
+      padding: 24px;
+      overflow: auto;
+      color: #1f2937;
+      background: #fff;
+      border-radius: 4px;
+    }
+
+    .isolation-test-page h1 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      line-height: 30px;
+    }
+
+    .isolation-test-page p {
+      margin: 0;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="isolation-test-page">
+    <h1>宿主样式污染回归页</h1>
+    <p>顶部导航、应用菜单、角色菜单、侧栏和页签必须保持框架2标准样式。</p>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="./framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="./framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    activeFeature: 'training-manage',
+    hideSidebar: true,
+    tabs: [
+      { key: 'training-manage', label: '进修培训管理', closable: true }
+    ]
+  });
+</script>
+</body>
+</html>

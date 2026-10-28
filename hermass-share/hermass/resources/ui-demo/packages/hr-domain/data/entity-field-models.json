@@ -1,0 +1,2238 @@
+{
+  "$schema": "./entity-model.schema.json",
+  "library": "szpu-hr-standard-entity-field-models",
+  "version": "1.0.0",
+  "fieldTypes": [
+    "id",
+    "string",
+    "text",
+    "integer",
+    "number",
+    "boolean",
+    "date",
+    "datetime",
+    "concept",
+    "reference",
+    "object"
+  ],
+  "classifications": [
+    "public",
+    "internal",
+    "sensitive",
+    "restricted"
+  ],
+  "entities": [
+    {
+      "id": "Person",
+      "label": "人员",
+      "domain": "workforce",
+      "description": "学校人员主数据主体，不等同于账号、候选人或任职记录。",
+      "identifier": "personId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "personId",
+          "label": "人员主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "employeeNumber",
+          "label": "工号",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "exact",
+          "unique": true,
+          "description": "业务编号，不得作为人员主键或被不同人员复用。"
+        },
+        {
+          "id": "name",
+          "label": "姓名",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "controlled"
+        },
+        {
+          "id": "birthDate",
+          "label": "出生日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "personnelCategory",
+          "label": "人员类别",
+          "type": "concept",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "PersonnelCategory"
+        },
+        {
+          "id": "employmentStatus",
+          "label": "人员状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "EmploymentStatus"
+        },
+        {
+          "id": "originatedFromCandidateId",
+          "label": "来源候选人",
+          "type": "reference",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Candidate"
+        },
+        {
+          "id": "createdAt",
+          "label": "创建时间",
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "updatedAt",
+          "label": "更新时间",
+          "type": "datetime",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "PersonIdentity",
+      "label": "人员身份凭证",
+      "domain": "workforce",
+      "description": "用于受控身份核验和防重匹配的身份凭证。",
+      "identifier": "identityId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "identityId",
+          "label": "身份凭证主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "人员主键",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "restricted",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "documentType",
+          "label": "证件类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "restricted",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "DocumentType"
+        },
+        {
+          "id": "documentNumber",
+          "label": "证件号码",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "restricted",
+          "mutable": true,
+          "searchable": "exact-encrypted"
+        },
+        {
+          "id": "documentFingerprint",
+          "label": "证件指纹",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "restricted",
+          "mutable": true,
+          "searchable": "exact",
+          "display": "never"
+        },
+        {
+          "id": "validFrom",
+          "label": "有效期始",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "restricted",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "有效期止",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "restricted",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "Candidate",
+      "label": "候选人",
+      "domain": "recruitment",
+      "description": "参与招聘、尚未成为正式人员主数据主体的自然人。",
+      "identifier": "candidateId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "candidateId",
+          "label": "候选人主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "registrationNumber",
+          "label": "报名号",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "name",
+          "label": "姓名",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "controlled"
+        },
+        {
+          "id": "candidateStatus",
+          "label": "候选状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "CandidateStatus"
+        },
+        {
+          "id": "personId",
+          "label": "转化后人员主键",
+          "type": "reference",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "createdAt",
+          "label": "创建时间",
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "Organization",
+      "label": "组织",
+      "domain": "organization",
+      "description": "带层级和生效期的学校组织主数据。",
+      "identifier": "organizationId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "organizationId",
+          "label": "组织主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "organizationCode",
+          "label": "组织编码",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "name",
+          "label": "组织名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "organizationType",
+          "label": "组织类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "OrganizationType"
+        },
+        {
+          "id": "parentOrganizationId",
+          "label": "上级组织",
+          "type": "reference",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "validFrom",
+          "label": "生效日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "失效日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "Position",
+      "label": "岗位",
+      "domain": "position",
+      "description": "长期岗位定义，不等同于招聘岗位或人员任职。",
+      "identifier": "positionId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "positionId",
+          "label": "岗位主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "organizationId",
+          "label": "定义组织",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "positionCode",
+          "label": "岗位编码",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "name",
+          "label": "岗位名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "positionCategory",
+          "label": "岗位类别",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "PositionCategory"
+        },
+        {
+          "id": "positionLevel",
+          "label": "岗位等级",
+          "type": "concept",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "PositionLevel"
+        },
+        {
+          "id": "responsibilities",
+          "label": "岗位职责",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "validFrom",
+          "label": "生效日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "失效日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "PositionSlot",
+      "label": "岗位编制",
+      "domain": "position",
+      "description": "组织下可被任职关系占用的岗位资源。",
+      "identifier": "slotId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "slotId",
+          "label": "岗位编制主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "positionId",
+          "label": "岗位主键",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Position"
+        },
+        {
+          "id": "organizationId",
+          "label": "所属组织",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "headcount",
+          "label": "核定人数",
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none",
+          "minimum": 0
+        },
+        {
+          "id": "slotStatus",
+          "label": "编制状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "SlotStatus"
+        },
+        {
+          "id": "validFrom",
+          "label": "生效日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "失效日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "EmploymentAssignment",
+      "label": "任职关系",
+      "domain": "workforce",
+      "description": "人员在一段时间内于组织和岗位上的任用事实。",
+      "identifier": "assignmentId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "assignmentId",
+          "label": "任职关系主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "人员主键",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "organizationId",
+          "label": "任职组织",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "positionId",
+          "label": "任职岗位",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Position"
+        },
+        {
+          "id": "slotId",
+          "label": "占用岗位编制",
+          "type": "reference",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "PositionSlot"
+        },
+        {
+          "id": "assignmentType",
+          "label": "任职类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "AssignmentType"
+        },
+        {
+          "id": "isPrimary",
+          "label": "是否主要任职",
+          "type": "boolean",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validFrom",
+          "label": "任职开始日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "任职结束日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "assignmentStatus",
+          "label": "任职状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "AssignmentStatus"
+        }
+      ]
+    },
+    {
+      "id": "RecruitmentPlan",
+      "label": "招聘计划",
+      "domain": "recruitment",
+      "description": "按批次和组织形成的招聘需求集合。",
+      "identifier": "recruitmentPlanId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "recruitmentPlanId",
+          "label": "招聘计划主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "planNumber",
+          "label": "计划编号",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "organizationId",
+          "label": "申报组织",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "recruitmentType",
+          "label": "招聘种类",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "RecruitmentType"
+        },
+        {
+          "id": "planStatus",
+          "label": "计划状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "RecruitmentPlanStatus"
+        },
+        {
+          "id": "validFrom",
+          "label": "计划生效日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "计划失效日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "RecruitmentPosition",
+      "label": "招聘岗位",
+      "domain": "recruitment",
+      "description": "招聘计划中面向特定组织发布的岗位需求。",
+      "identifier": "recruitmentPositionId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "recruitmentPositionId",
+          "label": "招聘岗位主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "recruitmentPlanId",
+          "label": "招聘计划",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "RecruitmentPlan"
+        },
+        {
+          "id": "organizationId",
+          "label": "招聘组织",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "positionId",
+          "label": "对应正式岗位",
+          "type": "reference",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Position"
+        },
+        {
+          "id": "vacancyCount",
+          "label": "招聘人数",
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none",
+          "minimum": 1
+        },
+        {
+          "id": "requirements",
+          "label": "本批次任职条件",
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "publishStatus",
+          "label": "发布状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "RecruitmentPublishStatus"
+        }
+      ]
+    },
+    {
+      "id": "Application",
+      "label": "应聘申请",
+      "domain": "recruitment",
+      "description": "候选人针对招聘岗位提交的一次申请。",
+      "identifier": "applicationId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "applicationId",
+          "label": "应聘申请主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "candidateId",
+          "label": "候选人",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Candidate"
+        },
+        {
+          "id": "recruitmentPositionId",
+          "label": "招聘岗位",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "RecruitmentPosition"
+        },
+        {
+          "id": "submittedAt",
+          "label": "提交时间",
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "applicationStatus",
+          "label": "申请状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "ApplicationStatus"
+        }
+      ]
+    },
+    {
+      "id": "OnboardingCase",
+      "label": "进校报到实例",
+      "domain": "onboarding",
+      "description": "从拟录用到正式建档的一次可审计报到流程。",
+      "identifier": "onboardingCaseId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "onboardingCaseId",
+          "label": "报到实例主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "candidateId",
+          "label": "候选人",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Candidate"
+        },
+        {
+          "id": "applicationId",
+          "label": "来源申请",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Application"
+        },
+        {
+          "id": "organizationId",
+          "label": "入职组织",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        },
+        {
+          "id": "positionId",
+          "label": "入职岗位",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Position"
+        },
+        {
+          "id": "personId",
+          "label": "建档后人员",
+          "type": "reference",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "onboardingType",
+          "label": "进校方式",
+          "type": "concept",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "OnboardingType"
+        },
+        {
+          "id": "onboardingStatus",
+          "label": "报到状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "OnboardingStatus"
+        },
+        {
+          "id": "expectedDate",
+          "label": "预计报到日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "actualDate",
+          "label": "实际报到日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "Contract",
+      "label": "合同",
+      "domain": "workforce",
+      "description": "人员与学校之间具有版本和有效期的合同事实。",
+      "identifier": "contractId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "contractId",
+          "label": "合同主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "签约人员",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "contractNumber",
+          "label": "合同编号",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "contractType",
+          "label": "合同类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "ContractType"
+        },
+        {
+          "id": "validFrom",
+          "label": "合同开始日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "合同结束日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "contractStatus",
+          "label": "合同状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "ContractStatus"
+        }
+      ]
+    },
+    {
+      "id": "Course",
+      "label": "课程",
+      "domain": "teaching-portfolio",
+      "description": "教务主数据中的稳定课程定义，不包含具体学期授课事实。",
+      "identifier": "courseId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "courseId",
+          "label": "课程主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "courseCode",
+          "label": "课程编码",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "unique": true
+        },
+        {
+          "id": "name",
+          "label": "课程名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "courseType",
+          "label": "课程类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "CourseType"
+        },
+        {
+          "id": "credit",
+          "label": "学分",
+          "type": "number",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "totalHours",
+          "label": "总学时",
+          "type": "integer",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none",
+          "minimum": 0
+        },
+        {
+          "id": "owningOrganizationId",
+          "label": "开课单位",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact",
+          "target": "Organization"
+        }
+      ]
+    },
+    {
+      "id": "TeachingAssignment",
+      "label": "授课任务",
+      "domain": "teaching-portfolio",
+      "description": "教师在特定学期、班级承担某课程教学的事实。",
+      "identifier": "teachingAssignmentId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "teachingAssignmentId",
+          "label": "授课任务主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "授课教师",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "courseId",
+          "label": "课程",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Course"
+        },
+        {
+          "id": "academicYear",
+          "label": "学年",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet"
+        },
+        {
+          "id": "term",
+          "label": "学期",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "AcademicTerm"
+        },
+        {
+          "id": "className",
+          "label": "授课班级",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "controlled"
+        },
+        {
+          "id": "plannedHours",
+          "label": "计划学时",
+          "type": "integer",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none",
+          "minimum": 0
+        },
+        {
+          "id": "completedHours",
+          "label": "完成学时",
+          "type": "integer",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none",
+          "minimum": 0
+        },
+        {
+          "id": "status",
+          "label": "授课状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "TeachingAssignmentStatus"
+        }
+      ]
+    },
+    {
+      "id": "CoursePortfolio",
+      "label": "课程档案",
+      "domain": "teaching-portfolio",
+      "description": "围绕一次授课任务形成的教学设计、实施、评价、反思和证据集合。",
+      "identifier": "coursePortfolioId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "coursePortfolioId",
+          "label": "课程档案主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "teachingAssignmentId",
+          "label": "授课任务",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "TeachingAssignment"
+        },
+        {
+          "id": "teachingObjectives",
+          "label": "教学目标",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "teachingDesign",
+          "label": "教学设计",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "implementationSummary",
+          "label": "实施总结",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "reflection",
+          "label": "课程反思",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "evidence",
+          "label": "支撑材料",
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "archiveStatus",
+          "label": "归档状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "PortfolioArchiveStatus"
+        },
+        {
+          "id": "updatedAt",
+          "label": "更新时间",
+          "type": "datetime",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "EnterprisePractice",
+      "label": "企业实践",
+      "domain": "teaching-portfolio",
+      "description": "教师在企业开展实践、挂职或产学合作的一段经历。",
+      "identifier": "enterprisePracticeId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "enterprisePracticeId",
+          "label": "企业实践主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "教师",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "enterpriseName",
+          "label": "企业名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "unifiedSocialCreditCode",
+          "label": "统一社会信用代码",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "practicePosition",
+          "label": "实践岗位",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "startDate",
+          "label": "开始日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "endDate",
+          "label": "结束日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "practiceContent",
+          "label": "实践内容",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "outcome",
+          "label": "实践成果",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "evidence",
+          "label": "证明材料",
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "status",
+          "label": "认定状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "EvidenceReviewStatus"
+        }
+      ]
+    },
+    {
+      "id": "TeachingAchievement",
+      "label": "教学成果",
+      "domain": "teaching-portfolio",
+      "description": "教师参与的项目、论文、教材、竞赛指导、奖励或荣誉成果。",
+      "identifier": "achievementId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "achievementId",
+          "label": "成果主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "成果人员",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "achievementType",
+          "label": "成果类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "TeachingAchievementType"
+        },
+        {
+          "id": "title",
+          "label": "成果名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "level",
+          "label": "成果级别",
+          "type": "concept",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "AchievementLevel"
+        },
+        {
+          "id": "role",
+          "label": "本人角色",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet"
+        },
+        {
+          "id": "awardingOrganization",
+          "label": "授予或颁发单位",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "achievedAt",
+          "label": "取得日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "evidence",
+          "label": "证明材料",
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "status",
+          "label": "认定状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "EvidenceReviewStatus"
+        }
+      ]
+    },
+    {
+      "id": "TrainingExperience",
+      "label": "进修培训经历",
+      "domain": "teaching-portfolio",
+      "description": "教师参加培训、研修、访学或学历提升的经历事实。",
+      "identifier": "trainingExperienceId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "trainingExperienceId",
+          "label": "培训经历主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "教师",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "trainingType",
+          "label": "培训类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "TrainingType"
+        },
+        {
+          "id": "name",
+          "label": "项目名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "provider",
+          "label": "培训机构",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "startDate",
+          "label": "开始日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "endDate",
+          "label": "结束日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "hours",
+          "label": "培训学时",
+          "type": "integer",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none",
+          "minimum": 0
+        },
+        {
+          "id": "certificateNumber",
+          "label": "证书编号",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "exact"
+        },
+        {
+          "id": "evidence",
+          "label": "证明材料",
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "status",
+          "label": "认定状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "EvidenceReviewStatus"
+        }
+      ]
+    },
+    {
+      "id": "ProfessionalAppointment",
+      "label": "专业任职",
+      "domain": "teaching-portfolio",
+      "description": "教师在校外机构、行业组织或专业组织中的任职，不替代校内 EmploymentAssignment。",
+      "identifier": "professionalAppointmentId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "professionalAppointmentId",
+          "label": "专业任职主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "教师",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "organizationName",
+          "label": "任职机构",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "roleName",
+          "label": "职务名称",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "fulltext"
+        },
+        {
+          "id": "appointmentType",
+          "label": "任职类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "ProfessionalAppointmentType"
+        },
+        {
+          "id": "startDate",
+          "label": "开始日期",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "endDate",
+          "label": "结束日期",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "evidence",
+          "label": "证明材料",
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "status",
+          "label": "认定状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "EvidenceReviewStatus"
+        }
+      ]
+    },
+    {
+      "id": "PortfolioSubmission",
+      "label": "档案提交",
+      "domain": "teaching-portfolio",
+      "description": "教师针对一个档案实体发起的一次补录、变更或归档提交。",
+      "identifier": "portfolioSubmissionId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "portfolioSubmissionId",
+          "label": "档案提交主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "personId",
+          "label": "提交教师",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "subjectType",
+          "label": "档案对象类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "facet",
+          "vocabulary": "PortfolioSubjectType"
+        },
+        {
+          "id": "subjectId",
+          "label": "档案对象主键",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "submissionType",
+          "label": "提交类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "PortfolioSubmissionType"
+        },
+        {
+          "id": "status",
+          "label": "提交状态",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "PortfolioSubmissionStatus"
+        },
+        {
+          "id": "submittedAt",
+          "label": "提交时间",
+          "type": "datetime",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        },
+        {
+          "id": "changeSet",
+          "label": "变更内容",
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "PortfolioReview",
+      "label": "档案审核记录",
+      "domain": "teaching-portfolio",
+      "description": "针对一次档案提交形成的不可覆盖审核决定。",
+      "identifier": "portfolioReviewId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "portfolioReviewId",
+          "label": "审核记录主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "portfolioSubmissionId",
+          "label": "档案提交",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "PortfolioSubmission"
+        },
+        {
+          "id": "reviewerPersonId",
+          "label": "审核人",
+          "type": "reference",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "exact",
+          "target": "Person"
+        },
+        {
+          "id": "decision",
+          "label": "审核决定",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "facet",
+          "vocabulary": "PortfolioReviewDecision"
+        },
+        {
+          "id": "comment",
+          "label": "审核意见",
+          "type": "text",
+          "required": false,
+          "nullable": true,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "reviewedAt",
+          "label": "审核时间",
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "sequence",
+          "label": "审核顺序",
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none",
+          "minimum": 1
+        }
+      ]
+    },
+    {
+      "id": "LegacyIdentifier",
+      "label": "外部标识映射",
+      "domain": "governance",
+      "description": "领域实体与来源系统业务编号之间的有时效映射。",
+      "identifier": "legacyIdentifierId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "legacyIdentifierId",
+          "label": "映射主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "entityType",
+          "label": "实体类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "facet",
+          "vocabulary": "EntityType"
+        },
+        {
+          "id": "entityId",
+          "label": "领域实体主键",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "sourceSystem",
+          "label": "来源系统",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "facet"
+        },
+        {
+          "id": "sourceKey",
+          "label": "来源字段",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "sourceValue",
+          "label": "来源值",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "controlled"
+        },
+        {
+          "id": "validFrom",
+          "label": "有效期始",
+          "type": "date",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "validTo",
+          "label": "有效期止",
+          "type": "date",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": true,
+          "searchable": "none"
+        }
+      ]
+    },
+    {
+      "id": "HREvent",
+      "label": "人事领域事件",
+      "domain": "governance",
+      "description": "记录领域事实的发生时间、生效时间、来源和操作人。",
+      "identifier": "eventId",
+      "version": "1.0.0",
+      "fields": [
+        {
+          "id": "eventId",
+          "label": "事件主键",
+          "type": "id",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "eventType",
+          "label": "事件类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "facet",
+          "vocabulary": "HREventType"
+        },
+        {
+          "id": "subjectType",
+          "label": "主体类型",
+          "type": "concept",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "facet",
+          "vocabulary": "EntityType"
+        },
+        {
+          "id": "subjectId",
+          "label": "主体主键",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "occurredAt",
+          "label": "发生时间",
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "effectiveAt",
+          "label": "生效时间",
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "none"
+        },
+        {
+          "id": "actor",
+          "label": "操作主体",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "controlled"
+        },
+        {
+          "id": "sourceSystem",
+          "label": "来源系统",
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "facet"
+        },
+        {
+          "id": "sourceRecordId",
+          "label": "来源记录",
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "classification": "internal",
+          "mutable": false,
+          "searchable": "exact"
+        },
+        {
+          "id": "payload",
+          "label": "事件载荷",
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "classification": "sensitive",
+          "mutable": false,
+          "searchable": "none"
+        }
+      ]
+    }
+  ]
+}

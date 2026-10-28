@@ -1,0 +1,297 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 灰底消除（教学档案袋框架） */
+.pf-views {
+  background: transparent !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+#app {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}.sys-admin-page{
+  display: grid;
+  min-height: 100%;
+  gap: var(--ds-space-4);
+  padding: 0;
+  border-radius: 8px;
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-container);
+  align-content: start;
+}
+
+.sys-admin-page--auditBatch {
+  min-height: 100%;
+  background: var(--ds-color-bg-container);
+}
+
+.sys-admin-status {
+  position: fixed;
+  right: var(--ds-space-5);
+  bottom: var(--ds-space-5);
+  z-index: var(--ds-z-message);
+  max-width: 360px;
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border: 1px solid var(--ds-color-success-border);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-color-text);
+  background: var(--ds-color-success-light);
+  box-shadow: var(--ds-shadow-sm);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.sys-admin-muted {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+/* ── 考核批次管理（本院）──
+   视觉对齐 sys/sys-accounts：列表卡片、状态色、范围标签、详情两段式 */
+.audit-batch-stack {
+  display: grid;
+  gap: var(--ds-space-4);
+  align-content: start;
+}.ab-detail-page{
+  /* 整体纵向堆叠：SubPageHeader + 批次信息 + 设置内容 + 底部操作 */
+  border-radius: 8px;
+}
+
+.ab-scope-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-1);
+}/* 批次信息：收紧高度，覆盖 DS 间距 token（仅作用域内，不覆盖 .ds-* 选择器） */
+.ab-detail-group{
+  --ds-edit-group-content-gap: 12px;
+  --ds-edit-group-gap: 12px;
+  --ds-edit-group-title-height: 28px;
+  --ds-edit-group-title-padding-y: 2px;
+  --ds-edit-control-height: 28px;
+  --ds-edit-field-control-gap: 12px;
+  gap: var(--ds-space-3);
+}.ab-detail-group + .ab-detail-group{
+  margin-top: 0;
+}
+
+.ab-detail-group__body {
+  padding: 0 var(--ds-space-4);
+}
+
+/* 批次信息：紧凑网格，一行 4 个字段，字段间隔 20px */
+.ab-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  align-content: start;
+}
+
+.ab-info-grid > div {
+  grid-column: span 1;
+}
+
+.ab-info-grid .ab-field-full {
+  grid-column: 1 / -1;
+}
+
+.ab-info-readonly {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ds-space-2) var(--ds-space-6);
+}
+
+.ab-info-readonly__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ds-space-2);
+  white-space: nowrap;
+}
+
+.ab-info-readonly__item span {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ab-info-readonly__item strong {
+  color: var(--ds-color-text);
+  font-weight: var(--ds-font-weight-medium);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ab-content-summary {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+/* 设置内容：左树右配 */
+.ab-content-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+  gap: var(--ds-space-5);
+  min-height: 320px;
+}
+
+.ab-content-tree {
+  min-width: 0;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: var(--ds-space-4);
+  border-right: 1px solid var(--ds-color-border-secondary);
+}
+
+.ab-content-main {
+  display: grid;
+  align-content: start;
+  gap: var(--ds-space-3);
+  min-width: 0;
+}
+
+.ab-content-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-2) 0;
+}
+
+.ab-content-head__name {
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+}
+
+.ab-content-head__meta {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ab-content-head__actions {
+  display: inline-flex;
+  gap: var(--ds-space-2);
+  margin-left: auto;
+}
+
+.ab-content-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-3) 0;
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+}
+
+.ab-content-settings__field,
+.ab-content-settings__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.ab-content-settings__label {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ab-field-list {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ab-content-hidden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  background: var(--ds-color-bg-soft);
+  border-radius: var(--ds-radius-md);
+}
+
+.ab-content-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  background: var(--ds-color-bg-soft);
+  border-radius: var(--ds-radius-md);
+}
+
+/* 底部操作（仅未发布） */
+.ab-detail-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-3) var(--ds-space-4);
+  background: var(--ds-color-bg-container);
+  border-top: 1px solid var(--ds-color-border-secondary);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+@media (max-width: 1024px) {
+  .ab-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ab-content-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-content-tree {
+    max-height: none;
+    border-right: 0;
+    border-bottom: 1px solid var(--ds-color-border-secondary);
+    padding-right: 0;
+    padding-bottom: var(--ds-space-3);
+  }
+}
+
+/* 条件构造器 */
+.ab-condition-builder {
+  display: grid;
+  gap: var(--ds-space-2);
+  align-content: start;
+}
+
+.ab-condition-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.ab-condition-row > * {
+  min-width: 0;
+}/* 详情页高度自适应：flex 列 + 内容区 flex:1 */
+.ab-detail-page{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}.ab-detail-page > .ab-detail-header{
+  flex: none;
+}.ab-detail-page > .ab-detail-group:first-of-type{
+  flex: 0 0 auto;
+  min-height: 0;
+}.ab-detail-page > .ab-detail-group:last-of-type{
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}.ab-detail-page > .ab-detail-footer{
+  flex: none;
+}

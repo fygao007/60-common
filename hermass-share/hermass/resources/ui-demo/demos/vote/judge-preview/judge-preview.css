@@ -1,0 +1,136 @@
+@import '../../../framework/react-page-host.css';
+
+.judge-preview-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-height: 100%;
+  padding: 24px 32px 32px;
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-subtle);
+}
+
+.jp-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-color-bg-container);
+}
+
+.jp-project {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.jp-judge {
+  margin: 8px 0 0;
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+}
+
+.jp-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.jp-meta-item strong {
+  color: var(--ds-color-text-heading);
+  font-size: 15px;
+}
+
+.jp-board {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.jp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 24px;
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-color-bg-container);
+}
+
+.jp-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.jp-card-name {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.jp-card-position {
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+}
+
+.jp-card-head > :last-child {
+  margin-left: auto;
+}
+
+.jp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-top: 8px;
+}
+
+.jp-footer-tip {
+  color: var(--ds-color-text-secondary);
+  font-size: 13px;
+}
+
+.jp-footer-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.jp-toast {
+  position: fixed;
+  z-index: 80;
+  right: 24px;
+  bottom: 24px;
+  padding: 9px 16px;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-primary);
+  box-shadow: var(--ds-shadow-lg);
+  color: var(--ds-color-text-inverse);
+}
+
+@media (max-width: 720px) {
+  .judge-preview-page {
+    padding: 16px;
+  }
+
+  .jp-header,
+  .jp-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

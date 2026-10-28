@@ -1,0 +1,51 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 首页预警提醒区：分类统计卡片，克制留白 */
+.wh-page {
+  display: grid;
+  min-height: 100%;
+  align-content: start;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-4);
+  color: var(--ds-color-text);
+  background: var(--ds-color-bg-page);
+}
+
+.wh-stat-card {
+  display: grid;
+  gap: var(--ds-space-2);
+}
+
+.wh-stat-label {
+  font-size: 14px;
+  color: var(--ds-color-text-secondary, #5a6070);
+}
+
+.wh-stat-value {
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.wh-stat-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ds-color-text-secondary, #5a6070);
+}
+
+.wh-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.wh-dot.is-warn {
+  background: #e6a23c;
+}
+
+.wh-dot.is-done {
+  background: #52c41a;
+}

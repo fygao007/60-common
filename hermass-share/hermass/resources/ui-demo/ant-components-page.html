@@ -1,0 +1,2850 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ant 风格组件总览</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    :root {
+      --brand: #333fff;
+      --brand-hover: #5964ff;
+      --brand-active: #1f2cff;
+      --text: #000;
+      --text-2: #505266;
+      --text-3: #737585;
+      --border: #dcdce0;
+      --border-light: #eeeef0;
+      --fill: #fafafa;
+      --danger: #fa5151;
+      --warning: #e78915;
+      --success: #20b486;
+      --radius: 4px;
+    }
+
+    body {
+      color: var(--text);
+      background: #fff;
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .ant-page {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .ant-stage {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .ant-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .ant-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .ant-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .ant-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ant-desc {
+      margin: 6px 0 0;
+      color: var(--text-3);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .ant-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-2);
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .ant-summary strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .ant-layout {
+      display: grid;
+      grid-template-columns: 184px minmax(0, 1fr);
+      gap: 16px;
+      width: min(1280px, 100%);
+    }
+
+    .ant-anchor {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      border: 1px solid var(--border-light);
+      background: #fff;
+    }
+
+    .ant-anchor-title {
+      height: 40px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border-light);
+      background: var(--fill);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 40px;
+    }
+
+    .ant-anchor-label {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 12px;
+      color: var(--text);
+      background: #fafafa;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .ant-anchor a {
+      display: flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 12px 6px 20px;
+      color: var(--text-2);
+      font-size: 13px;
+      line-height: 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .ant-anchor a:hover {
+      color: var(--brand);
+      background: #f5f5ff;
+    }
+
+    .ant-content {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .ant-section {
+      border: 1px solid var(--border-light);
+      background: #fff;
+    }
+
+    .ant-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: var(--fill);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .ant-section-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .ant-section-meta {
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .ant-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(320px, 1fr));
+      gap: 0;
+    }
+
+    .ant-panel.is-three {
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+    }
+
+    .ant-block {
+      min-width: 0;
+      padding: 16px;
+      border-right: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .ant-panel .ant-block:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .ant-panel.is-three .ant-block:nth-child(2n) {
+      border-right: 1px solid var(--border-light);
+    }
+
+    .ant-panel.is-three .ant-block:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .block-title {
+      margin: 0 0 12px;
+      color: var(--text-2);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .demo-col {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 16px;
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 22px;
+      transition: all .16s cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .btn:hover {
+      color: var(--brand);
+      border-color: #b8c3ff;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .btn.primary:hover {
+      background: var(--brand-hover);
+      border-color: var(--brand-hover);
+    }
+
+    .btn.dashed {
+      border-style: dashed;
+    }
+
+    .btn.text {
+      border-color: transparent;
+      background: transparent;
+    }
+
+    .btn.link {
+      height: auto;
+      padding: 0;
+      color: var(--brand);
+      border: 0;
+      background: transparent;
+    }
+
+    .btn.danger {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .btn[disabled] {
+      color: #c9cdd4;
+      background: #f2f3f5;
+      border-color: #e5e6eb;
+      cursor: not-allowed;
+    }
+
+    .btn.icon {
+      width: 32px;
+      padding: 0;
+    }
+
+    .btn.small { height: 24px; padding: 0 8px; font-size: 12px; }
+    .btn.large { height: 40px; padding: 0 20px; }
+
+    .field,
+    .select,
+    .picker,
+    .textarea,
+    .input-number,
+    .cascader,
+    .tree-select,
+    .mention {
+      width: 100%;
+      min-width: 0;
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color .16s cubic-bezier(.2, 0, 0, 1), box-shadow .16s cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .field,
+    .select,
+    .picker,
+    .input-number,
+    .cascader,
+    .tree-select,
+    .mention {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 5px 12px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .field:hover,
+    .select:hover,
+    .picker:hover,
+    .textarea:hover,
+    .input-number:hover,
+    .cascader:hover,
+    .tree-select:hover,
+    .mention:hover {
+      border-color: #b8c3ff;
+    }
+
+    .field:focus,
+    .textarea:focus,
+    .is-focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 2px rgba(51, 63, 255, .12);
+    }
+
+    .textarea {
+      min-height: 80px;
+      padding: 5px 12px;
+      resize: vertical;
+      line-height: 22px;
+    }
+
+    .placeholder {
+      color: #9697a3;
+    }
+
+    .select,
+    .picker,
+    .cascader,
+    .tree-select,
+    .mention {
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .arrow {
+      color: var(--text-3);
+      font-size: 12px;
+    }
+
+    .input-number {
+      justify-content: space-between;
+      width: 132px;
+      padding-right: 4px;
+    }
+
+    .stepper {
+      display: grid;
+      width: 20px;
+      height: 24px;
+      color: var(--text-3);
+      border-left: 1px solid var(--border-light);
+      font-size: 10px;
+      text-align: center;
+      line-height: 12px;
+    }
+
+    .radio,
+    .check,
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .radio-dot,
+    .check-box {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      flex: none;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .radio-dot {
+      border-radius: 50%;
+    }
+
+    .radio.is-checked .radio-dot {
+      border-color: var(--brand);
+    }
+
+    .radio.is-checked .radio-dot::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      background: var(--brand);
+      border-radius: 50%;
+    }
+
+    .check.is-checked .check-box,
+    .checkbox.is-checked .check-box {
+      border-color: var(--brand);
+      background: var(--brand);
+    }
+
+    .check.is-checked .check-box::after,
+    .checkbox.is-checked .check-box::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(45deg);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 46px;
+      height: 24px;
+      padding-left: 8px;
+      color: #fff;
+      background: var(--brand);
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+    }
+
+    .switch.off {
+      justify-content: flex-end;
+      padding: 0 8px 0 0;
+      color: var(--text-3);
+      background: #eeeef0;
+    }
+
+    .switch.off::after {
+      left: 2px;
+      right: auto;
+    }
+
+    .slider {
+      position: relative;
+      width: 180px;
+      height: 6px;
+      background: #eeeef0;
+      border-radius: 999px;
+    }
+
+    .slider span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 6px;
+      background: var(--brand);
+      border-radius: 999px;
+    }
+
+    .slider i {
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border: 2px solid var(--brand);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .rate {
+      color: #f7ba1e;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .upload,
+    .dragger {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      color: var(--text-2);
+      border: 1px dashed var(--border);
+      background: #fafafa;
+      border-radius: var(--radius);
+    }
+
+    .upload {
+      width: 180px;
+      height: 68px;
+    }
+
+    .dragger {
+      min-height: 128px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 2px;
+      background: #eeeef0;
+      border-radius: var(--radius);
+    }
+
+    .segmented span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 12px;
+      color: var(--text-2);
+      border-radius: 3px;
+      font-size: 14px;
+    }
+
+    .segmented .active {
+      color: var(--text);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border-light);
+    }
+
+    table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    th,
+    td {
+      height: 44px;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      border-right: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+
+    th {
+      background: var(--fill);
+      font-weight: 600;
+    }
+
+    td:last-child,
+    th:last-child {
+      border-right: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      color: var(--text-2);
+      background: #eeeef0;
+      border-radius: var(--radius);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .tag.blue { color: var(--brand); background: #f0f2ff; }
+    .tag.green { color: var(--success); background: #e8fff7; }
+    .tag.orange { color: var(--warning); background: #fff5cc; }
+    .tag.red { color: var(--danger); background: #fff0f0; }
+
+    .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      color: var(--brand);
+      background: #eff1ff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge::after {
+      content: "6";
+      position: absolute;
+      right: -10px;
+      top: -8px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      color: #fff;
+      background: var(--danger);
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: center;
+    }
+
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 220px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: #eeeef0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-track span {
+      display: block;
+      height: 100%;
+      background: var(--success);
+      border-radius: 999px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 18px 24px;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      bottom: -6px;
+      width: 1px;
+      background: var(--border-light);
+    }
+
+    .timeline-item::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 5px;
+      width: 9px;
+      height: 9px;
+      background: var(--brand);
+      border-radius: 50%;
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    .tree,
+    .menu-box {
+      display: grid;
+      gap: 4px;
+      width: 220px;
+      padding: 8px;
+      border: 1px solid var(--border-light);
+    }
+
+    .tree div,
+    .menu-box div {
+      height: 30px;
+      padding: 4px 8px;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 22px;
+      border-radius: var(--radius);
+    }
+
+    .tree .active,
+    .menu-box .active {
+      color: var(--brand);
+      background: #f5f5ff;
+      font-weight: 600;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .tab {
+      position: relative;
+      height: 38px;
+      color: var(--text-2);
+      line-height: 38px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--brand);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-width: 560px;
+    }
+
+    .step {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .step::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-light);
+    }
+
+    .step:last-child::after {
+      display: none;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      color: #fff;
+      background: var(--brand);
+      border-radius: 50%;
+      font-size: 12px;
+    }
+
+    .breadcrumb,
+    .pagination {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-3);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .pagination span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      border-radius: var(--radius);
+    }
+
+    .pagination .active {
+      color: var(--text);
+      background: #eeeef0;
+      font-weight: 600;
+    }
+
+    .alert,
+    .message,
+    .notification {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .alert.info,
+    .message.info { color: var(--brand); background: #f0f2ff; border-color: #cdd3ff; }
+    .alert.success,
+    .message.success { color: var(--success); background: #e8fff7; border-color: #b7f2df; }
+    .alert.warning,
+    .message.warning { color: var(--warning); background: #fff8de; border-color: #ffe4a3; }
+    .alert.error,
+    .message.error { color: var(--danger); background: #fff0f0; border-color: #ffd2d2; }
+
+    .notification {
+      width: 280px;
+      color: var(--text);
+      background: #fff;
+      border-color: var(--border-light);
+      box-shadow: 0 6px 18px rgba(70, 79, 105, .14);
+    }
+
+    .modal-demo,
+    .drawer-demo {
+      border: 1px solid var(--border-light);
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(70, 79, 105, .12);
+    }
+
+    .modal-demo {
+      width: 360px;
+      border-radius: 6px;
+    }
+
+    .drawer-demo {
+      width: 320px;
+    }
+
+    .float-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border-light);
+      font-weight: 600;
+    }
+
+    .float-body {
+      padding: 16px;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .float-foot {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .popover,
+    .tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+    }
+
+    .tooltip::after,
+    .popover::after {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      white-space: nowrap;
+      border-radius: var(--radius);
+      font-size: 12px;
+      line-height: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .12);
+    }
+
+    .tooltip::after {
+      content: "文字提示";
+      padding: 4px 8px;
+      color: #fff;
+      background: rgba(0, 0, 0, .82);
+    }
+
+    .popover::after {
+      content: "气泡卡片内容";
+      padding: 10px 12px;
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--border-light);
+    }
+
+    .skeleton {
+      display: grid;
+      gap: 10px;
+      width: 280px;
+    }
+
+    .skeleton span {
+      height: 12px;
+      background: linear-gradient(90deg, #f2f3f5, #e8e9ee, #f2f3f5);
+      border-radius: 999px;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      width: 260px;
+      min-height: 120px;
+      color: var(--text-3);
+      border: 1px dashed var(--border);
+      background: #fafafa;
+      font-size: 14px;
+    }
+
+    .calendar {
+      width: 292px;
+      border: 1px solid var(--border-light);
+    }
+
+    .calendar-head {
+      height: 40px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border-light);
+      font-weight: 600;
+      line-height: 40px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .calendar-grid span {
+      height: 32px;
+      text-align: center;
+      color: var(--text-2);
+      font-size: 12px;
+      line-height: 32px;
+    }
+
+    .calendar-grid .today {
+      color: #fff;
+      background: var(--brand);
+      border-radius: 50%;
+    }
+
+    .statistic {
+      display: grid;
+      gap: 4px;
+    }
+
+    .statistic span {
+      color: var(--text-3);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .statistic strong {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    .qr {
+      display: grid;
+      grid-template-columns: repeat(5, 16px);
+      gap: 4px;
+      padding: 10px;
+      border: 1px solid var(--border-light);
+      width: fit-content;
+    }
+
+    .qr i {
+      width: 16px;
+      height: 16px;
+      background: #111;
+    }
+
+    .qr i:nth-child(2n) {
+      background: #fff;
+      border: 1px solid #111;
+    }
+
+    .ant-block:target,
+    .ant-block.is-active-block {
+      box-shadow: inset 3px 0 0 var(--brand);
+      background: linear-gradient(90deg, #f8f9ff 0, #fff 120px);
+    }
+
+    .official-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 0;
+    }
+
+    .official-card {
+      min-height: 132px;
+      padding: 14px 16px;
+      border-right: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      scroll-margin-top: 16px;
+    }
+
+    .official-card:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .official-card:target {
+      box-shadow: inset 3px 0 0 var(--brand);
+      background: linear-gradient(90deg, #f8f9ff 0, #fff 120px);
+    }
+
+    .official-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .official-card-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .official-card-category {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      color: var(--text-2);
+      background: #eeeef0;
+      border-radius: var(--radius);
+      font-size: 12px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .official-card-desc {
+      margin: 0 0 10px;
+      min-height: 20px;
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .official-demo {
+      min-height: 38px;
+    }
+
+    .mini-layout {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 4px;
+      width: 180px;
+      height: 56px;
+    }
+
+    .mini-layout span {
+      background: #f5f5ff;
+      border: 1px solid #d6d9ff;
+    }
+
+    .mini-layout span:first-child {
+      grid-row: 1 / span 2;
+      background: #ebecff;
+    }
+
+    .mini-carousel {
+      position: relative;
+      width: 180px;
+      height: 54px;
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .mini-carousel span {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      color: var(--brand);
+      background: #f5f5ff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .mini-carousel span.is-active {
+      display: grid;
+    }
+
+    .float-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      color: #fff;
+      background: var(--brand);
+      border-radius: 50%;
+      box-shadow: 0 6px 16px rgba(51, 63, 255, .24);
+      cursor: pointer;
+    }
+
+    .color-swatch {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .mini-image {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 88px;
+      height: 54px;
+      color: var(--text-3);
+      background: #f5f5ff;
+      border: 1px solid #d6d9ff;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 4px;
+      width: 180px;
+    }
+
+    .mini-list span {
+      height: 24px;
+      padding: 2px 8px;
+      background: #fafafa;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      font-size: 12px;
+      line-height: 20px;
+      cursor: pointer;
+    }
+
+    .mini-splitter {
+      display: grid;
+      grid-template-columns: 1fr 6px 1fr;
+      width: 180px;
+      height: 48px;
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+    }
+
+    .mini-splitter span {
+      background: #fafafa;
+    }
+
+    .mini-splitter i {
+      background: #d6d9ff;
+    }
+
+    .mini-util {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      color: var(--text-2);
+      background: #fafafa;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .ant-anchor a.is-current {
+      color: var(--brand);
+      background: #f5f5ff;
+      font-weight: 600;
+    }
+
+    .btn.is-clicked {
+      color: #fff;
+      background: var(--brand-active);
+      border-color: var(--brand-active);
+    }
+
+    .popup-list {
+      display: none;
+      width: 100%;
+      margin-top: 4px;
+      padding: 4px;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 16px rgba(70, 79, 105, .12);
+      z-index: 5;
+    }
+
+    .popup-list.is-open {
+      display: grid;
+      gap: 2px;
+    }
+
+    .popup-option {
+      display: flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 8px;
+      color: var(--text-2);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .popup-option:hover,
+    .popup-option.is-active {
+      color: var(--brand);
+      background: #f5f5ff;
+      font-weight: 600;
+    }
+
+    .field-status {
+      margin-top: 6px;
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .menu-box div,
+    .tree div,
+    .pagination span,
+    .tab,
+    .step,
+    .calendar-grid span,
+    .tag,
+    .avatar,
+    .alert,
+    .message,
+    .notification,
+    .segmented span {
+      cursor: pointer;
+    }
+
+    tr.is-selected td {
+      background: #f5f5ff;
+    }
+
+    .editable-input {
+      width: 190px;
+      height: 28px;
+      padding: 3px 8px;
+      border: 1px solid var(--brand);
+      border-radius: var(--radius);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(51, 63, 255, .12);
+    }
+
+    .upload-list {
+      display: grid;
+      gap: 4px;
+      width: 100%;
+      margin-top: 8px;
+      color: var(--text-2);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .upload-list span {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 8px;
+      background: #fafafa;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+    }
+
+    .dragger.is-dragover {
+      color: var(--brand);
+      background: #f5f5ff;
+      border-color: var(--brand);
+    }
+
+    .slider {
+      cursor: pointer;
+    }
+
+    .rate-star {
+      cursor: pointer;
+      color: #dcdce0;
+    }
+
+    .rate-star.is-active {
+      color: #f7ba1e;
+    }
+
+    .calendar-grid span.is-selected {
+      color: #fff;
+      background: var(--brand);
+      border-radius: 50%;
+    }
+
+    .alert.is-closed,
+    .message.is-closed,
+    .notification.is-closed {
+      display: none;
+    }
+
+    .toast-stack {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      display: grid;
+      gap: 8px;
+      transform: translateX(-50%);
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 180px;
+      padding: 8px 12px;
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 18px rgba(70, 79, 105, .16);
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .overlay-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .24);
+      z-index: 40;
+    }
+
+    .overlay-mask.is-open {
+      display: flex;
+    }
+
+    .live-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      width: 360px;
+      background: #fff;
+      border-left: 1px solid var(--border-light);
+      box-shadow: -8px 0 24px rgba(70, 79, 105, .16);
+      z-index: 42;
+    }
+
+    .live-drawer.is-open {
+      display: block;
+    }
+
+    .spin-dot {
+      animation: spin 800ms linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .skeleton span {
+      animation: skeleton 1.4s ease-in-out infinite;
+      background-size: 200% 100%;
+    }
+
+    @keyframes skeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 1100px) {
+      .ant-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .ant-anchor {
+        position: static;
+      }
+
+      .ant-panel,
+      .ant-panel.is-three,
+      .official-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ant-block,
+      .official-card,
+      .official-card:nth-child(3n),
+      .ant-panel .ant-block:nth-child(2n),
+      .ant-panel.is-three .ant-block:nth-child(2n),
+      .ant-panel.is-three .ant-block:nth-child(3n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="ant-page">
+    <section class="ant-stage">
+      <header class="ant-head">
+        <div>
+          <h1 class="ant-title"><span>Ant 风格组件总览</span></h1>
+          <p class="ant-desc">先按 Ant Design 的组件分类生成一版全量基础交互稿，后续逐个组件调整为 60 系统视觉规范。</p>
+        </div>
+        <div class="ant-summary"><strong>70</strong><span>个官方基础组件</span></div>
+      </header>
+
+      <div class="ant-layout">
+        <nav class="ant-anchor" aria-label="组件分类">
+          <div class="ant-anchor-title">组件菜单</div>
+          <div class="ant-anchor-label">通用</div>
+          <a href="#component-button">Button 按钮</a>
+          <a href="#component-icon">Icon / Size 图标与尺寸</a>
+          <a href="#component-typography">Typography 排版</a>
+          <div class="ant-anchor-label">布局</div>
+          <a href="#component-space">Space 间距</a>
+          <a href="#component-grid">Divider / Grid</a>
+          <div class="ant-anchor-label">导航</div>
+          <a href="#component-breadcrumb">Breadcrumb 面包屑</a>
+          <a href="#component-pagination">Pagination 分页</a>
+          <a href="#component-menu">Menu 菜单</a>
+          <a href="#component-tabs">Tabs 标签页</a>
+          <a href="#component-steps">Steps 步骤条</a>
+          <a href="#component-dropdown">Dropdown 下拉菜单</a>
+          <div class="ant-anchor-label">数据录入</div>
+          <a href="#component-input">Input 输入框</a>
+          <a href="#component-input-number">InputNumber 数字输入</a>
+          <a href="#component-textarea">Textarea 文本域</a>
+          <a href="#component-select">Select / TreeSelect / Cascader</a>
+          <a href="#component-picker">DatePicker / TimePicker</a>
+          <a href="#component-choice">Radio / Checkbox</a>
+          <a href="#component-switch">Switch / Slider / Rate</a>
+          <a href="#component-upload">Upload 上传</a>
+          <a href="#component-dragger">Dragger / Mentions / AutoComplete</a>
+          <div class="ant-anchor-label">数据展示</div>
+          <a href="#component-table">Table 表格</a>
+          <a href="#component-tag">Tag / Badge / Avatar</a>
+          <a href="#component-card">Card / Statistic</a>
+          <a href="#component-timeline">Timeline 时间轴</a>
+          <a href="#component-tree">Tree 树</a>
+          <a href="#component-calendar">Calendar 日历</a>
+          <a href="#component-collapse">Collapse / Descriptions</a>
+          <div class="ant-anchor-label">反馈</div>
+          <a href="#component-alert">Alert 警告提示</a>
+          <a href="#component-message">Message 全局提示</a>
+          <a href="#component-notification">Notification 通知提醒</a>
+          <a href="#component-result">Result 结果</a>
+          <a href="#component-spin">Spin 加载</a>
+          <a href="#component-skeleton">Skeleton / Empty</a>
+          <div class="ant-anchor-label">弹层</div>
+          <a href="#component-modal">Modal 对话框</a>
+          <a href="#component-drawer">Drawer 抽屉</a>
+          <a href="#component-tooltip">Tooltip / Popover</a>
+          <a href="#component-popconfirm">Popconfirm 确认气泡</a>
+          <div class="ant-anchor-label">其他</div>
+          <a href="#component-segmented">Segmented 分段控制器</a>
+          <a href="#component-qrcode">QRCode 二维码</a>
+          <a href="#component-transfer">Transfer 穿梭框</a>
+          <a href="#component-tour">Tour 漫游式引导</a>
+          <a href="#component-watermark">Watermark 水印</a>
+          <a href="#component-backtop">BackTop / Affix</a>
+        </nav>
+
+        <div class="ant-content">
+          <section class="ant-section" id="official-all">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">Ant Design 全量组件交互目录</h2>
+              <span class="ant-section-meta">每个组件一个独立入口 / 基础交互稿</span>
+            </div>
+            <div class="official-grid" id="officialComponentGrid"></div>
+          </section>
+
+          <section class="ant-section" id="general">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">通用 General</h2>
+              <span class="ant-section-meta">Button / Icon / Typography</span>
+            </div>
+            <div class="ant-panel is-three">
+              <div class="ant-block">
+                <h3 class="block-title">Button 按钮</h3>
+                <div class="demo-row">
+                  <button class="btn primary">主要按钮</button>
+                  <button class="btn">默认按钮</button>
+                  <button class="btn dashed">虚线按钮</button>
+                  <button class="btn text">文本按钮</button>
+                  <button class="btn link">链接按钮</button>
+                  <button class="btn danger">危险按钮</button>
+                  <button class="btn" disabled>禁用</button>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Icon / Size 图标与尺寸</h3>
+                <div class="demo-row">
+                  <button class="btn icon" title="搜索">⌕</button>
+                  <button class="btn icon" title="刷新">↻</button>
+                  <button class="btn icon" title="更多">⋯</button>
+                  <button class="btn small">小按钮</button>
+                  <button class="btn">默认</button>
+                  <button class="btn large">大按钮</button>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Typography 排版</h3>
+                <div class="demo-col">
+                  <strong>标题文本</strong>
+                  <span style="color: var(--text-2)">正文说明文本，保持 14px / 22px 行高。</span>
+                  <span style="color: var(--brand)">链接文本</span>
+                  <span style="color: var(--danger)">错误文本</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="layout">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">布局 Layout</h2>
+              <span class="ant-section-meta">Divider / Flex / Grid / Space</span>
+            </div>
+            <div class="ant-panel">
+              <div class="ant-block">
+                <h3 class="block-title">Space 间距</h3>
+                <div class="demo-row">
+                  <button class="btn">操作一</button>
+                  <button class="btn">操作二</button>
+                  <button class="btn primary">提交</button>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Divider 分割线 / Grid 栅格</h3>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+                  <div style="height:36px;background:#f5f5ff;border:1px solid #d6d9ff"></div>
+                  <div style="height:36px;background:#f5f5ff;border:1px solid #d6d9ff"></div>
+                  <div style="height:36px;background:#f5f5ff;border:1px solid #d6d9ff"></div>
+                  <div style="height:36px;background:#f5f5ff;border:1px solid #d6d9ff"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="navigation">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">导航 Navigation</h2>
+              <span class="ant-section-meta">Breadcrumb / Menu / Tabs / Steps / Pagination</span>
+            </div>
+            <div class="ant-panel">
+              <div class="ant-block">
+                <h3 class="block-title">Breadcrumb 面包屑</h3>
+                <div class="breadcrumb"><span>首页</span><span>/</span><span>组件库</span><span>/</span><strong>表单</strong></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Pagination 分页</h3>
+                <div class="pagination"><span>‹</span><span class="active">1</span><span>2</span><span>...</span><span>10</span><span>›</span></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Menu 菜单</h3>
+                <div class="menu-box">
+                  <div>按钮</div>
+                  <div>表单</div>
+                  <div class="active">表格</div>
+                  <div>弹窗</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Tabs 标签页</h3>
+                <div class="tabs">
+                  <div class="tab active">全部</div>
+                  <div class="tab">待处理</div>
+                  <div class="tab">已完成</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Steps 步骤条</h3>
+                <div class="steps">
+                  <div class="step"><span class="step-num">1</span><span>上传</span></div>
+                  <div class="step"><span class="step-num">2</span><span>校验</span></div>
+                  <div class="step"><span class="step-num">3</span><span>完成</span></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Dropdown 下拉菜单</h3>
+                <div class="demo-row">
+                  <button class="btn">更多操作 <span class="arrow">⌄</span></button>
+                  <div class="menu-box" style="width:132px">
+                    <div class="active">编辑</div>
+                    <div>复制</div>
+                    <div>删除</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="entry">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">数据录入 Data Entry</h2>
+              <span class="ant-section-meta">Input / Select / DatePicker / Upload / Switch 等</span>
+            </div>
+            <div class="ant-panel is-three">
+              <div class="ant-block">
+                <h3 class="block-title">Input 输入框</h3>
+                <div class="demo-col">
+                  <input class="field" value="普通输入" />
+                  <input class="field is-focus" value="聚焦状态" />
+                  <input class="field" placeholder="请输入内容" />
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">InputNumber 数字输入</h3>
+                <div class="input-number"><span>12</span><span class="stepper"><span>⌃</span><span>⌄</span></span></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Textarea 文本域</h3>
+                <textarea class="textarea">多行文本内容</textarea>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Select / TreeSelect / Cascader</h3>
+                <div class="demo-col">
+                  <div class="select"><span>请选择</span><span class="arrow">⌄</span></div>
+                  <div class="tree-select"><span>组织树选择</span><span class="arrow">⌄</span></div>
+                  <div class="cascader"><span>浙江 / 杭州</span><span class="arrow">⌄</span></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">DatePicker / TimePicker</h3>
+                <div class="demo-col">
+                  <div class="picker"><span>2026-05-18</span><span>◷</span></div>
+                  <div class="picker"><span>09:30:00</span><span>◷</span></div>
+                  <div class="picker"><span>2026-05-18 至 2026-05-25</span><span>◷</span></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Radio / Checkbox</h3>
+                <div class="demo-row">
+                  <label class="radio is-checked"><span class="radio-dot"></span>选项 A</label>
+                  <label class="radio"><span class="radio-dot"></span>选项 B</label>
+                  <label class="check is-checked"><span class="check-box"></span>多选 A</label>
+                  <label class="check"><span class="check-box"></span>多选 B</label>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Switch / Slider / Rate</h3>
+                <div class="demo-col">
+                  <div class="demo-row"><span class="switch">是</span><span class="switch off">否</span></div>
+                  <div class="slider"><span style="width:64%"></span><i style="left:64%"></i></div>
+                  <div class="rate">★ ★ ★ ★ ☆</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Upload 上传</h3>
+                <div class="demo-row">
+                  <button class="btn">上传文件</button>
+                  <div class="upload"><strong>+</strong><span>上传</span></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Dragger / Mentions / AutoComplete</h3>
+                <div class="demo-col">
+                  <div class="dragger"><strong>拖拽文件到此处</strong><span>支持单个或批量上传</span></div>
+                  <div class="mention"><span>@张明 请确认</span><span class="arrow">⌄</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="display">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">数据展示 Data Display</h2>
+              <span class="ant-section-meta">Table / Tag / Badge / Card / Timeline / Tree 等</span>
+            </div>
+            <div class="ant-panel">
+              <div class="ant-block" style="grid-column:1/-1">
+                <h3 class="block-title">Table 表格</h3>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr><th>序号</th><th>标题</th><th>负责人</th><th>状态</th><th>进度</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>1</td><td>培养方案模板维护</td><td><span class="avatar">张</span> 张明</td><td><span class="tag green">启用</span></td><td><div class="progress"><span class="progress-track"><span style="width:80%"></span></span><span>80%</span></div></td><td><button class="btn link">编辑</button></td></tr>
+                      <tr><td>2</td><td>年度招生计划配置</td><td><span class="avatar">李</span> 李华</td><td><span class="tag orange">待处理</span></td><td><div class="progress"><span class="progress-track"><span style="width:45%"></span></span><span>45%</span></div></td><td><button class="btn link">编辑</button></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Tag / Badge / Avatar</h3>
+                <div class="demo-row">
+                  <span class="tag">默认</span>
+                  <span class="tag blue">标签</span>
+                  <span class="tag green">成功</span>
+                  <span class="tag orange">提醒</span>
+                  <span class="tag red">失败</span>
+                  <span class="badge"><span class="avatar">王</span></span>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Card / Statistic</h3>
+                <div style="width:240px;padding:16px;border:1px solid var(--border-light)">
+                  <div class="statistic"><span>组件覆盖率</span><strong>86%</strong></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Timeline 时间轴</h3>
+                <div class="timeline">
+                  <div class="timeline-item">创建组件稿</div>
+                  <div class="timeline-item">走查交互状态</div>
+                  <div class="timeline-item">沉淀到组件库</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Tree 树</h3>
+                <div class="tree">
+                  <div>▾ 组件库</div>
+                  <div class="active">　表单组件</div>
+                  <div>　表格组件</div>
+                  <div>　反馈组件</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Calendar 日历</h3>
+                <div class="calendar">
+                  <div class="calendar-head">2026 年 5 月</div>
+                  <div class="calendar-grid">
+                    <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+                    <span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
+                    <span class="today">18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Collapse / Descriptions</h3>
+                <div class="demo-col">
+                  <div class="alert info"><strong>面板一</strong><span>组件基础信息</span></div>
+                  <div style="display:grid;grid-template-columns:80px 1fr;gap:8px;font-size:14px;line-height:22px"><span style="color:var(--text-3)">名称</span><span>基础组件</span><span style="color:var(--text-3)">状态</span><span>待调整</span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="feedback">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">反馈 Feedback</h2>
+              <span class="ant-section-meta">Alert / Message / Notification / Result / Spin / Skeleton</span>
+            </div>
+            <div class="ant-panel is-three">
+              <div class="ant-block">
+                <h3 class="block-title">Alert 警告提示</h3>
+                <div class="demo-col">
+                  <div class="alert info">信息提示内容</div>
+                  <div class="alert success">成功提示内容</div>
+                  <div class="alert warning">警告提示内容</div>
+                  <div class="alert error">错误提示内容</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Message 全局提示</h3>
+                <div class="demo-col">
+                  <div class="message success">保存成功</div>
+                  <div class="message error">提交失败</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Notification 通知提醒</h3>
+                <div class="notification"><strong>通知标题</strong><span>这里展示通知内容。</span></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Result 结果</h3>
+                <div class="empty"><strong style="color:var(--success);font-size:24px">✓</strong><span>提交成功</span><button class="btn primary">返回列表</button></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Spin 加载</h3>
+                <div class="demo-row"><span style="width:24px;height:24px;border:3px solid #e6e8ff;border-top-color:var(--brand);border-radius:50%;display:inline-block"></span><span>加载中...</span></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Skeleton 骨架屏 / Empty 空状态</h3>
+                <div class="demo-col">
+                  <div class="skeleton"><span style="width:80%"></span><span style="width:100%"></span><span style="width:60%"></span></div>
+                  <div class="empty">暂无数据</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="overlay">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">弹层 Overlay</h2>
+              <span class="ant-section-meta">Modal / Drawer / Popover / Tooltip / Popconfirm</span>
+            </div>
+            <div class="ant-panel">
+              <div class="ant-block">
+                <h3 class="block-title">Modal 对话框</h3>
+                <div class="modal-demo">
+                  <div class="float-head"><span>对话框标题</span><span>×</span></div>
+                  <div class="float-body">对话框内容区域，承载确认、表单、说明等信息。</div>
+                  <div class="float-foot"><button class="btn">取消</button><button class="btn primary">确定</button></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Drawer 抽屉</h3>
+                <div class="drawer-demo">
+                  <div class="float-head"><span>抽屉标题</span><span>×</span></div>
+                  <div class="float-body">右侧滑出容器，可放详情、编辑表单。</div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Tooltip / Popover</h3>
+                <div class="demo-row" style="padding-top:42px">
+                  <span class="tooltip"><button class="btn">悬浮提示</button></span>
+                  <span class="popover"><button class="btn">气泡卡片</button></span>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Popconfirm 确认气泡</h3>
+                <div class="notification"><strong>确认删除？</strong><span>删除后不可恢复。</span><div class="demo-row"><button class="btn small">取消</button><button class="btn primary small">确定</button></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ant-section" id="other">
+            <div class="ant-section-head">
+              <h2 class="ant-section-title">其他 Other</h2>
+              <span class="ant-section-meta">Segmented / QRCode / Transfer / Tour / Watermark</span>
+            </div>
+            <div class="ant-panel is-three">
+              <div class="ant-block">
+                <h3 class="block-title">Segmented 分段控制器</h3>
+                <div class="segmented"><span class="active">日</span><span>周</span><span>月</span></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">QRCode 二维码</h3>
+                <div class="qr"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Transfer 穿梭框</h3>
+                <div class="demo-row">
+                  <div class="tree" style="width:140px"><div class="active">选项一</div><div>选项二</div><div>选项三</div></div>
+                  <button class="btn icon">›</button>
+                  <div class="tree" style="width:140px"><div>已选一</div><div>已选二</div></div>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Tour 漫游式引导</h3>
+                <div class="notification"><strong>步骤 1 / 3</strong><span>这里是当前功能的说明。</span><button class="btn primary small">下一步</button></div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">Watermark 水印</h3>
+                <div style="position:relative;width:240px;height:100px;border:1px solid var(--border-light);overflow:hidden">
+                  <span style="position:absolute;left:32px;top:34px;color:#dcdce0;transform:rotate(-24deg);font-size:18px">60 System</span>
+                </div>
+              </div>
+              <div class="ant-block">
+                <h3 class="block-title">BackTop / Affix</h3>
+                <div class="demo-row"><button class="btn icon">↑</button><span style="color:var(--text-3);font-size:13px">吸顶操作区 / 回到顶部</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const componentAnchors = {
+    'Button 按钮': 'component-button',
+    'Icon / Size 图标与尺寸': 'component-icon',
+    'Typography 排版': 'component-typography',
+    'Space 间距': 'component-space',
+    'Divider 分割线 / Grid 栅格': 'component-grid',
+    'Breadcrumb 面包屑': 'component-breadcrumb',
+    'Pagination 分页': 'component-pagination',
+    'Menu 菜单': 'component-menu',
+    'Tabs 标签页': 'component-tabs',
+    'Steps 步骤条': 'component-steps',
+    'Dropdown 下拉菜单': 'component-dropdown',
+    'Input 输入框': 'component-input',
+    'InputNumber 数字输入': 'component-input-number',
+    'Textarea 文本域': 'component-textarea',
+    'Select / TreeSelect / Cascader': 'component-select',
+    'DatePicker / TimePicker': 'component-picker',
+    'Radio / Checkbox': 'component-choice',
+    'Switch / Slider / Rate': 'component-switch',
+    'Upload 上传': 'component-upload',
+    'Dragger / Mentions / AutoComplete': 'component-dragger',
+    'Table 表格': 'component-table',
+    'Tag / Badge / Avatar': 'component-tag',
+    'Card / Statistic': 'component-card',
+    'Timeline 时间轴': 'component-timeline',
+    'Tree 树': 'component-tree',
+    'Calendar 日历': 'component-calendar',
+    'Collapse / Descriptions': 'component-collapse',
+    'Alert 警告提示': 'component-alert',
+    'Message 全局提示': 'component-message',
+    'Notification 通知提醒': 'component-notification',
+    'Result 结果': 'component-result',
+    'Spin 加载': 'component-spin',
+    'Skeleton 骨架屏 / Empty 空状态': 'component-skeleton',
+    'Modal 对话框': 'component-modal',
+    'Drawer 抽屉': 'component-drawer',
+    'Tooltip / Popover': 'component-tooltip',
+    'Popconfirm 确认气泡': 'component-popconfirm',
+    'Segmented 分段控制器': 'component-segmented',
+    'QRCode 二维码': 'component-qrcode',
+    'Transfer 穿梭框': 'component-transfer',
+    'Tour 漫游式引导': 'component-tour',
+    'Watermark 水印': 'component-watermark',
+    'BackTop / Affix': 'component-backtop'
+  };
+
+  document.querySelectorAll('.block-title').forEach((title) => {
+    const id = componentAnchors[title.textContent.trim()];
+    if (id) title.closest('.ant-block').id = id;
+  });
+
+  const toastStack = document.createElement('div');
+  toastStack.className = 'toast-stack';
+  document.body.appendChild(toastStack);
+
+  function toast(text) {
+    const item = document.createElement('div');
+    item.className = 'toast';
+    item.textContent = text;
+    toastStack.appendChild(item);
+    setTimeout(() => item.remove(), 1600);
+  }
+
+  const officialComponents = [
+    ['通用', 'Button', '按钮、主要操作、次要操作、危险操作', 'button'],
+    ['通用', 'FloatButton', '悬浮快捷操作', 'floatButton'],
+    ['通用', 'Icon', '图标和图标按钮', 'icon'],
+    ['通用', 'Typography', '标题、正文、链接、状态文字', 'typography'],
+    ['布局', 'Divider', '分割线', 'divider'],
+    ['布局', 'Flex', '弹性布局', 'flex'],
+    ['布局', 'Grid', '栅格布局', 'grid'],
+    ['布局', 'Layout', '页面框架布局', 'layout'],
+    ['布局', 'Space', '间距组合', 'space'],
+    ['布局', 'Splitter', '分割面板', 'splitter'],
+    ['导航', 'Anchor', '锚点导航', 'anchor'],
+    ['导航', 'Breadcrumb', '面包屑', 'breadcrumb'],
+    ['导航', 'Dropdown', '下拉菜单', 'dropdown'],
+    ['导航', 'Menu', '菜单', 'menu'],
+    ['导航', 'Pagination', '分页', 'pagination'],
+    ['导航', 'Steps', '步骤条', 'steps'],
+    ['导航', 'Tabs', '标签页', 'tabs'],
+    ['数据录入', 'AutoComplete', '自动完成', 'autocomplete'],
+    ['数据录入', 'Cascader', '级联选择', 'select'],
+    ['数据录入', 'Checkbox', '多选框', 'checkbox'],
+    ['数据录入', 'ColorPicker', '颜色选择器', 'color'],
+    ['数据录入', 'DatePicker', '日期选择', 'picker'],
+    ['数据录入', 'Form', '表单容器和校验', 'form'],
+    ['数据录入', 'Input', '文本输入', 'input'],
+    ['数据录入', 'InputNumber', '数字输入', 'number'],
+    ['数据录入', 'Mentions', '提及输入', 'mention'],
+    ['数据录入', 'Radio', '单选框', 'radio'],
+    ['数据录入', 'Rate', '评分', 'rate'],
+    ['数据录入', 'Select', '下拉选择', 'select'],
+    ['数据录入', 'Slider', '滑动输入', 'slider'],
+    ['数据录入', 'Switch', '开关', 'switch'],
+    ['数据录入', 'TimePicker', '时间选择', 'picker'],
+    ['数据录入', 'Transfer', '穿梭框', 'transfer'],
+    ['数据录入', 'TreeSelect', '树选择', 'select'],
+    ['数据录入', 'Upload', '上传', 'upload'],
+    ['数据展示', 'Avatar', '头像', 'avatar'],
+    ['数据展示', 'Badge', '徽标', 'badge'],
+    ['数据展示', 'Calendar', '日历', 'calendar'],
+    ['数据展示', 'Card', '卡片', 'card'],
+    ['数据展示', 'Carousel', '走马灯', 'carousel'],
+    ['数据展示', 'Collapse', '折叠面板', 'collapse'],
+    ['数据展示', 'Descriptions', '描述列表', 'descriptions'],
+    ['数据展示', 'Empty', '空状态', 'empty'],
+    ['数据展示', 'Image', '图片预览', 'image'],
+    ['数据展示', 'List', '列表', 'list'],
+    ['数据展示', 'Popover', '气泡卡片', 'popover'],
+    ['数据展示', 'QRCode', '二维码', 'qrcode'],
+    ['数据展示', 'Segmented', '分段控制器', 'segmented'],
+    ['数据展示', 'Statistic', '统计数值', 'statistic'],
+    ['数据展示', 'Table', '表格', 'table'],
+    ['数据展示', 'Tag', '标签', 'tag'],
+    ['数据展示', 'Timeline', '时间轴', 'timeline'],
+    ['数据展示', 'Tooltip', '文字提示', 'tooltip'],
+    ['数据展示', 'Tour', '漫游式引导', 'tour'],
+    ['数据展示', 'Tree', '树', 'tree'],
+    ['反馈', 'Alert', '警告提示', 'alert'],
+    ['反馈', 'Drawer', '抽屉', 'drawer'],
+    ['反馈', 'Message', '全局提示', 'message'],
+    ['反馈', 'Modal', '对话框', 'modal'],
+    ['反馈', 'Notification', '通知提醒', 'notification'],
+    ['反馈', 'Popconfirm', '气泡确认框', 'popconfirm'],
+    ['反馈', 'Progress', '进度条', 'progress'],
+    ['反馈', 'Result', '结果', 'result'],
+    ['反馈', 'Skeleton', '骨架屏', 'skeleton'],
+    ['反馈', 'Spin', '加载中', 'spin'],
+    ['反馈', 'Watermark', '水印', 'watermark'],
+    ['其他', 'Affix', '固钉', 'affix'],
+    ['其他', 'App', '应用包裹组件', 'app'],
+    ['其他', 'ConfigProvider', '全局配置', 'config'],
+    ['其他', 'Util', '工具方法', 'util']
+  ].map(([category, name, desc, demo]) => ({
+    category,
+    name,
+    desc,
+    demo,
+    id: `official-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  }));
+
+  function renderOfficialDemo(component) {
+    const n = component.name;
+    switch (component.demo) {
+      case 'button':
+        return '<div class="demo-row"><button class="btn primary">主要</button><button class="btn">默认</button><button class="btn danger">危险</button></div>';
+      case 'floatButton':
+        return '<span class="float-btn">＋</span>';
+      case 'icon':
+        return '<div class="demo-row"><button class="btn icon">⌕</button><button class="btn icon">↻</button><button class="btn icon">⋯</button></div>';
+      case 'typography':
+        return '<div class="demo-col"><strong>标题文本</strong><span style="color:var(--brand)">链接文本</span></div>';
+      case 'divider':
+        return '<div style="height:1px;background:var(--border-light);width:180px"></div>';
+      case 'flex':
+      case 'space':
+        return '<div class="demo-row"><button class="btn small">一</button><button class="btn small">二</button><button class="btn primary small">三</button></div>';
+      case 'grid':
+      case 'masonry':
+        return '<div style="display:grid;grid-template-columns:repeat(3,42px);gap:6px"><span style="height:28px;background:#f5f5ff;border:1px solid #d6d9ff"></span><span style="height:40px;background:#f5f5ff;border:1px solid #d6d9ff"></span><span style="height:32px;background:#f5f5ff;border:1px solid #d6d9ff"></span></div>';
+      case 'layout':
+        return '<div class="mini-layout"><span></span><span></span><span></span></div>';
+      case 'splitter':
+        return '<div class="mini-splitter"><span></span><i></i><span></span></div>';
+      case 'anchor':
+      case 'breadcrumb':
+        return '<div class="breadcrumb"><span>首页</span><span>/</span><strong>组件</strong></div>';
+      case 'dropdown':
+      case 'select':
+      case 'autocomplete':
+      case 'mention':
+        return `<div class="select"><span>${n === 'Mentions' ? '@张明' : '请选择'}</span><span class="arrow">⌄</span></div>`;
+      case 'menu':
+      case 'tree':
+        return '<div class="menu-box" style="width:160px"><div class="active">组件一</div><div>组件二</div><div>组件三</div></div>';
+      case 'pagination':
+        return '<div class="pagination"><span>‹</span><span class="active">1</span><span>2</span><span>3</span><span>›</span></div>';
+      case 'steps':
+        return '<div class="steps" style="grid-template-columns:repeat(3,120px)"><div class="step"><span class="step-num">1</span><span>开始</span></div><div class="step"><span class="step-num">2</span><span>处理中</span></div><div class="step"><span class="step-num">3</span><span>完成</span></div></div>';
+      case 'tabs':
+        return '<div class="tabs"><div class="tab active">全部</div><div class="tab">待办</div><div class="tab">完成</div></div>';
+      case 'checkbox':
+      case 'radio':
+        return `<div class="demo-row"><label class="${component.demo} is-checked"><span class="${component.demo === 'radio' ? 'radio-dot' : 'check-box'}"></span>选项 A</label><label class="${component.demo}"><span class="${component.demo === 'radio' ? 'radio-dot' : 'check-box'}"></span>选项 B</label></div>`;
+      case 'color':
+        return '<span class="color-swatch" style="background:#333fff"></span>';
+      case 'picker':
+        return '<div class="picker"><span>2026-05-18</span><span>◷</span></div>';
+      case 'form':
+      case 'input':
+        return `<input class="field" value="${n === 'Form' ? '表单字段' : '普通输入'}">`;
+      case 'number':
+        return '<div class="input-number"><span>12</span><span class="stepper"><span>⌃</span><span>⌄</span></span></div>';
+      case 'rate':
+        return '<div class="rate">★ ★ ★ ☆ ☆</div>';
+      case 'slider':
+        return '<div class="slider"><span style="width:48%"></span><i style="left:48%"></i></div>';
+      case 'switch':
+        return '<span class="switch">是</span>';
+      case 'transfer':
+        return '<div class="demo-row"><div class="tree" style="width:100px"><div class="active">选项一</div><div>选项二</div></div><button class="btn icon">›</button><div class="tree" style="width:100px"><div>已选</div></div></div>';
+      case 'upload':
+        return '<div class="demo-row"><button class="btn">上传</button><div class="upload" style="width:88px;height:40px"><strong>+</strong></div></div>';
+      case 'avatar':
+        return '<div class="demo-row"><span class="avatar">张</span><span class="avatar">李</span><span class="avatar">王</span></div>';
+      case 'badge':
+        return '<span class="badge"><span class="avatar">消</span></span>';
+      case 'calendar':
+        return '<div class="calendar" style="width:220px"><div class="calendar-head">2026 年 5 月</div><div class="calendar-grid"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span></div></div>';
+      case 'card':
+        return '<div style="width:180px;padding:12px;border:1px solid var(--border-light)"><strong>卡片标题</strong><p style="margin:6px 0 0;color:var(--text-3);font-size:12px">卡片内容</p></div>';
+      case 'carousel':
+        return '<div class="mini-carousel"><span class="is-active">1</span><span>2</span><span>3</span></div>';
+      case 'collapse':
+        return '<div class="alert info"><strong>面板</strong><span>点击展开/收起</span></div>';
+      case 'descriptions':
+        return '<div style="display:grid;grid-template-columns:56px 1fr;gap:6px;font-size:12px"><span style="color:var(--text-3)">名称</span><span>组件</span><span style="color:var(--text-3)">状态</span><span>基础交互稿</span></div>';
+      case 'empty':
+        return '<div class="empty" style="width:180px;min-height:72px">暂无数据</div>';
+      case 'image':
+        return '<span class="mini-image">图片预览</span>';
+      case 'list':
+        return '<div class="mini-list"><span>列表项一</span><span>列表项二</span></div>';
+      case 'popover':
+      case 'tooltip':
+        return `<span class="${component.demo}"><button class="btn">${n}</button></span>`;
+      case 'qrcode':
+        return '<div class="qr"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>';
+      case 'segmented':
+        return '<div class="segmented"><span class="active">日</span><span>周</span><span>月</span></div>';
+      case 'statistic':
+        return '<div class="statistic"><span>数量</span><strong>128</strong></div>';
+      case 'table':
+        return '<div class="table-wrap"><table style="min-width:280px"><tbody><tr><td>1</td><td>文本</td><td><button class="btn link">编辑</button></td></tr></tbody></table></div>';
+      case 'tag':
+        return '<div class="demo-row"><span class="tag">默认</span><span class="tag blue">标签</span><span class="tag green">成功</span></div>';
+      case 'timeline':
+        return '<div class="timeline"><div class="timeline-item">创建</div><div class="timeline-item">审核</div></div>';
+      case 'tour':
+        return '<div class="notification"><strong>步骤 1 / 3</strong><span>点击下一步</span><button class="btn primary small">下一步</button></div>';
+      case 'alert':
+        return '<div class="alert info">信息提示</div>';
+      case 'drawer':
+        return '<button class="btn">打开抽屉</button>';
+      case 'message':
+        return '<button class="btn">显示消息</button>';
+      case 'modal':
+        return '<button class="btn primary">打开弹窗</button>';
+      case 'notification':
+        return '<button class="btn">显示通知</button>';
+      case 'popconfirm':
+        return '<div class="notification"><strong>确认删除？</strong><button class="btn primary small">确定</button></div>';
+      case 'progress':
+        return '<div class="progress"><span class="progress-track"><span style="width:60%"></span></span><span>60%</span></div>';
+      case 'result':
+        return '<div class="empty" style="width:180px;min-height:80px"><strong style="color:var(--success)">✓</strong><span>成功</span></div>';
+      case 'skeleton':
+        return '<div class="skeleton"><span style="width:80%"></span><span style="width:100%"></span><span style="width:60%"></span></div>';
+      case 'spin':
+        return '<div class="demo-row"><span class="spin-dot" style="width:24px;height:24px;border:3px solid #e6e8ff;border-top-color:var(--brand);border-radius:50%;display:inline-block"></span><span>加载中</span></div>';
+      case 'watermark':
+        return '<div style="position:relative;width:180px;height:58px;border:1px solid var(--border-light);overflow:hidden"><span style="position:absolute;left:24px;top:18px;color:#dcdce0;transform:rotate(-24deg)">60 System</span></div>';
+      case 'affix':
+      case 'app':
+      case 'config':
+      case 'util':
+        return `<span class="mini-util">${n}</span>`;
+      default:
+        return `<button class="btn">${n}</button>`;
+    }
+  }
+
+  function renderOfficialComponents() {
+    const menu = document.querySelector('.ant-anchor');
+    const categories = [...new Set(officialComponents.map(item => item.category))];
+    menu.innerHTML = '<div class="ant-anchor-title">组件菜单</div>' + categories.map(category => {
+      const links = officialComponents
+        .filter(item => item.category === category)
+        .map(item => `<a href="#${item.id}">${item.name}</a>`)
+        .join('');
+      return `<div class="ant-anchor-label">${category}</div>${links}`;
+    }).join('');
+
+    document.getElementById('officialComponentGrid').innerHTML = officialComponents.map(component => `
+      <article class="official-card" id="${component.id}" data-demo="${component.demo}" data-name="${component.name}">
+        <div class="official-card-head">
+          <h3 class="official-card-title">${component.name}</h3>
+          <span class="official-card-category">${component.category}</span>
+        </div>
+        <p class="official-card-desc">${component.desc}</p>
+        <div class="official-demo">${renderOfficialDemo(component)}</div>
+      </article>
+    `).join('');
+  }
+
+  renderOfficialComponents();
+
+  function block(id) {
+    return document.getElementById(id);
+  }
+
+  function bindButtonClicks(container) {
+    if (!container) return;
+    container.querySelectorAll('button:not([disabled])').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        button.classList.add('is-clicked');
+        setTimeout(() => button.classList.remove('is-clicked'), 260);
+        if (!event.defaultPrevented && !button.closest('.float-foot')) {
+          toast(`${button.textContent.trim() || '按钮'} 已点击`);
+        }
+      });
+    });
+  }
+
+  function createPopup(trigger, options) {
+    const popup = document.createElement('div');
+    popup.className = 'popup-list';
+    options.forEach((option, index) => {
+      const item = document.createElement('div');
+      item.className = `popup-option${index === 0 ? ' is-active' : ''}`;
+      item.textContent = option;
+      item.addEventListener('click', (event) => {
+        event.stopPropagation();
+        popup.querySelectorAll('.popup-option').forEach(node => node.classList.remove('is-active'));
+        item.classList.add('is-active');
+        trigger.querySelector('span:first-child').textContent = option;
+        popup.classList.remove('is-open');
+        trigger.classList.add('is-focus');
+        toast(`已选择：${option}`);
+      });
+      popup.appendChild(item);
+    });
+    trigger.insertAdjacentElement('afterend', popup);
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      document.querySelectorAll('.popup-list.is-open').forEach(node => {
+        if (node !== popup) node.classList.remove('is-open');
+      });
+      popup.classList.toggle('is-open');
+      trigger.classList.toggle('is-focus', popup.classList.contains('is-open'));
+    });
+  }
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.popup-list.is-open').forEach(node => node.classList.remove('is-open'));
+    document.querySelectorAll('.is-focus').forEach(node => node.classList.remove('is-focus'));
+  });
+
+  bindButtonClicks(block('component-button'));
+  bindButtonClicks(block('component-icon'));
+  bindButtonClicks(block('component-space'));
+
+  block('component-typography')?.querySelectorAll('span, strong').forEach((node) => {
+    node.addEventListener('click', () => toast(`排版文本：${node.textContent.trim()}`));
+  });
+
+  block('component-grid')?.querySelectorAll('[style*="height:36px"]').forEach((cell, index) => {
+    cell.addEventListener('click', () => {
+      cell.style.background = cell.style.background === 'rgb(235, 236, 255)' ? '#f5f5ff' : '#ebecff';
+      toast(`栅格 ${index + 1}`);
+    });
+  });
+
+  block('component-pagination')?.querySelectorAll('.pagination span').forEach((item) => {
+    item.addEventListener('click', () => {
+      if (!/^\d+$/.test(item.textContent.trim())) return;
+      item.parentElement.querySelectorAll('span').forEach(node => node.classList.remove('active'));
+      item.classList.add('active');
+      toast(`切换到第 ${item.textContent.trim()} 页`);
+    });
+  });
+
+  block('component-menu')?.querySelectorAll('.menu-box div').forEach((item) => {
+    item.addEventListener('click', () => {
+      item.parentElement.querySelectorAll('div').forEach(node => node.classList.remove('active'));
+      item.classList.add('active');
+      toast(`菜单：${item.textContent.trim()}`);
+    });
+  });
+
+  block('component-tabs')?.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tab.parentElement.querySelectorAll('.tab').forEach(node => node.classList.remove('active'));
+      tab.classList.add('active');
+      toast(`切换标签：${tab.textContent.trim()}`);
+    });
+  });
+
+  block('component-steps')?.querySelectorAll('.step').forEach((step, index, steps) => {
+    step.addEventListener('click', () => {
+      steps.forEach((node, nodeIndex) => {
+        node.querySelector('.step-num').style.background = nodeIndex <= index ? 'var(--brand)' : '#dcdce0';
+      });
+      toast(`当前步骤：${step.textContent.trim()}`);
+    });
+  });
+
+  const dropdownBlock = block('component-dropdown');
+  if (dropdownBlock) {
+    const trigger = dropdownBlock.querySelector('button');
+    const menu = dropdownBlock.querySelector('.menu-box');
+    menu.style.display = 'none';
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      menu.style.display = menu.style.display === 'none' ? 'grid' : 'none';
+    });
+    menu.querySelectorAll('div').forEach((item) => {
+      item.addEventListener('click', () => {
+        menu.querySelectorAll('div').forEach(node => node.classList.remove('active'));
+        item.classList.add('active');
+        trigger.childNodes[0].textContent = item.textContent.trim() + ' ';
+        menu.style.display = 'none';
+        toast(`下拉操作：${item.textContent.trim()}`);
+      });
+    });
+  }
+
+  block('component-input')?.querySelectorAll('.field').forEach((input) => {
+    const status = document.createElement('span');
+    status.className = 'field-status';
+    status.textContent = `${input.value.length}/20`;
+    input.insertAdjacentElement('afterend', status);
+    input.addEventListener('input', () => {
+      status.textContent = `${input.value.length}/20`;
+    });
+    input.addEventListener('focus', () => input.classList.add('is-focus'));
+    input.addEventListener('blur', () => input.classList.remove('is-focus'));
+  });
+
+  const numberBlock = block('component-input-number');
+  if (numberBlock) {
+    const value = numberBlock.querySelector('.input-number > span:first-child');
+    numberBlock.querySelectorAll('.stepper span').forEach((step, index) => {
+      step.addEventListener('click', () => {
+        value.textContent = String(Number(value.textContent) + (index === 0 ? 1 : -1));
+      });
+    });
+  }
+
+  const textarea = block('component-textarea')?.querySelector('.textarea');
+  if (textarea) {
+    const status = document.createElement('span');
+    status.className = 'field-status';
+    status.textContent = `${textarea.value.length}/200`;
+    textarea.insertAdjacentElement('afterend', status);
+    textarea.addEventListener('input', () => {
+      status.textContent = `${textarea.value.length}/200`;
+    });
+  }
+
+  block('component-select')?.querySelectorAll('.select, .tree-select, .cascader').forEach((trigger, index) => {
+    const options = [
+      ['全部', '本科生', '研究生', '博士生'],
+      ['组织树选择', '研究生院', '国际商学院', '教务处'],
+      ['浙江 / 杭州', '江苏 / 南京', '上海 / 浦东', '广东 / 广州']
+    ][index];
+    createPopup(trigger, options);
+  });
+
+  block('component-picker')?.querySelectorAll('.picker').forEach((trigger, index) => {
+    const options = [
+      ['2026-05-18', '2026-05-19', '2026-05-20', '2026-05-21'],
+      ['09:30:00', '10:00:00', '14:30:00', '18:00:00'],
+      ['2026-05-18 至 2026-05-25', '2026-06-01 至 2026-06-07', '2026-07-01 至 2026-07-15']
+    ][index];
+    createPopup(trigger, options);
+  });
+
+  const choiceBlock = block('component-choice');
+  choiceBlock?.querySelectorAll('.radio').forEach((radio) => {
+    radio.addEventListener('click', () => {
+      choiceBlock.querySelectorAll('.radio').forEach(node => node.classList.remove('is-checked'));
+      radio.classList.add('is-checked');
+    });
+  });
+  choiceBlock?.querySelectorAll('.check').forEach((check) => {
+    check.addEventListener('click', () => check.classList.toggle('is-checked'));
+  });
+
+  const switchBlock = block('component-switch');
+  switchBlock?.querySelectorAll('.switch').forEach((item) => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('off');
+      item.textContent = item.classList.contains('off') ? '否' : '是';
+    });
+  });
+  const slider = switchBlock?.querySelector('.slider');
+  slider?.addEventListener('click', (event) => {
+    const rect = slider.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(100, Math.round((event.clientX - rect.left) / rect.width * 100)));
+    slider.querySelector('span').style.width = `${percent}%`;
+    slider.querySelector('i').style.left = `${percent}%`;
+    toast(`当前值：${percent}%`);
+  });
+  const rate = switchBlock?.querySelector('.rate');
+  if (rate) {
+    rate.innerHTML = [1, 2, 3, 4, 5].map(i => `<span class="rate-star${i <= 4 ? ' is-active' : ''}" data-rate="${i}">★</span>`).join(' ');
+    rate.querySelectorAll('.rate-star').forEach((star) => {
+      star.addEventListener('click', () => {
+        const value = Number(star.dataset.rate);
+        rate.querySelectorAll('.rate-star').forEach(node => node.classList.toggle('is-active', Number(node.dataset.rate) <= value));
+        toast(`${value} 星`);
+      });
+    });
+  }
+
+  function addUploadItem(container, text) {
+    let list = container.querySelector('.upload-list');
+    if (!list) {
+      list = document.createElement('div');
+      list.className = 'upload-list';
+      container.appendChild(list);
+    }
+    list.insertAdjacentHTML('beforeend', `<span>${text}<button class="btn link" type="button">删除</button></span>`);
+    list.querySelectorAll('button').forEach(btn => btn.onclick = () => btn.closest('span').remove());
+  }
+
+  const uploadBlock = block('component-upload');
+  uploadBlock?.querySelectorAll('button, .upload').forEach((target) => {
+    target.addEventListener('click', () => addUploadItem(uploadBlock, `附件-${Date.now().toString().slice(-4)}.xlsx`));
+  });
+
+  const draggerBlock = block('component-dragger');
+  const dragger = draggerBlock?.querySelector('.dragger');
+  if (dragger) {
+    ['dragenter', 'dragover'].forEach(type => dragger.addEventListener(type, (event) => {
+      event.preventDefault();
+      dragger.classList.add('is-dragover');
+    }));
+    ['dragleave', 'drop'].forEach(type => dragger.addEventListener(type, (event) => {
+      event.preventDefault();
+      dragger.classList.remove('is-dragover');
+    }));
+    dragger.addEventListener('drop', () => addUploadItem(draggerBlock, '拖拽上传文件.xlsx'));
+    dragger.addEventListener('click', () => addUploadItem(draggerBlock, '手动选择文件.xlsx'));
+  }
+  const mention = draggerBlock?.querySelector('.mention');
+  if (mention) createPopup(mention, ['@张明 请确认', '@李华 请审批', '@王宁 请补充']);
+
+  block('component-table')?.querySelectorAll('tbody tr').forEach((row) => {
+    row.addEventListener('click', (event) => {
+      if (event.target.closest('button')) return;
+      row.classList.toggle('is-selected');
+    });
+    row.querySelector('button')?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const titleCell = row.children[1];
+      if (titleCell.querySelector('input')) return;
+      const oldValue = titleCell.textContent.trim();
+      titleCell.innerHTML = `<input class="editable-input" value="${oldValue}">`;
+      const input = titleCell.querySelector('input');
+      input.focus();
+      input.addEventListener('blur', () => {
+        titleCell.textContent = input.value || oldValue;
+      });
+    });
+  });
+
+  block('component-tag')?.querySelectorAll('.tag, .avatar').forEach((item) => {
+    item.addEventListener('click', () => {
+      item.style.outline = item.style.outline ? '' : '2px solid rgba(51, 63, 255, .28)';
+    });
+  });
+
+  const statistic = block('component-card')?.querySelector('.statistic strong');
+  statistic?.addEventListener('click', () => {
+    const value = Math.min(100, Number(statistic.textContent.replace('%', '')) + 1);
+    statistic.textContent = `${value}%`;
+  });
+
+  block('component-timeline')?.querySelectorAll('.timeline-item').forEach((item) => {
+    item.addEventListener('click', () => toast(`时间节点：${item.textContent.trim()}`));
+  });
+
+  block('component-tree')?.querySelectorAll('.tree div').forEach((item) => {
+    item.addEventListener('click', () => {
+      item.parentElement.querySelectorAll('div').forEach(node => node.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  block('component-calendar')?.querySelectorAll('.calendar-grid span').forEach((day) => {
+    if (!/^\d+$/.test(day.textContent.trim())) return;
+    day.addEventListener('click', () => {
+      block('component-calendar').querySelectorAll('.calendar-grid span').forEach(node => node.classList.remove('is-selected'));
+      day.classList.add('is-selected');
+      toast(`选中 2026-05-${day.textContent.trim().padStart(2, '0')}`);
+    });
+  });
+
+  const collapseBlock = block('component-collapse');
+  const collapsePanel = collapseBlock?.querySelector('.alert');
+  const descriptions = collapseBlock?.querySelector('[style*="grid-template-columns"]');
+  collapsePanel?.addEventListener('click', () => {
+    descriptions.style.display = descriptions.style.display === 'none' ? 'grid' : 'none';
+  });
+
+  block('component-alert')?.querySelectorAll('.alert').forEach((alert) => {
+    alert.addEventListener('click', () => alert.classList.toggle('is-closed'));
+  });
+
+  block('component-message')?.querySelectorAll('.message').forEach((message) => {
+    message.addEventListener('click', () => toast(message.textContent.trim()));
+  });
+
+  block('component-notification')?.querySelector('.notification')?.addEventListener('click', () => {
+    toast('通知已读');
+  });
+
+  block('component-result')?.querySelector('button')?.addEventListener('click', () => toast('返回列表'));
+  block('component-spin')?.querySelector('[style*="border-top-color"]')?.classList.add('spin-dot');
+  block('component-skeleton')?.querySelector('.empty')?.addEventListener('click', () => toast('暂无数据'));
+
+  const modalMask = document.createElement('div');
+  modalMask.className = 'overlay-mask';
+  modalMask.innerHTML = `
+    <div class="modal-demo">
+      <div class="float-head"><span>对话框标题</span><button class="btn link" type="button">×</button></div>
+      <div class="float-body">这是点击后打开的真实弹窗层。</div>
+      <div class="float-foot"><button class="btn" type="button">取消</button><button class="btn primary" type="button">确定</button></div>
+    </div>`;
+  document.body.appendChild(modalMask);
+  modalMask.addEventListener('click', (event) => {
+    if (event.target === modalMask || event.target.closest('.float-head button') || event.target.closest('.float-foot button')) {
+      modalMask.classList.remove('is-open');
+    }
+  });
+  block('component-modal')?.querySelector('.modal-demo')?.addEventListener('click', () => modalMask.classList.add('is-open'));
+
+  const drawer = document.createElement('aside');
+  drawer.className = 'live-drawer';
+  drawer.innerHTML = '<div class="float-head"><span>抽屉标题</span><button class="btn link" type="button">×</button></div><div class="float-body">这是点击后打开的真实抽屉层，可承载详情或表单。</div>';
+  document.body.appendChild(drawer);
+  drawer.querySelector('button').addEventListener('click', () => drawer.classList.remove('is-open'));
+  block('component-drawer')?.querySelector('.drawer-demo')?.addEventListener('click', () => drawer.classList.add('is-open'));
+
+  block('component-tooltip')?.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => toast(button.textContent.trim()));
+  });
+
+  block('component-popconfirm')?.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => toast(button.textContent.trim()));
+  });
+
+  block('component-segmented')?.querySelectorAll('.segmented span').forEach((item) => {
+    item.addEventListener('click', () => {
+      item.parentElement.querySelectorAll('span').forEach(node => node.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  block('component-qrcode')?.querySelector('.qr')?.addEventListener('click', (event) => {
+    if (event.target.tagName === 'I') event.target.style.background = event.target.style.background === 'var(--brand)' ? '#111' : 'var(--brand)';
+  });
+
+  const transferBlock = block('component-transfer');
+  transferBlock?.querySelectorAll('.tree div').forEach((item) => {
+    item.addEventListener('click', () => item.classList.toggle('active'));
+  });
+  transferBlock?.querySelector('button')?.addEventListener('click', () => {
+    const boxes = transferBlock.querySelectorAll('.tree');
+    const selected = [...boxes[0].querySelectorAll('.active')];
+    selected.forEach((item) => {
+      item.classList.remove('active');
+      boxes[1].appendChild(item);
+    });
+  });
+
+  const tourBlock = block('component-tour');
+  const tourSteps = ['这里是当前功能的说明。', '这里展示交互按钮。', '这里完成组件确认。'];
+  let tourIndex = 0;
+  tourBlock?.querySelector('button')?.addEventListener('click', () => {
+    tourIndex = (tourIndex + 1) % tourSteps.length;
+    tourBlock.querySelector('strong').textContent = `步骤 ${tourIndex + 1} / ${tourSteps.length}`;
+    tourBlock.querySelector('span').textContent = tourSteps[tourIndex];
+  });
+
+  block('component-watermark')?.querySelector('div[style*="position:relative"]')?.addEventListener('click', (event) => {
+    const mark = event.currentTarget.querySelector('span');
+    mark.textContent = mark.textContent === '60 System' ? 'WiseEdu' : '60 System';
+  });
+
+  block('component-backtop')?.querySelector('button')?.addEventListener('click', () => {
+    document.querySelector('.ant-stage').scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  function bindOfficialCardInteractions() {
+    document.querySelectorAll('.official-card').forEach((card) => {
+      const demo = card.dataset.demo;
+      const name = card.dataset.name;
+      bindButtonClicks(card);
+
+      card.querySelectorAll('.btn:not([disabled]), .float-btn, .mini-util, .mini-image, .tag, .avatar, .alert, .message, .notification, .empty').forEach((node) => {
+        node.addEventListener('click', (event) => {
+          event.stopPropagation();
+          if (demo === 'modal') modalMask.classList.add('is-open');
+          else if (demo === 'drawer') drawer.classList.add('is-open');
+          else if (demo === 'message') toast('这是一条 Message');
+          else if (demo === 'notification') toast('通知已触发');
+          else if (demo === 'floatButton') document.querySelector('.ant-stage').scrollTo({ top: 0, behavior: 'smooth' });
+          else if (demo === 'image') node.style.transform = node.style.transform ? '' : 'scale(1.08)';
+          else if (demo === 'app' || demo === 'config' || demo === 'util') toast(`${name} 配置已触发`);
+        });
+      });
+
+      card.querySelectorAll('.select, .picker').forEach((trigger) => {
+        if (trigger.dataset.bound) return;
+        trigger.dataset.bound = 'true';
+        createPopup(trigger, ['选项一', '选项二', '选项三']);
+      });
+
+      card.querySelectorAll('.menu-box div, .tree div, .mini-list span').forEach((item) => {
+        item.addEventListener('click', () => {
+          item.parentElement.querySelectorAll('div, span').forEach(node => node.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+
+      card.querySelectorAll('.pagination span').forEach((item) => {
+        item.addEventListener('click', () => {
+          if (!/^\d+$/.test(item.textContent.trim())) return;
+          item.parentElement.querySelectorAll('span').forEach(node => node.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+
+      card.querySelectorAll('.tab, .segmented span').forEach((item) => {
+        item.addEventListener('click', () => {
+          item.parentElement.querySelectorAll('.tab, span').forEach(node => node.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+
+      card.querySelectorAll('.radio').forEach((radio) => {
+        radio.addEventListener('click', () => {
+          card.querySelectorAll('.radio').forEach(node => node.classList.remove('is-checked'));
+          radio.classList.add('is-checked');
+        });
+      });
+
+      card.querySelectorAll('.checkbox').forEach((check) => {
+        check.addEventListener('click', () => check.classList.toggle('is-checked'));
+      });
+
+      card.querySelectorAll('.switch').forEach((item) => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('off');
+          item.textContent = item.classList.contains('off') ? '否' : '是';
+        });
+      });
+
+      card.querySelectorAll('.slider').forEach((item) => {
+        item.addEventListener('click', (event) => {
+          const rect = item.getBoundingClientRect();
+          const percent = Math.max(0, Math.min(100, Math.round((event.clientX - rect.left) / rect.width * 100)));
+          item.querySelector('span').style.width = `${percent}%`;
+          item.querySelector('i').style.left = `${percent}%`;
+        });
+      });
+
+      card.querySelectorAll('.rate').forEach((rateNode) => {
+        if (rateNode.dataset.bound) return;
+        rateNode.dataset.bound = 'true';
+        rateNode.innerHTML = [1, 2, 3, 4, 5].map(i => `<span class="rate-star${i <= 3 ? ' is-active' : ''}" data-rate="${i}">★</span>`).join(' ');
+        rateNode.querySelectorAll('.rate-star').forEach((star) => {
+          star.addEventListener('click', () => {
+            const value = Number(star.dataset.rate);
+            rateNode.querySelectorAll('.rate-star').forEach(node => node.classList.toggle('is-active', Number(node.dataset.rate) <= value));
+          });
+        });
+      });
+
+      card.querySelectorAll('.input-number').forEach((number) => {
+        const value = number.querySelector('span:first-child');
+        number.querySelectorAll('.stepper span').forEach((step, index) => {
+          step.addEventListener('click', () => {
+            value.textContent = String(Number(value.textContent) + (index === 0 ? 1 : -1));
+          });
+        });
+      });
+
+      card.querySelectorAll('.color-swatch').forEach((swatch) => {
+        const colors = ['#333fff', '#20b486', '#e78915', '#fa5151'];
+        swatch.addEventListener('click', () => {
+          const current = colors.indexOf(swatch.style.backgroundColor);
+          swatch.style.background = colors[(current + 1 + colors.length) % colors.length];
+        });
+      });
+
+      card.querySelectorAll('.mini-carousel').forEach((carousel) => {
+        carousel.addEventListener('click', () => {
+          const items = [...carousel.querySelectorAll('span')];
+          const current = items.findIndex(item => item.classList.contains('is-active'));
+          items.forEach(item => item.classList.remove('is-active'));
+          items[(current + 1) % items.length].classList.add('is-active');
+        });
+      });
+
+      card.querySelectorAll('.calendar-grid span').forEach((day) => {
+        if (!/^\d+$/.test(day.textContent.trim())) return;
+        day.addEventListener('click', () => {
+          card.querySelectorAll('.calendar-grid span').forEach(node => node.classList.remove('is-selected'));
+          day.classList.add('is-selected');
+        });
+      });
+
+      card.querySelectorAll('.progress-track').forEach((track) => {
+        track.addEventListener('click', () => {
+          const fill = track.querySelector('span');
+          const current = parseInt(fill.style.width || '0', 10);
+          const next = current >= 100 ? 20 : current + 20;
+          fill.style.width = `${next}%`;
+          const text = track.nextElementSibling;
+          if (text) text.textContent = `${next}%`;
+        });
+      });
+
+      card.querySelectorAll('.mini-splitter').forEach((splitter) => {
+        splitter.addEventListener('click', () => {
+          splitter.style.gridTemplateColumns = splitter.style.gridTemplateColumns === '2fr 6px 1fr' ? '1fr 6px 1fr' : '2fr 6px 1fr';
+        });
+      });
+
+      if (demo === 'upload') {
+        card.querySelectorAll('button, .upload').forEach((target) => {
+          target.addEventListener('click', () => addUploadItem(card, `${name}-文件.xlsx`));
+        });
+      }
+
+      if (demo === 'table') {
+        card.querySelectorAll('tr').forEach((row) => {
+          row.addEventListener('click', () => row.classList.toggle('is-selected'));
+        });
+      }
+
+      if (demo === 'watermark') {
+        card.querySelector('[style*="position:relative"]')?.addEventListener('click', (event) => {
+          const mark = event.currentTarget.querySelector('span');
+          mark.textContent = mark.textContent === '60 System' ? 'WiseEdu' : '60 System';
+        });
+      }
+
+      if (demo === 'tour') {
+        let step = 1;
+        card.querySelector('button')?.addEventListener('click', () => {
+          step = step >= 3 ? 1 : step + 1;
+          card.querySelector('strong').textContent = `步骤 ${step} / 3`;
+        });
+      }
+    });
+  }
+
+  bindOfficialCardInteractions();
+
+  document.querySelectorAll('.ant-anchor a').forEach((link) => {
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.ant-anchor a').forEach(node => node.classList.remove('is-current'));
+      link.classList.add('is-current');
+    });
+  });
+
+  const componentFeatureRoutes = {
+    '功能索引': './component-library-index.html',
+    '当前组件': './current-components-index.html',
+    'Ant目录': './all-components-index.html',
+    '组件总览': './ant-components-page.html',
+    '表单': './form-components-page.html',
+    '表格': './basic-table-page.html',
+    '框架': './primary-nav.html'
+  };
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '组件总览',
+    onFeatureChange(feature) {
+      const target = componentFeatureRoutes[feature];
+      if (!target) return;
+      window.location.href = target;
+    }
+  });
+
+  if (window.location.hash) {
+    requestAnimationFrame(() => {
+      document.querySelector(window.location.hash)?.scrollIntoView({ block: 'start' });
+    });
+  }
+</script>
+</body>
+</html>

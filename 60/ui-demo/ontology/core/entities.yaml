@@ -1,0 +1,227 @@
+ontology: szpu-hr
+version: 0.1.0
+entities:
+  - id: Person
+    label: 人员
+    definition: 已进入学校人员主数据管理范围的自然人，不等同于账号、候选人或任职记录。
+    identifier: personId
+    attributes:
+      - { id: personId, label: 人员主键, type: string, required: true, classification: internal }
+      - { id: employeeNumber, label: 工号, type: string, classification: sensitive }
+      - { id: name, label: 姓名, type: string, required: true, classification: sensitive }
+      - { id: birthDate, label: 出生日期, type: date, classification: sensitive }
+      - { id: personnelCategory, label: 人员类别, type: concept, vocabulary: PersonnelCategory }
+      - { id: employmentStatus, label: 人员状态, type: concept, vocabulary: EmploymentStatus }
+
+  - id: PersonIdentity
+    label: 人员身份凭证
+    definition: 用于身份核验或跨系统匹配的证件事实，与人员主体分离保存。
+    identifier: identityId
+    attributes:
+      - { id: identityId, label: 身份凭证主键, type: string, required: true, classification: restricted }
+      - { id: documentType, label: 证件类型, type: concept, required: true, classification: restricted }
+      - { id: documentNumber, label: 证件号码, type: string, required: true, classification: restricted, index: exact-encrypted }
+      - { id: validFrom, label: 有效期始, type: date, classification: restricted }
+      - { id: validTo, label: 有效期止, type: date, classification: restricted }
+
+  - id: Candidate
+    label: 候选人
+    definition: 参与招聘但尚未成为学校人员主数据主体的自然人。
+    identifier: candidateId
+    attributes:
+      - { id: candidateId, label: 候选人主键, type: string, required: true, classification: internal }
+      - { id: registrationNumber, label: 报名号, type: string, classification: internal }
+      - { id: name, label: 姓名, type: string, required: true, classification: sensitive }
+      - { id: candidateStatus, label: 候选状态, type: concept, vocabulary: CandidateStatus }
+      - { id: personId, label: 转化后人员主键, type: reference, target: Person, nullable: true }
+
+  - id: Organization
+    label: 组织
+    definition: 学校治理或业务管理中的机构单元，包括学校、学院、部门等，不包含岗位。
+    identifier: organizationId
+    source: T_RS_JGGL_XZJG, T_RS_ZXBZ_DW
+    attributes:
+      - { id: organizationId, label: 组织主键, type: string, required: true, classification: internal }
+      - { id: organizationCode, label: 组织编码, type: string, required: true, unique: true, classification: internal }
+      - { id: name, label: 组织名称, type: string, required: true, classification: internal }
+      - { id: nameEn, label: 英文名称, type: string, nullable: true, classification: internal }
+      - { id: shortName, label: 简称, type: string, nullable: true, classification: internal }
+      - { id: organizationType, label: 组织类型, type: concept, vocabulary: OrganizationType }
+      - { id: organizationCategory, label: 组织大类, type: concept, vocabulary: OrganizationCategory }
+      - { id: level, label: 组织层级, type: concept, vocabulary: OrganizationLevel, required: true }
+      - { id: parentOrganizationId, label: 上级组织, type: reference, target: Organization, nullable: true }
+      - { id: responsibilities, label: 组织职责, type: text, nullable: true }
+      - { id: establishedDate, label: 成立日期, type: date, nullable: true }
+      - { id: establishmentDocument, label: 成立文号, type: string, nullable: true }
+      - { id: abolishedDate, label: 撤销日期, type: date, nullable: true }
+      - { id: abolishmentDocument, label: 撤销文号, type: string, nullable: true }
+      - { id: isActive, label: 是否启用, type: boolean, required: true, default: true }
+      - { id: sortOrder, label: 排序序号, type: integer, required: true }
+      - { id: validFrom, label: 生效日期, type: date }
+      - { id: validTo, label: 失效日期, type: date, nullable: true }
+    relationships:
+      - { relation: parentOf, target: Organization, cardinality: one-to-many, description: 组织层级关系 }
+      - { relation: affiliatedTo, target: Organization, cardinality: many-to-one, description: 挂靠关系，用于双重领导 }
+
+  - id: Position
+    label: 岗位
+    definition: 对职责、任职条件和岗位类别的稳定描述，不代表某个人实际任职，也不等同于招聘岗位。
+    identifier: positionId
+    attributes:
+      - { id: positionId, label: 岗位主键, type: string, required: true }
+      - { id: positionCode, label: 岗位编码, type: string, required: true }
+      - { id: name, label: 岗位名称, type: string, required: true }
+      - { id: positionCategory, label: 岗位类别, type: concept, vocabulary: PositionCategory }
+      - { id: positionLevel, label: 岗位等级, type: concept, vocabulary: PositionLevel }
+      - { id: responsibilities, label: 岗位职责, type: text }
+
+  - id: PositionSlot
+    label: 岗位编制
+    definition: 某组织下可被人员占用的岗位资源实例，用于表达核定数、占用和空缺。
+    identifier: slotId
+    attributes:
+      - { id: slotId, label: 岗位编制主键, type: string, required: true }
+      - { id: headcount, label: 核定人数, type: integer, required: true }
+      - { id: slotStatus, label: 编制状态, type: concept, vocabulary: SlotStatus }
+
+  - id: EmploymentAssignment
+    label: 任职关系
+    definition: 人员在一段有效时间内于组织、岗位或岗位编制上的任用事实，可区分主要岗位和兼任岗位。
+    identifier: assignmentId
+    attributes:
+      - { id: assignmentId, label: 任职关系主键, type: string, required: true }
+      - { id: assignmentType, label: 任职类型, type: concept, vocabulary: AssignmentType, required: true }
+      - { id: isPrimary, label: 是否主要任职, type: boolean, required: true }
+      - { id: validFrom, label: 任职开始日期, type: date, required: true }
+      - { id: validTo, label: 任职结束日期, type: date, nullable: true }
+      - { id: assignmentStatus, label: 任职状态, type: concept, vocabulary: AssignmentStatus }
+
+  - id: RecruitmentPlan
+    label: 招聘计划
+    definition: 在特定批次和组织范围内，经申报审批形成的招聘需求集合。
+    identifier: recruitmentPlanId
+    attributes:
+      - { id: recruitmentPlanId, label: 招聘计划主键, type: string, required: true }
+      - { id: planNumber, label: 计划编号, type: string, required: true }
+      - { id: recruitmentType, label: 招聘种类, type: concept, vocabulary: RecruitmentType }
+      - { id: planStatus, label: 计划状态, type: concept, vocabulary: RecruitmentPlanStatus }
+
+  - id: RecruitmentPosition
+    label: 招聘岗位
+    definition: 某招聘计划中对外发布的岗位需求，引用岗位定义并附加本批次条件和招聘人数。
+    identifier: recruitmentPositionId
+    attributes:
+      - { id: recruitmentPositionId, label: 招聘岗位主键, type: string, required: true }
+      - { id: vacancyCount, label: 招聘人数, type: integer, required: true }
+      - { id: requirements, label: 本批次任职条件, type: structured-text }
+      - { id: publishStatus, label: 发布状态, type: concept }
+
+  - id: Application
+    label: 应聘申请
+    definition: 候选人针对招聘岗位提交的一次可审计申请。
+    identifier: applicationId
+    attributes:
+      - { id: applicationId, label: 应聘申请主键, type: string, required: true }
+      - { id: submittedAt, label: 提交时间, type: datetime }
+      - { id: applicationStatus, label: 申请状态, type: concept, vocabulary: ApplicationStatus }
+
+  - id: OnboardingCase
+    label: 进校报到实例
+    definition: 拟录用人员从报备到正式建档的一次流程实例，包含正常、延期、放弃等分支。
+    identifier: onboardingCaseId
+    attributes:
+      - { id: onboardingCaseId, label: 报到实例主键, type: string, required: true }
+      - { id: onboardingType, label: 进校方式, type: concept, vocabulary: OnboardingType }
+      - { id: onboardingStatus, label: 报到状态, type: concept, vocabulary: OnboardingStatus }
+      - { id: expectedDate, label: 预计报到日期, type: date }
+      - { id: actualDate, label: 实际报到日期, type: date, nullable: true }
+
+  - id: Contract
+    label: 合同
+    definition: 人员与学校之间具有生效期和版本的合同事实。
+    identifier: contractId
+    attributes:
+      - { id: contractId, label: 合同主键, type: string, required: true, classification: sensitive }
+      - { id: contractNumber, label: 合同编号, type: string, classification: sensitive }
+      - { id: contractType, label: 合同类型, type: concept }
+      - { id: validFrom, label: 合同开始日期, type: date }
+      - { id: validTo, label: 合同结束日期, type: date }
+      - { id: contractStatus, label: 合同状态, type: concept }
+
+  - id: Course
+    label: 课程
+    definition: 教务主数据中的稳定课程定义。
+    identifier: courseId
+    attributes:
+      - { id: courseId, label: 课程主键, type: string, required: true }
+      - { id: courseCode, label: 课程编码, type: string, required: true }
+      - { id: name, label: 课程名称, type: string, required: true }
+
+  - id: TeachingAssignment
+    label: 授课任务
+    definition: 教师在特定学期和班级承担某课程教学的事实。
+    identifier: teachingAssignmentId
+    attributes:
+      - { id: teachingAssignmentId, label: 授课任务主键, type: string, required: true }
+      - { id: personId, label: 授课教师, type: reference, target: Person, required: true }
+      - { id: courseId, label: 课程, type: reference, target: Course, required: true }
+
+  - id: CoursePortfolio
+    label: 课程档案
+    definition: 围绕一次授课任务形成的设计、实施、评价、反思和证据集合。
+    identifier: coursePortfolioId
+    attributes:
+      - { id: coursePortfolioId, label: 课程档案主键, type: string, required: true }
+      - { id: teachingAssignmentId, label: 授课任务, type: reference, target: TeachingAssignment, required: true }
+      - { id: archiveStatus, label: 归档状态, type: concept, vocabulary: PortfolioArchiveStatus }
+
+  - id: EnterprisePractice
+    label: 企业实践
+    definition: 教师在企业开展实践、挂职或产学合作的一段经历。
+    identifier: enterprisePracticeId
+    attributes:
+      - { id: enterprisePracticeId, label: 企业实践主键, type: string, required: true }
+      - { id: personId, label: 教师, type: reference, target: Person, required: true }
+
+  - id: TeachingAchievement
+    label: 教学成果
+    definition: 教师参与的项目、论文、教材、竞赛指导、奖励或荣誉成果。
+    identifier: achievementId
+    attributes:
+      - { id: achievementId, label: 成果主键, type: string, required: true }
+      - { id: personId, label: 成果人员, type: reference, target: Person, required: true }
+      - { id: achievementType, label: 成果类型, type: concept, vocabulary: TeachingAchievementType }
+
+  - id: TrainingExperience
+    label: 进修培训经历
+    definition: 教师参加培训、研修、访学或学历提升的经历事实。
+    identifier: trainingExperienceId
+    attributes:
+      - { id: trainingExperienceId, label: 培训经历主键, type: string, required: true }
+      - { id: personId, label: 教师, type: reference, target: Person, required: true }
+
+  - id: ProfessionalAppointment
+    label: 专业任职
+    definition: 教师在校外机构、行业组织或专业组织中的任职，不替代校内任职关系。
+    identifier: professionalAppointmentId
+    attributes:
+      - { id: professionalAppointmentId, label: 专业任职主键, type: string, required: true }
+      - { id: personId, label: 教师, type: reference, target: Person, required: true }
+
+  - id: PortfolioSubmission
+    label: 档案提交
+    definition: 教师针对一个档案实体发起的一次补录、变更或归档提交。
+    identifier: portfolioSubmissionId
+    attributes:
+      - { id: portfolioSubmissionId, label: 档案提交主键, type: string, required: true }
+      - { id: personId, label: 提交教师, type: reference, target: Person, required: true }
+      - { id: subjectId, label: 档案对象主键, type: string, required: true }
+
+  - id: PortfolioReview
+    label: 档案审核记录
+    definition: 针对一次档案提交形成的只追加、不可覆盖审核决定。
+    identifier: portfolioReviewId
+    attributes:
+      - { id: portfolioReviewId, label: 审核记录主键, type: string, required: true }
+      - { id: portfolioSubmissionId, label: 档案提交, type: reference, target: PortfolioSubmission, required: true }
+      - { id: reviewerPersonId, label: 审核人, type: reference, target: Person, required: true }

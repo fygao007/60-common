@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>我的工资 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">我的工资</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">资</span>我的工资</h1>
+        <div class="ap-actions"><button class="ap-btn" type="button">申请收入证明</button><button class="ap-btn primary" type="button">下载工资条</button></div>
+      </div>
+
+      <div class="ap-stat-row">
+        <div class="ap-stat accent"><p>2026年5月实发工资</p><h3>14,286 <small>元</small></h3></div>
+        <div class="ap-stat"><p>应发合计</p><h3>17,920 <small>元</small></h3></div>
+        <div class="ap-stat"><p>扣款合计（五险一金、个税等）</p><h3>3,634 <small>元</small></h3></div>
+        <div class="ap-stat"><p>本年度累计发放</p><h3>71,430 <small>元</small></h3></div>
+      </div>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>2026年5月工资明细</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>项目</th><th>应发</th><th>项目</th><th>扣款</th></tr></thead>
+              <tbody>
+                <tr><td>岗位工资</td><td>5,200</td><td>养老保险</td><td>720</td></tr>
+                <tr><td>薪级工资</td><td>2,860</td><td>医疗保险</td><td>410</td></tr>
+                <tr><td>绩效工资</td><td>6,400</td><td>失业保险</td><td>52</td></tr>
+                <tr><td>岗位津贴</td><td>2,000</td><td>住房公积金</td><td>1,560</td></tr>
+                <tr><td>课时补贴</td><td>1,460</td><td>个人所得税</td><td>892</td></tr>
+                <tr><td><strong>应发合计</strong></td><td><strong>17,920</strong></td><td><strong>扣款合计</strong></td><td><strong>3,634</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>近6个月发放趋势</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>月份</th><th>应发</th><th>实发</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>2026-05</td><td>17,920</td><td>14,286</td><td><span class="ap-tag green">已发放</span></td></tr>
+                <tr><td>2026-04</td><td>17,920</td><td>14,286</td><td><span class="ap-tag green">已发放</span></td></tr>
+                <tr><td>2026-03</td><td>18,560</td><td>14,802</td><td><span class="ap-tag green">已发放</span></td></tr>
+                <tr><td>2026-02</td><td>17,920</td><td>14,290</td><td><span class="ap-tag green">已发放</span></td></tr>
+                <tr><td>2026-01</td><td>21,340</td><td>16,932</td><td><span class="ap-tag green">已发放（含年终绩效）</span></td></tr>
+                <tr><td>2025-12</td><td>17,920</td><td>14,286</td><td><span class="ap-tag green">已发放</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>常见问题</h2></div>
+        <div class="ap-panel-body">
+          <p style="margin:0 0 12px;color:var(--ap-text);font-size:14px;line-height:24px">· 工资条数据每月10日前更新，如有疑问可在线发起"工资核对"工单；</p>
+          <p style="margin:0 0 12px;color:var(--ap-text);font-size:14px;line-height:24px">· 个人所得税年度汇算清缴信息可在"我的档案"中查询；</p>
+          <p style="margin:0;color:var(--ap-text);font-size:14px;line-height:24px">· 公积金、社保缴纳明细可前往"证明打印"模块申请相关证明。</p>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'my-salary', versionLabel:'我的工资', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'my-salary',label:'我的工资',closable:true}]
+});
+</script>
+</body>
+</html>

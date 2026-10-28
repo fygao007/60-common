@@ -1,0 +1,68 @@
+/* KpiCard 顶部统计卡片 - 干净白卡，无渐变高光 */
+
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+  padding: 20px 22px;
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  transition: box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.kpi-card--accent {
+  border-color: #c7d8ff;
+}
+
+.kpi-card__icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #eef4ff;
+  color: #3d4af5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-card__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.kpi-card__label {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  line-height: 22px;
+}
+
+.kpi-card__value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  margin-top: 22px;
+  letter-spacing: -0.4px;
+}
+
+.kpi-card--accent .kpi-card__value {
+  color: #0f172a;
+}
+
+.kpi-card__subtext {
+  font-size: 13px;
+  color: #8a94a6;
+  line-height: 18px;
+  margin-top: 6px;
+}

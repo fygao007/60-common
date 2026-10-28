@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>当前组件</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg);
+      font-family: var(--ds-font-family);
+    }
+
+    .current-page {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      padding: 16px 16px 80px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .current-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .current-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .current-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .current-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .current-desc {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .current-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .current-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .current-action.primary {
+      color: #fff;
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      padding: 14px 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .summary-card span {
+      display: block;
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-top: 4px;
+      color: #000;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+    }
+
+    .component-section {
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 10px 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .section-count {
+      color: var(--ds-color-text-tertiary);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .component-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .component-table th,
+    .component-table td {
+      height: 44px;
+      padding: 10px 12px;
+      text-align: left;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+      vertical-align: middle;
+    }
+
+    .component-table th {
+      color: #000;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .component-table th:last-child,
+    .component-table td:last-child {
+      border-right: 0;
+    }
+
+    .component-name {
+      color: #000;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .component-meta {
+      color: var(--ds-color-text-secondary);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      color: #505266;
+      background: #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .text-link {
+      color: var(--ds-color-primary);
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1100px) {
+      .current-head {
+        flex-direction: column;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .component-section {
+        overflow: auto;
+      }
+
+      .component-table {
+        min-width: 920px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="current-page">
+    <header class="current-head">
+      <div>
+        <h1 class="current-title"><span>当前组件</span></h1>
+        <p class="current-desc">这里列的是当前已经沉淀到 `@wisedu/design-system` 的组件，不是 Ant 全量待办清单。每个组件包含用途、预览页和源码入口。</p>
+      </div>
+      <div class="current-actions">
+        <a class="current-action" href="./component-library-index.html">功能索引</a>
+        <a class="current-action primary" href="./all-components-index.html">Ant目录</a>
+      </div>
+    </header>
+
+    <section class="summary-grid" aria-label="组件统计">
+      <article class="summary-card"><span>当前组件</span><strong id="componentTotal">0</strong></article>
+      <article class="summary-card"><span>组件分组</span><strong id="groupTotal">0</strong></article>
+      <article class="summary-card"><span>预览页面</span><strong id="previewTotal">0</strong></article>
+      <article class="summary-card"><span>维护方式</span><strong>组件化</strong></article>
+    </section>
+
+    <div id="componentSections"></div>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const groups = [
+    {
+      title: '基础组件',
+      items: [
+        ['DSAnchor', '锚点导航组件，用于长页面目录、表单分组和详情章节跳转。', '已组件化', './anchor-components.html', './packages/design-system/src/Anchor/index.jsx'],
+        ['DSButton', '按钮基础组件，支持主按钮、默认按钮、文字按钮、危险按钮、加载和禁用。', '已组件化', './button-states.html', './packages/design-system/src/Button/index.jsx'],
+        ['DSButtonGroup', '普通按钮组、主次组合、工具栏按钮、分段按钮、图标按钮和块级按钮。', '已组件化', './button-group-states.html', './packages/design-system/src/ButtonGroup/index.jsx'],
+        ['DSLinkButton', '链接样式按钮，用于表格操作列和轻量文本操作。', '已组件化', './link-button-components.html', './packages/design-system/src/LinkButton/index.jsx'],
+        ['DSLinkButtonGroup', '链接按钮组，用于编辑、详情、删除等行内操作组合。', '已组件化', './link-button-components.html', './packages/design-system/src/LinkButtonGroup/index.jsx'],
+        ['DSIconButton', '图标按钮，用于刷新、列设置、全屏等工具栏操作。', '已组件化', './ant-components-page.html#official-button', './packages/design-system/src/IconButton/index.jsx'],
+        ['DSSteps', '通用步骤条，用于流程步骤、审核进度、导入流程和可点击切换。', '已组件化', './steps-components.html', './packages/design-system/src/Steps/index.jsx'],
+        ['DSTag', '标签组件，用于状态、分类、轻量标识。', '已组件化', './basic-table-page.html', './packages/design-system/src/Tag/index.jsx']
+      ]
+    },
+    {
+      title: '表单组件',
+      items: [
+        ['DSField', '表单字段容器，承载标签、必填、帮助文本和错误提示。', '已组件化', './form-components-page.html', './packages/design-system/src/Field/index.jsx'],
+        ['DSInput', '单行文本输入组件。', '已组件化', './form-input-states.html', './packages/design-system/src/Field/index.jsx'],
+        ['DSSelect', '下拉选择组件。', '已组件化', './form-select-states.html', './packages/design-system/src/Field/index.jsx'],
+        ['DSCascader', '级联选择器组件，支持多列选择、搜索、清除和路径展示。', '已组件化', './form-cascader-states.html', './packages/design-system/src/Cascader/index.jsx'],
+        ['DSDatePicker', '日期选择器组件，支持日期、日期范围、按月、按年、标题层级跳转和跨度切换。', '已组件化', './form-date-picker-states.html', './packages/design-system/src/DatePicker/index.jsx'],
+        ['DSTextarea', '多行文本域组件。', '已组件化', './form-textarea-states.html', './packages/design-system/src/Field/index.jsx'],
+        ['DSRadioGroup / DSRadio', '单选组件，支持横向、纵向、禁用、错误、表单行交互。', '已组件化', './form-radio-group-states.html', './packages/design-system/src/Radio/index.jsx'],
+        ['DSRichTextEditor', '富文本编辑器组件，支持工具栏、正文编辑和字数统计。', '已组件化', './form-rich-text-editor-states.html', './packages/design-system/src/RichTextEditor/index.jsx'],
+        ['DSTimePicker', '时间选择器组件，支持时分秒面板、此刻、确认和清除。', '已组件化', './form-time-picker-states.html', './packages/design-system/src/TimePicker/index.jsx'],
+        ['DSSwitch', '开关组件，用于启用、停用、是否类字段。', '已组件化', './form-switch-states.html', './packages/design-system/src/Switch/index.jsx']
+      ]
+    },
+    {
+      title: '数据与表格',
+      items: [
+        ['DSFilterBar', '查询筛选区，承载关键词、分类、状态、日期等筛选条件。', '已组件化', './basic-table-page.html', './packages/design-system/src/FilterBar/index.jsx'],
+        ['DSDataTable', '基础数据表格，支持列、操作、状态展示。', '已组件化', './basic-table-page.html', './packages/design-system/src/DataTable/index.jsx'],
+        ['DSParentChildTable', '父子/多级表格，用于分组、统计、嵌套数据展示。', '已组件化', './multi-level-table-page.html', './packages/design-system/src/ParentChildTable/index.jsx'],
+        ['DSPagination', '分页组件，用于总数、页码、每页条数和跳页。', '已组件化', './basic-table-page.html', './packages/design-system/src/Pagination/index.jsx'],
+        ['DSEmptyState', '空状态组件，用于无数据、无搜索结果。', '已组件化', './ant-components-page.html#official-empty', './packages/design-system/src/EmptyState/index.jsx']
+      ]
+    },
+    {
+      title: '布局与框架',
+      items: [
+        ['DSAppShell', 'PC 三层框架：一级导航、二级导航、顶部标签、右侧内容区。', '已组件化', './primary-nav.html', './packages/design-system/src/AppShell/index.jsx'],
+        ['WiseAppShellV2', '框架2预览壳：顶部主导航、左侧菜单、页签工作区和可收起侧栏。', '版本新增', './framework-2/', './packages/design-system/src/AppShellV2/app-shell-v2.js'],
+        ['DSPageHeader', '页面标题区域和一级标题组件。', '已组件化', './basic-table-page.html', './packages/design-system/src/PageHeader/index.jsx'],
+        ['DSGroupTitle', '内容区一级分组标题，支持前置内容、长标题省略和右侧扩展操作。', '已组件化', './group-title-components.html', './packages/design-system/src/GroupTitle/index.jsx'],
+        ['DSCard', '内容容器卡片组件。', '已组件化', './form-components-page.html', './packages/design-system/src/Card/index.jsx'],
+        ['DSTabs', '标签切换组件。', '已组件化', './ant-components-page.html#official-tabs', './packages/design-system/src/Tabs/index.jsx']
+      ]
+    },
+    {
+      title: '弹层与反馈',
+      items: [
+        ['DSModal', '对话框组件，用于确认、表单弹窗和信息反馈。', '已组件化', './ant-components-page.html#official-modal', './packages/design-system/src/Modal/index.jsx'],
+        ['DSDrawer', '抽屉组件，用于详情、编辑、侧边配置。', '已组件化', './ant-components-page.html#official-drawer', './packages/design-system/src/Drawer/index.jsx']
+      ]
+    },
+    {
+      title: '审核组件',
+      items: [
+        ['DSAuditStatusTabs', '审核状态页签。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/AuditStatusTabs/index.jsx'],
+        ['DSAuditToolbar', '审核工具栏。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/AuditToolbar/index.jsx'],
+        ['DSAuditActions', '审核操作按钮组。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/AuditActions/index.jsx'],
+        ['DSAuditOpinionModal', '审核意见弹窗。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/AuditOpinionModal/index.jsx'],
+        ['DSAuditDetailDrawer', '审核详情抽屉。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/AuditDetailDrawer/index.jsx']
+      ]
+    },
+    {
+      title: '导入组件',
+      items: [
+        ['DSImportSteps', '导入流程步骤，导入向导专用。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/ImportSteps/index.jsx'],
+        ['DSImportUpload', '导入上传入口。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/ImportUpload/index.jsx'],
+        ['DSImportMappingTable', '导入字段映射表格。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/ImportMappingTable/index.jsx'],
+        ['DSImportValidationPanel', '导入校验结果面板。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/ImportValidationPanel/index.jsx'],
+        ['DSImportResult', '导入结果反馈。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/ImportResult/index.jsx']
+      ]
+    },
+    {
+      title: '模板组件',
+      items: [
+        ['DSCrudTemplate', '列表 CRUD 页面模板。', '已组件化', './basic-table-page.html', './packages/design-system/src/CrudTemplate/index.jsx'],
+        ['DSAuditTemplate', '审核场景页面模板。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/AuditTemplate/index.jsx'],
+        ['DSImportWizard', '导入向导页面模板。', '已组件化', './packages/design-system/README.md', './packages/design-system/src/ImportWizard/index.jsx']
+      ]
+    }
+  ];
+
+  const root = document.getElementById('componentSections');
+  groups.forEach((group) => {
+    const rows = group.items.map(([name, usage, status, preview, source]) => `
+      <tr>
+        <td><span class="component-name">${name}</span></td>
+        <td><span class="component-meta">${usage}</span></td>
+        <td><span class="tag">${status}</span></td>
+        <td>
+          <div class="link-row">
+            <a class="text-link" href="${preview}">预览</a>
+            <a class="text-link" href="${source}">源码</a>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    root.insertAdjacentHTML('beforeend', `
+      <section class="component-section">
+        <div class="section-head">
+          <h2 class="section-title">${group.title}</h2>
+          <span class="section-count">${group.items.length} 个组件</span>
+        </div>
+        <table class="component-table">
+          <thead>
+            <tr>
+              <th style="width: 180px">组件</th>
+              <th>用途</th>
+              <th style="width: 120px">状态</th>
+              <th style="width: 140px">入口</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </section>
+    `);
+  });
+
+  document.getElementById('componentTotal').textContent = groups.reduce((sum, group) => sum + group.items.length, 0);
+  document.getElementById('groupTotal').textContent = groups.length;
+  document.getElementById('previewTotal').textContent = new Set(groups.flatMap(group => group.items.map(item => item[3]))).size;
+
+  const componentFeatureRoutes = {
+    '功能索引': './component-library-index.html',
+    '当前组件': './current-components-index.html',
+    'Ant目录': './all-components-index.html',
+    '组件总览': './ant-components-page.html',
+    '表单': './form-components-page.html',
+    '表格': './basic-table-page.html',
+    '框架': './primary-nav.html'
+  };
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '当前组件',
+    onFeatureChange(feature) {
+      const target = componentFeatureRoutes[feature];
+      if (!target) return;
+      window.location.href = target;
+    }
+  });
+</script>
+</body>
+</html>

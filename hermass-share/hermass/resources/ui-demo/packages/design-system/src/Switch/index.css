@@ -1,0 +1,70 @@
+@import '../tokens.css';
+
+.ds-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0;
+  color: var(--ds-color-text-tertiary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.ds-switch__label {
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ds-switch__label--on {
+  color: var(--ds-color-text-tertiary);
+}
+
+.ds-switch__label--off {
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-switch__core {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  background: var(--ds-color-border);
+  border-radius: 999px;
+  transition: background var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-switch__core::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--ds-color-white);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(var(--ds-color-text-rgb), 0.2);
+  transition: transform var(--ds-motion-duration) var(--ds-motion-ease);
+}
+
+.ds-switch.is-checked .ds-switch__core {
+  background: var(--ds-color-primary);
+}
+
+.ds-switch.is-checked .ds-switch__core::after {
+  transform: translateX(20px);
+}
+
+.ds-switch.is-checked .ds-switch__label--on {
+  color: var(--ds-color-primary);
+}
+
+.ds-switch.is-checked .ds-switch__label--off {
+  color: var(--ds-color-text-tertiary);
+}
+
+.ds-switch.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}

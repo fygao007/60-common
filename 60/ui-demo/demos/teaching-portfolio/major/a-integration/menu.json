@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "a-integration",
+    "label": "数据采集",
+    "group": "数据采集",
+    "defaultFeature": "a-integration"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-a-integration",
+      "label": "数据采集（专业群带头人）",
+      "type": "static-prototype-menu",
+      "html": "a-integration.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../p-review/p-review.html",
+          "../t-overview/t-overview.html",
+          "../t-home/t-home.html",
+          "../p-major-group/p-major-group.html"
+        ]
+      }
+    }
+  ]
+}

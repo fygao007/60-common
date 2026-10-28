@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>年度考核 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">年度考核</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">年</span>2025年度考核填报</h1>
+        <div class="ap-actions"><button class="ap-btn primary" type="button">提交本年度考核表</button></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>填报流程</h2><span class="ap-tag orange">距填报截止还有 5 天</span></div>
+        <div class="ap-panel-body">
+          <div class="ap-steps">
+            <div class="ap-step current"><span class="num">1</span>个人自评填报</div>
+            <div class="ap-step-line"></div>
+            <div class="ap-step"><span class="num">2</span>系所互评</div>
+            <div class="ap-step-line"></div>
+            <div class="ap-step"><span class="num">3</span>学院审核定档</div>
+            <div class="ap-step-line"></div>
+            <div class="ap-step"><span class="num">4</span>校级核定</div>
+            <div class="ap-step-line"></div>
+            <div class="ap-step"><span class="num">5</span>结果反馈</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>个人年度述职自评</h2></div>
+        <div class="ap-panel-body">
+          <div class="ap-form-grid">
+            <div class="ap-field full"><label><span class="req">*</span>德能勤绩廉自我评价</label><textarea placeholder="请从师德师风、教育教学、科研服务、廉洁自律等方面进行总结"></textarea></div>
+            <div class="ap-field full"><label><span class="req">*</span>本年度主要工作业绩</label><textarea placeholder="如承担课程、指导学生竞赛、发表论文、横向课题等，建议关联业绩数据登记中已有数据"></textarea></div>
+            <div class="ap-field"><label><span class="req">*</span>拟定考核等次</label><select><option>优秀</option><option>合格</option><option>基本合格</option></select></div>
+            <div class="ap-field"><label>关联业绩数据</label><span class="ap-tag blue" style="height:38px;line-height:38px;cursor:pointer">从"业绩数据登记"导入 →</span></div>
+          </div>
+          <div class="ap-form-actions">
+            <button class="ap-btn" type="button">存为草稿</button>
+            <button class="ap-btn primary" type="button">提交个人自评</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>本年度关键数据概览</h2></div>
+          <div class="ap-panel-body ap-info-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+            <div class="ap-info-item"><p>授课总学时</p><h4>512 学时</h4></div>
+            <div class="ap-info-item"><p>指导学生获奖</p><h4>3 项</h4></div>
+            <div class="ap-info-item"><p>发表论文/专利</p><h4>2 篇（件）</h4></div>
+            <div class="ap-info-item"><p>主持/参与项目</p><h4>2 项</h4></div>
+            <div class="ap-info-item"><p>考勤出勤率</p><h4>100%</h4></div>
+            <div class="ap-info-item"><p>师德师风测评</p><h4>优秀</h4></div>
+          </div>
+        </section>
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>历年考核结果</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>年度</th><th>考核等次</th><th>核定单位</th><th>反馈时间</th></tr></thead>
+              <tbody>
+                <tr><td>2024年度</td><td><span class="ap-tag green">优秀</span></td><td>智能制造学院</td><td>2025-02-20</td></tr>
+                <tr><td>2023年度</td><td><span class="ap-tag blue">合格</span></td><td>智能制造学院</td><td>2024-02-22</td></tr>
+                <tr><td>2022年度</td><td><span class="ap-tag blue">合格</span></td><td>智能制造学院</td><td>2023-02-18</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'annual-assessment', versionLabel:'年度考核', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'annual-assessment',label:'年度考核',closable:true}]
+});
+</script>
+</body>
+</html>

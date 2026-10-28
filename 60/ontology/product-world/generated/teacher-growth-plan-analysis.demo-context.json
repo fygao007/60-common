@@ -1,0 +1,299 @@
+{
+  "generatedFrom": "ontology/product-world/scenarios/teacher-growth-plan-analysis.json",
+  "scenarioId": "teacher-growth-plan-analysis",
+  "version": "1.0.0",
+  "generationRules": {
+    "framework": "framework-2",
+    "useTemplateFirst": true,
+    "useDesignSystemOnly": true,
+    "useFieldRefsOnly": true,
+    "copyCrossDemoCode": false,
+    "preserveDeletedCodeAsComments": false
+  },
+  "research": {
+    "sources": [
+      {
+        "id": "existing-page",
+        "type": "existing-product",
+        "title": "现有发展规划分析页面与管理侧详细设计 M18"
+      }
+    ],
+    "actors": [
+      {
+        "id": "manager",
+        "name": "管理部门"
+      }
+    ],
+    "goals": [
+      "从发展规划文档确认规则并生成可追溯分析报表"
+    ],
+    "painPoints": [
+      "空状态占屏过大",
+      "规则编辑区窄屏拥挤",
+      "报表与配置层次不清"
+    ],
+    "openQuestions": [
+      "真实文件解析、真实 AI 服务、全量人员数据与未登记统计范围仍待实现",
+      "Business.teacher-growth 字段当前为业务草案，不能视为已确认生产口径"
+    ]
+  },
+  "scenario": {
+    "name": "发展规划分析",
+    "actorRefs": [
+      "manager"
+    ],
+    "preconditions": [
+      "使用已有演示数据快照"
+    ],
+    "mainFlow": [
+      "选择文档或粘贴正文",
+      "识别并确认规则",
+      "选择已有统计范围与截止日",
+      "生成冻结报表",
+      "查看口径与导出报表"
+    ],
+    "exceptions": [
+      "没有数字不补目标值",
+      "未知数据不判为不达标",
+      "规则变更后标记需重新生成"
+    ]
+  },
+  "requirements": {
+    "rules": [
+      "沿用原页面规则提取与冻结报表逻辑",
+      "使用 dashboard 网格模板和设计系统卡片，不覆盖组件内部 CSS",
+      "只使用已登记字段引用",
+      "保留上传仅为演示且不真实解析的说明"
+    ],
+    "acceptanceCriteria": [
+      "示例正文可提取规则并生成报表",
+      "改变规则或范围后报表标记需重新生成",
+      "报表口径可查看并导出",
+      "宽屏和窄屏组件不重叠"
+    ]
+  },
+  "page": {
+    "title": "发展规划分析",
+    "templateId": "dashboard",
+    "menuRef": "teacher-growth-portfolio.management:mp-plan-analysis",
+    "fieldRefs": [
+      "Business.teacher-growth.requirementName",
+      "Business.teacher-growth.requirementType",
+      "Business.teacher-growth.targetOperator",
+      "Business.teacher-growth.targetLower",
+      "Business.teacher-growth.actualValue",
+      "Business.teacher-growth.gapValue",
+      "Business.teacher-growth.resultState",
+      "Business.teacher-growth.dataCutoff",
+      "Business.teacher-growth.scopeDefinition"
+    ],
+    "components": [
+      "DSDashboardGrid",
+      "DSDashboardGridItem",
+      "DSCard",
+      "DSAlert",
+      "DSButton",
+      "DSDataTable",
+      "DSUpload",
+      "DSInput",
+      "DSSelect",
+      "DSDatePicker",
+      "DSTextarea",
+      "DSSwitch",
+      "DSDrawer",
+      "DSTag",
+      "DSEmptyState"
+    ],
+    "demoPath": "demos/teacher-growth-portfolio/teacher/mp-plan-analysis/mp-plan-analysis.html",
+    "template": {
+      "id": "dashboard",
+      "component": "DSDashboardGrid",
+      "useFor": [
+        "首页",
+        "工作台",
+        "统计看板"
+      ],
+      "requiredComponents": [
+        "DSCard",
+        "DSChartCard",
+        "DSDashboardGrid"
+      ]
+    },
+    "resolvedFields": [
+      {
+        "fieldId": "Business.teacher-growth.requirementName",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "师资要求名称",
+        "dataType": "string",
+        "classification": "internal",
+        "lifecycle": "stored",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "fieldRef": "Business.teacher-growth.requirementName"
+      },
+      {
+        "fieldId": "Business.teacher-growth.requirementType",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "师资要求类型",
+        "dataType": "concept",
+        "classification": "internal",
+        "lifecycle": "stored",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "valueSet": [
+          {
+            "code": "headcount",
+            "label": "人数"
+          },
+          {
+            "code": "ratio",
+            "label": "比例"
+          },
+          {
+            "code": "coverage",
+            "label": "覆盖"
+          },
+          {
+            "code": "ladder",
+            "label": "梯队"
+          },
+          {
+            "code": "training",
+            "label": "培养完成"
+          },
+          {
+            "code": "manual",
+            "label": "人工评估"
+          }
+        ],
+        "fieldRef": "Business.teacher-growth.requirementType"
+      },
+      {
+        "fieldId": "Business.teacher-growth.targetOperator",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "目标比较方式",
+        "dataType": "concept",
+        "classification": "internal",
+        "lifecycle": "stored",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "valueSet": [
+          {
+            "code": "gte",
+            "label": "不低于"
+          },
+          {
+            "code": "lte",
+            "label": "不高于"
+          },
+          {
+            "code": "between",
+            "label": "区间内"
+          }
+        ],
+        "fieldRef": "Business.teacher-growth.targetOperator"
+      },
+      {
+        "fieldId": "Business.teacher-growth.targetLower",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "目标下限值",
+        "dataType": "number",
+        "classification": "internal",
+        "lifecycle": "stored",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "fieldRef": "Business.teacher-growth.targetLower"
+      },
+      {
+        "fieldId": "Business.teacher-growth.actualValue",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "要求当前计算值",
+        "dataType": "number",
+        "classification": "internal",
+        "lifecycle": "derived",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "fieldRef": "Business.teacher-growth.actualValue"
+      },
+      {
+        "fieldId": "Business.teacher-growth.gapValue",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "要求差距值",
+        "dataType": "number",
+        "classification": "internal",
+        "lifecycle": "derived",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "fieldRef": "Business.teacher-growth.gapValue"
+      },
+      {
+        "fieldId": "Business.teacher-growth.resultState",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "要求分析结果",
+        "dataType": "concept",
+        "classification": "internal",
+        "lifecycle": "derived",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "valueSet": [
+          {
+            "code": "met",
+            "label": "已满足"
+          },
+          {
+            "code": "gap",
+            "label": "存在缺口"
+          },
+          {
+            "code": "uncertain",
+            "label": "待核验"
+          },
+          {
+            "code": "manual",
+            "label": "待人工评估"
+          },
+          {
+            "code": "unconfigured",
+            "label": "未完成配置"
+          },
+          {
+            "code": "na",
+            "label": "不适用"
+          }
+        ],
+        "fieldRef": "Business.teacher-growth.resultState"
+      },
+      {
+        "fieldId": "Business.teacher-growth.dataCutoff",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "分析数据截止时间",
+        "dataType": "datetime",
+        "classification": "internal",
+        "lifecycle": "stored",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "fieldRef": "Business.teacher-growth.dataCutoff"
+      },
+      {
+        "fieldId": "Business.teacher-growth.scopeDefinition",
+        "fieldKind": "business-specific",
+        "ownerDomain": "teacher-growth-portfolio",
+        "label": "统计人员范围定义",
+        "dataType": "object",
+        "classification": "internal",
+        "lifecycle": "stored",
+        "status": "draft",
+        "description": "教师队伍发展管理设计草案；学校业务口径确认并进入正式场景后方可启用。",
+        "fieldRef": "Business.teacher-growth.scopeDefinition"
+      }
+    ]
+  }
+}

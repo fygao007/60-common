@@ -1,0 +1,84 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--global-set",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "统一维护系统名称、LOGO 与登录/首页欢迎语",
+      "让投票应用与学校整体品牌口径保持一致"
+    ],
+    "painPoints": [
+      "原系统品牌信息散落在多个配置项，改一处需排查多处"
+    ],
+    "openQuestions": [
+      "系统名称是否需要与学校视觉识别规范强绑定，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "全局设置",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票管理员已登录并具备系统配置权限"
+    ],
+    "mainFlow": [
+      "进入全局设置，维护系统名称与 LOGO",
+      "编辑登录欢迎语与首页欢迎语",
+      "保存后系统各处品牌与欢迎文案同步更新"
+    ],
+    "exceptions": [
+      "系统名称为空时阻止保存并提示",
+      "LOGO 上传数量上限为 1 张"
+    ]
+  },
+  "page": {
+    "title": "全局设置",
+    "templateId": "edit-form",
+    "menuRef": "recruitment.vote:global-set",
+    "fieldRefs": [
+      "Business.vote.systemDisplayName",
+      "Business.vote.systemLogo",
+      "Business.vote.loginWelcome",
+      "Business.vote.homeWelcome"
+    ],
+    "components": [
+      "DSAlert",
+      "DSButton",
+      "DSEditField",
+      "DSEditForm",
+      "DSFormGroup",
+      "DSInput",
+      "DSTextarea",
+      "DSUpload"
+    ],
+    "demoPath": "demos/vote/global-set/global-set.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「系统设置」分组下「全局设置」处于高亮态",
+      "品牌信息与欢迎语分组呈现",
+      "系统名称为空时保存给出错误提示",
+      "LOGO 上传上限为一张"
+    ]
+  }
+}

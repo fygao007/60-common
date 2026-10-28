@@ -1,0 +1,16 @@
+{
+  "application": { "key": "warning-center", "label": "预警中心" },
+  "role": { "key": "admin", "label": "预警管理员" },
+  "menu": { "key": "warning-record", "label": "预警记录", "group": "预警中心", "defaultFeature": "warning-record" },
+  "pages": [
+    {
+      "key": "warning-center-admin-warning-record",
+      "label": "预警记录（预警管理员）",
+      "type": "react-business-page",
+      "html": "warning-record.html",
+      "jsx": "warning-record.page.jsx",
+      "css": "warning-record.css",
+      "bundle": "assets/bundles/pages/warning-record.bundle.js"
+    }
+  ]
+}

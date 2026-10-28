@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>通知/消息详情 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+body{margin:0}
+.nd-meta-row { display:flex; flex-wrap:wrap; align-items:center; gap:18px; color:var(--ap-muted); font-size:13px; padding:14px 0 18px; border-bottom:1px solid var(--ap-line); }
+.nd-meta-row span b { color:var(--ap-text); font-weight:500; }
+.nd-body { padding:22px 2px 6px; color:var(--ap-text); font-size:15px; line-height:30px; }
+.nd-body p { margin:0 0 14px; }
+.nd-empty { padding:60px 20px; text-align:center; color:var(--ap-muted); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur" id="ndCrumbCur">通知详情</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge" id="ndBadge">通</span><span id="ndTitle">详情</span></h1>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>详情内容</h2></div>
+        <div class="ap-panel-body" id="ndBody"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'notice-detail', versionLabel:'通知/消息详情', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'notice-detail',label:'通知/消息详情',closable:true}]
+});
+</script>
+<script>
+(function () {
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // 通知详情数据（与首页"通知"列表对应）
+  var NOTICES = {
+    n1: { title: '深圳职业大学2026年人事处分工名单', pinned: true,
+      meta: [{ label: '发布部门', value: '人事处' }, { label: '发布时间', value: '2026-05-12 09:30:21' }, { label: '阅读范围', value: '全体教职工' }],
+      body: [
+        '根据学校机构改革安排，结合人事处近期职能调整情况，现将2026年人事处内设科室分工调整情况予以公布，自公布之日起施行。',
+        '调整后，人事处下设综合科、人才科、考核科、职称科、劳资科、档案科共6个科室，各科室职责范围详见附件《人事处内设科室职责分工一览表》。',
+        '各部门、各学院如对分工范围或具体业务归口存在疑问，可联系人事处综合科（电话：0755-XXXXXXXX）进行咨询核实。'
+      ] },
+    n2: { title: '关于启动 2025 年度教职工绩效考核填报工作的通知', pinned: false,
+      meta: [{ label: '发布部门', value: '人事处考核科' }, { label: '发布时间', value: '2026-05-12 10:05:08' }, { label: '截止时间', value: '2026-06-20 18:00' }],
+      body: [
+        '2025年度教职工绩效考核填报系统已正式开放，请各位教职工登录"智慧人事一体化服务系统 - 年度考核"模块，按要求完成本年度个人述职与业绩材料填报。',
+        '填报内容包括：师德师风自评、教学工作量统计、科研成果汇总、社会服务情况、个人发展规划等五个部分，请如实填写并上传相应佐证材料。',
+        '请于 2026年6月20日 18:00 前完成填报并提交所在学院初审，逾期未填报者，按学校相关规定视为放弃本年度考核评定资格。'
+      ] },
+    n3: { title: '关于组织 2026 新入职辅导员岗前素养培训的报名通知', pinned: false,
+      meta: [{ label: '发布部门', value: '党委教师工作部' }, { label: '报名截止', value: '2026-05-25' }, { label: '培训地点', value: '行政楼三楼会议室' }],
+      body: [
+        '为帮助新入职辅导员尽快适应岗位要求、提升职业素养，党委教师工作部将于近期组织开展"2026年新入职辅导员岗前素养培训"，现就有关报名事项通知如下。',
+        '培训时间初步安排在 6月3日—6月7日，共5天，采取集中授课与案例研讨相结合的方式，培训合格者将颁发结业证书并计入继续教育学时。',
+        '符合条件的教职工请于 5月25日 前通过系统内"培训报名"模块完成报名，名额有限，报满即止。'
+      ] }
+  };
+
+  // 消息详情数据（与首页"消息"列表对应）
+  var MESSAGES = {
+    m1: { title: '实验室设备采购计划编制：调研需求、编制采购计划、招标准备等事项', pinned: false,
+      meta: [{ label: '发送人', value: '张思远' }, { label: '所属应用', value: '设备管理系统' }, { label: '发送时间', value: '2026-05-11 16:08:21' }],
+      body: [
+        '您收到一条来自「设备管理系统」的提醒：实验室设备采购计划编制工作已进入需求调研阶段。',
+        '请您协助确认所在学院/部门下一年度的设备需求清单（含设备名称、规格型号、预估数量及预算金额），并于本周五 17:00 前通过设备管理系统反馈，逾期将影响本轮采购计划的统一编制与招标准备进度。'
+      ] },
+    m2: { title: '学生公寓电费缴纳通知：请及时缴费，避免停电影响正常生活', pinned: false,
+      meta: [{ label: '发送人', value: '后勤服务平台（系统通知）' }, { label: '所属应用', value: '后勤服务平台' }, { label: '发送时间', value: '2026-05-10 09:42:55' }],
+      body: [
+        '系统检测到您名下的教师公寓本月电费余额已不足，为避免因欠费导致断电影响正常生活，请尽快通过「后勤服务平台」线上完成充值缴费。',
+        '如已缴费仍收到本提醒，可能为系统数据同步延迟，请于24小时后刷新查看，或联系后勤服务中心核实（电话：0755-XXXXXXXX）。'
+      ] }
+  };
+
+  function getQuery(name) {
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+
+  var type = getQuery('type') === 'message' ? 'message' : 'notice';
+  var id = getQuery('id');
+  var dataset = type === 'message' ? MESSAGES : NOTICES;
+  var item = dataset[id];
+
+  var crumbCur = document.getElementById('ndCrumbCur');
+  var badge = document.getElementById('ndBadge');
+  var titleEl = document.getElementById('ndTitle');
+  var bodyEl = document.getElementById('ndBody');
+
+  crumbCur.textContent = type === 'message' ? '消息详情' : '通知详情';
+  badge.textContent = type === 'message' ? '息' : '通';
+
+  if (!item) {
+    titleEl.textContent = '内容不存在或已被删除';
+    bodyEl.innerHTML = '<div class="nd-empty">未找到对应的' + (type === 'message' ? '消息' : '通知') + '内容，请返回首页重新查看。</div>';
+  } else {
+    titleEl.innerHTML = escapeHtml(item.title) + (item.pinned ? ' <span class="ap-tag blue" style="margin-left:6px">置顶</span>' : '');
+    bodyEl.innerHTML =
+      '<div class="nd-meta-row">' + item.meta.map(function (m) { return '<span>' + escapeHtml(m.label) + '：<b>' + escapeHtml(m.value) + '</b></span>'; }).join('') + '</div>' +
+      '<div class="nd-body">' + item.body.map(function (p) { return '<p>' + escapeHtml(p) + '</p>'; }).join('') + '</div>';
+  }
+})();
+</script>
+</body>
+</html>

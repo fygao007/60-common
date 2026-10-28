@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>我的信息 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">我的信息</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">人</span>我的信息</h1>
+        <div class="ap-actions">
+          <button class="ap-btn" type="button">信息变更申请</button>
+          <button class="ap-btn primary" type="button">导出个人信息</button>
+        </div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>基本信息</h2><a class="ap-btn" style="height:30px;padding:0 14px;font-size:13px" href="#">编辑</a></div>
+        <div class="ap-panel-body ap-info-grid">
+          <div class="ap-info-item"><p>姓名</p><h4>金晓智</h4></div>
+          <div class="ap-info-item"><p>工号</p><h4>20180452</h4></div>
+          <div class="ap-info-item"><p>性别</p><h4>男</h4></div>
+          <div class="ap-info-item"><p>出生日期</p><h4>1989-04-12</h4></div>
+          <div class="ap-info-item"><p>身份证号</p><h4>4403**********1216</h4></div>
+          <div class="ap-info-item"><p>联系电话</p><h4>138****6271</h4></div>
+          <div class="ap-info-item"><p>电子邮箱</p><h4>jinxiaozhi@szpu.edu.cn</h4></div>
+          <div class="ap-info-item"><p>政治面貌</p><h4>中共党员</h4></div>
+          <div class="ap-info-item"><p>婚姻状况</p><h4>已婚</h4></div>
+        </div>
+      </section>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>任职信息</h2></div>
+        <div class="ap-panel-body ap-info-grid">
+          <div class="ap-info-item"><p>所属学院</p><h4>智能制造学院</h4></div>
+          <div class="ap-info-item"><p>所属部门</p><h4>机电工程系</h4></div>
+          <div class="ap-info-item"><p>岗位类别</p><h4>专任教师</h4></div>
+          <div class="ap-info-item"><p>职称</p><h4>副教授</h4></div>
+          <div class="ap-info-item"><p>聘任岗位等级</p><h4>七级</h4></div>
+          <div class="ap-info-item"><p>入职时间</p><h4>2014-09-01</h4></div>
+          <div class="ap-info-item"><p>编制类型</p><h4>事业编制</h4></div>
+          <div class="ap-info-item"><p>合同到期日</p><h4>2028-08-31</h4></div>
+          <div class="ap-info-item"><p>教师资格证</p><h4>高等学校教师资格证</h4></div>
+        </div>
+      </section>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>教育与工作经历</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>起止时间</th><th>类型</th><th>单位/院校</th><th>专业/职务</th><th>证明材料</th></tr></thead>
+            <tbody>
+              <tr><td>2007.09 - 2011.06</td><td>教育经历</td><td>华南理工大学</td><td>机械设计制造及自动化（本科）</td><td class="link">查看</td></tr>
+              <tr><td>2011.09 - 2014.06</td><td>教育经历</td><td>华南理工大学</td><td>机械工程（硕士）</td><td class="link">查看</td></tr>
+              <tr><td>2014.09 - 至今</td><td>工作经历</td><td>深圳职业技术大学</td><td>专任教师</td><td class="link">查看</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'my-info', versionLabel:'我的信息', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'my-info',label:'我的信息',closable:true}]
+});
+</script>
+</body>
+</html>

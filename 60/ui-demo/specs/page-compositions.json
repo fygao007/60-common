@@ -1,0 +1,157 @@
+{
+  "$schema": "./page-compositions.schema.json",
+  "version": 1,
+  "sharedPages": [
+    {
+      "id": "shared.recruitment-resume",
+      "module": "@wisedu/shared-pages",
+      "allowedExtensions": ["detailHeaderActions", "detailFooter", "detailBack"]
+    }
+  ],
+  "pages": [
+    {
+      "pageId": "teacher-growth-portfolio.management.sys-eval-indicator",
+      "path": "demos/teacher-growth-portfolio/teacher/sys-eval-indicator/sys-eval-indicator.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "teacher-growth-portfolio.management.mp-plan-analysis",
+      "path": "demos/teacher-growth-portfolio/teacher/mp-plan-analysis/mp-plan-analysis.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "teacher-growth-portfolio.management.mp-plan-list",
+      "path": "demos/teacher-growth-portfolio/teacher/mp-plan-list/mp-plan-list.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "teacher-growth-portfolio.management.mp-plan-audit-detail",
+      "path": "demos/teacher-growth-portfolio/teacher/mp-plan-audit-detail/mp-plan-audit-detail.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "teaching-portfolio.major.t-home",
+      "path": "demos/teaching-portfolio/major/t-home/t-home.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.hr.resume-info",
+      "path": "demos/recruitment/hr/resume-info/resume-info.html",
+      "mode": "shared",
+      "basePageRef": "shared.recruitment-resume",
+      "extensions": []
+    },
+    {
+      "pageId": "recruitment.hr.process-audit",
+      "path": "demos/recruitment/hr/process-audit/process-audit.html",
+      "mode": "hybrid",
+      "basePageRef": "shared.recruitment-resume",
+      "extensions": ["detailHeaderActions", "detailFooter", "detailBack"]
+    },
+    {
+      "pageId": "warning-center.admin.warning-home",
+      "path": "demos/warning-center/admin/warning-home/warning-home.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "warning-center.admin.warning-rule-config",
+      "path": "demos/warning-center/admin/warning-rule-config/warning-rule-config.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "warning-center.admin.warning-record",
+      "path": "demos/warning-center/admin/warning-record/warning-record.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "warning-center.admin.warning-audit",
+      "path": "demos/warning-center/admin/warning-audit/warning-audit.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.vote-project",
+      "path": "demos/vote/vote-project/vote-project.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.scheme-set",
+      "path": "demos/vote/scheme-set/scheme-set.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.vote-item",
+      "path": "demos/vote/vote-item/vote-item.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.candidate",
+      "path": "demos/vote/candidate/candidate.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.quota-set",
+      "path": "demos/vote/quota-set/quota-set.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.group-set",
+      "path": "demos/vote/group-set/group-set.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.material",
+      "path": "demos/vote/material/material.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.judge-account",
+      "path": "demos/vote/judge-account/judge-account.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.promise-set",
+      "path": "demos/vote/promise-set/promise-set.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.project-status",
+      "path": "demos/vote/project-status/project-status.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.progress",
+      "path": "demos/vote/progress/progress.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.result",
+      "path": "demos/vote/result/result.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.report",
+      "path": "demos/vote/report/report.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.screen-config",
+      "path": "demos/vote/screen-config/screen-config.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.screen-preview",
+      "path": "demos/vote/screen-preview/screen-preview.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.judge-preview",
+      "path": "demos/vote/judge-preview/judge-preview.html",
+      "mode": "custom"
+    },
+    {
+      "pageId": "recruitment.vote.global-set",
+      "path": "demos/vote/global-set/global-set.html",
+      "mode": "custom"
+    }
+  ]
+}

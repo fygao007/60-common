@@ -1,0 +1,110 @@
+{
+  "$schema": "./edit-overlay-templates.schema.json",
+  "id": "wisedu.edit-overlay-templates",
+  "version": "1.0.0",
+  "sources": {
+    "singleModal": "https://mastergo.com/goto/WK3QSSKH?page_id=3665:105590&file=200884015180678",
+    "largeModal": "https://mastergo.com/goto/WK3QSSKH?page_id=3665:105590&file=200884015180678",
+    "wideModal": "https://mastergo.com/goto/WK3QSSKH?page_id=3665:105590&file=200884015180678",
+    "doubleModal": "mastergo://getd2c/195991886967017-11-92097",
+    "groupedDrawer": "mastergo://getd2c/195991886967017-11-92271"
+  },
+  "shared": {
+    "headerHeight": 56,
+    "footerHeight": 56,
+    "surfacePaddingX": 20,
+    "headerPadding": [12, 12, 12, 20],
+    "footerPadding": [12, 20],
+    "footerButtonGap": 8,
+    "labelWidth": 94,
+    "labelControlGap": 16,
+    "fieldGap": 16,
+    "controlHeight": 32,
+    "controlRadius": 4,
+    "compactFieldBreakpoint": 560
+  },
+  "templates": {
+    "singleModal": {
+      "component": "DSSingleEditModal",
+      "container": "DSModal",
+      "width": 600,
+      "height": 664,
+      "columns": 1,
+      "contentPaddingY": 15,
+      "recommendedMaxFields": 9
+    },
+    "doubleModal": {
+      "component": "DSDoubleEditModal",
+      "container": "DSModal",
+      "width": 900,
+      "height": 520,
+      "columns": 2,
+      "contentPaddingY": 7,
+      "columnMinWidth": 370,
+      "collapseContentWidth": 755,
+      "recommendedMaxFields": 10
+    },
+    "largeModal": {
+      "component": "DSLargeModalTemplate",
+      "container": "DSModal",
+      "width": 1200,
+      "height": 640,
+      "columns": 1
+    },
+    "wideModal": {
+      "component": "DSWideModalTemplate",
+      "container": "DSModal",
+      "width": 900,
+      "height": 640,
+      "columns": 2
+    },
+    "groupedDrawer": {
+      "component": "DSGroupedEditDrawer",
+      "container": "DSDrawer",
+      "width": 600,
+      "columns": 1,
+      "groupGap": 24,
+      "groupContentGap": 16,
+      "groupTitleHeight": 38,
+      "groupTitlePadding": [8, 16]
+    }
+  },
+  "interaction": {
+    "maskClosable": true,
+    "keyboard": true,
+    "focusTrap": true,
+    "restoreFocus": true,
+    "lockPageScroll": true,
+    "lockCloseWhileSubmitting": true,
+    "bodyOnlyScroll": true
+  },
+  "generation": {
+    "requiredFieldComponent": "DSEditField",
+    "requiredGroupComponent": "DSFormGroup",
+    "forbiddenPageSelectors": [
+      ".ds-modal",
+      ".ds-modal__header",
+      ".ds-modal__body",
+      ".ds-modal__footer",
+      ".ds-drawer",
+      ".ds-drawer__header",
+      ".ds-drawer__body",
+      ".ds-drawer__footer",
+      ".ds-edit-field",
+      ".ds-edit-field__label",
+      ".ds-edit-field__content"
+    ],
+    "forbiddenPractices": [
+      "Copy internal modal or drawer DOM into business pages",
+      "Override locked dimensions or spacing in page CSS",
+      "Use div or button mocks instead of DS form controls",
+      "Reimplement focus trap, mask close, Escape close, or scroll locking"
+    ]
+  },
+  "visualRegression": {
+    "desktopViewport": [1280, 900],
+    "responsiveViewport": [800, 820],
+    "pixelThreshold": 0.1,
+    "maxMismatchRatio": 0.005
+  }
+}

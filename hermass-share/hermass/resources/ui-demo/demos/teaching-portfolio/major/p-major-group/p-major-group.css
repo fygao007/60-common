@@ -1,0 +1,549 @@
+@import '../../../../framework/react-page-host.css';
+
+/* ============================================================
+   电子信息专业群统计分析
+   视觉规范对齐 t-home（DS 看板体系）：16px 圆角白卡 + 浅阴影 + 主色竖条标题
+   图表全部走 DSChartCard + buildChartOption，本文件只负责页面级布局与标题
+   ============================================================ */
+
+/* donut 环形图右侧图例文字统一 14px */
+.chart-donut-layout .legend-list .legend-name {
+  font-size: 14px;
+}
+
+.chart-donut-layout .legend-list .legend-value {
+  font-size: 14px;
+}
+
+.pmg-page{
+  --pmg-card-radius: 8px;
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  padding: 0;
+  border-radius: 8px; /* 框架给 padding */
+  color: var(--ds-color-text-heading);
+  font-variant-numeric: tabular-nums;
+}
+.pmg-page h1,
+.pmg-page h2,
+.pmg-page p{
+  margin: 0;
+}
+
+/* === 页头 === */
+.pmg-header {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-8);
+  padding: var(--ds-space-4) var(--ds-space-5);
+  background: var(--ds-color-bg-container);
+  border: 1px solid var(--ds-color-border-tertiary);
+  border-radius: var(--pmg-card-radius);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.pmg-header__identity {
+  min-width: 0;
+}
+
+.pmg-header__identity h1 {
+  margin: 0 0 var(--ds-space-3);
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-title);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-title);
+}
+
+.pmg-header__identity dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3) var(--ds-space-8);
+  margin: 0;
+}
+
+.pmg-header__identity dl div {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  font-size: var(--ds-font-size-sm);
+}
+
+.pmg-header__identity dt {
+  color: var(--ds-color-text-tertiary);
+}
+
+.pmg-header__identity dd {
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-weight: var(--ds-font-weight-medium);
+  font-family: var(--ds-font-family-code);
+  font-variant-numeric: tabular-nums;
+}
+
+.pmg-header__controls {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-4);
+  white-space: nowrap;
+}
+
+.pmg-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+}
+
+.pmg-filter > span {
+  flex: none;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  white-space: nowrap;
+}
+
+.pmg-filter__select {
+  width: 136px;
+}
+
+.pmg-filter__select--major {
+  width: 180px;
+}/* === 分组卡片外壳（对齐 t-home .th-card）=== */
+.pmg-section-card{
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.pmg-section-head {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: var(--ds-space-3) var(--ds-space-4) 8px;
+}
+
+/* 分组标题行带内联筛选器：标题与筛选器两端对齐 */
+.pmg-section-head--with-filter {
+  justify-content: space-between;
+}
+
+.pmg-filter--inline {
+  margin-left: var(--ds-space-4);
+}
+
+/* 面板标题：主色竖条 + 标题 + 副说明（对齐 t-home .th-panel-title） */
+.pmg-panel-title {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.pmg-panel-title h2 {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: var(--ds-space-3);
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+  letter-spacing: 0.01em;
+}
+
+.pmg-panel-title h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary);
+  transform: translateY(-50%);
+}
+
+.pmg-panel-title > span {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+}/* === KPI 业绩纵览（对齐 p-review .th-performance-*）=== */
+.pmg-kpi-list {
+  display: grid;
+  align-items: center;
+  margin-top: var(--ds-space-3);
+  padding: 0 var(--ds-space-4) var(--ds-space-3);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.pmg-kpi-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 var(--ds-space-2);
+  border-left: 1px solid var(--ds-color-border-secondary);
+}
+
+.pmg-kpi-item:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.pmg-kpi-item__label {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+  white-space: nowrap;
+}
+
+.pmg-kpi-item__value {
+  color: var(--ds-color-text-heading);
+  font-size: 24px;
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 28px;
+  white-space: nowrap;
+}
+
+.pmg-kpi-item__value small {
+  margin-left: 2px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.pmg-kpi-item__compare {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+@media (max-width: 1200px) {
+  .pmg-kpi-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pmg-kpi-item:nth-child(4) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .pmg-kpi-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pmg-kpi-item,
+  .pmg-kpi-item:nth-child(4) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+/* === 图表网格（12 列，2 或 3 卡一行）=== */
+.pmg-chart-grid {
+  display: grid;
+  align-items: stretch;
+  gap: var(--ds-space-3);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  padding: 0 var(--ds-space-4);
+}.pmg-chart-grid > .pmg-chart-card,
+.pmg-chart-grid > .pmg-card{
+  grid-column: span 6;
+}
+
+/* 需带一把 + 数据采集健康度行：卡片自带边框，去掉 grid 左右 padding 让宽度自适应撑满，
+   与关键指标、群内专业结构分析等区块的左右边缘对齐 */
+.pmg-care-grid {
+  padding-left: 0;
+  padding-right: 0;
+}/* 职称结构 donut：图例与环形垂直居中对齐 */
+.pmg-chart-card .chart-donut-layout{
+  align-items: center;
+}/* 3 卡一行：各占 4 列 */
+.pmg-chart-grid--3 > .pmg-chart-card{
+  grid-column: span 4;
+}
+
+/* 3 列 grid（人数统计、成果结构）取消底部 padding，让两卡间距由 .pmg-page gap 16px 控制 */
+.pmg-chart-grid--3 {
+  padding-bottom: 0;
+}
+
+/* 分组卡片间距已由 portfolio-compact 统一为 16px，无需再覆盖。 */
+
+.ds-scope .pmg-page[data-ds-business-page] > .pmg-section-card + .pmg-section-card {
+  margin-top: 0;
+}
+
+/* 需带一把 + 数据采集健康度：grid 里同行相邻的 .ds-card 会被 compact 加 margin-top:16px
+   导致右卡整体下移 16px，与左卡顶部错位。栅格内相邻卡片不需要这个 margin，撤掉。 */
+.ds-scope .pmg-page[data-ds-business-page] .pmg-chart-grid > .ds-card + .ds-card {
+  margin-top: 0;
+}/* 让 DSChartCard 在网格里等高拉伸 */
+.pmg-chart-card{
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* 末尾两张独立卡：无分组外壳，与 section 内卡片同等质感（DSChartCard 自带边框阴影）*/
+.pmg-loose-grid {
+  padding: 0;
+}
+
+/* === 响应式 === */
+@media (max-width: 1280px) {.pmg-chart-grid > .pmg-chart-card,
+  .pmg-chart-grid--3 > .pmg-chart-card,
+  .pmg-chart-grid > .pmg-card{
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 900px) {
+  .pmg-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--ds-space-4);
+  }
+
+  .pmg-header__controls {
+    width: 100%;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+
+  .pmg-filter {
+    min-width: 0;
+  }.pmg-chart-grid > .pmg-chart-card,
+  .pmg-chart-grid--3 > .pmg-chart-card,
+  .pmg-chart-grid > .pmg-card{
+    grid-column: 1 / -1;
+  }
+}/* ========== 需带一把 + 数据采集健康度 ==========
+   同行两张卡：grid stretch 拉到等高后，内部用 flex column 让
+   标题固定 + 列表占满剩余高度均匀分布，避免被压缩或顶部留白 */
+.pmg-card.pmg-care-card{
+  display: flex;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}.pmg-card.pmg-care-card > *{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}.pmg-card-head{
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-3) var(--ds-space-4) 0;
+  margin-bottom: var(--ds-space-2);  /* 二级标题行到内容间距 8px */
+}
+.pmg-card-title{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin: 0;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);      /* 二级标题 14px */
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}.pmg-care-card__hint{
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.pmg-care-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 0 var(--ds-space-4) var(--ds-space-4);
+}
+
+.pmg-care-row {
+  display: grid;
+  min-height: 48px;
+  align-items: center;
+  gap: var(--ds-space-2);
+  border-bottom: 1px solid var(--ds-color-border-tertiary);
+  grid-template-columns: var(--ds-space-2) 64px minmax(0, 1fr) auto;
+  font-size: var(--ds-font-size-md);
+}
+
+.pmg-care-row:last-child {
+  border-bottom: 0;
+}
+
+.pmg-care-row__status {
+  width: var(--ds-space-2);
+  height: var(--ds-space-2);
+  background: var(--ds-color-warning);
+  border-radius: 50%;
+}
+
+.pmg-care-row > strong {
+  color: var(--ds-color-text-heading);
+}
+
+.pmg-care-row > span:not(.pmg-care-row__status) {
+  color: var(--ds-color-text-tertiary);
+}
+
+/* ========== 教学闭环详情弹窗 ========== */
+.pmg-closeloop-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+}
+
+.pmg-closeloop-item__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.pmg-closeloop-item__head strong {
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.pmg-closeloop-item__rate {
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.pmg-closeloop-item__rate--risk {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.pmg-closeloop-item__bar {
+  height: 8px;
+  margin: var(--ds-space-2) 0;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-border-secondary);
+}
+
+.pmg-closeloop-item__bar > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ds-color-primary);
+}
+
+.pmg-closeloop-item__bar-fill--risk {
+  background: var(--ds-color-danger) !important;
+}
+
+.pmg-closeloop-item__pending {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+}
+
+.pmg-closeloop-item__pending-label {
+  color: var(--ds-color-text-tertiary);
+}
+
+.pmg-closeloop-item__pending--done {
+  color: var(--ds-color-success, var(--ds-color-primary));
+}.pmg-card.pmg-health-card{
+  display: flex;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}.pmg-health-card > *{
+  flex: 1;
+  height: 100%;
+}
+
+/* ========== 自适应/间距修复 ========== */
+
+/* 1) 需带一把二级标题：补主色竖条，与"数据采集健康度"等标题统一 */
+.pmg-care-card .pmg-card-title::before {
+  content: '';
+  flex: none;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary);
+}
+
+/* 2) 数据采集健康度：分段统计条高度 22px → 8px */
+.pmg-health-card .segment-bar-card__bar {
+  height: 8px;
+}
+
+/* 3~5) 分组标题行到图表卡的间距收紧。间距实际来自 DSCard 内容区
+   .ds-card-component__content 的 grid row-gap(12px)；先把标题行底部撑高去掉，
+   让标题紧贴内容区下沿，再直接调该 gap 精确控制。图1/图2 = 4px，图3 = 8px。 */
+.pmg-sec--g1 .pmg-section-head,
+.pmg-sec--g2 .pmg-section-head,
+.pmg-sec--g3 .pmg-section-head {
+  min-height: 0 !important;      /* 覆盖 compact.css 的 min-height:40px */
+  padding-bottom: 0 !important;  /* 覆盖 compact.css 的 padding:8px 16px 的底部 */
+}
+
+/* 图1 标题行带内联筛选器（比标题高），改底对齐让标题也紧贴内容区，
+   与图2 一样得到 4px（否则标题在更高的行内居中，会多出约 4px）。 */
+.pmg-sec--g1 .pmg-section-head {
+  align-items: flex-end;
+}
+
+.pmg-sec--g1 .ds-card-component__content,
+.pmg-sec--g2 .ds-card-component__content {
+  gap: 4px;
+}
+
+.pmg-sec--g3 .ds-card-component__content {
+  gap: 8px;
+}
+
+/* compact.css 给 .pmg-section-head + * 加了 margin-top:12px，会叠加在上面的
+   content gap 之上；这里归零，让标题→内容间距完全由 content gap 决定。 */
+.pmg-sec--g1 .pmg-chart-grid,
+.pmg-sec--g2 .pmg-chart-grid,
+.pmg-sec--g3 .pmg-chart-grid {
+  margin-top: 0 !important;
+}
+
+/* 图3 底部与其他分组保持一致，不再补回额外底边距。 */
+.pmg-sec--g3 .pmg-chart-grid {
+  padding-bottom: 0;
+}
+
+/* 4) 图2（群内人数统计）图表与卡片自适应：三卡被拉到等高后，让 DSChartCard
+   正文区弹性填满卡片高度，消除柱状图/环形图下方的大片空白。 */
+.pmg-sec--g2 .pmg-chart-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.pmg-sec--g2 .pmg-chart-card .ds-chart-card__body {
+  flex: 1 1 auto;
+  height: auto !important;
+  min-height: 260px;
+}
+
+/* 通知 toast */
+.pmg-notice {
+  position: fixed;
+  right: var(--ds-space-5);
+  bottom: var(--ds-space-5);
+  z-index: var(--ds-z-dropdown);
+  padding: var(--ds-space-2) var(--ds-space-4);
+  color: var(--ds-color-text-inverse);
+  background: var(--ds-color-text-heading);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow-md);
+  font-size: var(--ds-font-size-md);
+}
+

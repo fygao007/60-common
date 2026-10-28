@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "sys",
+    "label": "系统管理员"
+  },
+  "menu": {
+    "key": "sys-accounts",
+    "label": "专业群管理",
+    "group": "专业群管理",
+    "defaultFeature": "majorGroup"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-sys-sys-accounts",
+      "label": "专业群管理（系统管理员）",
+      "type": "react-business-page",
+      "html": "sys-accounts.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "sys-accounts.html#majorGroup",
+          "sys-accounts.html#formManagement",
+          "sys-accounts.html#auditConfig",
+          "sys-accounts.html#auditBatch"
+        ]
+      }
+    }
+  ]
+}

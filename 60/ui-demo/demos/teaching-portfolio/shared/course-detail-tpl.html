@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>深圳职业技术大学 · 教学档案袋平台 · 课程详情</title>
+<link rel="stylesheet" href="../../../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../../../framework/theme.css" />
+<link rel="stylesheet" href="portfolio-v3.css?v=20260623-archive-dict" />
+<link rel="stylesheet" href="../dean/portfolio-detail/portfolio-detail.css" />
+<style>
+/* ── 子 tab 条（胶囊型）── */
+.pdt-sub-tabs{display:flex;gap:2px;padding:2px;background:var(--ds-color-bg-hover);border-radius:var(--ds-radius-md);overflow-x:auto;width:fit-content;max-width:100%}
+.pdt-sub-tab{height:28px;padding:0 12px;border:0;border-radius:calc(var(--ds-radius-md) - 2px);background:transparent;color:var(--ds-color-text-secondary);font-size:var(--ds-font-size-sm);cursor:pointer;white-space:nowrap;flex:none}
+.pdt-sub-tab.is-active{background:var(--ds-color-bg-container);color:var(--ds-color-black);font-weight:var(--ds-font-weight-semibold);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* ── 操作按钮 ── */
+.pdt-btn{height:28px;padding:0 10px;border:1px solid var(--ds-color-border);border-radius:var(--ds-radius-sm);background:var(--ds-color-bg-container);color:var(--ds-color-text-heading);font-size:var(--ds-font-size-sm);cursor:pointer}
+.pdt-btn:hover{background:var(--ds-color-bg-hover)}
+.pdt-btn-link{padding:0;border:0;background:transparent;color:var(--ds-color-primary);font-size:var(--ds-font-size-xs);cursor:pointer}
+.pdt-btn-link:hover{text-decoration:underline}
+
+/* ── 返回头部 ── */
+.pdt-sub-header{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-bottom:1px solid var(--ds-color-border-secondary)}
+.pdt-sub-header__back{display:inline-flex;align-items:center;gap:4px;color:var(--ds-color-text-secondary);font-size:var(--ds-font-size-md);cursor:pointer;border:0;background:transparent;padding:0}
+.pdt-sub-header__back svg{width:16px;height:16px}
+.pdt-sub-header__divider{width:1px;height:16px;background:var(--ds-color-border)}
+.pdt-sub-header__title{font-size:var(--ds-font-size-md);font-weight:var(--ds-font-weight-semibold);color:var(--ds-color-black)}
+
+/* ── 课程信息头 ── */
+.cd-course-header{margin:16px;padding:20px;background:var(--ds-color-steps-bg);border:1px solid var(--ds-color-white);border-radius:var(--ds-radius-xl);position:relative;overflow:hidden}
+.cd-course-header::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 60% 0%,var(--ds-color-primary-tint),transparent 50%),linear-gradient(265deg,var(--ds-color-primary-lighter),var(--ds-color-primary-light))}
+.cd-course-header__body{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.cd-course-header__main{display:flex;flex-direction:column;gap:10px}
+.cd-course-title{font-size:20px;font-weight:700;color:var(--ds-color-black);margin:0;line-height:1.4}
+.cd-course-tags{display:flex;gap:6px;flex-wrap:wrap}
+.cd-course-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:var(--ds-radius-sm);font-size:var(--ds-font-size-xs);background:rgba(255,255,255,.7);color:var(--ds-color-text-secondary);border:1px solid rgba(255,255,255,.9)}
+.cd-course-tag--primary{background:rgba(51,95,234,.12);color:var(--ds-color-primary);border-color:rgba(51,95,234,.2)}
+.cd-course-meta{display:flex;gap:20px;flex-wrap:wrap}
+.cd-course-meta__item{display:flex;gap:6px;align-items:center;font-size:13px}
+.cd-course-meta__label{color:var(--ds-color-text-placeholder)}
+.cd-course-meta__val{color:var(--ds-color-black);font-weight:600}
+.cd-course-cover{flex:none;width:200px;height:112px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.4);position:relative;z-index:1}
+.cd-course-cover svg{width:100%;height:100%}
+
+/* ── 内容布局 ── */
+.cd-content{padding:16px}
+.cd-content-inner{display:flex;flex-direction:column;gap:0}
+
+/* ── section ── */
+.pdt-section{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.pdt-section-head{display:flex;min-height:32px;align-items:center;gap:8px}
+.pdt-section-head h3{display:inline-flex;align-items:center;gap:8px;margin:0;color:var(--ds-color-black);font-size:var(--ds-font-size-md);font-weight:var(--ds-font-weight-regular)}
+.pdt-section-head h3::before{content:"";width:4px;height:12px;border-radius:var(--ds-radius-pill);background:var(--ds-color-primary);flex:none}
+.pdt-source-note{margin-left:auto;display:inline-flex;align-items:center;gap:2px;color:var(--ds-color-text-tertiary);font-size:var(--ds-font-size-xs);white-space:nowrap}
+.pdt-source-note strong{color:var(--ds-color-black);font-weight:var(--ds-font-weight-semibold)}
+.pdt-box{display:flex;width:100%;min-height:120px;padding:10px 12px;color:var(--ds-color-black);background:var(--ds-color-bg-container);border:1px solid var(--ds-color-border);border-radius:var(--ds-radius-sm);font-size:var(--ds-font-size-md);line-height:var(--ds-line-height-md);overflow-wrap:anywhere}
+.pdt-box--compact{min-height:40px;align-items:center;color:var(--ds-color-text-placeholder)}
+
+/* ── 策略条目 ── */
+.pdt-strategy{display:grid;gap:8px}
+.pdt-strategy-actions{display:flex;justify-content:flex-end;gap:4px;margin-bottom:4px}
+.pdt-strategy-card{display:grid;gap:8px;padding:10px 12px;background:var(--ds-color-bg-container);border:1px solid var(--ds-color-border);border-radius:var(--ds-radius-sm)}
+.pdt-strategy-card p{margin:0;color:var(--ds-color-black);font-size:var(--ds-font-size-md);line-height:var(--ds-line-height-md)}
+.pdt-strategy-card__foot{display:flex;align-items:center;gap:8px;color:var(--ds-color-text-secondary);font-size:var(--ds-font-size-md)}
+.pdt-strategy-card__foot span:nth-child(2),.pdt-strategy-card__foot span:nth-child(3){color:var(--ds-color-black)}
+.pdt-strategy-card__foot span:nth-child(3){margin-right:auto}
+
+/* ── 文件列表 ── */
+.pdt-upload-row{display:flex;flex-direction:column;gap:8px}
+.pdt-file-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--ds-color-border);border-radius:var(--ds-radius-sm);background:var(--ds-color-bg-container);font-size:var(--ds-font-size-sm);color:var(--ds-color-text-heading)}
+.pdt-file-item svg{width:16px;height:16px;color:var(--ds-color-primary);flex:none}
+.pdt-file-meta{margin-left:auto;color:var(--ds-color-text-placeholder)}
+.pdt-upload-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:100px;border:1px dashed var(--ds-color-border);border-radius:var(--ds-radius-sm);color:var(--ds-color-text-placeholder);font-size:var(--ds-font-size-sm);cursor:pointer}
+.pdt-upload-placeholder:hover{border-color:var(--ds-color-primary);color:var(--ds-color-primary)}
+.pdt-upload-placeholder svg{width:22px;height:22px;opacity:.5}
+
+/* ── 指标 ── */
+.pdt-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.pdt-metric{display:flex;flex-direction:column;gap:4px}
+.pdt-metric__label{font-size:var(--ds-font-size-xs);color:var(--ds-color-text-placeholder)}
+.pdt-metric__val{font-size:var(--ds-font-size-lg);font-weight:var(--ds-font-weight-semibold);color:var(--ds-color-black)}
+
+/* ── sub pane 控制 ── */
+.pdt-sub-pane{display:none}.pdt-sub-pane.is-active{display:block}
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <div class="pf-views">
+<section class="pf-view is-visible">
+<div class="pd-page">
+<section class="pd-shell" aria-label="课程详情">
+
+  <!-- 返回头部 -->
+  <div class="pdt-sub-header pd-detail-header">
+    <button class="pdt-sub-header__back" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      返回
+    </button>
+    <div class="pdt-sub-header__divider"></div>
+    <span class="pdt-sub-header__title" id="js-page-title">课程详情</span>
+  </div>
+
+  <!-- 课程信息头 -->
+  <div class="cd-course-header">
+    <div class="cd-course-header__body">
+      <div class="cd-course-header__main">
+        <h1 class="cd-course-title" id="js-course-name">动力电池系统原理与检修</h1>
+        <div class="cd-course-tags">
+          <span class="cd-course-tag cd-course-tag--primary" id="js-course-type">专业核心课</span>
+          <span class="cd-course-tag" id="js-major-name">新能源汽车工程技术</span>
+          <span class="cd-course-tag" id="js-credits-tag">5 学分</span>
+        </div>
+        <div class="cd-course-meta">
+          <div class="cd-course-meta__item">
+            <span class="cd-course-meta__label">课程负责人</span>
+            <span class="cd-course-meta__val" id="js-owner">李明华</span>
+          </div>
+          <div class="cd-course-meta__item">
+            <span class="cd-course-meta__label">建设时间</span>
+            <span class="cd-course-meta__val">2021.09 – 至今</span>
+          </div>
+          <div class="cd-course-meta__item">
+            <span class="cd-course-meta__label">思政元素</span>
+            <span class="cd-course-meta__val" id="js-ideology">科技报国、工匠精神</span>
+          </div>
+        </div>
+      </div>
+      <div class="cd-course-cover">
+        <svg viewBox="0 0 200 112" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="112" fill="rgba(255,255,255,.3)"/><rect x="16" y="52" width="36" height="46" rx="2" fill="rgba(255,255,255,.5)"/><rect x="44" y="24" width="88" height="70" rx="2" fill="rgba(255,255,255,.6)"/><rect x="44" y="24" width="88" height="12" fill="rgba(255,255,255,.4)"/><rect x="128" y="40" width="44" height="54" rx="2" fill="rgba(255,255,255,.5)"/><g fill="rgba(255,255,255,.7)"><rect x="52" y="44" width="10" height="10" rx="1.5"/><rect x="68" y="44" width="10" height="10" rx="1.5"/><rect x="84" y="44" width="10" height="10" rx="1.5"/><rect x="100" y="44" width="10" height="10" rx="1.5"/><rect x="52" y="60" width="10" height="10" rx="1.5"/><rect x="68" y="60" width="10" height="10" rx="1.5"/><rect x="84" y="60" width="10" height="10" rx="1.5"/><rect x="100" y="60" width="10" height="10" rx="1.5"/></g><rect x="86" y="78" width="14" height="20" rx="1.5" fill="rgba(255,255,255,.5)"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 内容区 -->
+  <div class="cd-content">
+
+    <!-- 子 tab 条 -->
+    <div class="pdt-sub-tabs" role="tablist">
+      <button class="pdt-sub-tab is-active" data-stab="design">课程设计与实施</button>
+      <button class="pdt-sub-tab" data-stab="care">教学设计与实施</button>
+      <button class="pdt-sub-tab" data-stab="effect">教学效果</button>
+      <button class="pdt-sub-tab" data-stab="evaluation">教学评价</button>
+      <button class="pdt-sub-tab" data-stab="reflection">课程反思</button>
+      <button class="pdt-sub-tab" data-stab="summary">课程总结</button>
+    </div>
+
+    <!-- ── 课程设计与实施 ── -->
+    <div class="pdt-sub-pane is-active" data-spane="design">
+
+      <div class="pdt-section">
+        <div class="pdt-section-head">
+          <h3>课程分类</h3>
+          <span class="pdt-source-note">数据来源于<strong>教务系统</strong>，<button class="pdt-btn-link">去纠错或补录</button></span>
+        </div>
+        <div class="pdt-box pdt-box--compact" id="js-sec-category">动力电池系统原理与检修面向202406班开设，课程定位为专业核心课，围绕岗位核心能力组织理论讲授、案例拆解和课堂实践。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head">
+          <h3>课程计划</h3>
+          <span class="pdt-source-note">数据来源于<strong>教务系统</strong>，<button class="pdt-btn-link">去纠错或补录</button></span>
+        </div>
+        <div class="pdt-box">本学期按"基础导入、核心知识建构、项目实践、综合评价"四个阶段推进。前 4 周完成概念框架与工具方法训练，中段围绕典型任务开展分组实践，后段完成课程项目展示与过程性评价归档。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head">
+          <h3>课程目标</h3>
+          <span class="pdt-source-note">数据来源于<strong>教务系统</strong>，<button class="pdt-btn-link">去纠错或补录</button></span>
+        </div>
+        <div class="pdt-box">学生能够理解课程关键概念，掌握常用方法与操作流程，能够在真实或仿真的任务场景中完成问题分析、方案设计、结果验证和反思优化。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head">
+          <h3>学情分析</h3>
+          <span class="pdt-source-note">数据来源于<strong>教务系统</strong>，<button class="pdt-btn-link">去纠错或补录</button></span>
+        </div>
+        <div class="pdt-box">学生基础差异较明显，部分学生具备较强动手能力，但理论迁移和规范表达仍需强化。课程采用分层任务、过程反馈和案例演示提升参与度。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>教学方法</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">采用任务驱动、案例教学、课堂演示和小组协作结合的方式组织教学。教师先用真实案例建立问题情境，再通过分解任务引导学生完成方案设计、实践验证和课堂复盘。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>教学备课（课件、备案）</h3><button class="pdt-btn">上传</button></div>
+        <div class="pdt-upload-row">
+          <div class="pdt-file-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            课件.pdf
+            <span class="pdt-file-meta">3.6 MB · 2026.03</span>
+          </div>
+          <div class="pdt-upload-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            点击或拖拽上传
+          </div>
+        </div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>教学策略</h3></div>
+        <div class="pdt-strategy">
+          <div class="pdt-strategy-actions">
+            <button class="pdt-btn">授课案例新增</button>
+            <button class="pdt-btn">新增全部</button>
+          </div>
+          <article class="pdt-strategy-card">
+            <p>本次课堂围绕课程核心知识点展开教学，在教学设计上强调任务驱动、问题导入和项目实践，帮助学生建立完整知识框架。</p>
+            <div class="pdt-strategy-card__foot">
+              <span>保存时间</span><span>2026-05-20</span><span id="js-strategy-course">动力电池系统原理与检修</span>
+              <button class="pdt-btn-link">编辑</button><button class="pdt-btn-link">删除</button>
+            </div>
+          </article>
+          <article class="pdt-strategy-card">
+            <p>课堂实施过程中结合案例拆解和分组讨论，引导学生把核心思想迁移到真实问题求解。</p>
+            <div class="pdt-strategy-card__foot">
+              <span>保存时间</span><span>2026-04-15</span><span>动力电池系统原理与检修</span>
+              <button class="pdt-btn-link">编辑</button><button class="pdt-btn-link">删除</button>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>教学改革与创新</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">围绕在线精品课程建设和产教融合要求，引入企业真实任务、课堂即时反馈和学习数据分析，持续优化教学活动设计与评价方式。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程资源</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">已建设课程课件、任务书、示例数据、操作视频、课堂练习和拓展阅读材料，支撑课前预习、课中实践和课后巩固。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程思政改革</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">将职业规范、工程伦理、质量意识和团队协作融入课程任务，在案例讨论和项目评价中强化学生责任意识。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程思政元素</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box" id="js-ideology-box">课程思政元素包括工匠精神、规范意识、数据安全、协同创新和服务产业发展的职业使命。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程思政教学内容</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">在项目任务中设置质量复核、方案论证和成果展示环节，引导学生理解技术选择对用户、组织和社会的影响。</div>
+      </div>
+
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程思政教学案例</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">以企业真实项目为案例，讨论方案设计中的可靠性、成本、可维护性和团队协作问题，形成课程思政案例素材。</div>
+      </div>
+
+    </div><!-- /design -->
+
+    <!-- ── 教学设计与实施 ── -->
+    <div class="pdt-sub-pane" data-spane="care">
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>辅导学生</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">本学期针对学习困难学生建立辅导清单，安排课后答疑、作业反馈和阶段性跟踪，重点帮助学生补齐基础概念和实践步骤。</div>
+      </div>
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>个性化案例</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">针对实践能力较强但表达薄弱的学生，采用"操作展示 + 复盘说明"的方式进行个性化指导，帮助其提升项目汇报和文档表达能力。</div>
+      </div>
+    </div>
+
+    <!-- ── 教学效果 ── -->
+    <div class="pdt-sub-pane" data-spane="effect">
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>教学信息</h3><span class="pdt-source-note">数据来源于<strong>教务系统</strong></span></div>
+        <div class="pdt-metrics">
+          <div class="pdt-metric"><span class="pdt-metric__label">上课率</span><span class="pdt-metric__val">98%</span></div>
+          <div class="pdt-metric"><span class="pdt-metric__label">平均成绩</span><span class="pdt-metric__val">--</span></div>
+        </div>
+      </div>
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>学生代表性作业</h3><button class="pdt-btn">上传</button></div>
+        <div class="pdt-upload-row">
+          <div class="pdt-upload-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            点击或拖拽上传
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 教学评价 ── -->
+    <div class="pdt-sub-pane" data-spane="evaluation">
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>学生评价</h3><span class="pdt-source-note">数据来源于<strong>教务系统</strong></span></div>
+        <div class="pdt-box">学生评价总体良好，认为课程案例贴近专业应用，课堂任务清晰，建议继续增加真实项目素材和课堂练习讲评。</div>
+      </div>
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>督导评价</h3><span class="pdt-source-note">数据来源于<strong>教务系统</strong></span></div>
+        <div class="pdt-box">督导评价认为课程目标明确，教学组织有序，互动充分，建议进一步完善过程性评价证据链。</div>
+      </div>
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>同行评价</h3><span class="pdt-source-note">数据来源于<strong>教务系统</strong></span></div>
+        <div class="pdt-box">同行评价认为课程内容与专业能力培养匹配，项目任务设计较完整，可继续强化跨课程资源共享。</div>
+      </div>
+    </div>
+
+    <!-- ── 课程反思 ── -->
+    <div class="pdt-sub-pane" data-spane="reflection">
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>教学反思</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">本轮教学中，学生对任务背景理解较快，但在方案比较和结果表达方面仍有不足。后续将增加示例讲评和分层任务。</div>
+      </div>
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>优化措施</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box">下一轮课程将优化课前导学材料，增加课堂即时检测，完善小组任务分工和评价规则，提高学习过程可见性。</div>
+      </div>
+    </div>
+
+    <!-- ── 课程总结 ── -->
+    <div class="pdt-sub-pane" data-spane="summary">
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程总结</h3><button class="pdt-btn">编辑</button></div>
+        <div class="pdt-box" id="js-summary-box">课程已完成本阶段教学任务，课程资料、课堂记录、学生作业和教学反思已归档。整体达成度较好，后续继续围绕项目案例和评价方式优化。</div>
+      </div>
+      <div class="pdt-section">
+        <div class="pdt-section-head"><h3>课程总结附件</h3><button class="pdt-btn">上传</button></div>
+        <div class="pdt-upload-row">
+          <div class="pdt-upload-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            点击或拖拽上传
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cd-content -->
+</section>
+</div>
+</section>
+  </div>
+</div>
+
+<script src="../../../assets/icon-registry.js"></script>
+<script src="../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../../../framework/framework-2.js?v=2.2.3"></script>
+<script src="portfolio-frame.js?v=20260714-compact4"></script>
+<script>
+window.PORTFOLIO_V3_PAGE = {"role":"teacher","view":"t-major-group","label":"课程详情"};
+
+/* URL 参数回填 */
+(function(){
+  var p = new URLSearchParams(location.search);
+  var name = p.get('name') || '动力电池系统原理与检修';
+  var type = p.get('type') || '专业核心课';
+  var major = p.get('major') || '';
+  var credits = p.get('credits') || '';
+  var owner = p.get('owner') || '';
+  var ideology = p.get('ideology') || '';
+
+  var set = function(id, val){ var el = document.getElementById(id); if(el && val) el.textContent = val; };
+  set('js-course-name', name);
+  set('js-page-title', name + ' · 课程详情');
+  set('js-course-type', type);
+  set('js-major-name', major);
+  set('js-credits-tag', credits ? credits + ' 学分' : '');
+  set('js-owner', owner);
+  set('js-ideology', ideology);
+  document.title = '深圳职业技术大学 · ' + name + ' · 课程详情';
+
+  /* 更新策略条目里的课程名 */
+  document.querySelectorAll('.pdt-strategy-card__foot span:nth-child(3)').forEach(function(el){
+    el.textContent = name;
+  });
+  /* 课程总结里带课程名 */
+  var sb = document.getElementById('js-summary-box');
+  if(sb && name) sb.textContent = name + '已完成本阶段教学任务，课程资料、课堂记录、学生作业和教学反思已归档。整体达成度较好，后续继续围绕项目案例和评价方式优化。';
+})();
+
+/* 子 tab 切换 */
+document.addEventListener('click', function(e){
+  var sTab = e.target.closest('[data-stab]');
+  if(sTab){
+    document.querySelectorAll('[data-stab]').forEach(function(t){ t.classList.remove('is-active'); });
+    document.querySelectorAll('[data-spane]').forEach(function(p){ p.classList.remove('is-active'); });
+    sTab.classList.add('is-active');
+    var pane = document.querySelector('[data-spane="' + sTab.dataset.stab + '"]');
+    if(pane) pane.classList.add('is-active');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://szpu.example/schemas/teaching-portfolio-view-1.0.0.json",
+  "title": "教学档案袋展示视图",
+  "type": "object",
+  "required": ["viewId", "version", "groups"],
+  "properties": {
+    "viewId": { "const": "TeachingPortfolio.default" },
+    "version": { "type": "string" },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "sections"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "entityType", "displayType", "fieldRefs"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "entityType": { "type": "string" },
+                "displayType": { "enum": ["form", "table", "card", "timeline", "document"] },
+                "fieldRefs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

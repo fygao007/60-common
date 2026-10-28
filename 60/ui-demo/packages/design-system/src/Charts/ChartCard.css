@@ -1,0 +1,252 @@
+/* ChartCard 样式 - 干净白卡，无渐变高光，不覆盖 .ds-* 和 .frame2-* */
+
+.ds-chart-card {
+  background: #ffffff;
+  border: 1px solid #dcdce0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  padding: 16px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 尺寸变体 */
+.ds-chart-card--mini {
+  padding: 16px 16px 8px;
+}
+
+.ds-chart-card--small {
+  padding: 16px 16px 8px;
+}
+
+.ds-chart-card--medium {
+  padding: 16px 16px 8px;
+}
+
+.ds-chart-card--wide {
+  padding: 16px 16px 8px;
+}
+
+.ds-chart-card--full {
+  padding: 16px 16px 8px;
+}
+
+/* Header 区域 - 标题无左侧竖条 */
+.ds-chart-card__header {
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
+
+.ds-chart-card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 20px;
+}
+
+/* Body 区域 - 图表容器必须有明确高度 */
+.ds-chart-card__body {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* donut/pie 左右布局 */
+.chart-donut-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  align-items: start;
+  gap: 32px;
+  min-height: 270px;
+}
+
+.chart-donut-canvas {
+  width: 260px;
+  height: 260px;
+  flex: 0 0 260px;
+}
+
+/* 响应式：宽度较小时改为上下布局 */
+@media (max-width: 1280px) {
+  .chart-donut-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .chart-donut-canvas {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+/* donutCallout：顶部横向图例 + 引导线环形图 */
+.chart-callout-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.chart-callout-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.chart-callout-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart-callout-legend__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chart-callout-legend__name {
+  font-size: 12px;
+  color: #3d3d3d;
+  line-height: 18px;
+}
+
+.chart-callout-canvas {
+  width: 100%;
+  height: 420px;
+}
+
+/* 业务洞察 - 浅蓝底，轻边框 */
+.ds-chart-card__insight {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f3f7ff;
+  border: 1px solid #dbe7ff;
+  color: #3167ff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  flex-shrink: 0;
+}
+
+.ds-chart-card__insight-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.ds-chart-card__insight-text {
+  font-size: 14px;
+  color: #3167ff;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+/* 空状态 */
+.ds-chart-card__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  min-height: 180px;
+}
+
+.ds-chart-card__empty-icon {
+  font-size: 48px;
+  opacity: 0.35;
+  margin-bottom: 8px;
+}
+
+.ds-chart-card__empty-message {
+  margin: 0;
+  font-size: 15px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.ds-chart-card__empty-sub {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* 加载状态 - skeleton */
+.ds-chart-card__loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  min-height: 180px;
+  padding: 12px 0;
+}
+
+.ds-chart-card__loading-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.ds-chart-card__skeleton-line {
+  height: 12px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  animation: ds-chart-card-shimmer 1.5s infinite;
+  width: 40%;
+}
+
+.ds-chart-card__skeleton-block {
+  flex: 1;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: ds-chart-card-shimmer 1.5s infinite;
+}
+
+@keyframes ds-chart-card-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 错误状态 */
+.ds-chart-card__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  min-height: 180px;
+}
+
+.ds-chart-card__error-icon {
+  font-size: 48px;
+  opacity: 0.35;
+  margin-bottom: 8px;
+}
+
+.ds-chart-card__error-message {
+  margin: 0;
+  font-size: 15px;
+  color: #ef4444;
+  font-weight: 500;
+}

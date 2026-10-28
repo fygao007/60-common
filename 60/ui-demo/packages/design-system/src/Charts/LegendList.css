@@ -1,0 +1,49 @@
+/* LegendList 业务图例样式 - 不使用 ECharts 内部 legend */
+
+.legend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.legend-item {
+  display: grid;
+  grid-template-columns: 13px 1fr auto auto;
+  align-items: center;
+  column-gap: 12px;
+  height: 36px;
+  white-space: nowrap;
+}
+
+.legend-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+
+.legend-name {
+  font-size: 16px;
+  color: #1f2937;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 24px;
+}
+
+.legend-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+}
+
+.legend-percent {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 500;
+  min-width: 48px;
+  text-align: right;
+}

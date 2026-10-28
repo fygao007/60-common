@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>自定义应用 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+body{margin:0}
+
+/* 应用图标（与首页"全部应用"保持一致的色块字符样式） */
+.app-icon { display:grid; place-items:center; width:48px; height:48px; border-radius:12px; font-size:22px; color:#fff; }
+.ic-1 { background: linear-gradient(135deg,#ff9966,#ff7043); }
+.ic-2 { background: linear-gradient(135deg,#5bc0ff,#3d8bff); }
+.ic-3 { background: linear-gradient(135deg,#9b8cff,#7a6bff); }
+.ic-4 { background: linear-gradient(135deg,#ff8fb1,#ff6f9c); }
+.ic-5 { background: linear-gradient(135deg,#7c8ba1,#5b6b82); }
+.ic-6 { background: linear-gradient(135deg,#7fd9c4,#4fc3a1); }
+.ic-7 { background: linear-gradient(135deg,#ffd34f,#f6b82e); }
+.ic-8 { background: linear-gradient(135deg,#5dd0a6,#34b88a); }
+.ic-9 { background: linear-gradient(135deg,#7aa6ff,#577dff); }
+.ic-10 { background: linear-gradient(135deg,#ffab6e,#ff8a3d); }
+.ic-11 { background: linear-gradient(135deg,#9adf8e,#6fcf6a); }
+.ic-12 { background: linear-gradient(135deg,#ffb259,#ff9234); }
+
+/* 分组列表 */
+.cg-group-list { display:flex; flex-direction:column; gap:14px; margin-top:14px; }
+.cg-group { border:1px solid var(--ap-line); border-radius:8px; background:#fff; overflow:hidden; }
+.cg-group-head { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:#fafcff; border-bottom:1px solid var(--ap-line); }
+.cg-group-head h3 { margin:0; display:flex; align-items:center; gap:8px; font-size:15px; font-weight:700; color:var(--ap-ink); }
+.cg-drag { color:#c3cad6; font-size:14px; cursor:grab; }
+.cg-count { font-weight:400; font-size:12px; color:var(--ap-muted); }
+.cg-group-actions { display:flex; align-items:center; gap:16px; }
+.cg-link { background:none; border:none; padding:0; font-size:13px; color:var(--ap-blue); cursor:pointer; }
+.cg-link.danger { color:var(--ap-red); }
+.cg-link:hover { text-decoration:underline; }
+.cg-app-list { display:flex; flex-wrap:wrap; gap:6px; padding:16px 12px; }
+.cg-app-tile { position:relative; width:108px; }
+.cg-app-link { display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; padding:10px 6px; border-radius:8px; }
+.cg-app-link:hover { background:#f5f8ff; }
+.cg-app-name { font-size:12px; color:var(--ap-text); text-align:center; line-height:16px; }
+.cg-remove {
+  position:absolute; top:2px; right:6px; width:20px; height:20px; border-radius:50%;
+  border:none; background:#fff; box-shadow:0 1px 4px rgba(15,23,42,.18);
+  color:var(--ap-muted); font-size:11px; line-height:1; display:grid; place-items:center; cursor:pointer;
+}
+.cg-remove:hover { color:var(--ap-red); }
+.cg-add-tile {
+  width:108px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  padding:16px 6px; margin:10px 0; border:1px dashed var(--ap-line); border-radius:8px;
+  background:#fafcff; color:var(--ap-muted); font-size:12px; cursor:pointer;
+}
+.cg-add-tile:hover { border-color:var(--ap-blue); color:var(--ap-blue); background:#f3f7ff; }
+.cg-add-ico { font-size:18px; line-height:1; }
+
+/* 弹层通用样式 */
+.cg-mask {
+  position:fixed; inset:0; background:rgba(15,23,42,.42);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:opacity .15s ease; z-index:300;
+}
+.cg-mask.is-open { opacity:1; visibility:visible; }
+.cg-close {
+  width:28px; height:28px; border-radius:50%; border:none; background:#f0f2f5;
+  color:var(--ap-muted); font-size:13px; cursor:pointer; display:grid; place-items:center; flex:none;
+}
+.cg-close:hover { background:#e6eaf2; color:var(--ap-ink); }
+.cg-dialog-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+
+/* 新建/重命名分组弹窗 */
+.cg-name-dialog { width:360px; background:#fff; border-radius:12px; box-shadow:0 18px 60px rgba(15,23,42,.22); padding:22px 24px; }
+.cg-name-dialog h3 { margin:0 0 14px; font-size:16px; font-weight:700; color:var(--ap-ink); }
+.cg-name-dialog input[type="text"] {
+  width:100%; box-sizing:border-box; padding:9px 12px; border:1px solid var(--ap-line);
+  border-radius:6px; font-size:14px; color:var(--ap-text);
+}
+.cg-name-dialog input[type="text"]:focus { outline:none; border-color:var(--ap-blue); }
+.cg-name-hint { min-height:18px; margin:6px 2px 0; font-size:12px; color:var(--ap-muted); }
+.cg-name-hint.is-error { color:var(--ap-red); }
+
+/* 选择应用弹窗 */
+.cg-pick-dialog {
+  width:580px; max-height:82vh; display:flex; flex-direction:column;
+  background:#fff; border-radius:12px; box-shadow:0 18px 60px rgba(15,23,42,.22); padding:22px 24px;
+}
+.cg-pick-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.cg-pick-head h3 { margin:0; font-size:16px; font-weight:700; color:var(--ap-ink); }
+.cg-pick-head h3 span { color:var(--ap-blue); }
+.cg-pick-sub { margin:8px 0 14px; font-size:13px; color:var(--ap-muted); }
+.cg-pick-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; overflow-y:auto; padding:2px; }
+.cg-pick-item {
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--ap-line);
+  border-radius:8px; cursor:pointer; font-size:13px; color:var(--ap-text);
+}
+.cg-pick-item input { margin:0; }
+.cg-pick-item.is-checked { border-color:var(--ap-blue); background:#f3f7ff; color:var(--ap-blue); font-weight:600; }
+.cg-pick-item .app-icon { width:32px; height:32px; font-size:15px; border-radius:8px; flex:none; }
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">自定义应用</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">自</span>自定义应用</h1>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head">
+          <h2><span class="dot"></span>我的应用分组</h2>
+          <button class="ap-btn primary" id="cgAddGroupBtn" type="button">＋ 新建分组</button>
+        </div>
+        <div class="ap-panel-body">
+          <p class="hint">在这里管理首页"全部应用"中展示的分组与应用：可新建/重命名/删除分组，也可以为每个分组挑选要展示的应用，或移除已添加的应用。</p>
+          <div class="cg-group-list" id="cgGroupList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- 新建 / 重命名分组 -->
+<div class="cg-mask" id="cgNameMask">
+  <div class="cg-name-dialog" role="dialog" aria-modal="true" aria-label="分组名称">
+    <h3 id="cgNameTitle">新建分组</h3>
+    <input type="text" id="cgNameInput" maxlength="12" placeholder="请输入分组名称，最多12个字" autocomplete="off" />
+    <p class="cg-name-hint" id="cgNameHint"></p>
+    <div class="cg-dialog-actions">
+      <button class="ap-btn" id="cgNameCancel" type="button">取消</button>
+      <button class="ap-btn primary" id="cgNameConfirm" type="button">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 选择分组应用 -->
+<div class="cg-mask" id="cgPickMask">
+  <div class="cg-pick-dialog" role="dialog" aria-modal="true" aria-label="选择应用">
+    <div class="cg-pick-head">
+      <h3>选择「<span id="cgPickGroupName"></span>」分组中展示的应用</h3>
+      <button class="cg-close" id="cgPickClose" type="button" aria-label="关闭">✕</button>
+    </div>
+    <p class="cg-pick-sub">勾选要在该分组中展示的应用，可多选；点击"确定"后将按当前勾选结果更新分组内容。</p>
+    <div class="cg-pick-grid" id="cgPickGrid"></div>
+    <div class="cg-dialog-actions">
+      <button class="ap-btn" id="cgPickCancel" type="button">取消</button>
+      <button class="ap-btn primary" id="cgPickConfirm" type="button">确定</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'app-custom', versionLabel:'自定义应用', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'app-custom',label:'自定义应用',closable:true}]
+});
+</script>
+<script>
+(function () {
+  // 应用库：与首页"全部应用"保持一致（图标色块、文字、跳转地址）
+  var APP_LIBRARY = [
+    { key: 'my-info',   icon: 'ic-1',  char: '人', label: '我的信息',     url: './my-info.html' },
+    { key: 'leave',     icon: 'ic-2',  char: '假', label: '我要请假',     url: './leave-application.html' },
+    { key: 'period',    icon: 'ic-3',  char: '聘', label: '聘期考核',     url: './period-assessment.html' },
+    { key: 'dual',      icon: 'ic-4',  char: '师', label: '双师认定',     url: './dual-qualified.html' },
+    { key: 'cert',      icon: 'ic-5',  char: '证', label: '证明打印',     url: './certificate-print.html' },
+    { key: 'further',   icon: 'ic-3',  char: '修', label: '进修申请',     url: './further-study.html' },
+    { key: 'annual',    icon: 'ic-7',  char: '年', label: '年度考核',     url: './annual-assessment.html' },
+    { key: 'title',     icon: 'ic-8',  char: '职', label: '职称评审',     url: './title-review.html' },
+    { key: 'perf',      icon: 'ic-9',  char: '绩', label: '业绩数据登记', url: './performance-data.html' },
+    { key: 'overseas',  icon: 'ic-10', char: '境', label: '出国境报备',   url: './overseas-report.html' },
+    { key: 'portfolio', icon: 'ic-11', char: '档', label: '教学档案袋',   url: './teaching-portfolio.html' },
+    { key: 'salary',    icon: 'ic-12', char: '资', label: '我的工资',     url: './my-salary.html' }
+  ];
+
+  // 演示用初始分组数据（仅保存在内存中，刷新页面会重置）
+  var groups = [
+    { id: 'g1', name: '常用应用', apps: ['my-info', 'leave', 'cert', 'salary'] },
+    { id: 'g2', name: '考核评价', apps: ['period', 'annual', 'perf'] }
+  ];
+  var groupSeq = groups.length;
+
+  var listEl = document.getElementById('cgGroupList');
+  var addGroupBtn = document.getElementById('cgAddGroupBtn');
+
+  var nameMask = document.getElementById('cgNameMask');
+  var nameTitle = document.getElementById('cgNameTitle');
+  var nameInput = document.getElementById('cgNameInput');
+  var nameHint = document.getElementById('cgNameHint');
+  var nameCancel = document.getElementById('cgNameCancel');
+  var nameConfirm = document.getElementById('cgNameConfirm');
+  var nameMode = null;
+  var nameTargetId = null;
+
+  var pickMask = document.getElementById('cgPickMask');
+  var pickGroupName = document.getElementById('cgPickGroupName');
+  var pickGrid = document.getElementById('cgPickGrid');
+  var pickClose = document.getElementById('cgPickClose');
+  var pickCancel = document.getElementById('cgPickCancel');
+  var pickConfirm = document.getElementById('cgPickConfirm');
+  var pickTargetId = null;
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function appByKey(key) {
+    for (var i = 0; i < APP_LIBRARY.length; i++) {
+      if (APP_LIBRARY[i].key === key) return APP_LIBRARY[i];
+    }
+    return null;
+  }
+
+  function findGroup(gid) {
+    for (var i = 0; i < groups.length; i++) {
+      if (groups[i].id === gid) return groups[i];
+    }
+    return null;
+  }
+
+  // ---------- 分组列表渲染 ----------
+  function renderGroups() {
+    if (!groups.length) {
+      listEl.innerHTML = '<div class="ap-empty-note">还没有自定义分组，点击右上角"新建分组"开始创建吧～</div>';
+      return;
+    }
+    listEl.innerHTML = groups.map(function (g) {
+      var tiles = g.apps.map(function (key) {
+        var app = appByKey(key);
+        if (!app) return '';
+        return '<div class="cg-app-tile" data-key="' + key + '">' +
+          '<a class="cg-app-link" href="' + app.url + '">' +
+            '<span class="app-icon ' + app.icon + '">' + app.char + '</span>' +
+            '<span class="cg-app-name">' + escapeHtml(app.label) + '</span>' +
+          '</a>' +
+          '<button class="cg-remove" type="button" data-act="remove-app" data-key="' + key + '" aria-label="从分组中移除' + escapeHtml(app.label) + '">✕</button>' +
+        '</div>';
+      }).join('');
+
+      return '<div class="cg-group" data-id="' + g.id + '">' +
+        '<div class="cg-group-head">' +
+          '<h3><span class="cg-drag" aria-hidden="true">⠿</span>' + escapeHtml(g.name) + '<span class="cg-count">' + g.apps.length + ' 个应用</span></h3>' +
+          '<div class="cg-group-actions">' +
+            '<button class="cg-link" type="button" data-act="rename">重命名</button>' +
+            '<button class="cg-link danger" type="button" data-act="delete">删除分组</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cg-app-list">' +
+          tiles +
+          '<button class="cg-add-tile" type="button" data-act="add-app"><span class="cg-add-ico">＋</span>添加应用</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    bindGroupEvents();
+  }
+
+  function bindGroupEvents() {
+    listEl.querySelectorAll('.cg-group').forEach(function (card) {
+      var gid = card.getAttribute('data-id');
+
+      card.querySelectorAll('[data-act="remove-app"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          removeAppFromGroup(gid, btn.getAttribute('data-key'));
+        });
+      });
+
+      var renameBtn = card.querySelector('[data-act="rename"]');
+      if (renameBtn) renameBtn.addEventListener('click', function () { openNamePrompt('rename', gid); });
+
+      var delBtn = card.querySelector('[data-act="delete"]');
+      if (delBtn) delBtn.addEventListener('click', function () { deleteGroup(gid); });
+
+      var addBtn = card.querySelector('[data-act="add-app"]');
+      if (addBtn) addBtn.addEventListener('click', function () { openPicker(gid); });
+    });
+  }
+
+  function removeAppFromGroup(gid, key) {
+    var g = findGroup(gid);
+    if (!g) return;
+    g.apps = g.apps.filter(function (k) { return k !== key; });
+    renderGroups();
+  }
+
+  function deleteGroup(gid) {
+    var g = findGroup(gid);
+    if (!g) return;
+    if (!window.confirm('确定要删除分组「' + g.name + '」吗？分组内的应用本身不会被删除，仅从该分组中移除展示。')) return;
+    groups = groups.filter(function (x) { return x.id !== gid; });
+    renderGroups();
+  }
+
+  // ---------- 新建 / 重命名分组弹窗 ----------
+  function openNamePrompt(mode, gid) {
+    nameMode = mode;
+    nameTargetId = gid;
+    nameHint.textContent = '';
+    nameHint.classList.remove('is-error');
+    if (mode === 'rename') {
+      var g = findGroup(gid);
+      nameTitle.textContent = '重命名分组';
+      nameInput.value = g ? g.name : '';
+      nameConfirm.textContent = '保存';
+    } else {
+      nameTitle.textContent = '新建分组';
+      nameInput.value = '';
+      nameConfirm.textContent = '创建';
+    }
+    nameMask.classList.add('is-open');
+    setTimeout(function () { nameInput.focus(); nameInput.select(); }, 0);
+  }
+
+  function closeNamePrompt() {
+    nameMask.classList.remove('is-open');
+    nameMode = null;
+    nameTargetId = null;
+  }
+
+  function confirmNamePrompt() {
+    var val = nameInput.value.trim();
+    if (!val) {
+      nameHint.textContent = '分组名称不能为空';
+      nameHint.classList.add('is-error');
+      return;
+    }
+    if (val.length > 12) {
+      nameHint.textContent = '分组名称最多 12 个字';
+      nameHint.classList.add('is-error');
+      return;
+    }
+    if (nameMode === 'create') {
+      groupSeq += 1;
+      groups.push({ id: 'g' + groupSeq, name: val, apps: [] });
+    } else if (nameMode === 'rename' && nameTargetId) {
+      var g = findGroup(nameTargetId);
+      if (g) g.name = val;
+    }
+    closeNamePrompt();
+    renderGroups();
+  }
+
+  addGroupBtn.addEventListener('click', function () { openNamePrompt('create', null); });
+  nameConfirm.addEventListener('click', confirmNamePrompt);
+  nameCancel.addEventListener('click', closeNamePrompt);
+  nameMask.addEventListener('click', function (e) { if (e.target === nameMask) closeNamePrompt(); });
+  nameInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { confirmNamePrompt(); }
+    else if (e.key === 'Escape') { closeNamePrompt(); }
+  });
+
+  // ---------- 选择分组应用弹窗 ----------
+  function openPicker(gid) {
+    var g = findGroup(gid);
+    if (!g) return;
+    pickTargetId = gid;
+    pickGroupName.textContent = g.name;
+    pickGrid.innerHTML = APP_LIBRARY.map(function (app) {
+      var checked = g.apps.indexOf(app.key) !== -1;
+      return '<label class="cg-pick-item' + (checked ? ' is-checked' : '') + '">' +
+        '<input type="checkbox" value="' + app.key + '"' + (checked ? ' checked' : '') + ' />' +
+        '<span class="app-icon ' + app.icon + '">' + app.char + '</span>' +
+        '<span>' + escapeHtml(app.label) + '</span>' +
+      '</label>';
+    }).join('');
+    pickGrid.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var item = cb.parentNode;
+        if (item) item.classList.toggle('is-checked', cb.checked);
+      });
+    });
+    pickMask.classList.add('is-open');
+  }
+
+  function closePicker() {
+    pickMask.classList.remove('is-open');
+    pickTargetId = null;
+  }
+
+  function confirmPicker() {
+    var g = findGroup(pickTargetId);
+    if (!g) { closePicker(); return; }
+    var picked = [];
+    pickGrid.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) { picked.push(cb.value); });
+    g.apps = picked;
+    closePicker();
+    renderGroups();
+  }
+
+  pickConfirm.addEventListener('click', confirmPicker);
+  pickCancel.addEventListener('click', closePicker);
+  pickClose.addEventListener('click', closePicker);
+  pickMask.addEventListener('click', function (e) { if (e.target === pickMask) closePicker(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (pickMask.classList.contains('is-open')) closePicker();
+    else if (nameMask.classList.contains('is-open')) closeNamePrompt();
+  });
+
+  renderGroups();
+})();
+</script>
+</body>
+</html>

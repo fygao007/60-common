@@ -1,0 +1,80 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--progress",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "实时掌握评委投票提交进度，识别未提交人员",
+      "对未提交评委一键催办，保证投票如期结束"
+    ],
+    "painPoints": [
+      "原系统仅在投票结束后汇总，过程中无法看到谁未提交"
+    ],
+    "openQuestions": [
+      "催办提醒的触达渠道（站内信 / 短信）待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "投票进度",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票项目已开启投票"
+    ],
+    "mainFlow": [
+      "进入投票进度页，通过文字统计查看已提交、未提交与完成率",
+      "切换「全部评委 / 已提交 / 未提交」页签",
+      "按分组与提交状态筛选评委",
+      "点击「催办未提交」向未提交评委发送提醒"
+    ],
+    "exceptions": [
+      "筛选无结果时表格展示空态文案",
+      "投票未开启时完成率显示为 0%"
+    ]
+  },
+  "page": {
+    "title": "投票进度",
+    "templateId": "regular-list",
+    "menuRef": "recruitment.vote:progress",
+    "fieldRefs": [
+      "StaffBasicInformation.xm",
+      "Business.vote.groupName",
+      "Business.vote.submitStatus",
+      "Business.vote.submitTime",
+      "Business.vote.voteProjectName"
+    ],
+    "components": [
+      "DSRegularListTemplate",
+      "DSTag"
+    ],
+    "demoPath": "demos/vote/progress/progress.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「投票执行」分组下「投票进度」处于高亮态",
+      "统计条展示已提交、未提交与完成率",
+      "切换页签与筛选条件后表格按条件收敛",
+      "提交状态以设计系统标签色区分"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--screen-config",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "配置会议大屏的标题、欢迎语与开始/结束提示文案",
+      "设置开始与结束倒计时以及大屏背景，支撑现场仪式感"
+    ],
+    "painPoints": [
+      "原系统大屏文案写死，不同会议需改代码"
+    ],
+    "openQuestions": [
+      "大屏背景是否需要按会议批次分别留存，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "大屏配置",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票项目已创建"
+    ],
+    "mainFlow": [
+      "进入大屏配置，填写大屏标题与欢迎语",
+      "设置开始、结束提示语与对应倒计时秒数",
+      "上传大屏背景图",
+      "保存后打开大屏预览核对效果"
+    ],
+    "exceptions": [
+      "标题为空时阻止保存并提示",
+      "倒计时填写非数字或负数时阻止保存并提示"
+    ]
+  },
+  "page": {
+    "title": "大屏配置",
+    "templateId": "edit-form",
+    "menuRef": "recruitment.vote:screen-config",
+    "fieldRefs": [
+      "Business.vote.screenTitle",
+      "Business.vote.welcomeWords",
+      "Business.vote.startWords",
+      "Business.vote.endWords",
+      "Business.vote.startCountdown",
+      "Business.vote.endCountdown",
+      "Business.vote.screenBackground"
+    ],
+    "components": [
+      "DSAlert",
+      "DSButton",
+      "DSEditField",
+      "DSEditForm",
+      "DSFormGroup",
+      "DSInput",
+      "DSTextarea",
+      "DSUpload"
+    ],
+    "demoPath": "demos/vote/screen-config/screen-config.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「展示端」分组下「大屏配置」处于高亮态",
+      "文案、倒计时与背景图分组呈现且校验生效",
+      "「预览大屏」在新窗口打开大屏预览页",
+      "保存校验通过后给出成功提示"
+    ]
+  }
+}

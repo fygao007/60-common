@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>筛选区域组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Field/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/FilterBar/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: #eef5ff;
+      font-family: var(--ds-font-family);
+    }
+
+    .demo-shell {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .demo-card {
+      padding: 24px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(28, 64, 128, .06);
+    }
+
+    .demo-table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 56px;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .demo-ops {
+      display: flex;
+      gap: 8px;
+    }
+
+    .demo-table {
+      height: 420px;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-top: 0;
+      background: #fff;
+    }
+
+    .demo-table-head {
+      display: grid;
+      grid-template-columns: 64px 1.1fr 1.2fr 1.5fr 1fr 1fr;
+      height: 48px;
+      align-items: center;
+      color: var(--ds-color-text);
+      background: #fafafa;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .demo-table-head span {
+      min-width: 0;
+      padding: 0 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-left: 1px solid rgba(var(--ds-color-border-rgb), .6);
+    }
+
+    .demo-table-head span:first-child {
+      border-left: 0;
+    }
+
+    .demo-empty {
+      display: grid;
+      place-items: center;
+      height: 372px;
+      color: var(--ds-color-text-tertiary);
+      font-size: 16px;
+    }
+
+    .demo-extra {
+      display: none;
+    }
+
+    .is-expanded .demo-extra {
+      display: grid;
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-shell ds-scope">
+    <section class="demo-card">
+      <section class="ds-filter-area" aria-label="筛选区域示例">
+        <div class="ds-filter-area__tabs" role="tablist" aria-label="筛选分组">
+          <button class="ds-filter-area__tab is-active" type="button" role="tab" aria-selected="true">选项</button>
+          <button class="ds-filter-area__tab" type="button" role="tab" aria-selected="false">选项</button>
+        </div>
+
+        <div class="ds-filter-area__panel">
+          <div class="ds-filter-area__fields">
+            <label class="ds-field ds-filter-area__field">
+              <span class="ds-field__label ds-filter-area__label">标题名称</span>
+              <input class="ds-input" placeholder="请输入" />
+            </label>
+            <label class="ds-field ds-filter-area__field">
+              <span class="ds-field__label ds-filter-area__label">标题名称</span>
+              <input class="ds-input" placeholder="请输入" />
+            </label>
+            <label class="ds-field ds-filter-area__field">
+              <span class="ds-field__label ds-filter-area__label">标题名称</span>
+              <input class="ds-input" placeholder="请输入" />
+            </label>
+            <label class="ds-field ds-filter-area__field">
+              <span class="ds-field__label ds-filter-area__label">标题名称</span>
+              <input class="ds-input" placeholder="请输入" />
+            </label>
+            <label class="ds-field ds-filter-area__field ds-filter-area__field--span-2 demo-extra">
+              <span class="ds-field__label ds-filter-area__label">标题名称</span>
+              <input class="ds-input" placeholder="请输入" />
+            </label>
+          </div>
+
+          <div class="ds-filter-area__actions">
+            <button class="ds-button ds-button--default ds-button--default-size ds-filter-area__more" type="button" aria-label="更多筛选" title="更多筛选">...</button>
+            <button class="ds-button ds-button--default ds-button--default-size" type="button">重置</button>
+            <button class="ds-button ds-button--primary ds-button--default-size" type="button">查询</button>
+            <button class="ds-button ds-button--link ds-button--default-size ds-filter-area__expand" type="button" data-expand aria-expanded="false">
+              <span class="ds-button__label">展开</span>
+              <span class="ds-button__icon ds-filter-area__chevron" aria-hidden="true">⌄</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="demo-table-toolbar">
+        <div class="demo-ops">
+          <button class="ds-button ds-button--default ds-button--default-size" type="button">新增科目</button>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button">批量操作⌄</button>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button">删除</button>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button">锁定/解锁⌄</button>
+          <button class="ds-button ds-button--default ds-button--default-size" type="button">导出⌄</button>
+        </div>
+      </div>
+
+      <section class="demo-table" aria-label="表格占位">
+        <div class="demo-table-head">
+          <span><input type="checkbox" /></span>
+          <span>科目类别</span>
+          <span>科目代码</span>
+          <span>科目名称</span>
+          <span>单元</span>
+          <span>操作</span>
+        </div>
+        <div class="demo-empty">暂无数据</div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const filter = document.querySelector('.ds-filter-area')
+    const expand = document.querySelector('[data-expand]')
+    expand.addEventListener('click', () => {
+      const next = !filter.classList.contains('is-expanded')
+      filter.classList.toggle('is-expanded', next)
+      expand.setAttribute('aria-expanded', String(next))
+      expand.querySelector('.ds-button__label').textContent = next ? '收起' : '展开'
+      expand.querySelector('.ds-filter-area__chevron').textContent = next ? '⌃' : '⌄'
+    })
+  </script>
+</body>
+</html>

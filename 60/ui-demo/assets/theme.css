@@ -1,0 +1,99 @@
+.frame2-stage {
+  /* ========== 框架2：主题色阶 ========== */
+  --f2-color-1: #f0f6ff;
+  --f2-color-2: #deebff;
+  --f2-color-3: #b5d0ff;
+  --f2-color-4: #8cb3ff;
+  --f2-color-5: #608ef7;
+  --f2-color-6: #3565ea;
+  --f2-color-7: #2349c4;
+  --f2-color-8: #15309e;
+  --f2-color-9: #0a1c78;
+  --f2-color-10: #061052;
+
+  --f2-primary-950: var(--f2-color-10);
+  --f2-primary-900: var(--f2-color-9);
+  --f2-primary-800: var(--f2-color-8);
+  --f2-primary-700: var(--f2-color-7);
+  --f2-primary-600: var(--f2-color-6);
+  --f2-primary-500: var(--f2-color-5);
+  --f2-primary-400: var(--f2-color-4);
+  --f2-primary-300: var(--f2-color-3);
+  --f2-primary-200: var(--f2-color-2);
+  --f2-primary-100: var(--f2-color-1);
+  --f2-primary-50: var(--f2-color-1);
+
+  --f2-success: #18b981;
+  --f2-success-bg: #d1fae5;
+  --f2-success-text: #047857;
+  --f2-warning: #f59e0b;
+  --f2-warning-bg: #fef3c7;
+  --f2-warning-text: #b45309;
+  --f2-danger: #ef4444;
+  --f2-danger-bg: #fee2e2;
+  --f2-danger-text: #b91c1c;
+  --f2-info: #8b5cf6;
+  --f2-info-bg: #ede9fe;
+  --f2-info-text: #6d28d9;
+
+  --f2-text-primary: #1f2937;
+  --f2-text-regular: #4b5563;
+  --f2-text-secondary: #6b7280;
+  --f2-text-placeholder: #9ca3af;
+  --f2-border-strong: #d1d5db;
+  --f2-border: #e5e7eb;
+  --f2-border-light: #f1f5f9;
+  --f2-bg-soft: #f9fafb;
+  --f2-bg-page: #f7f7f8;
+  --f2-bg-card: #ffffff;
+
+  /* 覆盖共用组件变量，仅在框架2作用域内生效 */
+  --ds-color-primary: var(--f2-primary-600);
+  --ds-color-primary-hover: var(--f2-primary-500);
+  --ds-color-primary-active: var(--f2-primary-800);
+  --ds-color-primary-disabled: var(--f2-primary-200);
+  --ds-color-primary-light: var(--f2-primary-50);
+  --ds-color-primary-lighter: var(--f2-bg-soft);
+  --ds-color-primary-selected: var(--f2-primary-100);
+  --ds-color-primary-weak: var(--f2-primary-200);
+  --ds-color-primary-rgb: 53, 101, 234;
+
+  --ds-color-success: var(--f2-success);
+  --ds-color-success-active: var(--f2-success-text);
+  --ds-color-success-light: var(--f2-success-bg);
+  --ds-color-success-rgb: 24, 185, 129;
+
+  --ds-color-warning: var(--f2-warning);
+  --ds-color-warning-text: var(--f2-warning-text);
+  --ds-color-warning-light: var(--f2-warning-bg);
+
+  --ds-color-danger: var(--f2-danger);
+  --ds-color-danger-active: var(--f2-danger-text);
+  --ds-color-danger-light: var(--f2-danger-bg);
+
+  --ds-color-info: var(--f2-info);
+  --ds-color-info-light: var(--f2-info-bg);
+
+  --ds-color-text: var(--f2-text-primary);
+  --ds-color-text-heading: var(--f2-text-primary);
+  --ds-color-text-secondary: var(--f2-text-regular);
+  --ds-color-text-tertiary: var(--f2-text-secondary);
+  --ds-color-text-placeholder: var(--f2-text-placeholder);
+  --ds-color-text-rgb: 31, 41, 55;
+
+  --ds-color-bg-page: var(--f2-bg-page);
+  --ds-color-bg-container: var(--f2-bg-card);
+  --ds-color-bg-hover: var(--f2-bg-soft);
+  --ds-color-bg-active: var(--f2-primary-100);
+  --ds-color-bg-disabled: var(--f2-border-light);
+  --ds-color-bg-subtle: var(--f2-bg-soft);
+  --ds-color-bg-soft: var(--f2-bg-soft);
+
+  --ds-color-border: var(--f2-border-strong);
+  --ds-color-border-secondary: var(--f2-border);
+  --ds-color-border-tertiary: var(--f2-border-light);
+  --ds-color-border-hover: var(--f2-primary-600);
+  --ds-color-border-weak: var(--f2-border-light);
+  --ds-color-border-primary-weak: var(--f2-primary-100);
+  --ds-color-border-rgb: 229, 231, 235;
+}

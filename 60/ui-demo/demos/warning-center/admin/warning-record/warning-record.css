@@ -1,0 +1,51 @@
+@import '../../../../framework/react-page-host.css';
+
+/* 预警记录台账页：DSRegularListTemplate 组合，仅写页面专属样式 */
+.wr-page {
+  display: grid;
+  min-height: 100%;
+}
+
+/* 导出按钮：左对齐置于筛选区与表格之间 */
+.wr-export-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 处理状态：圆点 + 文字（规范：禁止彩色标签块） */
+.wr-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.wr-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.wr-status.is-done i {
+  background: #52c41a;
+}
+
+.wr-status.is-warn i {
+  background: #e6a23c;
+}
+
+.wr-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  background: #1f2329;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  padding: 10px 16px;
+  border-radius: 4px;
+  z-index: 20;
+}

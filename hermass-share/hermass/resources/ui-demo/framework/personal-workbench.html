@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 智慧人事一体化服务系统</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <style>
+    body { margin: 0; }
+
+    .framework-preview {
+      min-height: 100%;
+      padding: 24px;
+      background: #fff;
+    }
+
+    .framework-preview__panel {
+      max-width: 760px;
+      padding: 28px;
+      border: 1px solid #e4e7ec;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .framework-preview__badge {
+      display: inline-flex;
+      padding: 3px 10px;
+      color: #333fff;
+      background: #eef0ff;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .framework-preview h1 {
+      margin: 16px 0 8px;
+      color: #101828;
+      font-size: 24px;
+      line-height: 34px;
+    }
+
+    .framework-preview p {
+      margin: 0 0 22px;
+      color: #667085;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .framework-preview__back {
+      display: inline-flex;
+      height: 36px;
+      align-items: center;
+      padding: 0 18px;
+      color: #fff;
+      background: #333fff;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="framework-preview">
+    <section class="framework-preview__panel">
+      <span class="framework-preview__badge">默认框架</span>
+      <h1>框架2预览</h1>
+      <p>顶部应用导航、左侧菜单、页签工作区和 Shadow DOM 样式隔离。全部索引及新业务页面默认使用框架2。</p>
+      <a class="framework-preview__back" href="./framework-index.html">返回框架选择</a>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="./framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="./framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    versionLabel: '框架2',
+    userName: '教职工',
+    activeApp: 'home',
+    activeFeature: 'home',
+    hideSidebar: true,
+    tabs: [{ key: 'home', label: '首页', wiseIcon: 'homeOutline', closable: false }]
+  });
+</script>
+</body>
+</html>

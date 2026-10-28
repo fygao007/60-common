@@ -1,0 +1,30 @@
+{
+  "application": {
+    "key": "teacher-growth-portfolio",
+    "label": "教师成长档案袋"
+  },
+  "role": {
+    "key": "sys-admin",
+    "label": "系统管理员"
+  },
+  "menu": {
+    "key": "sys-eval-indicator",
+    "label": "评估指标配置",
+    "group": "系统管理员",
+    "defaultFeature": "sys-eval-indicator"
+  },
+  "pages": [
+    {
+      "key": "growth-sys-admin-sys-eval-indicator",
+      "label": "评估指标配置（系统管理员）",
+      "type": "react-business-page",
+      "html": "sys-eval-indicator.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": []
+      }
+    }
+  ]
+}

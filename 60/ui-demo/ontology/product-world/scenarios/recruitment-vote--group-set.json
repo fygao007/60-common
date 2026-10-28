@@ -1,0 +1,85 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--group-set",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "按分组建制编排评审范围，为每组指定组长与可评岗位数",
+      "支持批量设置岗位数，快速铺开评审组容量"
+    ],
+    "painPoints": [
+      "原系统分组设岗与限额、候选人分散在不同页面，分组容量调整需要反复核对"
+    ],
+    "openQuestions": [
+      "分组与岗位的绑定是否与组织架构同步，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "分组设岗",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票方案与候选人已录入完成"
+    ],
+    "mainFlow": [
+      "进入分组设岗列表，查看各评审组的组长、岗位数与覆盖范围",
+      "点击「编辑」调整单个分组的组长与岗位数",
+      "点击「批量设置岗位数」为所有分组统一填充容量",
+      "保存后分组列表状态标签同步更新"
+    ],
+    "exceptions": [
+      "岗位数填写非数字时阻止提交并提示",
+      "未设定岗位数的分组标记为「未设岗」"
+    ]
+  },
+  "page": {
+    "title": "分组设岗",
+    "templateId": "regular-list",
+    "menuRef": "recruitment.vote:group-set",
+    "fieldRefs": [
+      "Business.vote.groupName",
+      "Business.vote.groupLeader",
+      "Business.vote.groupPositionCount",
+      "Business.vote.objectScope",
+      "Business.vote.judgeAccountStatus"
+    ],
+    "components": [
+      "DSButton",
+      "DSEditField",
+      "DSEditForm",
+      "DSInput",
+      "DSModal",
+      "DSRegularListTemplate",
+      "DSTag"
+    ],
+    "demoPath": "demos/vote/group-set/group-set.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「项目设置」分组下「分组设岗」处于高亮态",
+      "分组表格展示分组名称、组长、岗位数、覆盖范围与设岗状态",
+      "编辑弹窗可修改组长与岗位数，保存后列表同步更新",
+      "批量设置岗位数后所有分组容量统一变更"
+    ]
+  }
+}

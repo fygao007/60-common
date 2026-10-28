@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnchorTree 分组锚点树 - 组件演示</title>
+  <link rel="stylesheet" href="../packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AnchorTree/index.css" />
+  <style>
+    body { margin: 0; background: #f6f6f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif; }
+    .demo-page { padding: 32px; max-width: 1200px; margin: 0 auto; }
+    .demo-title { font-size: 24px; font-weight: 600; color: #000; margin: 0 0 24px; }
+    .demo-section { margin-bottom: 32px; }
+    .demo-section-title { font-size: 16px; font-weight: 600; color: #333; margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
+    .demo-section-title::before { content: ''; width: 4px; height: 16px; background: #165DFF; border-radius: 2px; }
+    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .demo-card { background: #fff; border: 1px solid #eeeef0; border-radius: 8px; padding: 20px; }
+    .demo-card-title { font-size: 14px; font-weight: 500; color: #505266; margin: 0 0 12px; }
+    .demo-card-desc { font-size: 13px; color: #737585; margin: 0 0 16px; }
+    .demo-content { min-height: 200px; display: flex; align-items: flex-start; }
+    /* 右侧内容区模拟 */
+    .demo-right-content { flex: 1; min-width: 0; padding-left: 24px; }
+    .demo-section-block { padding: 16px; margin-bottom: 16px; border: 1px solid #eeeef0; border-radius: 6px; background: #fff; }
+    .demo-section-block h3 { margin: 0 0 8px; font-size: 14px; color: #000; }
+    .demo-section-block p { margin: 0; font-size: 13px; color: #505266; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<div class="demo-page">
+  <h1 class="demo-title">AnchorTree 分组锚点树</h1>
+
+  <!-- 基础用法 -->
+  <div class="demo-section">
+    <div class="demo-section-title">基础用法</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="demo-card-title">默认样式</div>
+        <div class="demo-card-desc">分组可折叠，子节点点击高亮，支持 badge 计数</div>
+        <div class="demo-content">
+          <nav class="ds-anchor-tree" id="demo1">
+            <ul class="ds-anchor-tree__list">
+              <li class="ds-anchor-tree__group">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">基本信息</span>
+                  <span class="ds-anchor-tree__group-badge">3</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item is-active"><a class="ds-anchor-tree__link" href="#sec1"><span>职工号</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#sec2"><span>姓名</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#sec3"><span>性别</span></a></li>
+                </ul>
+              </li>
+              <li class="ds-anchor-tree__group">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">教学情况</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#sec4"><span>教学(课程)情况</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#sec5"><span>指导学生情况</span></a></li>
+                </ul>
+              </li>
+              <li class="ds-anchor-tree__group is-collapsed">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">科研情况</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#sec6"><span>发表论文情况</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#sec7"><span>出版著作情况</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-card-title">带左侧边框</div>
+        <div class="demo-card-desc">bordered 模式，激活节点左侧有蓝色指示条</div>
+        <div class="demo-content">
+          <nav class="ds-anchor-tree ds-anchor-tree--bordered" id="demo2">
+            <ul class="ds-anchor-tree__list">
+              <li class="ds-anchor-tree__group">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">分组一</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item is-active"><a class="ds-anchor-tree__link" href="#a1"><span>节点A1</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#a2"><span>节点A2</span></a></li>
+                </ul>
+              </li>
+              <li class="ds-anchor-tree__group is-collapsed">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">分组二</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#b1"><span>节点B1</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-card-title">小尺寸</div>
+        <div class="demo-card-desc">size="small"，适用于侧边栏空间紧凑场景</div>
+        <div class="demo-content">
+          <nav class="ds-anchor-tree ds-anchor-tree--small ds-anchor-tree--bordered" id="demo3">
+            <ul class="ds-anchor-tree__list">
+              <li class="ds-anchor-tree__group">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">导航</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item is-active"><a class="ds-anchor-tree__link" href="#nav1"><span>首页</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#nav2"><span>列表</span></a></li>
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#nav3"><span>详情</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 状态演示 -->
+  <div class="demo-section">
+    <div class="demo-section-title">节点状态</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="demo-card-title">禁用节点</div>
+        <div class="demo-card-desc">is-disabled 类，不可点击，灰色文字</div>
+        <div class="demo-content">
+          <nav class="ds-anchor-tree">
+            <ul class="ds-anchor-tree__list">
+              <li class="ds-anchor-tree__group">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">可用分组</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#x1"><span>正常节点</span></a></li>
+                  <li class="ds-anchor-tree__item is-disabled"><a class="ds-anchor-tree__link"><span>禁用节点</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-card-title">长文本截断</div>
+        <div class="demo-card-desc">标题超长时自动省略显示，hover 可看完整内容</div>
+        <div class="demo-content">
+          <nav class="ds-anchor-tree" style="width:160px">
+            <ul class="ds-anchor-tree__list">
+              <li class="ds-anchor-tree__group">
+                <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                  <span class="ds-anchor-tree__toggle">▶</span>
+                  <span class="ds-anchor-tree__group-title">这是一个非常长的分组标题</span>
+                </div>
+                <ul class="ds-anchor-tree__sub">
+                  <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#long1" title="这是一个非常长的节点标题会被截断"><span>这是一个非常长的节点标题会被截断</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 与内容联动 -->
+  <div class="demo-section">
+    <div class="demo-section-title">与右侧内容联动</div>
+    <div class="demo-card">
+      <div class="demo-card-desc">点击锚点平滑滚动到对应内容区块，滚动时自动高亮当前区块</div>
+      <div style="display:flex;gap:24px;">
+        <nav class="ds-anchor-tree ds-anchor-tree--bordered" id="demoLinked" style="position:sticky;top:16px;align-self:flex-start">
+          <ul class="ds-anchor-tree__list">
+            <li class="ds-anchor-tree__group">
+              <div class="ds-anchor-tree__group-link" onclick="toggleGroup(this)">
+                <span class="ds-anchor-tree__toggle">▶</span>
+                <span class="ds-anchor-tree__group-title">章节导航</span>
+                <span class="ds-anchor-tree__group-badge">4</span>
+              </div>
+              <ul class="ds-anchor-tree__sub">
+                <li class="ds-anchor-tree__item is-active"><a class="ds-anchor-tree__link" href="#content1" onclick="scrollToSection('content1', event)"><span>第一章</span></a></li>
+                <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#content2" onclick="scrollToSection('content2', event)"><span>第二章</span></a></li>
+                <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#content3" onclick="scrollToSection('content3', event)"><span>第三章</span></a></li>
+                <li class="ds-anchor-tree__item"><a class="ds-anchor-tree__link" href="#content4" onclick="scrollToSection('content4', event)"><span>第四章</span></a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <div class="demo-right-content" id="scrollContainer" style="max-height:400px;overflow-y:auto">
+          <div class="demo-section-block" id="content1"><h3>第一章</h3><p>这是第一章的内容。Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          <div class="demo-section-block" id="content2"><h3>第二章</h3><p>这是第二章的内容。Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
+          <div class="demo-section-block" id="content3"><h3>第三章</h3><p>这是第三章的内容。Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></div>
+          <div class="demo-section-block" id="content4"><h3>第四章</h3><p>这是第四章的内容。Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 折叠/展开分组
+function toggleGroup(linkEl) {
+  var group = linkEl.closest('.ds-anchor-tree__group');
+  if (group) group.classList.toggle('is-collapsed');
+}
+
+// 平滑滚动到内容区块
+function scrollToSection(id, event) {
+  if (event) event.preventDefault();
+  var el = document.getElementById(id);
+  if (!el) return;
+  var container = document.getElementById('scrollContainer');
+  if (container) {
+    var top = el.offsetTop - container.offsetTop - 8;
+    container.scrollTo({ top: top, behavior: 'smooth' });
+  }
+  // 更新高亮
+  updateActiveAnchor(id);
+}
+
+function updateActiveAnchor(activeId) {
+  document.querySelectorAll('#demoLinked .ds-anchor-tree__item').forEach(function(item) {
+    var link = item.querySelector('.ds-anchor-tree__link');
+    var href = link && link.getAttribute('href');
+    item.classList.toggle('is-active', href === '#' + activeId);
+  });
+}
+
+// 滚动监听自动高亮
+var scrollRaf = null;
+document.getElementById('scrollContainer').addEventListener('scroll', function() {
+  if (scrollRaf) return;
+  scrollRaf = requestAnimationFrame(function() {
+    scrollRaf = null;
+    var container = document.getElementById('scrollContainer');
+    var sections = container.querySelectorAll('.demo-section-block');
+    var offset = 20;
+    var current = null;
+    sections.forEach(function(sec) {
+      var rect = sec.getBoundingClientRect();
+      var containerRect = container.getBoundingClientRect();
+      if (rect.top <= containerRect.top + offset) current = sec.id;
+    });
+    if (current) updateActiveAnchor(current);
+  });
+});
+</script>
+</body>
+</html>

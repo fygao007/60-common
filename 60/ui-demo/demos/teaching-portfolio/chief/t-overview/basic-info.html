@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基本信息</title>
+  <link rel="stylesheet" href="../../../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../../../assets/base.css" />
+  <link rel="stylesheet" href="../../../../assets/theme.css" />
+  <link rel="stylesheet" href="../../../../packages/design-system/src/GroupTitle/index.css" />
+  <style>
+    .ds-group-title { height: auto; min-height: 0; }
+  </style>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+
+    .bi-page {
+      height: 100%;
+      min-height: 0;
+      padding: 0;
+      background: var(--ds-color-bg-container);
+    }
+
+    .bi-content-card {
+      width: 100%;
+      height: calc(100vh - 92px);
+      min-height: 0;
+      overflow: hidden;
+      background: var(--ds-color-bg-container);
+    }
+
+    /* 顶部返回头 */
+    .bi-top-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .bi-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      color: #000;
+      font-size: 14px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .bi-back-btn:hover { color: var(--ds-color-primary); }
+    .bi-back-btn svg { width: 20px; height: 20px; }
+
+    .bi-header-divider { width: 1px; height: 20px; background: #eeeef0; }
+    .bi-header-title { margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+
+    /* 主内容布局 */
+    .bi-detail-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 180px;
+      height: calc(100vh - 144px);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* 锚点导航 */
+    .bi-anchor-panel {
+      width: 100%;
+      min-width: 150px;
+      max-width: 220px;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 20px 0;
+      background: var(--ds-color-bg-container);
+      border-left: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .bi-anchor-group { margin-bottom: 16px; }
+    .bi-anchor-group__title {
+      margin: 0;
+      padding: 8px 16px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .bi-anchor-item {
+      display: block;
+      padding: 8px 16px 8px 24px;
+      color: #505266;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .bi-anchor-item:hover {
+      color: var(--ds-color-primary);
+      background: var(--ds-color-primary-light);
+    }
+
+    .bi-anchor-item.is-active {
+      color: var(--ds-color-primary);
+      background: var(--ds-color-primary-light);
+      border-left-color: var(--ds-color-primary);
+    }
+
+    /* 主内容区 */
+    .bi-main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 12px 12px 12px;
+      background: var(--ds-color-bg-container);
+      scroll-behavior: smooth;
+    }
+
+    /* 一级分组 */
+    .bi-primary-group {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .bi-primary-group__body {
+      display: grid;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    /* 二级分区 */
+    .bi-section {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+      scroll-margin-top: 16px;
+    }
+
+    .bi-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    /* 二级分区标题 - 蓝色竖条 */
+    .field-group-title {
+      margin: 0;
+      padding-left: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      line-height: 22px;
+      border-left: 3px solid var(--ds-color-primary);
+    }
+
+    .bi-source-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      color: var(--ds-color-text-secondary);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .bi-source-note strong { color: #000; font-weight: 600; }
+    .bi-source-note .link-btn {
+      color: var(--ds-color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 0 4px;
+    }
+    .bi-source-note .link-btn:hover { text-decoration: underline; }
+
+    /* 只读表单 - 表格式布局 */
+    .info-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .info-table th,
+    .info-table td {
+      height: 36px;
+      padding: 0 12px;
+      border-bottom: 1px solid #eeeef0;
+      border-left: 1px solid #eeeef0;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .info-table th:first-child,
+    .info-table td:first-child { border-left: none; }
+
+    .info-table th {
+      background: #fafafa;
+      color: #505266;
+      font-weight: 400;
+      text-align: right;
+      white-space: nowrap;
+      width: 140px;
+    }
+
+    .info-table td { color: #000; }
+
+    .info-table tbody tr:last-child th,
+    .info-table tbody tr:last-child td { border-bottom: none; }
+
+    .info-table .attachment-link {
+      color: var(--ds-color-primary);
+      text-decoration: none;
+    }
+    .info-table .attachment-link:hover { text-decoration: underline; }
+
+    /* 数据表格 */
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      color: #000;
+      font-size: 14px;
+      line-height: 22px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .data-table th,
+    .data-table td {
+      height: 40px;
+      padding: 0 12px;
+      background: #fff;
+      border-bottom: 1px solid #eeeef0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-align: left;
+      text-overflow: ellipsis;
+    }
+
+    .data-table th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .data-table th + th,
+    .data-table td + td {
+      border-left: 1px solid rgba(238, 238, 240, 0.72);
+    }
+
+    .data-table tbody tr:hover td { background: #f6f6f7; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+
+    .data-table .action-cell { text-align: right; }
+    .data-table .text-action {
+      padding: 0;
+      color: var(--ds-color-primary);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .data-table .text-action:hover { color: var(--ds-color-primary-hover); }
+
+    /* 师德师风承诺书入口 */
+    .bi-ethics-entry {
+      padding: 16px 20px;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .bi-ethics-entry__text {
+      color: var(--ds-color-text-secondary);
+      font-size: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      min-width: 72px;
+      padding: 0 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #dcdce0;
+      background: #fff;
+      color: #000;
+    }
+
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { background: var(--ds-color-primary-hover); }
+
+    /* 弹窗 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.is-open { display: flex; }
+
+    .modal {
+      width: 720px;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal--large { width: 960px; }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #eeeef0;
+      flex-shrink: 0;
+    }
+
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+
+    .modal__close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+    .modal__close:hover { background: #f5f5f5; }
+
+    .modal__body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .modal__footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 20px;
+      border-top: 1px solid #eeeef0;
+      flex-shrink: 0;
+    }
+
+    /* 响应式 */
+    @media (max-width: 1100px) {
+      .bi-detail-layout { grid-template-columns: minmax(0, 1fr) 170px; }
+    }
+
+    @media (max-width: 860px) {
+      .bi-detail-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: calc(100vh - 144px);
+        overflow: visible;
+      }
+
+      .bi-anchor-panel {
+        order: -1;
+        overflow: visible;
+        padding: 16px;
+        border-bottom: 1px solid var(--ds-color-border-secondary);
+        border-left: 0;
+        max-width: none;
+      }
+
+      .bi-anchor-group {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-right: 16px;
+      }
+
+      .bi-anchor-group__title {
+        display: inline-block;
+        padding: 4px 8px;
+      }
+
+      .bi-anchor-item {
+        display: inline-block;
+        padding: 4px 8px;
+        border-left: none;
+      }
+
+      .bi-section-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .bi-main { overflow: visible; }
+    }
+
+    @media (max-width: 640px) {
+      .bi-main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ds-scope bi-page" id="app">
+    <div class="bi-content-card">
+      <!-- 顶部返回头 -->
+      <div class="bi-top-header">
+        <button class="bi-back-btn" id="backBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          返回
+        </button>
+        <div class="bi-header-divider"></div>
+        <h1 class="bi-header-title">基本信息</h1>
+      </div>
+
+      <!-- 主内容布局 -->
+      <div class="bi-detail-layout">
+        <!-- 主内容区 -->
+        <div class="bi-main" id="mainContent">
+          <!-- 个人信息 -->
+          <section class="bi-primary-group" aria-label="个人信息">
+            <div class="ds-group-title">
+              <div class="ds-group-title__main">
+                <span class="ds-group-title__text">个人信息</span>
+              </div>
+            </div>
+            <div class="bi-primary-group__body">
+              <!-- 基本信息 -->
+              <section class="bi-section" id="base">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">基本信息</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong>，<button class="link-btn" type="button">去纠错或补录</button></span>
+                </div>
+                <table class="info-table">
+                  <tbody>
+                    <tr><th>姓名</th><td>金晓智</td><th>工号</th><td>1112131</td></tr>
+                    <tr><th>性别</th><td>女</td><th>年龄</th><td>36</td></tr>
+                    <tr><th>出生日期</th><td>1990-02-14</td><th>民族</th><td>汉族</td></tr>
+                    <tr><th>政治面貌</th><td>中国共产党党员</td><th>所属机构</th><td>信息中心</td></tr>
+                    <tr><th>入校日期</th><td>2025-09-01</td><th>主岗位</th><td>专业技术岗</td></tr>
+                    <tr><th>教师类型</th><td colspan="3">教学科研型</td></tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 学习信息 -->
+              <section class="bi-section" id="education">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">学习信息</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统、档案袋</strong></span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>学历</th>
+                      <th>学位类型</th>
+                      <th>毕业院校</th>
+                      <th>毕业专业</th>
+                      <th>海外学习经历</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>本科</td>
+                      <td>工学学士</td>
+                      <td>深圳大学</td>
+                      <td>计算机科学与技术</td>
+                      <td>无</td>
+                    </tr>
+                    <tr>
+                      <td>研究生</td>
+                      <td>工学硕士</td>
+                      <td>华南理工大学</td>
+                      <td>软件工程</td>
+                      <td>无</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 职称信息 -->
+              <section class="bi-section" id="title">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">职称信息</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong></span>
+                </div>
+                <table class="info-table">
+                  <tbody>
+                    <tr><th>职称</th><td>副教授</td><th>职称级别</th><td>教授系列副高</td></tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </section>
+
+          <!-- 个人发展 -->
+          <section class="bi-primary-group" aria-label="个人发展">
+            <div class="ds-group-title">
+              <div class="ds-group-title__main">
+                <span class="ds-group-title__text">个人发展</span>
+              </div>
+            </div>
+            <div class="bi-primary-group__body">
+              <!-- 个人发展规划 -->
+              <section class="bi-section" id="growth">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">个人发展规划</h3>
+                  <span class="bi-source-note">数据来源于<strong>教学档案袋维护</strong>，<button class="link-btn" type="button">去纠错或补录</button></span>
+                </div>
+                <table class="info-table">
+                  <tbody>
+                    <tr><th style="width:140px;">个人成长规划</th><td style="white-space: pre-wrap; line-height: 1.75;">围绕智慧教学、课程资源建设和产教融合实践持续提升专业能力。计划完成省级精品课程建设，深化校企协同育人项目，持续沉淀课程设计、教学反思与学生发展证据，完善教学档案袋核心材料。</td></tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 专业领域 -->
+              <section class="bi-section" id="field">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">专业领域</h3>
+                  <span class="bi-source-note">数据来源于<strong>教学档案袋维护</strong>，<button class="link-btn" type="button">去纠错或补录</button></span>
+                </div>
+                <table class="info-table">
+                  <tbody>
+                    <tr><th>专业领域</th><td style="white-space: pre-wrap; line-height: 1.75;">主要从事人工智能与软件工程、智慧教学平台建设、职业教育数字化等领域的教学与研究。关注人工智能技术与课程建设、教学评价和学习分析的深度融合。</td></tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 专业特长 -->
+              <section class="bi-section" id="skill">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">专业特长</h3>
+                  <span class="bi-source-note">数据来源于<strong>教学档案袋维护</strong>，<button class="link-btn" type="button">去纠错或补录</button></span>
+                </div>
+                <table class="info-table">
+                  <tbody>
+                    <tr><th>专业特长</th><td style="white-space: pre-wrap; line-height: 1.75;">擅长课程资源体系建设、项目化教学设计与产教融合实践指导。能够将企业真实项目转化为教学任务，组织学生完成需求分析、方案设计、开发实施和成果评价。</td></tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </section>
+
+          <!-- 资格证书信息 -->
+          <section class="bi-primary-group" aria-label="资格证书信息">
+            <div class="ds-group-title">
+              <div class="ds-group-title__main">
+                <span class="ds-group-title__text">资格证书信息</span>
+              </div>
+            </div>
+            <div class="bi-primary-group__body">
+              <!-- 高等学校教师资格证书 -->
+              <section class="bi-section" id="teacher-cert">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">高等学校教师资格证书</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong></span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>资格证种类</th>
+                      <th>任教学科</th>
+                      <th>发证日期</th>
+                      <th>发证单位</th>
+                      <th>证书编号</th>
+                      <th>附件</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="teacherCertTable">
+                    <!-- JS渲染 -->
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 双师型教师认定 -->
+              <section class="bi-section" id="double-teacher">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">双师型教师认定</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong></span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>认定专业大类</th>
+                      <th>认定专业</th>
+                      <th>双师等级</th>
+                      <th>认定年份</th>
+                      <th>认定通过时间</th>
+                      <th>发证单位</th>
+                      <th>有效期</th>
+                      <th>附件</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="doubleTeacherTable">
+                    <!-- JS渲染 -->
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 技能等级证书 -->
+              <section class="bi-section" id="skill-level">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">技能等级证书</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong></span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>证书名称</th>
+                      <th>工种名称</th>
+                      <th>技术等级</th>
+                      <th>取得途径</th>
+                      <th>取得日期</th>
+                      <th>发证单位</th>
+                      <th>证书编号</th>
+                      <th>附件</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="skillLevelTable">
+                    <!-- JS渲染 -->
+                  </tbody>
+                </table>
+              </section>
+
+              <!-- 行业资质证书 -->
+              <section class="bi-section" id="industry-cert">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">行业资质证书</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong></span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>行业资质名称</th>
+                      <th>行业类别</th>
+                      <th>证书等级</th>
+                      <th>取得时间</th>
+                      <th>发证单位</th>
+                      <th>证书编号</th>
+                      <th>当前状态</th>
+                      <th>附件</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="industryCertTable">
+                    <!-- JS渲染 -->
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </section>
+
+          <!-- 师德师风 -->
+          <section class="bi-primary-group" aria-label="师德师风">
+            <div class="ds-group-title">
+              <div class="ds-group-title__main">
+                <span class="ds-group-title__text">师德师风</span>
+              </div>
+            </div>
+            <div class="bi-primary-group__body">
+              <!-- 师德师风承诺书 -->
+              <section class="bi-section" id="ethics-commitment">
+                <div class="bi-ethics-entry">
+                  <span class="bi-ethics-entry__text">点击查看并签署师德师风承诺书</span>
+                  <button class="btn" id="ethicsBtn" type="button">查看承诺书</button>
+                </div>
+              </section>
+
+              <!-- 师德师风考核结果 -->
+              <section class="bi-section" id="ethics">
+                <div class="bi-section-head">
+                  <h3 class="field-group-title">师德师风考核结果</h3>
+                  <span class="bi-source-note">数据来源于<strong>人事系统</strong></span>
+                </div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>考核学年</th>
+                      <th>考核年度</th>
+                      <th>考核开展时间</th>
+                      <th>考核结果</th>
+                      <th>考核异常原因</th>
+                      <th>备注</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2025—2026学年</td>
+                      <td>2025</td>
+                      <td>2026-01-15</td>
+                      <td>优秀</td>
+                      <td>-</td>
+                      <td>年度师德考核优秀</td>
+                    </tr>
+                    <tr>
+                      <td>2024—2025学年</td>
+                      <td>2024</td>
+                      <td>2025-01-12</td>
+                      <td>优秀</td>
+                      <td>-</td>
+                      <td>获评校级师德先进个人</td>
+                    </tr>
+                    <tr>
+                      <td>2023—2024学年</td>
+                      <td>2023</td>
+                      <td>2024-01-10</td>
+                      <td>合格</td>
+                      <td>-</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>2022—2023学年</td>
+                      <td>2022</td>
+                      <td>2023-01-11</td>
+                      <td>合格</td>
+                      <td>-</td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>2021—2022学年</td>
+                      <td>2021</td>
+                      <td>2022-01-13</td>
+                      <td>合格</td>
+                      <td>-</td>
+                      <td>-</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+          </section>
+        </div>
+
+        <!-- 锚点导航 -->
+        <aside class="bi-anchor-panel" aria-label="档案信息锚点">
+          <div class="bi-anchor-group">
+            <h4 class="bi-anchor-group__title">个人信息</h4>
+            <a class="bi-anchor-item is-active" href="#base">基本信息</a>
+            <a class="bi-anchor-item" href="#education">学习信息</a>
+            <a class="bi-anchor-item" href="#title">职称信息</a>
+          </div>
+          <div class="bi-anchor-group">
+            <h4 class="bi-anchor-group__title">个人发展</h4>
+            <a class="bi-anchor-item" href="#growth">个人发展规划</a>
+            <a class="bi-anchor-item" href="#field">专业领域</a>
+            <a class="bi-anchor-item" href="#skill">专业特长</a>
+          </div>
+          <div class="bi-anchor-group">
+            <h4 class="bi-anchor-group__title">资格证书信息</h4>
+            <a class="bi-anchor-item" href="#teacher-cert">高等学校教师资格证书</a>
+            <a class="bi-anchor-item" href="#double-teacher">双师型教师认定</a>
+            <a class="bi-anchor-item" href="#skill-level">技能等级证书</a>
+            <a class="bi-anchor-item" href="#industry-cert">行业资质证书</a>
+          </div>
+          <div class="bi-anchor-group">
+            <h4 class="bi-anchor-group__title">师德师风</h4>
+            <a class="bi-anchor-item" href="#ethics-commitment">师德师风承诺书</a>
+            <a class="bi-anchor-item" href="#ethics">师德师风考核结果</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- 详情弹窗 -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal modal--large">
+      <div class="modal__header">
+        <h3 class="modal__title" id="detailModalTitle">详情</h3>
+        <button class="modal__close" id="detailModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body" id="detailModalBody">
+        <!-- JS渲染 -->
+      </div>
+      <div class="modal__footer">
+        <button class="btn primary" id="detailModalOk" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 师德师风承诺书弹窗 -->
+  <div class="modal-overlay" id="ethicsModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title">师德师风承诺书</h3>
+        <button class="modal__close" id="ethicsModalClose" type="button" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <p style="line-height: 1.8; color: #000;">
+          本人郑重承诺：<br><br>
+          一、坚定理想信念，忠诚党的教育事业，贯彻党的教育方针，落实立德树人根本任务。<br><br>
+          二、遵守法律法规，依法履行教师职责，不损害国家利益、社会公共利益。<br><br>
+          三、潜心教书育人，落实课程思政，关心爱护学生，尊重学生人格，公平对待学生。<br><br>
+          四、坚持言行雅正，为人师表，以身作则，举止文明，作风正派。<br><br>
+          五、秉持学术诚信，恪守学术道德，抵制学术不端行为。<br><br>
+          六、遵守廉洁自律规定，不利用职务之便谋取私利，不收受学生及家长财物。<br><br>
+          本人将严格遵守以上承诺，如有违反，愿接受相应处理。
+        </p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn primary" id="ethicsModalOk" type="button">我已阅读并知晓</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== 数据 =====
+    const TEACHER_CERT_DATA = [
+      { id: 'tc-2024', type: '高等学校教师资格证', subject: '软件工程', issueDate: '2024-10-18', issuer: '广东省教育厅', number: '202444017***0218', attachment: '教师资格证-2024.pdf' },
+      { id: 'tc-2020', type: '高等学校教师资格证', subject: '计算机应用技术', issueDate: '2020-09-22', issuer: '广东省教育厅', number: '202044017***0136', attachment: '教师资格证-2020.pdf' },
+      { id: 'tc-2016', type: '高等学校教师资格证', subject: '计算机科学与技术', issueDate: '2016-09-01', issuer: '广东省教育厅', number: '201544017***0008', attachment: '教师资格证-2016.pdf' },
+    ];
+
+    const DOUBLE_TEACHER_DATA = [
+      { id: 'dt-2024', category: '电子信息大类', major: '软件技术', level: '高级', year: '2024', approvedDate: '2024-06-15', issuer: '广东省教育厅职教处', validity: '2024-06-30 至 2029-06-29', number: 'SZ-SS-2024-0231', attachment: '双师型认定-2024.pdf' },
+      { id: 'dt-2021', category: '电子信息大类', major: '计算机网络技术', level: '中级', year: '2021', approvedDate: '2021-07-08', issuer: '深圳市教育局', validity: '2021-07-20 至 2024-07-19', number: 'SZ-SS-2021-0108', attachment: '双师型认定-2021.pdf' },
+      { id: 'dt-2018', category: '电子信息大类', major: '软件技术', level: '初级', year: '2018', approvedDate: '2018-05-12', issuer: '深圳职业技术学院', validity: '2018-06-01 至 2021-05-31', number: 'SZ-SS-2018-0066', attachment: '双师型认定-2018.pdf' },
+    ];
+
+    const SKILL_LEVEL_DATA = [
+      { id: 'sl-2025', name: '人工智能训练师', trade: '人工智能训练', level: '高级', route: '技能认定', acquiredDate: '2025-03-18', issuer: '广东省职业技能鉴定中心', number: 'AI-2025-0318', attachment: '人工智能训练师.pdf' },
+      { id: 'sl-2023', name: '大数据工程技术人员', trade: '大数据分析', level: '中级', route: '考试取得', acquiredDate: '2023-11-12', issuer: '工业和信息化部教育与考试中心', number: 'BD-2023-1162', attachment: '大数据工程师.pdf' },
+      { id: 'sl-2022', name: '软件设计师', trade: '软件开发', level: '中级', route: '考试取得', acquiredDate: '2022-11-20', issuer: '人社部职业技能鉴定中心', number: 'SC-2022-5567', attachment: '软件设计师.pdf' },
+      { id: 'sl-2019', name: '网络管理员', trade: '计算机网络', level: '高级工', route: '培训认定', acquiredDate: '2019-08-16', issuer: '深圳市职业技能鉴定中心', number: 'NW-2019-0816', attachment: '网络管理员.pdf' },
+    ];
+
+    const INDUSTRY_CERT_DATA = [
+      { id: 'ic-2024', name: '信息系统项目管理师', category: '信息技术服务', level: '高级', acquiredDate: '2024-11-09', issuer: '工业和信息化部教育与考试中心', number: 'PM-2024-1109', status: '有效', attachment: '项目管理师.pdf' },
+      { id: 'ic-2022', name: '信息安全工程师', category: '网络安全', level: '中级', acquiredDate: '2022-05-28', issuer: '中国信息安全评测中心', number: 'IS-2022-0528', status: '有效', attachment: '信息安全工程师.pdf' },
+      { id: 'ic-2019', name: '信息系统项目管理师', category: '信息技术服务', level: '高级', acquiredDate: '2019-03-16', issuer: '中国通信工业协会', number: 'RC-2019-1142', status: '已换证', attachment: '行业资质证-2019.pdf' },
+    ];
+
+    // ===== DOM =====
+    const backBtn = document.getElementById('backBtn');
+    const mainContent = document.getElementById('mainContent');
+    const anchorItems = document.querySelectorAll('.bi-anchor-item');
+
+    const detailModal = document.getElementById('detailModal');
+    const detailModalTitle = document.getElementById('detailModalTitle');
+    const detailModalBody = document.getElementById('detailModalBody');
+    const detailModalClose = document.getElementById('detailModalClose');
+    const detailModalOk = document.getElementById('detailModalOk');
+
+    const ethicsModal = document.getElementById('ethicsModal');
+    const ethicsBtn = document.getElementById('ethicsBtn');
+    const ethicsModalClose = document.getElementById('ethicsModalClose');
+    const ethicsModalOk = document.getElementById('ethicsModalOk');
+
+    // ===== 返回 =====
+    backBtn.addEventListener('click', () => {
+    });
+
+    // ===== 锚点导航 =====
+    anchorItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = item.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          anchorItems.forEach(a => a.classList.remove('is-active'));
+          item.classList.add('is-active');
+        }
+      });
+    });
+
+    // 滚动时更新锚点激活状态
+    const sections = document.querySelectorAll('.bi-section[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          anchorItems.forEach(item => {
+            item.classList.toggle('is-active', item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { root: mainContent, threshold: 0.3 });
+
+    sections.forEach(section => observer.observe(section));
+
+    // ===== 渲染表格 =====
+    function renderTable(tableId, data, columns, detailFields) {
+      const tbody = document.getElementById(tableId);
+      if (!tbody) return;
+
+      tbody.innerHTML = data.map(row => {
+        const cells = columns.map(col => {
+          if (col.key === 'attachment') {
+            return '<td><a class="attachment-link" href="#">' + row[col.dataIndex] + '</a></td>';
+          }
+          return '<td>' + (row[col.dataIndex] || '-') + '</td>';
+        }).join('');
+        return '<tr data-id="' + row.id + '">' + cells + '<td class="action-cell"><button class="text-action" type="button">详情</button></td></tr>';
+      }).join('');
+
+      // 详情点击
+      tbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('text-action') && e.target.textContent === '详情') {
+          const tr = e.target.closest('tr');
+          const id = tr.dataset.id;
+          const item = data.find(d => d.id === id);
+          if (item) {
+            openDetailModal(item, detailFields);
+          }
+        }
+      });
+    }
+
+    function openDetailModal(item, fields) {
+      detailModalBody.innerHTML = '<table class="info-table"><tbody>' +
+        fields.map(f => {
+          const value = item[f.dataIndex] || '-';
+          return '<tr><th>' + f.title + '</th><td>' + (f.key === 'attachment' ? '<a class="attachment-link" href="#">' + value + '</a>' : value) + '</td></tr>';
+        }).join('') +
+      '</tbody></table>';
+      detailModal.classList.add('is-open');
+    }
+
+    // 初始化表格
+    renderTable('teacherCertTable', TEACHER_CERT_DATA,
+      [
+        { key: 'type', dataIndex: 'type', title: '资格证种类' },
+        { key: 'subject', dataIndex: 'subject', title: '任教学科' },
+        { key: 'issueDate', dataIndex: 'issueDate', title: '发证日期' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ],
+      [
+        { key: 'type', dataIndex: 'type', title: '资格证种类' },
+        { key: 'subject', dataIndex: 'subject', title: '任教学科' },
+        { key: 'issueDate', dataIndex: 'issueDate', title: '发证日期' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ]
+    );
+
+    renderTable('doubleTeacherTable', DOUBLE_TEACHER_DATA,
+      [
+        { key: 'category', dataIndex: 'category', title: '认定专业大类' },
+        { key: 'major', dataIndex: 'major', title: '认定专业' },
+        { key: 'level', dataIndex: 'level', title: '双师等级' },
+        { key: 'year', dataIndex: 'year', title: '认定年份' },
+        { key: 'approvedDate', dataIndex: 'approvedDate', title: '认定通过时间' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'validity', dataIndex: 'validity', title: '有效期' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ],
+      [
+        { key: 'category', dataIndex: 'category', title: '认定专业大类' },
+        { key: 'major', dataIndex: 'major', title: '认定专业' },
+        { key: 'level', dataIndex: 'level', title: '双师等级' },
+        { key: 'year', dataIndex: 'year', title: '认定年份' },
+        { key: 'approvedDate', dataIndex: 'approvedDate', title: '认定通过时间' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'validity', dataIndex: 'validity', title: '有效期' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ]
+    );
+
+    renderTable('skillLevelTable', SKILL_LEVEL_DATA,
+      [
+        { key: 'name', dataIndex: 'name', title: '证书名称' },
+        { key: 'trade', dataIndex: 'trade', title: '工种名称' },
+        { key: 'level', dataIndex: 'level', title: '技术等级' },
+        { key: 'route', dataIndex: 'route', title: '取得途径' },
+        { key: 'acquiredDate', dataIndex: 'acquiredDate', title: '取得日期' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ],
+      [
+        { key: 'name', dataIndex: 'name', title: '证书名称' },
+        { key: 'trade', dataIndex: 'trade', title: '工种名称' },
+        { key: 'level', dataIndex: 'level', title: '技术等级' },
+        { key: 'route', dataIndex: 'route', title: '取得途径' },
+        { key: 'acquiredDate', dataIndex: 'acquiredDate', title: '取得日期' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ]
+    );
+
+    renderTable('industryCertTable', INDUSTRY_CERT_DATA,
+      [
+        { key: 'name', dataIndex: 'name', title: '行业资质名称' },
+        { key: 'category', dataIndex: 'category', title: '行业类别' },
+        { key: 'level', dataIndex: 'level', title: '证书等级' },
+        { key: 'acquiredDate', dataIndex: 'acquiredDate', title: '取得时间' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'status', dataIndex: 'status', title: '当前状态' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ],
+      [
+        { key: 'name', dataIndex: 'name', title: '行业资质名称' },
+        { key: 'category', dataIndex: 'category', title: '行业类别' },
+        { key: 'level', dataIndex: 'level', title: '证书等级' },
+        { key: 'acquiredDate', dataIndex: 'acquiredDate', title: '取得时间' },
+        { key: 'issuer', dataIndex: 'issuer', title: '发证单位' },
+        { key: 'number', dataIndex: 'number', title: '证书编号' },
+        { key: 'status', dataIndex: 'status', title: '当前状态' },
+        { key: 'attachment', dataIndex: 'attachment', title: '附件' },
+      ]
+    );
+
+    // ===== 弹窗 =====
+    detailModalClose.addEventListener('click', () => detailModal.classList.remove('is-open'));
+    detailModalOk.addEventListener('click', () => detailModal.classList.remove('is-open'));
+    detailModal.addEventListener('click', (e) => {
+      if (e.target === detailModal) detailModal.classList.remove('is-open');
+    });
+
+    ethicsBtn.addEventListener('click', () => ethicsModal.classList.add('is-open'));
+    ethicsModalClose.addEventListener('click', () => ethicsModal.classList.remove('is-open'));
+    ethicsModalOk.addEventListener('click', () => ethicsModal.classList.remove('is-open'));
+    ethicsModal.addEventListener('click', (e) => {
+      if (e.target === ethicsModal) ethicsModal.classList.remove('is-open');
+    });
+  </script>
+</body>
+</html>

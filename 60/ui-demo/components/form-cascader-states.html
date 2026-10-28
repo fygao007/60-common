@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>级联选择器状态</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Cascader/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .cascader-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: var(--ds-color-white); }
+    .cascader-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .cascader-content { display: grid; gap: 24px; width: min(1120px, 100%); }
+    .cascader-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .cascader-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .cascader-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .cascader-title span { position: relative; z-index: 1; }
+    .cascader-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .cascader-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .cascader-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .cascader-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .cascader-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .cascader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .cascader-card { min-width: 0; min-height: 268px; padding: 16px; border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .cascader-card:nth-child(3n) .ds-cascader__popup { left: auto; right: 0; }
+    .cascader-card h3 { margin: 0 0 12px; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .cascader-card .ds-cascader { width: 100%; }
+    .cascader-card p { margin: 10px 0 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .cascader-row { display: grid; grid-template-columns: 108px minmax(0, 420px); gap: 16px; align-items: start; padding: 16px; border-top: 1px solid var(--ds-color-border-secondary); }
+    .cascader-label { height: 32px; display: flex; align-items: center; justify-content: flex-end; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 20px; text-align: right; }
+    .cascader-message { margin-top: 4px; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .cascader-message.is-error { color: var(--ds-color-danger); }
+    .cascader-output { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; margin-top: 12px; padding: 10px 12px; color: var(--ds-color-text-secondary); background: var(--ds-color-bg-subtle); border: 1px solid var(--ds-color-border-secondary); font-size: 12px; line-height: 20px; }
+    .cascader-output strong { color: var(--ds-color-text); font-weight: 500; }
+    @media (max-width: 1100px) {
+      .cascader-grid { grid-template-columns: 1fr; }
+      .cascader-row { grid-template-columns: 1fr; }
+      .cascader-label { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="cascader-page">
+    <section class="cascader-stage">
+      <div class="cascader-content">
+        <header class="cascader-head">
+          <div>
+            <h1 class="cascader-title"><span>级联选择器</span></h1>
+            <p class="cascader-desc">基于基础控件设计生成 DSCascader，覆盖多列级联、搜索、清除、禁用、错误和表单场景。</p>
+          </div>
+        </header>
+
+        <section class="cascader-section">
+          <div class="cascader-section-head">
+            <h2 class="cascader-section-title">基础状态</h2>
+            <span class="cascader-section-meta">Default / Filled / Open / Search / Disabled / Error</span>
+          </div>
+          <div class="cascader-grid">
+            <article class="cascader-card">
+              <h3>未选择</h3>
+              <div class="ds-cascader js-cascader" data-placeholder="请选择地区"></div>
+              <p>默认展示占位文字和下拉箭头。</p>
+            </article>
+            <article class="cascader-card">
+              <h3>已选择</h3>
+              <div class="ds-cascader js-cascader" data-value="西湖区" data-clearable="true"></div>
+              <p>选中后展示完整路径，支持清除。</p>
+            </article>
+            <article class="cascader-card">
+              <h3>展开多列</h3>
+              <div class="ds-cascader js-cascader is-open" data-value="西湖区" data-clearable="true"></div>
+              <p>父级选项展开下一列，叶子项点击完成选择。</p>
+            </article>
+            <article class="cascader-card">
+              <h3>搜索</h3>
+              <div class="ds-cascader js-cascader is-open" data-searchable="true" data-query="杭州"></div>
+              <p>搜索时展示完整路径结果。</p>
+            </article>
+            <article class="cascader-card">
+              <h3>禁用</h3>
+              <div class="ds-cascader js-cascader is-disabled" data-placeholder="请选择地区"></div>
+              <p>禁用态不可展开、不可选择。</p>
+            </article>
+            <article class="cascader-card">
+              <h3>错误</h3>
+              <div class="ds-cascader js-cascader is-error" data-placeholder="请选择地区"></div>
+              <p class="cascader-message is-error">请选择所在地区。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="cascader-section">
+          <div class="cascader-section-head">
+            <h2 class="cascader-section-title">表单行示例</h2>
+            <span class="cascader-section-meta">Form Field</span>
+          </div>
+          <div class="cascader-row">
+            <span class="cascader-label">所在地区</span>
+            <div>
+              <div class="ds-cascader js-cascader js-cascader-live" data-placeholder="请选择省 / 市 / 区" data-clearable="true" data-searchable="true"></div>
+              <p class="cascader-message">支持点击列选择、搜索路径、清除已选值。</p>
+              <div class="cascader-output" aria-live="polite">
+                <span>当前值</span>
+                <strong class="js-cascader-output">未选择</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  const cascaderOptions = [
+    { label: '浙江省', value: '浙江省', children: [
+      { label: '杭州市', value: '杭州市', children: [
+        { label: '西湖区', value: '西湖区' },
+        { label: '滨江区', value: '滨江区' },
+        { label: '余杭区', value: '余杭区' }
+      ] },
+      { label: '宁波市', value: '宁波市', children: [
+        { label: '海曙区', value: '海曙区' },
+        { label: '鄞州区', value: '鄞州区' }
+      ] }
+    ] },
+    { label: '江苏省', value: '江苏省', children: [
+      { label: '南京市', value: '南京市', children: [
+        { label: '鼓楼区', value: '鼓楼区' },
+        { label: '建邺区', value: '建邺区' }
+      ] },
+      { label: '苏州市', value: '苏州市', children: [
+        { label: '姑苏区', value: '姑苏区' },
+        { label: '工业园区', value: '工业园区' }
+      ] }
+    ] },
+    { label: '上海市', value: '上海市', children: [
+      { label: '上海市', value: '上海市-市', children: [
+        { label: '浦东新区', value: '浦东新区' },
+        { label: '徐汇区', value: '徐汇区' }
+      ] }
+    ] }
+  ];
+
+  function flattenLeaves(options, path = []) {
+    return options.flatMap((option) => {
+      const nextPath = [...path, option];
+      return option.children ? flattenLeaves(option.children, nextPath) : [{ option, path: nextPath }];
+    });
+  }
+
+  function findPath(options, value, path = []) {
+    for (const option of options) {
+      const nextPath = [...path, option];
+      if (option.value === value || option.label === value) return nextPath;
+      if (option.children) {
+        const matched = findPath(option.children, value, nextPath);
+        if (matched.length) return matched;
+      }
+    }
+    return [];
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
+  function renderCascader(root, state) {
+    const placeholder = root.dataset.placeholder || '请选择';
+    const clearable = root.dataset.clearable === 'true';
+    const searchable = root.dataset.searchable === 'true';
+    const disabled = root.classList.contains('is-disabled');
+    const hasValue = state.selectedPath.length > 0;
+    const displayPath = hasValue ? state.selectedPath : state.activePath;
+    root.classList.toggle('has-value', hasValue);
+    root.innerHTML = `
+      <button class="ds-cascader__trigger" type="button" ${disabled ? 'disabled' : ''} aria-haspopup="listbox" aria-expanded="${root.classList.contains('is-open')}">
+        <span class="${hasValue ? 'ds-cascader__text' : 'ds-cascader__placeholder'}">${escapeHtml(hasValue ? state.selectedPath.map((item) => item.label).join(' / ') : placeholder)}</span>
+        ${clearable && hasValue && !disabled ? '<span class="ds-cascader__clear" role="button" tabindex="-1" aria-label="清除"></span>' : ''}
+        <span class="ds-cascader__arrow" aria-hidden="true"></span>
+      </button>
+      ${root.classList.contains('is-open') ? renderPopup(displayPath, state.query, searchable) : ''}
+    `;
+    updateCascaderOutput(root, state);
+  }
+
+  function updateCascaderOutput(root, state) {
+    if (!root.classList.contains('js-cascader-live')) return;
+    const output = document.querySelector('.js-cascader-output');
+    if (!output) return;
+    output.textContent = state.selectedPath.length ? state.selectedPath.map((item) => item.label).join(' / ') : '未选择';
+  }
+
+  function closeOtherCascaders(currentRoot) {
+    document.querySelectorAll('.js-cascader.is-open').forEach((root) => {
+      if (root === currentRoot) return;
+      root.classList.remove('is-open');
+      root.querySelector('.ds-cascader__popup')?.remove();
+      root.querySelector('.ds-cascader__trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function renderPopup(displayPath, query, searchable) {
+    const search = searchable ? `<div class="ds-cascader__search-wrap"><input class="ds-cascader__search" value="${escapeHtml(query)}" placeholder="搜索选项" /></div>` : '';
+    return `<div class="ds-cascader__popup">${search}<div class="ds-cascader__body">${renderPopupBody(displayPath, query)}</div></div>`;
+  }
+
+  function renderPopupBody(displayPath, query) {
+    if (query) {
+      const results = flattenLeaves(cascaderOptions).filter((item) => item.path.map((node) => node.label).join(' / ').includes(query));
+      return `<div class="ds-cascader__search-list" role="listbox">${results.length ? results.map((item) => `<button class="ds-cascader__search-option" type="button" data-path="${escapeHtml(item.path.map((node) => node.value).join('|'))}">${escapeHtml(item.path.map((node) => node.label).join(' / '))}</button>`).join('') : '<div class="ds-cascader__empty">无匹配数据</div>'}</div>`;
+    }
+
+    const columns = [cascaderOptions];
+    let currentOptions = cascaderOptions;
+    displayPath.forEach((active) => {
+      const current = currentOptions.find((option) => option.value === active.value);
+      if (current?.children) {
+        columns.push(current.children);
+        currentOptions = current.children;
+      }
+    });
+    return `<div class="ds-cascader__columns">${columns.map((column, columnIndex) => `<div class="ds-cascader__column" role="listbox">${column.map((option) => {
+      const selected = displayPath[columnIndex]?.value === option.value;
+      return `<button class="ds-cascader__option ${selected ? 'is-selected' : ''} ${option.children ? 'has-children' : ''}" type="button" data-column="${columnIndex}" data-value="${escapeHtml(option.value)}"><span>${escapeHtml(option.label)}</span>${option.children ? '<span class="ds-cascader__option-arrow" aria-hidden="true"></span>' : ''}</button>`;
+    }).join('')}</div>`).join('')}</div>`;
+  }
+
+  function updateCascaderPopupBody(root, state) {
+    const body = root.querySelector('.ds-cascader__body');
+    if (!body) return;
+    const hasValue = state.selectedPath.length > 0;
+    const displayPath = hasValue ? state.selectedPath : state.activePath;
+    body.innerHTML = renderPopupBody(displayPath, state.query);
+  }
+
+  function initCascader(root) {
+    const state = {
+      selectedPath: findPath(cascaderOptions, root.dataset.value),
+      activePath: findPath(cascaderOptions, root.dataset.value),
+      query: root.dataset.query || ''
+    };
+    renderCascader(root, state);
+    root.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (root.classList.contains('is-disabled')) return;
+      const clear = event.target.closest('.ds-cascader__clear');
+      if (clear) {
+        state.selectedPath = [];
+        state.activePath = [];
+        state.query = '';
+        root.classList.remove('is-open');
+        renderCascader(root, state);
+        event.stopPropagation();
+        return;
+      }
+
+      const trigger = event.target.closest('.ds-cascader__trigger');
+      if (trigger) {
+        const nextOpen = !root.classList.contains('is-open');
+        closeOtherCascaders(root);
+        root.classList.toggle('is-open', nextOpen);
+        renderCascader(root, state);
+        return;
+      }
+
+      const option = event.target.closest('.ds-cascader__option');
+      if (option) {
+        const columnIndex = Number(option.dataset.column);
+        const path = [...state.activePath.slice(0, columnIndex), findPath(cascaderOptions, option.dataset.value).at(-1)];
+        const selectedOption = path.at(-1);
+        state.activePath = path;
+        if (!selectedOption.children) {
+          state.selectedPath = path;
+          root.classList.remove('is-open');
+        }
+        renderCascader(root, state);
+        return;
+      }
+
+      const searchOption = event.target.closest('.ds-cascader__search-option');
+      if (searchOption) {
+        const values = searchOption.dataset.path.split('|');
+        state.selectedPath = values.map((value) => findPath(cascaderOptions, value).at(-1));
+        state.activePath = state.selectedPath;
+        state.query = '';
+        root.classList.remove('is-open');
+        renderCascader(root, state);
+      }
+    });
+
+    root.addEventListener('input', (event) => {
+      event.stopPropagation();
+      if (!event.target.classList.contains('ds-cascader__search')) return;
+      state.query = event.target.value;
+      updateCascaderPopupBody(root, state);
+    });
+  }
+
+  document.querySelectorAll('.js-cascader').forEach(initCascader);
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll('.js-cascader.is-open').forEach((root) => {
+      if (root.contains(event.target)) return;
+      root.classList.remove('is-open');
+      root.querySelector('.ds-cascader__popup')?.remove();
+      root.querySelector('.ds-cascader__trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1039 @@
+# 教职工基本信息主表字段字典
+# 自动生成 · 请勿手工编辑 · 重新生成见 scripts/
+
+ontology: szpu-hr
+version: 0.4.0
+domain: staff-data
+
+table:
+  name: 教职工基本信息
+  sourceFile: 教职工基本信息 (17).xlsx
+  recordCount: 4512
+  fieldCount: 131
+  primaryKey: 工号
+  capturedAt: 2026-09-04
+  authority: system-export
+  notes:
+    - 工号唯一且非空，可作为人员主索引
+    - 仅 7 个字段完全非空：工号、姓名、所在部门、当前状态、人员身份、姓名全拼、是否辅导员
+    - 42 个字段 100% 为空，多为外籍人员、博士后等特定人群字段
+
+fields:
+  - name: 工号
+    type: date
+    classification: internal
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 4512
+
+  - name: 姓名
+    type: string
+    classification: sensitive
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 4400
+
+  - name: 性别
+    type: string
+    classification: internal
+    filled: 4497
+    fillRate: 99.7
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 所在部门
+    type: string
+    classification: internal
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 76
+    statisticsDimension: true
+
+  - name: 当前状态
+    type: string
+    classification: internal
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 5
+    statisticsDimension: true
+
+  - name: 人员身份
+    type: string
+    classification: internal
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 12
+    statisticsDimension: true
+
+  - name: 出生日期
+    type: date
+    classification: sensitive
+    filled: 4494
+    fillRate: 99.6
+    uniqueValues: 3896
+
+  - name: 民族
+    type: string
+    classification: sensitive
+    filled: 3883
+    fillRate: 86.1
+    uniqueValues: 22
+    statisticsDimension: true
+
+  - name: 婚姻状况
+    type: string
+    classification: sensitive
+    filled: 3170
+    fillRate: 70.3
+    uniqueValues: 5
+
+  - name: 国家（地区）
+    type: string
+    classification: internal
+    filled: 3104
+    fillRate: 68.8
+    uniqueValues: 25
+
+  - name: 首次参工时间
+    type: date
+    classification: internal
+    filled: 3247
+    fillRate: 72.0
+    uniqueValues: 1441
+
+  - name: 政治面貌
+    type: string
+    classification: sensitive
+    filled: 3851
+    fillRate: 85.4
+    uniqueValues: 13
+    statisticsDimension: true
+
+  - name: 参加党派日期
+    type: date
+    classification: sensitive
+    filled: 395
+    fillRate: 8.8
+    uniqueValues: 377
+
+  - name: 报到日期
+    type: date
+    classification: internal
+    filled: 3519
+    fillRate: 78.0
+    uniqueValues: 1742
+
+  - name: 第二党派
+    type: string
+    classification: sensitive
+    filled: 6
+    fillRate: 0.1
+    uniqueValues: 3
+    status: sparse
+
+  - name: 第二党派日期
+    type: date
+    classification: sensitive
+    filled: 1
+    fillRate: 0.0
+    uniqueValues: 1
+    status: sparse
+
+  - name: 主要岗位
+    type: string
+    classification: internal
+    filled: 3420
+    fillRate: 75.8
+    uniqueValues: 10
+    statisticsDimension: true
+
+  - name: 聘岗类别1
+    type: string
+    classification: internal
+    filled: 3414
+    fillRate: 75.7
+    uniqueValues: 10
+    statisticsDimension: true
+
+  - name: 聘岗等级1
+    type: string
+    classification: internal
+    filled: 3409
+    fillRate: 75.6
+    uniqueValues: 53
+    statisticsDimension: true
+
+  - name: 聘任时间1
+    type: date
+    classification: internal
+    filled: 3342
+    fillRate: 74.1
+    uniqueValues: 777
+
+  - name: 聘岗类别2
+    type: string
+    classification: internal
+    filled: 6
+    fillRate: 0.1
+    uniqueValues: 2
+    status: sparse
+
+  - name: 聘岗等级2
+    type: string
+    classification: internal
+    filled: 6
+    fillRate: 0.1
+    uniqueValues: 5
+    status: sparse
+
+  - name: 聘任时间2
+    type: date
+    classification: internal
+    filled: 6
+    fillRate: 0.1
+    uniqueValues: 4
+    status: sparse
+
+  - name: 专任教师类型
+    type: string
+    classification: internal
+    filled: 1195
+    fillRate: 26.5
+    uniqueValues: 3
+    statisticsDimension: true
+
+  - name: 证件号码
+    type: string
+    classification: restricted
+    filled: 4497
+    fillRate: 99.7
+    uniqueValues: 4490
+
+  - name: 籍贯
+    type: string
+    classification: sensitive
+    filled: 4268
+    fillRate: 94.6
+    uniqueValues: 1382
+
+  - name: 排序
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 出生地
+    type: string
+    classification: sensitive
+    filled: 3013
+    fillRate: 66.8
+    uniqueValues: 1233
+
+  - name: 教职工来源
+    type: string
+    classification: internal
+    filled: 1
+    fillRate: 0.0
+    uniqueValues: 1
+    status: sparse
+
+  - name: 教职工类别
+    type: string
+    classification: internal
+    filled: 3905
+    fillRate: 86.5
+    uniqueValues: 10
+    statisticsDimension: true
+
+  - name: 身份性质
+    type: string
+    classification: internal
+    filled: 1305
+    fillRate: 28.9
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 导师类别
+    type: string
+    classification: internal
+    filled: 2
+    fillRate: 0.0
+    uniqueValues: 2
+    statisticsDimension: true
+    status: sparse
+
+  - name: 最高学历
+    type: string
+    classification: internal
+    filled: 3904
+    fillRate: 86.5
+    uniqueValues: 8
+    statisticsDimension: true
+
+  - name: 最高学位
+    type: string
+    classification: internal
+    filled: 3889
+    fillRate: 86.2
+    uniqueValues: 4
+    statisticsDimension: true
+
+  - name: 任职时间1
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 职称
+    type: string
+    classification: internal
+    filled: 2209
+    fillRate: 49.0
+    uniqueValues: 82
+    statisticsDimension: true
+
+  - name: 职称等级
+    type: string
+    classification: internal
+    filled: 3737
+    fillRate: 82.8
+    uniqueValues: 5
+    statisticsDimension: true
+
+  - name: 职称取得时间
+    type: date
+    classification: internal
+    filled: 2108
+    fillRate: 46.7
+    uniqueValues: 429
+
+  - name: 是否双肩挑
+    type: boolean
+    classification: internal
+    filled: 4
+    fillRate: 0.1
+    uniqueValues: 2
+    statisticsDimension: true
+    status: sparse
+
+  - name: 预计离退休日期
+    type: unknown
+    classification: sensitive
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 双师认定级别
+    type: string
+    classification: internal
+    filled: 1123
+    fillRate: 24.9
+    uniqueValues: 3
+    statisticsDimension: true
+
+  - name: 双师认证年份
+    type: number
+    classification: internal
+    filled: 1123
+    fillRate: 24.9
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 证件类型
+    type: string
+    classification: sensitive
+    filled: 4497
+    fillRate: 99.7
+    uniqueValues: 5
+
+  - name: 姓名全拼
+    type: string
+    classification: sensitive
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 4264
+
+  - name: 曾用名
+    type: string
+    classification: sensitive
+    filled: 42
+    fillRate: 0.9
+    uniqueValues: 8
+    status: sparse
+
+  - name: 年龄
+    type: number
+    classification: sensitive
+    filled: 4495
+    fillRate: 99.6
+    uniqueValues: 72
+
+  - name: 户口所在地
+    type: string
+    classification: sensitive
+    filled: 2850
+    fillRate: 63.2
+    uniqueValues: 632
+
+  - name: 毕业学校
+    type: string
+    classification: internal
+    filled: 3676
+    fillRate: 81.5
+    uniqueValues: 1077
+
+  - name: 教师资格证号
+    type: date
+    classification: internal
+    filled: 1170
+    fillRate: 25.9
+    uniqueValues: 1167
+
+  - name: 职务名称1
+    type: string
+    classification: internal
+    filled: 353
+    fillRate: 7.8
+    uniqueValues: 303
+    statisticsDimension: true
+
+  - name: 现居住地址
+    type: string
+    classification: restricted
+    filled: 35
+    fillRate: 0.8
+    uniqueValues: 34
+    status: sparse
+
+  - name: 手机号
+    type: date
+    classification: sensitive
+    filled: 4061
+    fillRate: 90.0
+    uniqueValues: 4058
+
+  - name: 办公电话
+    type: string
+    classification: sensitive
+    filled: 3033
+    fillRate: 67.2
+    uniqueValues: 1538
+
+  - name: 个人邮箱
+    type: string
+    classification: sensitive
+    filled: 46
+    fillRate: 1.0
+    uniqueValues: 46
+    status: sparse
+
+  - name: 紧急联系人
+    type: string
+    classification: restricted
+    filled: 33
+    fillRate: 0.7
+    uniqueValues: 33
+    status: sparse
+
+  - name: 紧急联系电话
+    type: date
+    classification: restricted
+    filled: 34
+    fillRate: 0.8
+    uniqueValues: 34
+    status: sparse
+
+  - name: 所学专业
+    type: string
+    classification: internal
+    filled: 3617
+    fillRate: 80.2
+    uniqueValues: 1253
+
+  - name: 是否持有绿卡
+    type: boolean
+    classification: sensitive
+    filled: 44
+    fillRate: 1.0
+    uniqueValues: 1
+    status: sparse
+
+  - name: 港澳台侨
+    type: string
+    classification: sensitive
+    filled: 3036
+    fillRate: 67.3
+    uniqueValues: 3
+
+  - name: 是否外籍
+    type: boolean
+    classification: sensitive
+    filled: 4365
+    fillRate: 96.7
+    uniqueValues: 2
+
+  - name: 是否军转干
+    type: boolean
+    classification: sensitive
+    filled: 3044
+    fillRate: 67.5
+    uniqueValues: 2
+
+  - name: 子女情况
+    type: string
+    classification: sensitive
+    filled: 1264
+    fillRate: 28.0
+    uniqueValues: 4
+
+  - name: 户口类别
+    type: string
+    classification: sensitive
+    filled: 2402
+    fillRate: 53.2
+    uniqueValues: 5
+
+  - name: 宗教信仰
+    type: string
+    classification: sensitive
+    filled: 388
+    fillRate: 8.6
+    uniqueValues: 9
+
+  - name: 专业领域
+    type: string
+    classification: internal
+    filled: 40
+    fillRate: 0.9
+    uniqueValues: 10
+    status: sparse
+
+  - name: 专业特长
+    type: string
+    classification: internal
+    filled: 39
+    fillRate: 0.9
+    uniqueValues: 37
+    status: sparse
+
+  - name: 所属机构
+    type: string
+    classification: internal
+    filled: 116
+    fillRate: 2.6
+    uniqueValues: 67
+    statisticsDimension: true
+    status: sparse
+
+  - name: 实际工作部门
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 实际所属机构
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 是否校内雇员
+    type: boolean
+    classification: internal
+    filled: 3032
+    fillRate: 67.2
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否老工勤人员
+    type: boolean
+    classification: internal
+    filled: 3032
+    fillRate: 67.2
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否我校退休人员
+    type: boolean
+    classification: internal
+    filled: 3033
+    fillRate: 67.2
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否来自企业
+    type: boolean
+    classification: internal
+    filled: 371
+    fillRate: 8.2
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否辅导员
+    type: boolean
+    classification: internal
+    filled: 4512
+    fillRate: 100.0
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否班主任
+    type: boolean
+    classification: internal
+    filled: 1438
+    fillRate: 31.9
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否专职思政课教师
+    type: boolean
+    classification: internal
+    filled: 3
+    fillRate: 0.1
+    uniqueValues: 1
+    statisticsDimension: true
+    status: sparse
+
+  - name: 是否心理健康课教师
+    type: boolean
+    classification: internal
+    filled: 3034
+    fillRate: 67.2
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 是否教学名师
+    type: boolean
+    classification: internal
+    filled: 40
+    fillRate: 0.9
+    uniqueValues: 1
+    statisticsDimension: true
+    status: sparse
+
+  - name: 是否退休人员
+    type: boolean
+    classification: internal
+    filled: 3032
+    fillRate: 67.2
+    uniqueValues: 2
+    statisticsDimension: true
+
+  - name: 合同开始日期
+    type: date
+    classification: sensitive
+    filled: 1
+    fillRate: 0.0
+    uniqueValues: 1
+    status: sparse
+
+  - name: 合同结束日期
+    type: date
+    classification: sensitive
+    filled: 1
+    fillRate: 0.0
+    uniqueValues: 1
+    status: sparse
+
+  - name: 见习期截止日期
+    type: date
+    classification: sensitive
+    filled: 100
+    fillRate: 2.2
+    uniqueValues: 61
+    status: sparse
+
+  - name: 试用期截止日期
+    type: date
+    classification: sensitive
+    filled: 293
+    fillRate: 6.5
+    uniqueValues: 141
+
+  - name: 首次来校日期
+    type: date
+    classification: internal
+    filled: 1
+    fillRate: 0.0
+    uniqueValues: 1
+    status: sparse
+
+  - name: 学位归属学科
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 国（境）外院校
+    type: boolean
+    classification: sensitive
+    filled: 642
+    fillRate: 14.2
+    uniqueValues: 2
+
+  - name: 职务类别1
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 职务名称2
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 职务类别2
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 任职时间2
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 主要岗位层级起聘时间
+    type: date
+    classification: internal
+    filled: 1220
+    fillRate: 27.0
+    uniqueValues: 221
+
+  - name: 办公校区
+    type: string
+    classification: internal
+    filled: 76
+    fillRate: 1.7
+    uniqueValues: 5
+    statisticsDimension: true
+    status: sparse
+
+  - name: 学校邮箱
+    type: string
+    classification: sensitive
+    filled: 3696
+    fillRate: 81.9
+    uniqueValues: 3696
+
+  - name: 社保电脑号
+    type: number
+    classification: restricted
+    filled: 3359
+    fillRate: 74.4
+    uniqueValues: 3359
+
+  - name: 公积金账号
+    type: date
+    classification: restricted
+    filled: 3014
+    fillRate: 66.8
+    uniqueValues: 3014
+
+  - name: 银行名称
+    type: string
+    classification: restricted
+    filled: 3183
+    fillRate: 70.5
+    uniqueValues: 23
+
+  - name: 银行卡号
+    type: date
+    classification: restricted
+    filled: 3183
+    fillRate: 70.5
+    uniqueValues: 3183
+
+  - name: 银行卡开户行
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 证件有效开始日期
+    type: unknown
+    classification: sensitive
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 证件有效结束日期
+    type: unknown
+    classification: sensitive
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 身份证详细地址
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 档案号
+    type: unknown
+    classification: sensitive
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 户籍所在地区号
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 医疗缴费档次
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 是否深圳户籍
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 首次参加工作时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 是否托管
+    type: boolean
+    classification: internal
+    filled: 16
+    fillRate: 0.4
+    uniqueValues: 1
+    statisticsDimension: true
+    status: sparse
+
+  - name: 首次来华时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 护照编码
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 外籍教师合同开始时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 外籍教师合同结束时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 居留许可开始时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 居留许可结束时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 工作许可起始时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 工作许可截止时间
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 学院联系人
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 工作许可证号
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 绩效比例
+    type: string
+    classification: restricted
+    filled: 20
+    fillRate: 0.4
+    uniqueValues: 5
+    status: sparse
+
+  - name: 薪酬（万元）
+    type: number
+    classification: restricted
+    filled: 20
+    fillRate: 0.4
+    uniqueValues: 12
+    status: sparse
+
+  - name: 薪酬变化时间
+    type: unknown
+    classification: restricted
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 人才等级
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    statisticsDimension: true
+    status: empty
+
+  - name: 判断依据
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 经费等级
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    statisticsDimension: true
+    status: empty
+
+  - name: 入站时间
+    type: date
+    classification: internal
+    filled: 79
+    fillRate: 1.8
+    uniqueValues: 63
+    status: sparse
+
+  - name: 联合培养单位
+    type: string
+    classification: internal
+    filled: 79
+    fillRate: 1.8
+    uniqueValues: 14
+    status: sparse
+
+  - name: 联合培养导师
+    type: string
+    classification: internal
+    filled: 79
+    fillRate: 1.8
+    uniqueValues: 34
+    status: sparse
+
+  - name: 校内导师
+    type: string
+    classification: internal
+    filled: 79
+    fillRate: 1.8
+    uniqueValues: 42
+    status: sparse
+
+  - name: 毕业日期
+    type: date
+    classification: internal
+    filled: 688
+    fillRate: 15.2
+    uniqueValues: 416
+
+  - name: 兼任部门
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 兼任机构
+    type: unknown
+    classification: internal
+    filled: 0
+    fillRate: 0.0
+    uniqueValues: 0
+    status: empty
+
+  - name: 报到日期1
+    type: date
+    classification: internal
+    filled: 3765
+    fillRate: 83.4
+    uniqueValues: 1853

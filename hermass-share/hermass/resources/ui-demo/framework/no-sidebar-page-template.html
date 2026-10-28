@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>无侧栏业务页模板 - 框架2</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <style>
+    body { margin: 0; }
+
+    .wide-page {
+      min-height: 100%;
+    }
+
+    .wide-page__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ds-color-border-secondary);
+    }
+
+    .wide-page__head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    .wide-page__head p {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-tertiary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .wide-page__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .wide-page__link {
+      display: inline-flex;
+      height: 32px;
+      align-items: center;
+      padding: 0 14px;
+      color: var(--ds-color-primary);
+      background: var(--ds-color-bg);
+      border: 1px solid var(--ds-color-border);
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    .wide-page__link.primary {
+      color: #fff;
+      background: var(--ds-color-primary);
+      border-color: var(--ds-color-primary);
+    }
+
+    .wide-page__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .wide-page__card {
+      min-height: 180px;
+      padding: 20px;
+      background: #fafafa;
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: 8px;
+    }
+
+    .wide-page__card h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .wide-page__card p {
+      margin: 8px 0 0;
+      color: var(--ds-color-text-tertiary);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    @media (max-width: 720px) {
+      .wide-page__head { flex-direction: column; }
+      .wide-page__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="wide-page">
+    <header class="wide-page__head">
+      <div>
+        <h1>无左侧菜单业务页</h1>
+        <p>适用于日程、待办、消息中心等需要完整横向空间的独立功能。</p>
+      </div>
+      <div class="wide-page__links">
+        <a class="wide-page__link" href="../demos/schedule-detail.html">查看日程页</a>
+        <a class="wide-page__link primary" href="../demos/task-center.html">查看待办页</a>
+      </div>
+    </header>
+    <section class="wide-page__grid">
+      <article class="wide-page__card">
+        <h2>日程类页面</h2>
+        <p>使用全宽内容区承载月历、周历和右侧详情，内容区域自行管理内部网格。</p>
+      </article>
+      <article class="wide-page__card">
+        <h2>待办类页面</h2>
+        <p>使用全宽内容区承载筛选、状态页签和任务列表，页面滚动由框架工作区统一负责。</p>
+      </article>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="./framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="./framework-2.js?v=2.2.3"></script>
+<script>
+  WiseFramework2.mount({
+    activeFeature: 'task-center',
+    secondaryNav: { items: [] },
+    workspaceVariant: 'card',
+    tabs: [
+      { key: 'task-center', label: '无侧栏页面模板', closable: true }
+    ]
+  });
+</script>
+</body>
+</html>

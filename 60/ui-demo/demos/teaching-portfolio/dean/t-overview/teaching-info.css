@@ -1,0 +1,532 @@
+/* 教育教学信息详情页 · 业务布局样式（不覆盖 .ds-* / .frame2-*，颜色使用设计 token） */
+@import '../../shared/portfolio-v3.css';
+
+/* 等宽数字字段（学分/学时/选课人数等） */
+.ti-num {
+  font-family: var(--ds-font-family-mono, 'SF Mono', 'Menlo', 'Consolas', monospace);
+  font-variant-numeric: tabular-nums;
+}.ti-page{
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.ti-content-card{
+  width: 100%;
+  height: calc(100vh - 92px);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--ds-color-bg-container);
+  border-radius: 0;
+}
+
+.ti-top-header {
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+  border-radius: 0;
+}
+
+.ti-layout {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  height: calc(100vh - 144px);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ti-course-pane {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 12px 32px 16px;
+  border-right: 1px solid var(--ds-color-border-secondary);
+  background: var(--ds-color-bg-container);
+}
+
+.ti-filter-head {
+  margin-bottom: 12px;
+}
+
+.ti-semester-select {
+  width: 100%;
+}.ti-search-box{
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+}
+
+.ti-search-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.ti-search-btn {
+  flex: none;
+  margin-left: -1px;
+  border-radius: 0 var(--ds-radius-sm) var(--ds-radius-sm) 0;
+}
+
+.ti-course-list {
+  display: grid;
+  gap: 12px;
+}
+
+.ti-empty-state {
+  padding: 32px 16px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-md);
+  text-align: center;
+  border: 1px dashed var(--ds-color-border);
+  border-radius: var(--ds-radius-sm);
+}.ti-course-card{
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  color: var(--ds-color-black);
+  text-decoration: none;
+  border: 2px solid var(--ds-color-border);
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.ti-course-card.is-active{
+  border-color: var(--ds-color-primary);
+  background: linear-gradient(180deg, var(--ds-color-primary-light), var(--ds-color-bg-container));
+}.ti-course-card h2{
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: 16px;
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+}.ti-course-card:not(.is-active){
+  gap: 16px;
+}
+
+.ti-course-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ti-course-tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 14px;
+  color: var(--ds-color-text-secondary);
+  font-size: 14px;
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ti-course-fields {
+  display: grid;
+  gap: 14px;
+  margin: 6px 0 0;
+}
+
+.ti-course-fields div {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.ti-course-fields dt {
+  color: var(--ds-color-text-secondary);
+  font-size: 14px;
+  line-height: var(--ds-line-height-lg);
+}
+
+.ti-course-fields dd {
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: 14px;
+  line-height: var(--ds-line-height-lg);
+}
+
+.ti-detail-pane {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  background: var(--ds-color-bg-container);
+}
+
+.ti-tabs-wrap {
+  flex: none;
+  min-width: 0;
+  padding: 8px 24px 8px 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ti-tabs-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.ti-tab-segments {
+  width: max-content;
+  height: 32px;
+  gap: 2px;
+  padding: 2px;
+  background: var(--ds-color-bg-subtle);
+  border-radius: 6px;
+}
+
+.ti-tab-segment {
+  min-width: auto;
+  height: 28px;
+  padding: 3px 12px;
+  color: var(--ds-color-text-secondary);
+  background: var(--ds-color-bg-subtle);
+  border: 0;
+  border-radius: 4px;
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-md);
+}
+
+.ti-tab-segment:hover:not(:disabled) {
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-container);
+}
+
+.ti-tab-segment.is-active,
+.ti-tab-segment.is-active:hover:not(:disabled) {
+  height: 24px;
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-container);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ti-tab-body {
+  display: grid;
+  gap: 22px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 16px 40px 12px;
+}.ti-section{
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.ti-section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 16px;
+  background: linear-gradient(90deg, var(--ds-color-primary-light), var(--ds-color-bg-container));
+  border-radius: var(--ds-radius-sm);
+}
+
+.ti-section-head h3 {
+  margin: 0 auto 0 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+}
+
+.ti-source-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  margin-left: auto;
+  color: var(--ds-color-text-secondary);
+  white-space: nowrap;
+}
+
+.ti-source-note strong {
+  color: var(--ds-color-black);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ti-section-edit {
+  margin-left: auto;
+}.ti-display-box{
+  min-height: 84px;
+  padding: 16px;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.75;
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-bg-subtle);
+}
+
+.ti-display-box--compact {
+  min-height: 42px;
+}
+
+.ti-display-box--large {
+  min-height: 220px;
+}
+
+.ti-upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}.ti-upload-box,
+.ti-file-card{
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 96px;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  border: 1px dashed var(--ds-color-border);
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+  text-align: center;
+}
+
+.ti-upload-icon {
+  color: var(--ds-color-text-tertiary);
+}
+
+.ti-upload-link {
+  color: var(--ds-color-primary);
+}.ti-file-card{
+  border-style: solid;
+  background: var(--ds-color-bg-subtle);
+}
+
+.ti-file-icon {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ti-strategy {
+  display: grid;
+  gap: 10px;
+}
+
+.ti-strategy-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}.ti-strategy-card{
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.ti-strategy-card.is-featured{
+  padding: 16px;
+}.ti-strategy-card p{
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.75;
+}.ti-strategy-card__foot{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+}
+
+@media (max-width: 1100px) {
+  .ti-layout {
+    grid-template-columns: 320px minmax(0, 1fr);
+  }
+
+  .ti-course-pane {
+    padding-inline: 18px 14px;
+  }
+
+}
+
+@media (max-width: 860px) {.ti-content-card{
+    height: auto;
+    min-height: calc(100vh - 92px);
+  }
+
+  .ti-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .ti-course-pane,
+  .ti-tab-body {
+    overflow: visible;
+  }
+
+  .ti-course-pane {
+    border-right: 0;
+    border-bottom: 1px solid var(--ds-color-border-secondary);
+  }
+}/* ========== 基本信息：教学目标 / 学情分析 二级分组（无外边框）========== */
+.ti-section > .ti-base-group + .ti-base-group{
+  margin-top: 16px;
+}.ti-base-group{
+  padding: 0;
+}
+
+.ti-base-group__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ti-base-group__title {
+  position: relative;
+  padding-left: 10px;
+  color: var(--ds-color-text-heading);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.ti-base-group__title::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-primary);
+  transform: translateY(-50%);
+}
+
+.ti-base-group__body {
+  padding: 16px;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.75;
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-bg-subtle);
+}
+
+/* ========== 教学计划卡片列表 ========== */
+.ti-plan-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 10px 14px;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ti-plan-stats strong {
+  color: var(--ds-color-primary);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ti-plan-list {
+  display: grid;
+  gap: 12px;
+}.ti-plan-card{
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+  overflow: hidden;
+}/* 收起态：一行4列 + 展开箭头 */
+.ti-plan-card__head{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+}.ti-plan-card__head:hover{
+  background: var(--ds-color-bg-subtle);
+}
+
+.ti-plan-grid-4--compact {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.ti-plan-grid-4--compact > span {
+  display: flex;
+  gap: 2px;
+  color: var(--ds-color-text-primary);
+  font-size: var(--ds-font-size-md);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ti-plan-grid-4__name {
+  flex: none;
+  color: var(--ds-color-text-secondary);
+}
+
+.ti-plan-card__toggle {
+  flex: none;
+}
+
+.ti-plan-card__arrow {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--ds-color-text-secondary);
+}/* 展开态：完整字段 */
+.ti-plan-card__body{
+  padding: 4px 14px 14px;
+}
+
+
+/* 其余字段：两列布局，字段名统一 14px */
+.ti-plan-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  margin: 0;
+}
+
+.ti-plan-fields > div {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+}
+
+.ti-plan-fields > div.ti-full-width {
+  grid-column: 1 / -1;
+}
+
+.ti-plan-fields dt {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.6;
+}
+
+.ti-plan-fields dd {
+  margin: 0;
+  color: var(--ds-color-text-primary);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.6;
+}.ti-plan-card__actions{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* ========== 教学计划编辑弹窗 ========== */
+.ti-modal-sync-info {
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-secondary);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ti-modal-sync-info span + span::before {
+  content: "·";
+  margin: 0 8px;
+  color: var(--ds-color-text-tertiary);
+}

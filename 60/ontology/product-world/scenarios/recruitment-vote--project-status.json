@@ -1,0 +1,91 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--project-status",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "按未开启→投票中→已完成→已关闭的状态机推进投票项目",
+      "在推进状态前核对投票进度，避免提前结束投票"
+    ],
+    "painPoints": [
+      "原系统状态切换入口分散，管理员难以确认当前所处阶段与下一步动作"
+    ],
+    "openQuestions": [
+      "结束投票后是否允许回退状态，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "项目状态",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票项目已完成项目设置与分组设岗"
+    ],
+    "mainFlow": [
+      "进入项目状态页，通过步骤条查看当前所处阶段",
+      "在项目信息与投票进度概览中核对已提交与未提交人数",
+      "编辑状态说明并保存",
+      "点击状态操作按钮（开启投票 / 结束投票 / 关闭项目）并二次确认"
+    ],
+    "exceptions": [
+      "项目已关闭时状态操作按钮置为不可用",
+      "状态变更为需二次确认的操作"
+    ]
+  },
+  "page": {
+    "title": "项目状态",
+    "templateId": "edit-form",
+    "menuRef": "recruitment.vote:project-status",
+    "fieldRefs": [
+      "Business.vote.voteProjectName",
+      "Business.vote.voteMode",
+      "Business.vote.votePeriod",
+      "Business.vote.projectStatus",
+      "Business.vote.projectStatusNote",
+      "Business.vote.submittedCount",
+      "Business.vote.pendingCount",
+      "Business.vote.completeRate"
+    ],
+    "components": [
+      "DSAlert",
+      "DSButton",
+      "DSEditField",
+      "DSEditForm",
+      "DSFormGroup",
+      "DSModal",
+      "DSReadOnlyField",
+      "DSReadOnlyForm",
+      "DSSteps",
+      "DSTextarea"
+    ],
+    "demoPath": "demos/vote/project-status/project-status.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「投票执行」分组下「项目状态」处于高亮态",
+      "步骤条按未开启→投票中→已完成→已关闭高亮当前阶段",
+      "只读概览展示已提交数、未提交数与完成率",
+      "点击状态操作按钮需二次确认，确认后步骤条与提示同步更新"
+    ]
+  }
+}

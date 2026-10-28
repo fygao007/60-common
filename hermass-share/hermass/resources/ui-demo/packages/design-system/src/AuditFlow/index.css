@@ -1,0 +1,324 @@
+@import '../tokens.css';
+
+.ds-audit-flow {
+  width: 100%;
+  margin: 0;
+  padding: 20px 24px 24px;
+  background: var(--ds-color-white);
+  color: var(--ds-color-text);
+}
+
+.ds-audit-flow__header {
+  margin-bottom: 16px;
+}
+
+.ds-audit-flow__title {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-audit-flow__desc {
+  margin: 4px 0 0;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-audit-flow__track {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-audit-flow__node {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.ds-audit-flow__connector {
+  position: absolute;
+  top: 16px;
+  left: calc(50% + 20px);
+  right: calc(-50% + 20px);
+  height: 1px;
+  background: var(--ds-color-border-secondary);
+}
+
+.ds-audit-flow__node:last-child .ds-audit-flow__connector {
+  display: none;
+}
+
+.ds-audit-flow__icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--ds-color-white);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-pill);
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: 30px;
+}
+
+.ds-audit-flow__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ds-audit-flow__title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+}
+
+.ds-audit-flow__name {
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-md);
+  white-space: nowrap;
+}
+
+.ds-audit-flow__assignee {
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-audit-flow__tag {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  background: var(--ds-color-bg-disabled);
+  color: var(--ds-color-text-tertiary);
+  border-radius: var(--ds-radius-pill);
+  font-size: var(--ds-font-size-xs);
+  line-height: 18px;
+}
+
+/* 已完成节点 */
+.ds-audit-flow__node.is-finish .ds-audit-flow__icon {
+  color: var(--ds-color-primary);
+  border-color: var(--ds-color-primary);
+  background: var(--ds-color-white);
+}
+
+.ds-audit-flow__node.is-finish .ds-audit-flow__tag {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+}
+
+.ds-audit-flow__node.is-finish .ds-audit-flow__connector {
+  background: var(--ds-color-primary);
+}
+
+/* 进行中 */
+.ds-audit-flow__node.is-process .ds-audit-flow__icon {
+  color: var(--ds-color-white);
+  background: var(--ds-color-primary);
+  border-color: var(--ds-color-primary);
+}
+
+.ds-audit-flow__node.is-process .ds-audit-flow__tag {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+}
+
+.ds-audit-flow__node.is-process .ds-audit-flow__name {
+  color: var(--ds-color-primary);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+/* 已退回（error） */
+.ds-audit-flow__node.is-error .ds-audit-flow__icon {
+  color: var(--ds-color-danger);
+  background: var(--ds-color-white);
+  border-color: var(--ds-color-danger);
+}
+
+.ds-audit-flow__node.is-error .ds-audit-flow__tag {
+  color: var(--ds-color-danger);
+  background: var(--ds-color-danger-light);
+}
+
+.ds-audit-flow__node.is-error .ds-audit-flow__name {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-audit-flow__node.is-error .ds-audit-flow__connector {
+  background: var(--ds-color-danger);
+}
+
+/* 不通过（reject，终止） */
+.ds-audit-flow__node.is-reject .ds-audit-flow__icon {
+  color: var(--ds-color-white);
+  background: var(--ds-color-danger);
+  border-color: var(--ds-color-danger);
+}
+
+.ds-audit-flow__node.is-reject .ds-audit-flow__tag {
+  color: var(--ds-color-white);
+  background: var(--ds-color-danger);
+}
+
+.ds-audit-flow__node.is-reject .ds-audit-flow__name {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+/* 退回后未开始的节点：弱化 */
+.ds-audit-flow__node.is-rejected-after .ds-audit-flow__icon {
+  color: var(--ds-color-text-disabled-strong);
+  background: var(--ds-color-bg-hover);
+  border-color: var(--ds-color-border);
+}
+
+/* 未开始 */
+.ds-audit-flow__node.is-wait .ds-audit-flow__icon {
+  color: var(--ds-color-text-tertiary);
+  background: var(--ds-color-white);
+  border-color: var(--ds-color-border);
+}
+
+/* 跳过 / 禁用 */
+.ds-audit-flow__node.is-disabled .ds-audit-flow__icon {
+  color: var(--ds-color-text-disabled-strong);
+  background: var(--ds-color-bg-hover);
+  border-color: var(--ds-color-border);
+}
+
+.ds-audit-flow__node.is-disabled .ds-audit-flow__tag {
+  color: var(--ds-color-text-tertiary);
+  background: var(--ds-color-bg-disabled);
+}
+
+/* 纵向布局 */
+.ds-audit-flow--vertical .ds-audit-flow__track {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.ds-audit-flow--vertical .ds-audit-flow__node {
+  flex: none;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 0 20px;
+}
+
+.ds-audit-flow--vertical .ds-audit-flow__connector {
+  top: 5px;
+  left: 5px;
+  width: 1px;
+  height: calc(100% + 4px);
+  right: auto;
+}
+
+.ds-audit-flow--vertical .ds-audit-flow__node:last-child .ds-audit-flow__connector {
+  display: none;
+}
+
+.ds-audit-flow--vertical .ds-audit-flow__body {
+  align-items: flex-start;
+  flex: 1;
+}
+
+.ds-audit-flow--vertical .ds-audit-flow__title-row {
+  min-height: 22px;
+}
+
+/* 纵向布局：小圆点图标（与 AuditLog 一致） */
+.ds-audit-flow--vertical .ds-audit-flow__icon {
+  width: 11px;
+  height: 11px;
+  margin-top: 5px;
+  background: var(--ds-color-primary);
+  border: 2px solid var(--ds-color-primary-light);
+  border-radius: var(--ds-radius-pill);
+  font-size: 0;
+  line-height: 0;
+  box-sizing: content-box;
+}
+
+/* 进行中 → 主色蓝 */
+.ds-audit-flow--vertical .ds-audit-flow__node.is-process .ds-audit-flow__icon {
+  background: var(--ds-color-primary);
+  border-color: var(--ds-color-primary-light);
+}
+
+/* 已走过的状态：已完成 / 已退回 / 不通过 → 统一 #D6D9FF */
+.ds-audit-flow--vertical .ds-audit-flow__node.is-finish .ds-audit-flow__icon,
+.ds-audit-flow--vertical .ds-audit-flow__node.is-error .ds-audit-flow__icon,
+.ds-audit-flow--vertical .ds-audit-flow__node.is-reject .ds-audit-flow__icon {
+  background: #D6D9FF;
+  border-color: var(--ds-color-primary-light);
+}
+
+/* 未开始 / 跳过 / 退回后未开始 → 中性灰 */
+.ds-audit-flow--vertical .ds-audit-flow__node.is-wait .ds-audit-flow__icon,
+.ds-audit-flow--vertical .ds-audit-flow__node.is-disabled .ds-audit-flow__icon,
+.ds-audit-flow--vertical .ds-audit-flow__node.is-rejected-after .ds-audit-flow__icon {
+  background: var(--ds-color-border);
+  border-color: var(--ds-color-border-secondary);
+}
+
+@media (max-width: 900px) {
+  .ds-audit-flow:not(.ds-audit-flow--vertical) .ds-audit-flow__track {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .ds-audit-flow:not(.ds-audit-flow--vertical) .ds-audit-flow__node {
+    flex: none;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0 0 16px;
+  }
+
+  .ds-audit-flow:not(.ds-audit-flow--vertical) .ds-audit-flow__connector {
+    top: 16px;
+    left: 16px;
+    width: 1px;
+    height: calc(100% + 16px);
+    right: auto;
+  }
+
+  .ds-audit-flow:not(.ds-audit-flow--vertical) .ds-audit-flow__node:last-child .ds-audit-flow__connector {
+    display: none;
+  }
+
+  .ds-audit-flow:not(.ds-audit-flow--vertical) .ds-audit-flow__body {
+    align-items: flex-start;
+    flex: 1;
+  }
+
+  .ds-audit-flow:not(.ds-audit-flow--vertical) .ds-audit-flow__title-row {
+    min-height: 32px;
+  }
+}

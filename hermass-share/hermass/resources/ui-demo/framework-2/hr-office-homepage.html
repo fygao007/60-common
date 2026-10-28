@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 人事处首页工作台</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShellV2/app-shell-v2.css" />
+  <style>
+    body { margin: 0; }
+
+    .hr-home-frame {
+      --hr-blue: #2457d6;
+      --hr-blue-dark: #173b9b;
+      --hr-cyan: #168fb3;
+      --hr-green: #168a5b;
+      --hr-amber: #b96716;
+      --hr-red: #c73a32;
+      --hr-purple: #7157c8;
+      --hr-ink: #172033;
+      --hr-text: #4b5565;
+      --hr-muted: #7a8496;
+      --hr-line: #e5eaf2;
+      --hr-card: #fff;
+      --hr-page: #f4f7fb;
+    }
+
+    .hr-home-frame .frame2-content-shell,
+    .hr-home-frame .frame2-content {
+      min-height: 0;
+      background: var(--hr-page);
+    }
+
+    .hr-home-frame .frame2-content {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .hr-home {
+      height: 100%;
+      overflow: auto;
+      overflow-x: hidden;
+      color: var(--hr-ink);
+      background:
+        linear-gradient(180deg, rgba(36, 87, 214, .07) 0, rgba(244, 247, 251, 0) 260px),
+        var(--hr-page);
+    }
+
+    .hr-home button,
+    .hr-home input { font: inherit; }
+
+    .hr-wrap {
+      width: min(1480px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 18px 0 28px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .summary-main,
+    .ai-box {
+      min-width: 0;
+      border-radius: 8px;
+      box-shadow: 0 14px 34px rgba(31, 83, 190, .10);
+    }
+
+    .summary-main {
+      padding: 18px 20px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 86% 12%, rgba(255,255,255,.18), transparent 30%),
+        linear-gradient(135deg, var(--hr-blue-dark) 0%, var(--hr-blue) 58%, var(--hr-cyan) 100%);
+    }
+
+    .summary-main h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 30px;
+      letter-spacing: 0;
+    }
+
+    .summary-main p {
+      max-width: 860px;
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.84);
+      font-size: 13px;
+      line-height: 22px;
+    }
+
+    .summary-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .summary-tags span {
+      height: 26px;
+      padding: 0 10px;
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 26px;
+      white-space: nowrap;
+    }
+
+    .ai-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      background: #effaf5;
+      border: 1px solid #cfeadd;
+    }
+
+    .ai-box h2 {
+      margin: 0;
+      color: #123f47;
+      font-size: 17px;
+      line-height: 26px;
+    }
+
+    .ai-box p {
+      margin: 4px 0 12px;
+      color: #42606a;
+      font-size: 13px;
+      line-height: 21px;
+    }
+
+    .ai-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid #c8ded5;
+      border-radius: 7px;
+    }
+
+    .ai-input input {
+      flex: 1;
+      min-width: 0;
+      height: 34px;
+      padding: 0 8px;
+      border: 0;
+      outline: 0;
+    }
+
+    .ai-shortcuts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ai-shortcuts button {
+      height: 30px;
+      padding: 0 8px;
+      color: #164650;
+      background: #fff;
+      border: 1px solid #c8ded5;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .ai-insight-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) minmax(0, .9fr);
+      gap: 12px;
+    }
+
+    .ai-insight-card {
+      min-width: 0;
+      padding: 14px;
+      background: linear-gradient(180deg, #fbfdff 0%, #f6f9ff 100%);
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .ai-insight-card.is-command {
+      color: #fff;
+      background:
+        radial-gradient(circle at 92% 12%, rgba(255,255,255,.18), transparent 32%),
+        linear-gradient(135deg, #173b9b 0%, #2457d6 64%, #168fb3 100%);
+      border-color: transparent;
+    }
+
+    .ai-insight-card h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    .ai-insight-card p {
+      margin: 6px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 19px;
+    }
+
+    .ai-insight-card.is-command p { color: rgba(255,255,255,.82); }
+
+    .ai-action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ai-action {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding: 9px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 7px;
+    }
+
+    .ai-action b {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      color: #173b9b;
+      background: #fff;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+
+    .ai-action strong {
+      display: block;
+      overflow: hidden;
+      font-size: 13px;
+      line-height: 18px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ai-action span {
+      color: rgba(255,255,255,.74);
+      font-size: 12px;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+
+    .ai-signal {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--hr-line);
+    }
+
+    .ai-signal:last-child { border-bottom: 0; }
+
+    .ai-signal strong {
+      display: block;
+      font-size: 13px;
+      line-height: 19px;
+    }
+
+    .ai-signal span {
+      display: block;
+      margin-top: 2px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .ai-score {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 44px;
+      height: 44px;
+      color: var(--hr-blue);
+      background: #edf4ff;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .ai-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ai-chip-row span {
+      height: 24px;
+      padding: 0 8px;
+      color: var(--hr-blue-dark);
+      background: #edf4ff;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 32px;
+      padding: 0 12px;
+      color: var(--hr-blue-dark);
+      background: #fff;
+      border: 1px solid #cfd9e8;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: var(--hr-blue);
+      border-color: var(--hr-blue);
+    }
+
+    .cards,
+    .quick-grid,
+    .flow-grid,
+    .teacher-grid,
+    .quality-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .cards { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-bottom: 14px; }
+    .quick-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    .flow-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .teacher-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .quality-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .metric,
+    .panel,
+    .quick,
+    .flow-step,
+    .data-card,
+    .quality-card {
+      min-width: 0;
+      background: var(--hr-card);
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .metric {
+      padding: 12px;
+    }
+
+    .metric label {
+      display: block;
+      overflow: hidden;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--hr-blue);
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .metric.good strong { color: var(--hr-green); }
+    .metric.warn strong { color: var(--hr-amber); }
+    .metric.risk strong { color: var(--hr-red); }
+
+    .panel {
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 16px 8px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      color: var(--hr-ink);
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .panel-title p {
+      margin: 2px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .panel-body { padding: 0 16px 16px; }
+
+    .quick {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 76px;
+      gap: 6px;
+      color: var(--hr-ink);
+      background: #fbfcfe;
+      text-align: center;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .quick b {
+      color: var(--hr-blue);
+      font-size: 20px;
+      line-height: 20px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, .9fr);
+      gap: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tab {
+      height: 28px;
+      padding: 0 10px;
+      color: #536171;
+      background: #f4f7fa;
+      border: 1px solid #e2e8ee;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: #fff;
+      background: var(--hr-blue);
+      border-color: var(--hr-blue);
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      padding: 10px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .list-item h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .list-item p {
+      margin: 2px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .pill {
+      align-self: start;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+
+    .pill.red { color: var(--hr-red); background: #fff0ee; }
+    .pill.orange { color: var(--hr-amber); background: #fff3e6; }
+    .pill.blue { color: var(--hr-blue-dark); background: #eaf2ff; }
+    .pill.green { color: var(--hr-green); background: #eaf7f0; }
+    .pill.purple { color: var(--hr-purple); background: #f1efff; }
+
+    .flow-step {
+      min-height: 100px;
+      padding: 11px;
+      background: #fbfcfe;
+    }
+
+    .flow-step strong {
+      display: block;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .flow-step span {
+      display: block;
+      margin-top: 6px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .flow-step em {
+      display: block;
+      margin-top: 8px;
+      color: var(--hr-blue);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .data-card,
+    .quality-card {
+      padding: 12px;
+      background: #fbfcfe;
+    }
+
+    .data-card h3,
+    .quality-card h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .data-card strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--hr-blue-dark);
+      font-size: 22px;
+      line-height: 28px;
+    }
+
+    .data-card p,
+    .quality-card p {
+      margin: 5px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .bar {
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      background: #e8edf4;
+      border-radius: 999px;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--hr-blue), var(--hr-green));
+    }
+
+    .focus-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(360px, .75fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .focus-main {
+      min-width: 0;
+      padding: 20px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 88% 16%, rgba(255,255,255,.20), transparent 28%),
+        linear-gradient(135deg, #173b9b 0%, #2457d6 58%, #168fb3 100%);
+      border-radius: 8px;
+      box-shadow: 0 14px 34px rgba(31, 83, 190, .12);
+    }
+
+    .focus-main h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 32px;
+      letter-spacing: 0;
+    }
+
+    .focus-main p {
+      max-width: 900px;
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.84);
+      font-size: 13px;
+      line-height: 22px;
+    }
+
+    .focus-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .focus-action {
+      min-width: 0;
+      padding: 12px;
+      color: #fff;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+    }
+
+    .focus-action strong {
+      display: block;
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    .focus-action span {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255,255,255,.76);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .priority-panel {
+      min-width: 0;
+      padding: 16px;
+      background: #fff;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+      box-shadow: 0 14px 34px rgba(31, 83, 190, .08);
+    }
+
+    .priority-panel h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 26px;
+    }
+
+    .priority-panel > p {
+      margin: 4px 0 12px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .priority-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .priority-item {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 9px;
+      padding: 10px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .priority-rank {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      color: #fff;
+      background: var(--hr-blue);
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .priority-item h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .priority-item p {
+      margin: 2px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .focus-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .focus-kpi {
+      min-width: 0;
+      padding: 13px 14px;
+      background: #fff;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .focus-kpi label {
+      display: block;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .focus-kpi strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--hr-blue);
+      font-size: 26px;
+      line-height: 32px;
+    }
+
+    .focus-kpi span {
+      display: block;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .ai-work-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+      gap: 12px;
+    }
+
+    .ai-command-box {
+      min-width: 0;
+      padding: 14px;
+      background: #effaf5;
+      border: 1px solid #cfeadd;
+      border-radius: 8px;
+    }
+
+    .ai-command-box h3,
+    .ai-done h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 22px;
+    }
+
+    .ai-command-box p,
+    .ai-done p {
+      margin: 5px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .ai-command-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid #c8ded5;
+      border-radius: 7px;
+    }
+
+    .ai-command-row input {
+      flex: 1;
+      min-width: 0;
+      height: 34px;
+      padding: 0 8px;
+      border: 0;
+      outline: 0;
+    }
+
+    .ai-done {
+      min-width: 0;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .ai-done-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ai-done-item {
+      min-width: 0;
+      padding: 10px;
+      background: #f7f9ff;
+      border: 1px solid #e1e8fb;
+      border-radius: 8px;
+    }
+
+    .ai-done-item strong {
+      display: block;
+      color: var(--hr-blue-dark);
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    .ai-done-item span {
+      display: block;
+      margin-top: 2px;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .business-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .business-card {
+      min-width: 0;
+      padding: 12px;
+      background: #fbfcfe;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .business-card h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .business-card strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--hr-blue);
+      font-size: 22px;
+      line-height: 28px;
+    }
+
+    .business-card p {
+      margin: 4px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .compact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .compact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .role-switch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--hr-line);
+      border-radius: 8px;
+    }
+
+    .role-copy {
+      min-width: 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .role-control {
+      display: inline-flex;
+      align-items: center;
+      flex: none;
+      gap: 8px;
+      color: var(--hr-text);
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .role-control select {
+      width: 224px;
+      height: 34px;
+      padding: 0 10px;
+      color: var(--hr-ink);
+      background: #fff;
+      border: 1px solid #cfd9e8;
+      border-radius: 6px;
+      outline: 0;
+    }
+
+    .role-control select:focus {
+      border-color: var(--hr-blue);
+      box-shadow: 0 0 0 2px rgba(36, 87, 214, .12);
+    }
+
+    .footer {
+      padding: 4px 0 0;
+      color: var(--hr-muted);
+      font-size: 12px;
+      line-height: 18px;
+      text-align: center;
+    }
+
+    @media (max-width: 1320px) {
+      .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .quick-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .flow-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .teacher-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ai-insight-grid { grid-template-columns: 1fr; }
+      .business-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 980px) {
+      .summary,
+      .two-col,
+      .focus-hero,
+      .ai-work-grid,
+      .compact-grid { grid-template-columns: 1fr; }
+      .role-switch { align-items: flex-start; flex-direction: column; }
+      .cards,
+      .quick-grid,
+      .flow-grid,
+      .teacher-grid,
+      .quality-grid,
+      .focus-kpis,
+      .focus-actions,
+      .ai-done-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ai-shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .hr-wrap { width: calc(100% - 20px); }
+      .cards,
+      .quick-grid,
+      .flow-grid,
+      .teacher-grid,
+      .quality-grid,
+      .focus-kpis,
+      .focus-actions,
+      .ai-done-list,
+      .business-grid { grid-template-columns: 1fr; }
+      .ai-shortcuts { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage hr-home-frame ds-scope">
+  <main class="hr-home">
+    <div class="hr-wrap">
+      <div class="role-switch">
+        <div class="role-copy" id="roleCopy">当前视角：处领导。突出全处风险、关键审批和数据质量。</div>
+        <label class="role-control">
+          <span>切换工作台角色</span>
+          <select id="roleSelect" aria-label="切换工作台角色">
+            <option value="leader">处领导</option>
+            <option value="recruit">人才引进与招聘</option>
+            <option value="salary">薪酬与社保</option>
+            <option value="position">岗位职称与考核</option>
+            <option value="development">师资培养与发展</option>
+            <option value="general">综合办公室</option>
+          </select>
+        </label>
+        <label class="role-control">
+          <span>业务周期</span>
+          <select id="periodSelect" aria-label="切换业务周期">
+            <option value="active">当前业务期</option>
+            <option value="idle">非业务期</option>
+          </select>
+        </label>
+      </div>
+      <section class="focus-hero" aria-label="今日重点">
+        <div class="focus-main">
+          <h1 id="roleTitle">人事处今日工作台</h1>
+          <p id="roleSubtitle">首页只回答三个问题：今天最要紧的事是什么、AI 已经帮我判断了什么、哪些数据影响老师体验和学校决策。</p>
+          <div class="focus-actions" id="focusActions">
+            <div class="focus-action"><strong>先处理临期风险</strong><span>合同、退休、试用期转正</span></div>
+            <div class="focus-action"><strong>再处理关键审批</strong><span>招聘材料、职称资格、考核比例</span></div>
+            <div class="focus-action"><strong>最后看数据质量</strong><span>报送口径、字段缺失、外部数据认领</span></div>
+          </div>
+        </div>
+        <aside class="priority-panel">
+          <h2 id="priorityTitle">今天先办 3 件事</h2>
+          <p id="priorityDesc">按风险、截止时间和影响范围自动排序。</p>
+          <div class="priority-list" id="priorityList">
+            <article class="priority-item">
+              <span class="priority-rank">1</span>
+              <div><h3>合同临期 48 人</h3><p>30 天内到期，涉及续签、解除和电子签。</p></div>
+              <span class="pill red">立即处理</span>
+            </article>
+            <article class="priority-item">
+              <span class="priority-rank">2</span>
+              <div><h3>职称申报异常 14 项</h3><p>AI 已标出资格、材料和业绩口径疑点。</p></div>
+              <span class="pill orange">复核</span>
+            </article>
+            <article class="priority-item">
+              <span class="priority-rank">3</span>
+              <div><h3>年度考核待提交 9 个学院</h3><p>优秀比例与提交进度影响全校考核闭环。</p></div>
+              <span class="pill blue">催办</span>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="focus-kpis" aria-label="关键指标" id="focusKpis">
+        <div class="focus-kpi"><label>全校在岗教职工</label><strong>4,286</strong><span>管理底座规模</span></div>
+        <div class="focus-kpi"><label>今日待办</label><strong>18</strong><span>一网通办同步</span></div>
+        <div class="focus-kpi"><label>AI 已预处理</label><strong>326</strong><span>材料、规则、报表</span></div>
+        <div class="focus-kpi"><label>数据质量完整率</label><strong>96.8%</strong><span>较上周 +1.2%</span></div>
+      </section>
+
+      <section class="panel" id="aiSection">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2 id="aiSectionTitle">智能研判</h2>
+            <p id="aiSectionDesc">面向领导的 AI 只做辅助研判、风险归因和报告生成，不替代经办流程。</p>
+          </div>
+          <button class="btn" type="button">进入智慧人事</button>
+        </div>
+        <div class="panel-body ai-work-grid">
+          <div class="ai-command-box">
+            <h3 id="aiQuestionTitle">向 AI 追问当前工作</h3>
+            <p id="aiQuestionDesc">可按权限查询政策、解释预警原因、生成办理清单和报送说明。</p>
+            <label class="ai-command-row">
+              <input id="aiPlaceholder" placeholder="例如：合同临期 48 人中哪些会影响薪酬和离校手续？" />
+              <button class="btn primary" type="button">分析</button>
+            </label>
+          </div>
+          <div class="ai-done">
+            <h3 id="aiDoneTitle">AI 已完成的预处理</h3>
+            <p id="aiDoneDesc">把重复筛查和跨表核对前置，人工只处理需要判断的部分。</p>
+            <div class="ai-done-list" id="aiDoneList">
+              <div class="ai-done-item"><strong>214</strong><span>外部业绩待认领</span></div>
+              <div class="ai-done-item"><strong>23</strong><span>招聘材料疑点</span></div>
+              <div class="ai-done-item"><strong>7</strong><span>报送口径差异</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <h2 id="businessTitle">人事全链路态势</h2>
+            <p id="businessDesc">保留核心业务全貌，但只展示需要人事处持续盯住的状态。</p>
+          </div>
+          <button class="btn" type="button">查看明细</button>
+        </div>
+        <div class="panel-body business-grid" id="businessGrid">
+          <div class="business-card"><h3>招聘进校</h3><strong>1,284</strong><p>报名中，AI 初筛材料疑点 23 份。</p></div>
+          <div class="business-card"><h3>报到入职</h3><strong>12</strong><p>待报到，高层次人才 3 人。</p></div>
+          <div class="business-card"><h3>合同管理</h3><strong>48</strong><p>30 天内临期，优先级最高。</p></div>
+          <div class="business-card"><h3>薪酬福利</h3><strong>32</strong><p>本月异动，预计影响预算 2.6%。</p></div>
+          <div class="business-card"><h3>考核评价</h3><strong>76%</strong><p>年度考核进度，待 9 个学院提交。</p></div>
+          <div class="business-card"><h3>职称岗聘</h3><strong>126</strong><p>申报待审，AI 标记异常 14 项。</p></div>
+        </div>
+      </section>
+
+      <section class="compact-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h2 id="teacherTitle">老师关心的业务数据</h2>
+              <p id="teacherDesc">面向教师感知，优先放查询频率高、影响体验强的数据。</p>
+            </div>
+          </div>
+          <div class="panel-body compact-list" id="teacherList">
+            <article class="list-item"><div><h3>业务进度集中看</h3><p>请假、出国境、证明打印、培训报名、职称申报共 5 项进行中。</p></div><span class="pill blue">个人视角</span></article>
+            <article class="list-item"><div><h3>合同与聘岗提醒</h3><p>展示当前合同截止、聘岗等级、续签提醒与历史记录。</p></div><span class="pill orange">临期提醒</span></article>
+            <article class="list-item"><div><h3>成长档案沉淀</h3><p>教学、培训、访学、企业实践、人才项目和成果奖励汇聚成画像。</p></div><span class="pill green">画像</span></article>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h2 id="rightPanelTitle">数据质量与报送</h2>
+              <p id="rightPanelDesc">服务学校报表与决策，首页只提示影响报送的关键缺口。</p>
+            </div>
+          </div>
+          <div class="panel-body compact-list" id="rightPanelList">
+            <article class="list-item"><div><h3>基础字段完整率 96.8%</h3><p>缺失集中在外事证件、企业实践、导师资格等字段。</p></div><span class="pill green">稳定</span></article>
+            <article class="list-item"><div><h3>外部数据认领率 88.4%</h3><p>教务、科研、评教数据已读取，待教师认领 214 条。</p></div><span class="pill orange">待认领</span></article>
+            <article class="list-item"><div><h3>报送口径差异 7 条</h3><p>教师状态、聘岗、工资口径需在报送前确认。</p></div><span class="pill red">需确认</span></article>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">© 2026 深圳职业技术大学人事处 · 智慧人事一体化服务系统</div>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js"></script>
+<script>
+  WiseAppShellV2.init({
+    activeApp: 'home',
+    activeFeature: 'hr-home',
+    systemName: '智慧人事一体化服务系统',
+    versionLabel: '人事处工作台',
+    userName: '人事处管理员',
+    frameworkAssetBase: './assets',
+    logoSrc: './assets/szpu-logo-red.png',
+    topTools: [
+      { key: 'search', label: '搜索', icon: './assets/top-search.svg' },
+      { key: 'skin', label: '换肤', icon: './assets/top-skin.svg' },
+      { key: 'language', label: '语言', icon: './assets/top-language.svg' }
+    ],
+    appGroups: [
+      { key: 'home', label: '首页' },
+      { key: 'info', label: '信息管理', apps: [
+        { key: 'staff', label: '人员信息' },
+        { key: 'org', label: '机构编制' },
+        { key: 'contract', label: '合同管理' }
+      ] },
+      { key: 'process', label: '业务办理', apps: [
+        { key: 'recruit', label: '招聘进校' },
+        { key: 'transfer', label: '人员调配' },
+        { key: 'leave', label: '假勤管理' },
+        { key: 'retire', label: '离校退休' }
+      ] },
+      { key: 'development', label: '教师发展', apps: [
+        { key: 'training', label: '师资培训' },
+        { key: 'talent', label: '人才发展' },
+        { key: 'portfolio', label: '教师画像' }
+      ] },
+      { key: 'data', label: '数据中心' },
+      { key: 'ai', label: '智慧人事' },
+      { key: 'system', label: '系统管理' }
+    ],
+    secondaryNav: {
+      items: [
+        { key: 'overview', label: '工作总览', icon: 'home', children: [
+          { key: 'hr-home', label: '首页总览' },
+          { key: 'focus-task', label: '重点事项' },
+          { key: 'ai-center', label: 'AI 智能中枢' }
+        ] },
+        { key: 'chain', label: '全链路业务', icon: 'workflow', children: [
+          { key: 'recruit-entry', label: '招聘进校' },
+          { key: 'staff-manage', label: '教工管理' },
+          { key: 'salary', label: '薪酬福利' },
+          { key: 'assessment', label: '考核评价' },
+          { key: 'title-hire', label: '职称岗聘' }
+        ] },
+        { key: 'data-service', label: '数据服务', icon: 'database', children: [
+          { key: 'quality', label: '数据质量' },
+          { key: 'reporting', label: '报表报送' },
+          { key: 'teacher-data', label: '教师关心数据' }
+        ] }
+      ]
+    },
+    tabs: [{ key: 'hr-home', label: '首页总览', closable: false }]
+  });
+
+  const roleWorkbenches = {
+    leader: {
+      copy: '当前视角：处领导。重点看全处业务进展、跨部门堵点、风险预警和教师服务体验，不陷入单个经办待办。',
+      title: '处领导综合驾驶台',
+      subtitle: '处领导首页先看整体业务是否按计划推进、哪些事项需要协调拍板、哪些数据影响学校决策和教师体验。',
+      priorityTitle: '领导关注事项',
+      priorityDesc: '不展示普通经办待办，只呈现全局进展、跨部门堵点和高风险事项。',
+      businessTitle: '全处业务进展',
+      businessDesc: '按办公室和主责业务看推进情况，领导可快速判断哪里正常、哪里滞后、哪里需要协调。',
+      aiSectionTitle: '智能研判与报告',
+      aiSectionDesc: 'AI 辅助领导归因风险、生成周报材料、提炼跨部门协调事项。',
+      aiQuestionTitle: '向 AI 询问全处运行情况',
+      aiQuestionDesc: '可按办公室、业务链路、风险类型生成领导摘要和协调建议。',
+      actions: [
+        ['全处业务进度', '招聘、薪酬、考核、职称、培养、综合服务'],
+        ['跨部门堵点', '需要协调的信息中心、计财、学院反馈'],
+        ['风险与服务体验', '临期风险、咨询热点、办结时效、数据质量']
+      ],
+      priority: [
+        ['年度重点任务总体进度 73%', '招聘进校、薪酬发放、年度考核、职称评审、数据报送均在推进中。', '总览', 'blue'],
+        ['跨部门堵点 6 项', '计财推送、学院反馈、档案确认、信息同步需要协调。', '协调', 'orange'],
+        ['高风险预警 12 项', '合同临期、退休接续、数据报送口径差异需关注。', '关注', 'red']
+      ],
+      kpis: [
+        ['年度重点任务进度', '73%', '较计划滞后 2 项'],
+        ['跨部门堵点', '6', '需处领导协调'],
+        ['教师服务满意度', '96.2%', '本月工单评价'],
+        ['数据质量完整率', '96.8%', '支撑报送与决策']
+      ],
+      aiPlaceholder: '例如：本周哪些业务进度落后，哪些需要处领导协调？',
+      aiDone: [['6', '跨部门堵点归类'], ['12', '高风险事项聚合'], ['4', '专题报告草稿']],
+      business: [
+        ['人才引进与招聘', '68%', '材料复核和面试安排推进中，2 个岗位报名不足。'],
+        ['薪酬与社保', '82%', '本月算薪正常推进，计财推送规则待确认。'],
+        ['岗位职称与考核', '76%', '年度考核和职称申报集中办理，3 个学院进度滞后。'],
+        ['师资培养与发展', '61%', '培训报名稳定，访学成果归档进度偏慢。'],
+        ['综合办公室', '74%', '用印、校外兼职、专家库抽取正常流转。'],
+        ['数据质量与报送', '96.8%', '整体稳定，7 条报送口径差异待确认。']
+      ],
+      teacherTitle: '教师服务体验',
+      teacherDesc: '处领导关注的不是单个教师操作入口，而是服务是否顺畅、政策解释是否一致、办理是否及时。',
+      teacher: [
+        ['平均办结时长 2.3 天', '证明打印、信息变更、请假等高频事项整体稳定。', '体验', 'green'],
+        ['咨询热点 126 次', '薪酬发放、职称政策、招聘进度是本周高频问题。', '热点', 'blue'],
+        ['超期事项 8 件', '主要集中在跨部门反馈和材料补正环节。', '督办', 'orange']
+      ],
+      rightTitle: '处领导需要拍板/协调',
+      rightDesc: '把真正需要领导介入的事项从普通待办中分离出来。',
+      right: [
+        ['计财接口推送规则确认', '影响本月薪酬结果同步和老师查询口径。', '协调', 'orange'],
+        ['职称评审业绩口径差异', '教务、科研、人事数据口径需统一。', '拍板', 'red'],
+        ['高层次人才报到绿色通道', '3 人待跨部门快速反馈。', '推进', 'blue']
+      ]
+    },
+    salary: {
+      showAi: false,
+      copy: '当前视角：薪酬与社保办公室。突出发薪倒计时、算薪进度、薪资异动和老师薪酬查询。',
+      title: '薪酬与社保工作台',
+      subtitle: '薪酬工作台不做泛化 AI 看板，核心是按发薪日历推进算薪、校验异动、形成可解释的发放口径。',
+      actions: [
+        ['先看发薪倒计时', '距离本月算薪锁定还有 5 天'],
+        ['再核薪资异动', '入离职、调动、考勤影响工资'],
+        ['最后推送计财', '应发结果确认后同步财务']
+      ],
+      priority: [
+        ['本月算薪锁定倒计时 5 天', '32 条薪资异动需在锁定前确认。', '最优先', 'red'],
+        ['计财推送名单待确认 4 批', '工资、绩效、餐补、公积金扣款需分批核验。', '核验', 'orange'],
+        ['老师薪酬查询高频 126 次', '集中在工资发放时间、餐补和公积金扣款。', '答疑', 'blue']
+      ],
+      kpis: [
+        ['距离算薪锁定', '5 天', '本月工资批次'],
+        ['薪资异动待核', '32', '起薪、停薪、调薪'],
+        ['计财待推送', '4 批', '工资与绩效结果'],
+        ['老师查询', '126', '工资/餐补/公积金']
+      ],
+      aiPlaceholder: '例如：本月 32 条薪资异动中哪些会影响工资和餐补？',
+      aiDone: [['32', '薪资异动识别'], ['18', '餐补停发判断'], ['4', '计财推送批次']],
+      business: [
+        ['工资核算', '82%', '本月工资批次已完成初算。'],
+        ['绩效奖', '3 批', '专项绩效分配结果待确认。'],
+        ['公积金', '27', '开户、停缴、扣款变化待核。'],
+        ['餐补', '18', '异动人员自动判断停发。'],
+        ['住房补贴', '9', '待核退费与发放条件。'],
+        ['预算测算', '2.6%', '人员成本预计波动。']
+      ],
+      teacherTitle: '对外服务口径',
+      teacherDesc: '这些不是老师在本页操作的功能，而是薪酬岗需要提前准备好的查询解释和答疑口径。',
+      teacher: [
+        ['本月发薪口径', '准备对外说明：预计发放时间、计财推送状态、延迟风险。', '答疑口径', 'blue'],
+        ['金额变化解释', '形成个人查询时可引用的影响项：考勤、调动、补贴、公积金扣款。', '解释材料', 'orange'],
+        ['高频咨询分流', '把工资、餐补、公积金、绩效奖问题分流到对应办理人。', '分流', 'green']
+      ],
+      rightTitle: '算薪校验台',
+      rightDesc: '这是薪酬岗的内部办理区，目标是在锁定日前消除发放差异。',
+      right: [
+        ['发薪名单差异 6 人', '人员异动与工资发放名单存在差异，需确认。', '需核对', 'red'],
+        ['考勤影响工资 14 人', '请销假结果已对接薪酬模块。', '规则命中', 'orange'],
+        ['预算口径已更新', '岗位变动、退休权重、工龄年限已纳入测算。', '稳定', 'green']
+      ]
+    },
+    recruit: {
+      copy: '当前视角：人才引进与招聘。突出招聘进程、报名材料复核、面试安排和入职衔接。',
+      title: '招聘进校工作台',
+      subtitle: '围绕人才引进、公开招聘、博士后和高层次人才引进，首页聚焦“招聘走到哪一步、材料卡在哪里、下一批入职能否顺畅衔接”。',
+      actions: [
+        ['先看招聘进程', '报名、初筛、笔面试、录用'],
+        ['再处理材料疑点', 'AI 初筛后人工只看异常项'],
+        ['最后衔接报到入职', 'offer、工号、合同、部门反馈']
+      ],
+      priority: [
+        ['公开招聘材料复核 23 份', 'AI 已标出学历、专业、附件缺失等疑点。', '复核', 'red'],
+        ['面试专家抽取今天 14:00', '需从专家库按比例随机抽取并通知。', '安排', 'orange'],
+        ['高层次人才待报到 3 人', '需同步档案、工号、合同和职能部门反馈。', '跟进', 'blue']
+      ],
+      kpis: [
+        ['招聘报名', '1,284', '当前批次累计'],
+        ['AI 初筛通过率', '86%', '异常 23 份'],
+        ['待面试岗位', '18', '专家待确认'],
+        ['待报到', '12', '高层次人才 3 人']
+      ],
+      aiPlaceholder: '例如：本批招聘哪些岗位报名不足，哪些材料需要人工复核？',
+      aiDone: [['1,284', '简历识别入库'], ['23', '材料疑点'], ['18', '岗位热度分析']],
+      business: [
+        ['岗位征集', '42', '二级单位岗位需求已提交。'],
+        ['报名审核', '1,284', 'AI 条件初筛进行中。'],
+        ['笔面试安排', '18', '岗位待生成面试日程。'],
+        ['人才库', '356', '可复用候选人线索。'],
+        ['offer 发送', '9', '待确认入职意向。'],
+        ['报到入职', '12', '承接招聘报名信息。']
+      ],
+      teacherTitle: '应聘人与用人单位关心的数据',
+      teacherDesc: '招聘角色首页要让招聘流程透明、节点明确、沟通成本低。',
+      teacher: [
+        ['招聘进度到哪了', '岗位发布、资格初审、笔面试、录用公示节点集中展示。', '进度', 'blue'],
+        ['材料为什么退回', 'AI 标注缺失附件、专业不符、证明材料不清晰等原因。', '材料', 'orange'],
+        ['什么时候报到', 'offer、报到日期预约、工号生成和部门反馈统一跟踪。', '入职衔接', 'green']
+      ],
+      rightTitle: '招聘风险与效率',
+      rightDesc: '优先发现影响招聘成效和进校体验的卡点。',
+      right: [
+        ['报名不足岗位 6 个', '建议延长公告或调整宣传渠道。', '预警', 'red'],
+        ['材料复核压力 23 份', '集中在学历学位、专业条件和附件缺失。', '复核', 'orange'],
+        ['人才库可匹配 41 人', '可用于岗位调剂和后续批次邀约。', '推荐', 'green']
+      ]
+    },
+    position: {
+      copy: '当前视角：岗位管理与职称评审办公室。突出考核、职称、岗位聘任、考勤和合同。',
+      title: '岗位职称与考核工作台',
+      subtitle: '围绕岗位管理、职称评审、年度考核、聘期考核、考勤、试用期转正和人事合同管理，首页聚焦节点推进与资格判断。',
+      actions: [
+        ['先看职称异常', '资格、材料、业绩口径'],
+        ['再看考核进度', '年度考核和聘期考核闭环'],
+        ['最后处理岗位合同', '聘任、续聘、转正、合同']
+      ],
+      priority: [
+        ['职称申报异常 14 项', 'AI 已标出资格、材料和业绩口径疑点。', '复核', 'red'],
+        ['年度考核待提交 9 个学院', '优秀比例与提交进度影响全校考核闭环。', '催办', 'orange'],
+        ['试用期转正到期 11 人', '系统已自动生成转正待办。', '办理', 'blue']
+      ],
+      kpis: [
+        ['职称申报待审', '126', '异常 14 项'],
+        ['年度考核进度', '76%', '待提交 9 个学院'],
+        ['合同临期', '48', '30 天内'],
+        ['转正待办', '11', '本月到期']
+      ],
+      aiPlaceholder: '例如：职称申报异常 14 项分别是什么原因？',
+      aiDone: [['126', '职称资格初判'], ['9', '考核进度预警'], ['11', '转正待办生成']],
+      business: [
+        ['职称评审', '126', '申报待审，AI 标记异常 14 项。'],
+        ['年度考核', '76%', '待 9 个学院提交。'],
+        ['聘期考核', '64%', '材料读取与补填中。'],
+        ['岗位聘任', '38', '岗位晋升降级续聘待处理。'],
+        ['考勤管理', '27', '假勤结果影响薪酬。'],
+        ['合同管理', '48', '临期需续签或解除。']
+      ],
+      teacherTitle: '老师关心的考核与职称数据',
+      teacherDesc: '岗位职称角色要让教师清楚知道进度、差距和材料要求。',
+      teacher: [
+        ['职称资格差距', '显示资格判断、缺失材料、业绩分差和政策依据。', '资格', 'blue'],
+        ['考核材料进度', '年度考核、聘期考核材料读取、补填、审核状态集中看。', '考核', 'orange'],
+        ['聘岗与合同提醒', '岗位聘任、续聘、合同临期和转正节点主动提醒。', '聘任', 'green']
+      ],
+      rightTitle: '评审与考核风险',
+      rightDesc: '把影响评审公平、考核进度和合同合规的事项前置。',
+      right: [
+        ['优秀比例超限 3 个学院', '需退回修正后再汇总。', '需处理', 'red'],
+        ['业绩数据冲突 14 项', '教务、科研、人事数据口径不一致。', '复核', 'orange'],
+        ['合同续签规则命中 48 人', '可批量生成续签待办。', '可办理', 'green']
+      ]
+    },
+    development: {
+      copy: '当前视角：师资员工培养与发展办公室。突出培训、教师资格、双师认定、学历提升和访学。',
+      title: '师资培养与发展工作台',
+      subtitle: '围绕新入职教师培训、高层次/海外人才培训、教师资格、双师型教师认定、学历提升、继续教育和访学交流，首页聚焦成长进度。',
+      actions: [
+        ['先看培训任务', '报名、签到、评估、证书'],
+        ['再看资格认定', '教师资格、双师型、继续教育'],
+        ['最后看访学成果', '汇报、考核、成果归档']
+      ],
+      priority: [
+        ['新入职教师培训报名 37 人', '需确认名单、课程和签到安排。', '安排', 'red'],
+        ['双师型教师认定材料 18 份', 'AI 已标出佐证缺失和证书有效期。', '复核', 'orange'],
+        ['访学结束前提醒 6 人', '需推进汇报、考核、成果提交。', '提醒', 'blue']
+      ],
+      kpis: [
+        ['培训报名', '37', '本月项目'],
+        ['待认定材料', '18', '双师/教师资格'],
+        ['继续教育审核', '42', '待审核'],
+        ['访学预警', '6', '结束前 30 天']
+      ],
+      aiPlaceholder: '例如：哪些教师培训记录可自动归入电子档案？',
+      aiDone: [['37', '培训报名识别'], ['18', '认定材料检查'], ['6', '访学节点预警']],
+      business: [
+        ['新教师培训', '37', '报名与签到待安排。'],
+        ['教师资格认定', '12', '材料待审核。'],
+        ['双师型认定', '18', '佐证材料待复核。'],
+        ['学历提升', '9', '审批后需触发请假。'],
+        ['继续教育', '42', '记录待审核归档。'],
+        ['访学交流', '6', '结束前预警。']
+      ],
+      teacherTitle: '老师关心的成长数据',
+      teacherDesc: '培养发展角色要让教师看到培训、资格、成果和成长路径。',
+      teacher: [
+        ['我的培训学分', '报名、签到、评估、证书和学分记录集中展示。', '培训', 'blue'],
+        ['资格认定进度', '教师资格、双师型、继续教育审核状态可追踪。', '认定', 'orange'],
+        ['成长资源推荐', 'AI 根据教师画像推荐培训、课程、导师和企业实践资源。', '推荐', 'green']
+      ],
+      rightTitle: '培养质量与成果沉淀',
+      rightDesc: '让培训成果真正进入教师档案袋，服务考核、职称和成长方案。',
+      right: [
+        ['证书待归档 24 份', '培训证书需归入电子档案。', '归档', 'orange'],
+        ['培训评估未填 31 人', '影响项目闭环和后续优化。', '催办', 'red'],
+        ['资源推荐命中 68 人', '可推送课程、导师和企业实践机会。', '推荐', 'green']
+      ]
+    },
+    general: {
+      copy: '当前视角：综合办公室。突出印章、预算、专家库、校外兼职、收发文和部门对接。',
+      title: '综合办公室工作台',
+      subtitle: '围绕印章管理、人事业务专家库、预算编制、校外兼职、部门对接、收发文、行政处分和来访接待，首页聚焦综合协调和合规风险。',
+      actions: [
+        ['先看需协调事项', '部门对接、收发文、来访接待'],
+        ['再看合规风险', '校外兼职、行政处分、印章使用'],
+        ['最后看预算与专家库', '预算编制、专家抽取、资产管理']
+      ],
+      priority: [
+        ['校外兼职到期 5 人', '数量、期限、是否取酬需合规校验。', '处理', 'red'],
+        ['用印申请待审 12 件', '涉及证明、介绍信和业务材料盖章。', '审核', 'orange'],
+        ['专家库抽取任务 3 项', '招聘面试和评审专家需按比例抽取。', '办理', 'blue']
+      ],
+      kpis: [
+        ['用印待审', '12', '含证明与介绍信'],
+        ['校外兼职预警', '5', '到期/超量/取酬'],
+        ['收发文', '18', '本周流转'],
+        ['专家库任务', '3', '待抽取']
+      ],
+      aiPlaceholder: '例如：校外兼职到期 5 人中哪些存在合规风险？',
+      aiDone: [['12', '用印材料分类'], ['5', '兼职合规校验'], ['3', '专家抽取建议']],
+      business: [
+        ['印章管理', '12', '用印申请待审核。'],
+        ['专家库', '3', '抽取任务待办理。'],
+        ['预算编制', '2', '预算调整待确认。'],
+        ['校外兼职', '5', '到期和合规预警。'],
+        ['收发文', '18', '本周收发文流转。'],
+        ['行政处分', '1', '需权限控制和台账留痕。']
+      ],
+      teacherTitle: '老师关心的综合服务',
+      teacherDesc: '综合办公室角色关注老师办事是否能快速找到入口、材料是否一次通过。',
+      teacher: [
+        ['证明与盖章进度', '特殊在职收入证明、介绍信、外部制式文件盖章进度集中看。', '服务', 'blue'],
+        ['校外兼职状态', '申报、审批、到期、续聘和合规校验结果透明。', '合规', 'orange'],
+        ['来访与咨询分流', 'AI 根据问题自动匹配负责业务和联系方式。', '分流', 'green']
+      ],
+      rightTitle: '综合协调风险',
+      rightDesc: '减少跨部门沟通遗漏，确保台账、权限和合规可追溯。',
+      right: [
+        ['用印材料缺项 4 件', '缺少审批附件或业务依据。', '补正', 'orange'],
+        ['兼职合规风险 2 人', '期限和取酬信息需人工确认。', '风险', 'red'],
+        ['部门对接事项 9 件', '已按业务模块分派到责任人。', '已分派', 'green']
+      ]
+    }
+  };
+
+  const periodOverrides = {
+    leader: {
+      idle: {
+        copy: '当前视角：处领导 · 非业务期。重点看制度建设、数据治理、年度计划和服务复盘，而不是当日办理量。',
+        title: '处领导综合驾驶台 · 非业务期',
+        subtitle: '非业务期首页从“催办”切换为“建设”：看制度流程是否优化、数据底座是否补齐、下个业务周期是否准备充分。',
+        priority: [
+          ['下周期重点任务准备率 64%', '招聘计划、薪酬规则、考核方案、职称政策进入准备阶段。', '准备', 'blue'],
+          ['制度流程待优化 5 项', '集中在跨部门反馈、材料补正、数据口径和消息通知。', '优化', 'orange'],
+          ['历史数据治理缺口 214 条', '影响教师画像、年报和上级报送口径。', '治理', 'red']
+        ],
+        kpis: [
+          ['下周期准备率', '64%', '计划、规则、模板'],
+          ['流程优化项', '5', '需定责推进'],
+          ['数据治理缺口', '214', '影响报送和画像'],
+          ['服务复盘问题', '18', '来自本周期工单']
+        ],
+        business: [
+          ['招聘计划储备', '42', '岗位需求征集中。'],
+          ['薪酬规则维护', '8', '工资项、补贴、扣款规则待校验。'],
+          ['考核方案准备', '3', '年度/聘期方案模板维护。'],
+          ['职称政策准备', '2', '评审通知和资格规则待确认。'],
+          ['培训计划编制', '12', '师资培训项目储备。'],
+          ['数据底座治理', '214', '历史字段和外部数据待清洗。']
+        ],
+        rightTitle: '非业务期领导关注',
+        rightDesc: '非业务期不展示“没有待办”的空态，而展示准备度、治理度和复盘项。',
+        right: [
+          ['下周期风险预演', '提前模拟发薪、考核、职称、招聘高峰期容量。', '预演', 'blue'],
+          ['制度口径统一', '把本周期反复咨询的问题沉淀成政策问答。', '沉淀', 'green'],
+          ['历史问题销项', '跨部门堵点和超期事项需要在下周期前闭环。', '销项', 'orange']
+        ]
+      }
+    },
+    salary: {
+      idle: {
+        copy: '当前视角：薪酬与社保办公室 · 非算薪期。重点做规则维护、人员变动预处理、预算测算和对外口径沉淀。',
+        title: '薪酬与社保工作台 · 非算薪期',
+        subtitle: '非算薪期不展示“距发薪还有多少天”的紧急态，而展示下次算薪准备度、规则校验、历史差错复盘和预算测算。',
+        actions: [
+          ['维护薪酬规则', '工资项、津补贴、扣款、餐补停发'],
+          ['预处理人员异动', '入职、离职、调动、考勤影响'],
+          ['准备下次算薪', '名单、预算、计财推送口径']
+        ],
+        priority: [
+          ['下次算薪准备率 58%', '人员异动、考勤结果、补贴规则尚未全部入库。', '准备', 'blue'],
+          ['薪酬规则待维护 8 项', '餐补停发、房补退费、公积金扣款规则需确认。', '维护', 'orange'],
+          ['历史差错复盘 3 项', '上期教师咨询集中在扣款解释和到账时间。', '复盘', 'green']
+        ],
+        kpis: [
+          ['下次算薪准备率', '58%', '规则与名单准备'],
+          ['待维护规则', '8', '工资项/补贴/扣款'],
+          ['预处理异动', '19', '下期可能影响发薪'],
+          ['预算测算版本', '2', '待领导确认']
+        ],
+        business: [
+          ['工资项规则', '8', '待维护或复核。'],
+          ['人员异动预处理', '19', '下期算薪候选影响项。'],
+          ['预算测算', '2', '年度成本测算版本。'],
+          ['公积金基数', '27', '待下一周期确认。'],
+          ['餐补规则', '6', '停发/恢复条件校验。'],
+          ['咨询口径沉淀', '12', '上期高频问答待发布。']
+        ],
+        teacherTitle: '对外服务准备',
+        teacherDesc: '非算薪期准备老师后续会问的问题，不把它设计成老师直接操作。',
+        teacher: [
+          ['发薪日历维护', '确认下次算薪锁定、计财推送和预计到账时间。', '日历', 'blue'],
+          ['金额变化解释模板', '沉淀考勤、调动、补贴、公积金导致金额变化的统一说明。', '模板', 'green'],
+          ['高频问题知识库', '整理上期咨询，减少下次发薪后的重复答疑。', '知识库', 'orange']
+        ],
+        rightTitle: '非算薪期校验',
+        rightDesc: '在业务高峰前把规则、名单和预算口径校准。',
+        right: [
+          ['规则冲突 2 项', '餐补停发和考勤扣款存在边界冲突。', '需确认', 'red'],
+          ['名单差异预检 5 人', '人员状态与薪酬名单不一致。', '预检', 'orange'],
+          ['预算测算已生成', '可提交处领导查看下期人员成本变化。', '可提交', 'green']
+        ]
+      }
+    },
+    recruit: {
+      idle: {
+        copy: '当前视角：人才引进与招聘 · 非招聘高峰期。重点做岗位需求储备、人才库运营和招聘复盘。',
+        title: '招聘进校工作台 · 非招聘期',
+        subtitle: '非招聘期首页展示岗位储备、人才库活跃度、招聘复盘和下批次准备，而不是空的报名进度。',
+        actions: [
+          ['储备岗位需求', '学院需求、编制口径、岗位条件'],
+          ['运营人才库', '按专业、职称、学历和来源渠道维护'],
+          ['复盘招聘问题', '公告渠道、材料清单、面试组织']
+        ],
+        priority: [
+          ['岗位需求储备 42 个', '二级单位正在提交下一批岗位需求。', '储备', 'blue'],
+          ['人才库可触达 356 人', '按专业、职称、学历和来源渠道分层维护。', '运营', 'green'],
+          ['招聘复盘问题 9 项', '材料要求、公告渠道、面试组织需优化。', '复盘', 'orange']
+        ],
+        kpis: [
+          ['岗位储备', '42', '下一批需求'],
+          ['人才库线索', '356', '可运营'],
+          ['复盘问题', '9', '待优化'],
+          ['公告模板', '5', '待更新']
+        ],
+        business: [
+          ['岗位需求', '42', '二级单位储备中。'],
+          ['人才库运营', '356', '可触达候选人。'],
+          ['公告模板', '5', '待更新。'],
+          ['材料清单', '8', '需优化说明。'],
+          ['专家库准备', '3', '面试专家组储备。'],
+          ['招聘复盘', '9', '待销项问题。']
+        ]
+      }
+    }
+  };
+
+  function htmlEscape(value) {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
+  function renderPill(text, tone) {
+    return `<span class="pill ${htmlEscape(tone || 'blue')}">${htmlEscape(text)}</span>`;
+  }
+
+  function getRoleData(roleKey, periodKey) {
+    const base = roleWorkbenches[roleKey] || roleWorkbenches.leader;
+    const override = periodOverrides[roleKey]?.[periodKey];
+    if (override) return { ...base, ...override };
+    if (periodKey === 'idle') {
+      return {
+        ...base,
+        copy: `${base.copy} 当前为非业务期，工作台切换为准备、维护、复盘和数据治理。`,
+        title: `${base.title} · 非业务期`,
+        subtitle: '非业务期不展示空待办，而展示下个业务周期准备度、规则维护、历史数据治理和复盘销项。',
+        actions: [
+          ['准备下周期', '计划、模板、名单、规则提前维护'],
+          ['复盘本周期', '超期、退回、咨询热点形成改进项'],
+          ['治理数据底座', '历史字段、附件、台账和报送口径补齐']
+        ],
+        priority: [
+          ['下周期准备事项 12 项', '规则、模板、通知、名单和材料清单待维护。', '准备', 'blue'],
+          ['复盘改进项 6 项', '来自本周期退回、超期和高频咨询。', '复盘', 'orange'],
+          ['历史数据治理 38 条', '影响统计报送、教师画像和后续业务自动预填。', '治理', 'green']
+        ],
+        kpis: [
+          ['准备完成率', '62%', '下周期事项'],
+          ['复盘改进项', '6', '待销项'],
+          ['数据治理项', '38', '待补齐'],
+          ['知识库更新', '9', '政策问答/模板']
+        ]
+      };
+    }
+    return base;
+  }
+
+  function renderRole() {
+    const roleKey = document.getElementById('roleSelect')?.value || 'leader';
+    const periodKey = document.getElementById('periodSelect')?.value || 'active';
+    const data = getRoleData(roleKey, periodKey);
+    document.getElementById('roleCopy').textContent = data.copy;
+    document.getElementById('roleTitle').textContent = data.title;
+    document.getElementById('roleSubtitle').textContent = data.subtitle;
+    document.getElementById('priorityTitle').textContent = data.priorityTitle || (periodKey === 'idle' ? '非业务期重点' : '今天先办 3 件事');
+    document.getElementById('priorityDesc').textContent = data.priorityDesc || (periodKey === 'idle'
+      ? '没有当前批次时，展示准备、维护、复盘和治理，不显示空待办。'
+      : '按风险、截止时间和影响范围自动排序。');
+    document.getElementById('aiSection').style.display = data.showAi === false ? 'none' : '';
+    document.getElementById('aiSectionTitle').textContent = data.aiSectionTitle || 'AI 智能中枢';
+    document.getElementById('aiSectionDesc').textContent = data.aiSectionDesc || 'AI 不单独占一个聊天窗口，而是直接服务今天的人事业务判断和办理。';
+    document.getElementById('aiQuestionTitle').textContent = data.aiQuestionTitle || '向 AI 追问当前工作';
+    document.getElementById('aiQuestionDesc').textContent = data.aiQuestionDesc || '可按权限查询政策、解释预警原因、生成办理清单和报送说明。';
+    document.getElementById('focusActions').innerHTML = data.actions.map(([title, desc]) => `
+      <div class="focus-action"><strong>${htmlEscape(title)}</strong><span>${htmlEscape(desc)}</span></div>
+    `).join('');
+    document.getElementById('priorityList').innerHTML = data.priority.map(([title, desc, tag, tone], index) => `
+      <article class="priority-item">
+        <span class="priority-rank">${index + 1}</span>
+        <div><h3>${htmlEscape(title)}</h3><p>${htmlEscape(desc)}</p></div>
+        ${renderPill(tag, tone)}
+      </article>
+    `).join('');
+    document.getElementById('focusKpis').innerHTML = data.kpis.map(([label, value, desc]) => `
+      <div class="focus-kpi"><label>${htmlEscape(label)}</label><strong>${htmlEscape(value)}</strong><span>${htmlEscape(desc)}</span></div>
+    `).join('');
+    document.getElementById('aiPlaceholder').placeholder = data.aiPlaceholder;
+    document.getElementById('aiDoneList').innerHTML = data.aiDone.map(([value, label]) => `
+      <div class="ai-done-item"><strong>${htmlEscape(value)}</strong><span>${htmlEscape(label)}</span></div>
+    `).join('');
+    document.getElementById('businessGrid').innerHTML = data.business.map(([title, value, desc]) => `
+      <div class="business-card"><h3>${htmlEscape(title)}</h3><strong>${htmlEscape(value)}</strong><p>${htmlEscape(desc)}</p></div>
+    `).join('');
+    document.getElementById('businessTitle').textContent = data.businessTitle || '人事全链路态势';
+    document.getElementById('businessDesc').textContent = data.businessDesc || '保留核心业务全貌，但只展示需要人事处持续盯住的状态。';
+    document.getElementById('teacherTitle').textContent = data.teacherTitle;
+    document.getElementById('teacherDesc').textContent = data.teacherDesc;
+    document.getElementById('teacherList').innerHTML = data.teacher.map(([title, desc, tag, tone]) => `
+      <article class="list-item"><div><h3>${htmlEscape(title)}</h3><p>${htmlEscape(desc)}</p></div>${renderPill(tag, tone)}</article>
+    `).join('');
+    document.getElementById('rightPanelTitle').textContent = data.rightTitle;
+    document.getElementById('rightPanelDesc').textContent = data.rightDesc;
+    document.getElementById('rightPanelList').innerHTML = data.right.map(([title, desc, tag, tone]) => `
+      <article class="list-item"><div><h3>${htmlEscape(title)}</h3><p>${htmlEscape(desc)}</p></div>${renderPill(tag, tone)}</article>
+    `).join('');
+  }
+
+  document.getElementById('roleSelect')?.addEventListener('change', renderRole);
+  document.getElementById('periodSelect')?.addEventListener('change', renderRole);
+  renderRole();
+</script>
+</body>
+</html>

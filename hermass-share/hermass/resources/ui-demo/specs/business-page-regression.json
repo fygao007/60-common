@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "framework": {
+    "topbarHeight": 52,
+    "tabsbarHeight": 40,
+    "sidebarWidth": 256
+  },
+  "visualRegression": {
+    "pixelThreshold": 0.1,
+    "maxMismatchRatio": 0.01,
+    "desktopViewport": [
+      1440,
+      1000
+    ],
+    "responsiveViewport": [
+      1024,
+      900
+    ]
+  },
+  "pages": [
+    {
+      "name": "sys-eval-indicator",
+      "file": "demos/teacher-growth-portfolio/teacher/sys-eval-indicator/sys-eval-indicator.html",
+      "rootSelector": "[data-ds-business-page=\"sys-eval-indicator\"]",
+      "activeFeature": "sys-eval-indicator",
+      "requiredSelectors": {
+        ".sei-page": 1,
+        ".sei-sidebar": 1,
+        ".sei-main": 1
+      }
+    },
+    {
+      "name": "mp-plan-analysis",
+      "file": "demos/teacher-growth-portfolio/teacher/mp-plan-analysis/mp-plan-analysis.html",
+      "rootSelector": ".mpa2-page",
+      "requiredSelectors": [
+        ".ds-dashboard-grid",
+        ".ds-card-component",
+        ".ds-upload",
+        ".mpa2-scope-grid"
+      ],
+      "activeFeature": "mp-plan-analysis"
+    },
+    {
+      "name": "chief-c-review",
+      "file": "demos/teaching-portfolio/chief/c-review/c-review.html",
+      "rootSelector": "[data-ds-business-page=\"c-review\"]",
+      "requiredSelectors": {
+        ".cr-list-wrap": 1,
+        ".cr-scope-bar": 1,
+        ".cr-list-card": 1,
+        ".ds-data-table": 1
+      },
+      "activeFeature": "c-review"
+    },
+    {
+      "name": "p-major-group",
+      "file": "demos/teaching-portfolio/major/p-major-group/p-major-group.html",
+      "rootSelector": "[data-ds-business-page=\"p-major-group\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "p-major-group"
+    },
+    {
+      "name": "major-p-board",
+      "file": "demos/teaching-portfolio/major/p-board/p-board.html",
+      "rootSelector": "[data-ds-business-page=\"p-board\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "p-board"
+    },
+    {
+      "name": "major-t-overview",
+      "file": "demos/teaching-portfolio/major/t-overview/t-overview.html",
+      "rootSelector": "[data-ds-business-page=\"t-overview\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "t-overview"
+    },
+    {
+      "name": "major-t-home",
+      "file": "demos/teaching-portfolio/major/t-home/t-home.html",
+      "rootSelector": "[data-ds-business-page=\"t-home\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "t-home"
+    },
+    {
+      "name": "major-a-integration",
+      "file": "demos/teaching-portfolio/major/a-integration/a-integration.html",
+      "rootSelector": "[data-ds-business-page=\"a-integration\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "a-integration"
+    },
+    {
+      "name": "major-p-review",
+      "file": "demos/teaching-portfolio/major/p-review/p-review.html",
+      "rootSelector": "[data-ds-business-page=\"p-review\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "p-review"
+    },
+    {
+      "name": "l-dash",
+      "file": "demos/teaching-portfolio/dean/l-dash/l-dash.html",
+      "rootSelector": "[data-ds-business-page=\"l-dash\"]",
+      "requiredSelectors": {
+        ".ld-page": 1,
+        ".ld-header": 1
+      },
+      "activeFeature": "l-dash"
+    },
+    {
+      "name": "dean-p-board",
+      "file": "demos/teaching-portfolio/dean/p-board/p-board.html",
+      "rootSelector": "[data-ds-business-page=\"p-board\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "p-board"
+    },
+    {
+      "name": "dean-portfolio-detail",
+      "file": "demos/teaching-portfolio/dean/portfolio-detail/portfolio-detail.html",
+      "rootSelector": "[data-ds-business-page=\"portfolio-detail\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "portfolio-detail"
+    },
+    {
+      "name": "r-review",
+      "file": "demos/teaching-portfolio/dean/r-review/r-review.html",
+      "rootSelector": "[data-ds-business-page=\"r-review\"]",
+      "requiredSelectors": {
+        ".rr-list-wrap": 1,
+        ".rr-scope-bar": 1,
+        ".ds-regular-list-template": 1
+      },
+      "activeFeature": "r-review"
+    },
+    {
+      "name": "audit-batch",
+      "file": "demos/teaching-portfolio/dean/audit-batch/audit-batch.html",
+      "rootSelector": "[data-ds-business-page=\"audit-batch\"]",
+      "requiredSelectors": {
+        ".ds-regular-list-template": 1
+      },
+      "activeFeature": "audit-batch"
+    },
+    {
+      "name": "sys-sys-accounts",
+      "file": "demos/teaching-portfolio/sys/sys-accounts/sys-accounts.html",
+      "rootSelector": "[data-ds-business-page=\"sys-accounts\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "sys-accounts"
+    },
+    {
+      "name": "hr-statistics",
+      "file": "demos/teaching-portfolio/hr/hr-statistics/hr-statistics.html",
+      "rootSelector": "[data-ds-business-page=\"hr-statistics\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "hr-statistics"
+    },
+    {
+      "name": "hr-portfolio",
+      "file": "demos/teaching-portfolio/hr/hr-portfolio/hr-portfolio.html",
+      "rootSelector": "[data-ds-business-page=\"hr-portfolio\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "hr-portfolio"
+    },
+    {
+      "name": "hr-major-group",
+      "file": "demos/teaching-portfolio/hr/hr-major-group/hr-major-group.html",
+      "rootSelector": "[data-ds-business-page=\"hr-major-group\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "hr-major-group"
+    },
+    {
+      "name": "hr-home",
+      "file": "demos/teaching-portfolio/hr/hr-home/hr-home.html",
+      "rootSelector": "[data-ds-business-page=\"hr-home\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "hr-home"
+    },
+    {
+      "name": "teacher-t-submission",
+      "file": "demos/teaching-portfolio/teacher/t-submission/t-submission.html",
+      "rootSelector": "[data-ds-business-page=\"t-submission\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "t-submission"
+    },
+    {
+      "name": "teacher-course-detail",
+      "file": "demos/teaching-portfolio/teacher/course-detail/course-detail.html",
+      "rootSelector": "[data-ds-business-page=\"course-detail\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "course-detail"
+    },
+    {
+      "name": "teacher-t-data-supplement",
+      "file": "demos/teaching-portfolio/teacher/t-data-supplement/t-data-supplement.html",
+      "rootSelector": "[data-ds-business-page=\"t-data-supplement\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "t-data-supplement"
+    },
+    {
+      "name": "teacher-t-overview",
+      "file": "demos/teaching-portfolio/teacher/t-overview/t-overview.html",
+      "rootSelector": "[data-ds-business-page=\"t-overview\"]",
+      "requiredSelectors": {
+        ".to-idea-card": 1,
+        ".to-files-panel": 1,
+        ".to-folder-card": 8,
+        ".to-folder-grid": 1
+      },
+      "activeFeature": "t-overview"
+    },
+    {
+      "name": "teacher-t-home",
+      "file": "demos/teaching-portfolio/major/t-home/t-home.html",
+      "rootSelector": "[data-ds-business-page=\"t-home\"]",
+      "requiredSelectors": {
+        ".ds-sub-page-header": 1
+      },
+      "activeFeature": "t-home"
+    },
+    {
+      "name": "t-portrait",
+      "file": "demos/teaching-portfolio/teacher/t-portrait/t-portrait.html",
+      "rootSelector": "[data-ds-business-page=\"t-portrait\"]",
+      "requiredSelectors": {
+        ".mtp-page": 1,
+        ".mtp-overview": 1,
+        ".mtp-analysis-section": 3,
+        ".mtp-chart-card": 7
+      },
+      "activeFeature": "t-portrait"
+    },
+    {
+      "name": "chart-dashboard-demo",
+      "file": "demos/chart-dashboard-demo.html",
+      "rootSelector": "[data-ds-business-page=\"chart-dashboard-demo\"]",
+      "requiredSelectors": {
+        ".ds-dashboard-grid": 3,
+        ".ds-chart-card": 9,
+        ".kpi-card": 10,
+        ".table-stat-card": 1,
+        ".segment-bar-card": 1
+      },
+      "activeFeature": "图表规范演示"
+    },
+    {
+      "name": "chart-designer",
+      "file": "demos/teaching-portfolio/sys/chart-designer/chart-designer.html",
+      "rootSelector": "[data-ds-business-page=\"chart-designer\"]",
+      "requiredSelectors": {
+        ".chart-designer-page": 1,
+        ".chart-designer__left-panel": 1,
+        ".chart-designer__canvas-panel": 1,
+        ".chart-designer__right-panel": 1
+      },
+      "activeFeature": "chart-designer"
+    },
+    {
+      "name": "t-archive",
+      "file": "demos/teacher-growth-portfolio/teacher/t-archive/t-archive.html",
+      "rootSelector": "[data-ds-business-page=\"t-archive\"]",
+      "activeFeature": "t-archive",
+      "requiredSelectors": {
+        ".ta-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "t-data-collect",
+      "file": "demos/teacher-growth-portfolio/teacher/t-data-collect/t-data-collect.html",
+      "rootSelector": "[data-ds-business-page=\"t-data-collect\"]",
+      "activeFeature": "t-data-collect",
+      "requiredSelectors": {
+        ".tdc-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "t-diagnosis",
+      "file": "demos/teacher-growth-portfolio/teacher/t-diagnosis/t-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"t-diagnosis\"]",
+      "activeFeature": "t-diagnosis",
+      "requiredSelectors": {
+        ".td-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "t-portrait",
+      "file": "demos/teacher-growth-portfolio/teacher/t-portrait/t-portrait.html",
+      "rootSelector": "[data-ds-business-page=\"t-portrait\"]",
+      "activeFeature": "t-portrait",
+      "requiredSelectors": {
+        ".tp-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "t-workbench",
+      "file": "demos/teacher-growth-portfolio/teacher/t-workbench/t-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"t-workbench\"]",
+      "activeFeature": "t-workbench",
+      "requiredSelectors": {
+        ".tw-page": 1
+      }
+    },
+    {
+      "name": "d-archive",
+      "file": "demos/teacher-growth-portfolio/dean/d-archive/d-archive.html",
+      "rootSelector": "[data-ds-business-page=\"d-archive\"]",
+      "activeFeature": "d-archive",
+      "requiredSelectors": {
+        ".dar-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "d-data-manage",
+      "file": "demos/teacher-growth-portfolio/dean/d-data-manage/d-data-manage.html",
+      "rootSelector": "[data-ds-business-page=\"d-data-manage\"]",
+      "activeFeature": "d-data-manage",
+      "requiredSelectors": {
+        ".ddm-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "d-data-review",
+      "file": "demos/teacher-growth-portfolio/dean/d-data-review/d-data-review.html",
+      "rootSelector": "[data-ds-business-page=\"d-data-review\"]",
+      "activeFeature": "d-data-review",
+      "requiredSelectors": {
+        ".ddr-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "d-diagnosis",
+      "file": "demos/teacher-growth-portfolio/dean/d-diagnosis/d-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"d-diagnosis\"]",
+      "activeFeature": "d-diagnosis",
+      "requiredSelectors": {
+        ".dd-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "d-faculty-dashboard",
+      "file": "demos/teacher-growth-portfolio/dean/d-faculty-dashboard/d-faculty-dashboard.html",
+      "rootSelector": "[data-ds-business-page=\"d-faculty-dashboard\"]",
+      "activeFeature": "d-faculty-dashboard",
+      "requiredSelectors": {
+        ".dfd-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "d-team-diagnosis",
+      "file": "demos/teacher-growth-portfolio/dean/d-team-diagnosis/d-team-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"d-team-diagnosis\"]",
+      "activeFeature": "d-team-diagnosis",
+      "requiredSelectors": {
+        ".dtd-page": 1,
+        ".ds-echart-base": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "d-workbench",
+      "file": "demos/teacher-growth-portfolio/dean/d-workbench/d-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"d-workbench\"]",
+      "activeFeature": "d-workbench",
+      "requiredSelectors": {
+        ".dw-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-archive",
+      "file": "demos/teacher-growth-portfolio/hr/hr-archive/hr-archive.html",
+      "rootSelector": "[data-ds-business-page=\"hr-archive\"]",
+      "activeFeature": "hr-archive",
+      "requiredSelectors": {
+        ".har-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-data-manage",
+      "file": "demos/teacher-growth-portfolio/hr/hr-data-manage/hr-data-manage.html",
+      "rootSelector": "[data-ds-business-page=\"hr-data-manage\"]",
+      "activeFeature": "hr-data-manage",
+      "requiredSelectors": {
+        ".hdm-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-data-review",
+      "file": "demos/teacher-growth-portfolio/hr/hr-data-review/hr-data-review.html",
+      "rootSelector": "[data-ds-business-page=\"hr-data-review\"]",
+      "activeFeature": "hr-data-review",
+      "requiredSelectors": {
+        ".hdr-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-diagnosis",
+      "file": "demos/teacher-growth-portfolio/hr/hr-diagnosis/hr-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"hr-diagnosis\"]",
+      "activeFeature": "hr-diagnosis",
+      "requiredSelectors": {
+        ".hdi-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-faculty-dashboard",
+      "file": "demos/teacher-growth-portfolio/hr/hr-faculty-dashboard/hr-faculty-dashboard.html",
+      "rootSelector": "[data-ds-business-page=\"hr-faculty-dashboard\"]",
+      "activeFeature": "hr-faculty-dashboard",
+      "requiredSelectors": {
+        ".hfd-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "hr-team-diagnosis",
+      "file": "demos/teacher-growth-portfolio/hr/hr-team-diagnosis/hr-team-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"hr-team-diagnosis\"]",
+      "activeFeature": "hr-team-diagnosis",
+      "requiredSelectors": {
+        ".htd-page": 1,
+        ".ds-echart-base": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-workbench",
+      "file": "demos/teacher-growth-portfolio/hr/hr-workbench/hr-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"hr-workbench\"]",
+      "activeFeature": "hr-workbench",
+      "requiredSelectors": {
+        ".hw-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "l-archive",
+      "file": "demos/teacher-growth-portfolio/leader/l-archive/l-archive.html",
+      "rootSelector": "[data-ds-business-page=\"l-archive\"]",
+      "activeFeature": "l-archive",
+      "requiredSelectors": {
+        ".lar-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "l-diagnosis",
+      "file": "demos/teacher-growth-portfolio/leader/l-diagnosis/l-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"l-diagnosis\"]",
+      "activeFeature": "l-diagnosis",
+      "requiredSelectors": {
+        ".ldi-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "l-faculty-dashboard",
+      "file": "demos/teacher-growth-portfolio/leader/l-faculty-dashboard/l-faculty-dashboard.html",
+      "rootSelector": "[data-ds-business-page=\"l-faculty-dashboard\"]",
+      "activeFeature": "l-faculty-dashboard",
+      "requiredSelectors": {
+        ".lfd-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "l-school-dashboard",
+      "file": "demos/teacher-growth-portfolio/leader/l-school-dashboard/l-school-dashboard.html",
+      "rootSelector": "[data-ds-business-page=\"l-school-dashboard\"]",
+      "activeFeature": "l-school-dashboard",
+      "requiredSelectors": {
+        ".lsd-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "l-team-diagnosis",
+      "file": "demos/teacher-growth-portfolio/leader/l-team-diagnosis/l-team-diagnosis.html",
+      "rootSelector": "[data-ds-business-page=\"l-team-diagnosis\"]",
+      "activeFeature": "l-team-diagnosis",
+      "requiredSelectors": {
+        ".ltd-page": 1,
+        ".ds-echart-base": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "l-upgrade-dashboard",
+      "file": "demos/teacher-growth-portfolio/leader/l-upgrade-dashboard/l-upgrade-dashboard.html",
+      "rootSelector": "[data-ds-business-page=\"l-upgrade-dashboard\"]",
+      "activeFeature": "l-upgrade-dashboard",
+      "requiredSelectors": {
+        ".lud-page": 1,
+        ".ds-echart-base": 1
+      }
+    },
+    {
+      "name": "l-workbench",
+      "file": "demos/teacher-growth-portfolio/leader/l-workbench/l-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"l-workbench\"]",
+      "activeFeature": "l-workbench",
+      "requiredSelectors": {
+        ".lw-page": 1
+      }
+    },
+    {
+      "name": "tl-member-portrait",
+      "file": "demos/teacher-growth-portfolio/team-leader/tl-member-portrait/tl-member-portrait.html",
+      "rootSelector": "[data-ds-business-page=\"tl-member-portrait\"]",
+      "activeFeature": "tl-member-portrait",
+      "requiredSelectors": {
+        ".tlm-page": 1,
+        ".ds-echart-base": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "tl-result-manage",
+      "file": "demos/teacher-growth-portfolio/team-leader/tl-result-manage/tl-result-manage.html",
+      "rootSelector": "[data-ds-business-page=\"tl-result-manage\"]",
+      "activeFeature": "tl-result-manage",
+      "requiredSelectors": {
+        ".tlr-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "tl-task-warning",
+      "file": "demos/teacher-growth-portfolio/team-leader/tl-task-warning/tl-task-warning.html",
+      "rootSelector": "[data-ds-business-page=\"tl-task-warning\"]",
+      "activeFeature": "tl-task-warning",
+      "requiredSelectors": {
+        ".tlw-page": 1,
+        ".ds-card-component": 1
+      }
+    },
+    {
+      "name": "hr-workbench",
+      "file": "demos/recruitment/hr/workbench/hr-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"hr-workbench\"]",
+      "requiredSelectors": {
+        ".workbench-page": 1,
+        ".wb-stat-grid": 1,
+        ".wb-plan": 1,
+        ".wb-analysis": 1,
+        ".wb-college-grid": 1
+      },
+      "activeFeature": "workbench"
+    },
+    {
+      "name": "dean-workbench",
+      "file": "demos/recruitment/dean/workbench/dean-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"dean-workbench\"]",
+      "requiredSelectors": {
+        ".workbench-page": 1,
+        ".wb-stat-grid": 1,
+        ".wb-progress": 1,
+        ".wb-todo-list": 1
+      },
+      "activeFeature": "workbench"
+    },
+    {
+      "name": "sys-workbench",
+      "file": "demos/recruitment/sys/workbench/sys-workbench.html",
+      "rootSelector": "[data-ds-business-page=\"sys-workbench\"]",
+      "requiredSelectors": {
+        ".workbench-page": 1,
+        ".wb-stat-grid": 1,
+        ".wb-progress": 1,
+        ".wb-todo-list": 1
+      },
+      "activeFeature": "workbench"
+    },
+    {
+      "name": "plan-initiate",
+      "file": "demos/recruitment/hr/plan-manage/plan-initiate/plan-initiate.html",
+      "rootSelector": "[data-ds-business-page=\"plan-initiate\"]",
+      "requiredSelectors": {
+        ".plan-initiate-page": 1,
+        ".pi-main": 1
+      },
+      "activeFeature": "plan-initiate"
+    },
+    {
+      "name": "plan-audit",
+      "file": "demos/recruitment/hr/plan-audit/plan-audit.html",
+      "rootSelector": "[data-ds-business-page=\"plan-audit\"]",
+      "requiredSelectors": {
+        ".plan-audit-page": 1,
+        ".pa-toolbar-row": 1,
+        ".ds-parent-child-table": 1
+      },
+      "activeFeature": "plan-audit"
+    },
+    {
+      "name": "position",
+      "file": "demos/recruitment/hr/position/position.html",
+      "rootSelector": "[data-ds-business-page=\"position\"]",
+      "requiredSelectors": {
+        ".position-page": 1,
+        ".pos-list": 1
+      },
+      "activeFeature": "position"
+    },
+    {
+      "name": "plan-initiate",
+      "file": "demos/recruitment/dean/plan-initiate/plan-initiate.html",
+      "rootSelector": "[data-ds-business-page=\"dean-plan-initiate\"]",
+      "requiredSelectors": {
+        ".dean-plan-initiate-page": 1,
+        ".dpi-left": 1,
+        ".dpi-right": 1
+      },
+      "activeFeature": "plan-initiate"
+    },
+    {
+      "name": "login-setting",
+      "file": "demos/recruitment/hr/login-setting/login-setting.html",
+      "rootSelector": "[data-ds-business-page=\"login-setting\"]",
+      "requiredSelectors": {
+        ".login-setting-page": 1,
+        ".ls-form-wrap": 1,
+        ".ds-edit-form": 2,
+        ".ls-group": 2,
+        ".ls-footer": 1
+      },
+      "activeFeature": "login-setting"
+    },
+    {
+      "name": "common-params",
+      "file": "demos/recruitment/hr/common-params/common-params.html",
+      "rootSelector": "[data-ds-business-page=\"common-params\"]",
+      "requiredSelectors": {
+        ".common-params-page": 1,
+        ".ds-form-group": 2,
+        ".ds-edit-form": 2,
+        ".cp-footer": 1
+      },
+      "activeFeature": "common-params"
+    },
+    {
+      "name": "print-template",
+      "file": "demos/recruitment/hr/print-template/print-template.html",
+      "rootSelector": "[data-ds-business-page=\"print-template\"]",
+      "requiredSelectors": {
+        ".print-template-page": 1,
+        ".ds-filter-area": 1,
+        ".ds-data-table": 1,
+        ".ds-pagination": 1
+      },
+      "activeFeature": "print-template"
+    },
+    {
+      "name": "message-setting",
+      "file": "demos/recruitment/hr/message-setting/message-setting.html",
+      "rootSelector": "[data-ds-business-page=\"message-setting\"]",
+      "requiredSelectors": {
+        ".message-setting-page": 1,
+        ".ds-filter-area": 1,
+        ".ds-data-table": 1,
+        ".ms-toolbar": 1
+      },
+      "activeFeature": "message-setting"
+    },
+    {
+      "name": "hiring",
+      "file": "demos/recruitment/hr/hiring/hiring.html",
+      "rootSelector": "[data-ds-business-page=\"hiring\"][data-role=\"hr\"]",
+      "requiredSelectors": {
+        ".hiring-page": 1
+      },
+      "activeFeature": "hiring"
+    },
+    {
+      "name": "access-check",
+      "file": "demos/recruitment/hr/access-check/access-check.html",
+      "rootSelector": "[data-ds-business-page=\"access-check\"][data-role=\"hr\"]",
+      "requiredSelectors": {
+        ".ac-page": 1
+      },
+      "activeFeature": "access-check"
+    },
+    {
+      "name": "consultation",
+      "file": "demos/recruitment/hr/consultation/consultation.html",
+      "rootSelector": "[data-ds-business-page=\"consultation\"]",
+      "requiredSelectors": {
+        ".consultation-page": 1,
+        ".ds-regular-list-template": 1,
+        ".ds-data-table": 1
+      },
+      "activeFeature": "consultation"
+    },
+    {
+      "name": "warning-home",
+      "file": "demos/warning-center/admin/warning-home/warning-home.html",
+      "rootSelector": "[data-ds-business-page=\"warning-home\"]",
+      "requiredSelectors": {
+        ".ds-page-header": 1,
+        ".ds-dashboard-grid": 1,
+        ".wh-stat-card": 4
+      },
+      "activeFeature": "warning-home"
+    },
+    {
+      "name": "warning-rule-config",
+      "file": "demos/warning-center/admin/warning-rule-config/warning-rule-config.html",
+      "rootSelector": "[data-ds-business-page=\"warning-rule-config\"]",
+      "requiredSelectors": {
+        ".ds-filter-area": 1,
+        ".ds-data-table": 1,
+        ".wrc-status": 6
+      },
+      "activeFeature": "warning-rule-config"
+    },
+    {
+      "name": "warning-record",
+      "file": "demos/warning-center/admin/warning-record/warning-record.html",
+      "rootSelector": "[data-ds-business-page=\"warning-record\"]",
+      "requiredSelectors": {
+        ".ds-filter-area": 1,
+        ".ds-data-table": 1,
+        ".wr-export-bar": 1,
+        ".wr-status": 10
+      },
+      "activeFeature": "warning-record"
+    },
+    {
+      "name": "warning-audit",
+      "file": "demos/warning-center/admin/warning-audit/warning-audit.html",
+      "rootSelector": "[data-ds-business-page=\"warning-audit\"]",
+      "requiredSelectors": {
+        ".wa-page": 1,
+        ".ds-filter-area": 1,
+        ".ds-data-table": 1,
+        ".wa-status": 9
+      },
+      "activeFeature": "warning-audit"
+    },
+    {
+      "name": "vote-project",
+      "file": "demos/vote/vote-project/vote-project.html",
+      "rootSelector": "[data-ds-business-page=\"vote-project\"]",
+      "requiredSelectors": [
+        ".ds-card-list-template",
+        ".ds-filter-bar",
+        ".ds-card-component"
+      ],
+      "activeFeature": "vote-project"
+    },
+    {
+      "name": "scheme-set",
+      "file": "demos/vote/scheme-set/scheme-set.html",
+      "rootSelector": "[data-ds-business-page=\"scheme-set\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "scheme-set"
+    },
+    {
+      "name": "vote-item",
+      "file": "demos/vote/vote-item/vote-item.html",
+      "rootSelector": "[data-ds-business-page=\"vote-item\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "vote-item"
+    },
+    {
+      "name": "candidate",
+      "file": "demos/vote/candidate/candidate.html",
+      "rootSelector": "[data-ds-business-page=\"candidate\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "candidate"
+    },
+    {
+      "name": "quota-set",
+      "file": "demos/vote/quota-set/quota-set.html",
+      "rootSelector": "[data-ds-business-page=\"quota-set\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "quota-set"
+    },
+    {
+      "name": "group-set",
+      "file": "demos/vote/group-set/group-set.html",
+      "rootSelector": "[data-ds-business-page=\"group-set\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "group-set"
+    },
+    {
+      "name": "material",
+      "file": "demos/vote/material/material.html",
+      "rootSelector": "[data-ds-business-page=\"material\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "material"
+    },
+    {
+      "name": "judge-account",
+      "file": "demos/vote/judge-account/judge-account.html",
+      "rootSelector": "[data-ds-business-page=\"judge-account\"]",
+      "requiredSelectors": [
+        ".ds-card-list-template",
+        ".ds-filter-bar",
+        ".ds-card-component"
+      ],
+      "activeFeature": "judge-account"
+    },
+    {
+      "name": "promise-set",
+      "file": "demos/vote/promise-set/promise-set.html",
+      "rootSelector": "[data-ds-business-page=\"promise-set\"]",
+      "requiredSelectors": [
+        ".ds-form-group",
+        ".ds-edit-form"
+      ],
+      "activeFeature": "promise-set"
+    },
+    {
+      "name": "project-status",
+      "file": "demos/vote/project-status/project-status.html",
+      "rootSelector": "[data-ds-business-page=\"project-status\"]",
+      "requiredSelectors": [
+        ".ds-form-group",
+        ".ds-steps"
+      ],
+      "activeFeature": "project-status"
+    },
+    {
+      "name": "progress",
+      "file": "demos/vote/progress/progress.html",
+      "rootSelector": "[data-ds-business-page=\"progress\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "progress"
+    },
+    {
+      "name": "result",
+      "file": "demos/vote/result/result.html",
+      "rootSelector": "[data-ds-business-page=\"result\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "result"
+    },
+    {
+      "name": "report",
+      "file": "demos/vote/report/report.html",
+      "rootSelector": "[data-ds-business-page=\"report\"]",
+      "requiredSelectors": [
+        ".ds-regular-list-template",
+        ".ds-data-table"
+      ],
+      "activeFeature": "report"
+    },
+    {
+      "name": "screen-config",
+      "file": "demos/vote/screen-config/screen-config.html",
+      "rootSelector": "[data-ds-business-page=\"screen-config\"]",
+      "requiredSelectors": [
+        ".ds-form-group",
+        ".ds-edit-form"
+      ],
+      "activeFeature": "screen-config"
+    },
+    {
+      "name": "screen-preview",
+      "file": "demos/vote/screen-preview/screen-preview.html",
+      "rootSelector": "[data-ds-business-page=\"screen-preview\"]",
+      "requiredSelectors": [
+        ".sp-stage"
+      ],
+      "activeFeature": "screen-preview"
+    },
+    {
+      "name": "judge-preview",
+      "file": "demos/vote/judge-preview/judge-preview.html",
+      "rootSelector": "[data-ds-business-page=\"judge-preview\"]",
+      "requiredSelectors": [
+        ".jp-board"
+      ],
+      "activeFeature": "judge-preview"
+    },
+    {
+      "name": "global-set",
+      "file": "demos/vote/global-set/global-set.html",
+      "rootSelector": "[data-ds-business-page=\"global-set\"]",
+      "requiredSelectors": [
+        ".ds-form-group",
+        ".ds-edit-form"
+      ],
+      "activeFeature": "global-set"
+    }
+  ]
+}

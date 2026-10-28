@@ -1,0 +1,18 @@
+{
+  "key": "teaching-portfolio",
+  "label": "教学档案袋",
+  "roles": [
+    {
+      "key": "unified",
+      "label": "教学档案综合管理",
+      "manifest": "role.json"
+    }
+  ],
+  "relatedApplications": [
+    {
+      "key": "home",
+      "label": "首页",
+      "entry": "../home/teacher/home/staff-home.html"
+    }
+  ]
+}

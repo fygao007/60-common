@@ -1,0 +1,16 @@
+{
+  "application": { "key": "warning-center", "label": "预警中心" },
+  "role": { "key": "admin", "label": "预警管理员" },
+  "menu": { "key": "warning-rule-config", "label": "预警规则配置", "group": "预警中心", "defaultFeature": "warning-rule-config" },
+  "pages": [
+    {
+      "key": "warning-center-admin-warning-rule-config",
+      "label": "预警规则配置（预警管理员）",
+      "type": "react-business-page",
+      "html": "warning-rule-config.html",
+      "jsx": "warning-rule-config.page.jsx",
+      "css": "warning-rule-config.css",
+      "bundle": "assets/bundles/pages/warning-rule-config.bundle.js"
+    }
+  ]
+}

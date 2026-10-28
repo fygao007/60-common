@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基础表格页面</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    .basic-table-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: #fff; }
+
+    .basic-table-header {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px 8px;
+      background: #fff;
+    }
+
+    .basic-table-title {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .basic-table-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      z-index: 0;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .basic-table-title span { position: relative; z-index: 1; }
+    .basic-table-spacer { flex: 1; min-width: 0; }
+
+    .basic-table-search {
+      display: grid;
+      flex: none;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px 12px;
+      background: #fff;
+    }
+
+    .query-field {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 8px;
+    }
+
+    .query-field label {
+      flex: none;
+      color: #505266;
+      font-size: 14px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+
+    .query-field input,
+    .query-field select {
+      width: 100%;
+      height: 32px;
+      min-width: 0;
+      padding: 0 12px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .query-field input::placeholder { color: #9697a3; }
+    .query-field input:focus,
+    .query-field select:focus {
+      border-color: #333fff;
+      box-shadow: 0 0 0 2px rgba(51, 63, 255, 0.12);
+    }
+
+    .query-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .basic-toolbar {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 12px;
+      background: #fff;
+    }
+
+    .basic-toolbar .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .basic-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      min-width: 72px;
+      padding: 0 14px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .basic-button:hover { color: #333fff; border-color: #333fff; }
+    .basic-button.primary { color: #fff; background: #333fff; border-color: #333fff; }
+    .basic-button.primary:hover { color: #fff; background: #5a66ff; border-color: #5a66ff; }
+
+    .icon-button {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      color: #505266;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .icon-button:hover { color: #333fff; background: #f5f5ff; }
+    .icon-button svg { width: 16px; height: 16px; }
+
+    .table-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 0 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .basic-table-wrap {
+      position: relative;
+      height: 100%;
+      min-height: 0;
+      overflow: auto;
+      background: #fff;
+      border: 1px solid #eeeef0;
+    }
+
+    .basic-table {
+      width: 100%;
+      min-width: 1540px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      color: #000;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .basic-table th,
+    .basic-table td {
+      height: 46px;
+      padding: 0 12px;
+      background: #fff;
+      border-bottom: 1px solid #eeeef0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-align: left;
+      text-overflow: ellipsis;
+      transition: background-color 120ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .basic-table th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      height: 40px;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .basic-table th + th,
+    .basic-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+
+    .basic-table tbody tr:hover td { background: #f6f6f7; }
+    .basic-table tbody tr.is-selected td { background: #f5f5ff; }
+    .basic-table tbody tr.is-selected:hover td { background: #ebecff; }
+
+    .basic-table .col-drag {
+      width: 40px;
+      padding: 0;
+      overflow: visible;
+      text-align: center;
+      text-overflow: clip;
+    }
+    .col-check { width: 48px; text-align: center; }
+    .col-index { width: 64px; }
+    .col-title { width: 240px; }
+    .col-person { width: 240px; }
+    .col-number { width: 128px; text-align: right; }
+    .col-tag { width: 160px; }
+    .col-switch { width: 160px; }
+    .col-progress { width: 200px; }
+    .col-date { width: 180px; }
+    .col-actions { width: 128px; }
+
+    .is-fixed-left,
+    .is-fixed-right {
+      position: sticky;
+      z-index: 4;
+    }
+
+    th.is-fixed-left,
+    th.is-fixed-right { z-index: 8; }
+
+    .fixed-drag { left: 0; }
+    .fixed-check { left: 40px; }
+    .fixed-index { left: 88px; }
+    .fixed-title { left: 152px; box-shadow: 1px 0 4px rgba(70, 79, 105, 0.08); }
+    .fixed-actions { right: 0; box-shadow: -1px 0 4px rgba(70, 79, 105, 0.08); }
+
+    .drag-handle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      color: #000;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .drag-handle:hover {
+      background: #f5f5ff;
+      border-radius: 4px;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .drag-handle img {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    .basic-table input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #333fff;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    .basic-table tbody tr.is-dragging td {
+      background: #ebecff;
+      opacity: 0.46;
+    }
+
+    .basic-table tbody tr.is-drag-over td {
+      background: #f5f5ff;
+    }
+
+    .row-drag-ghost {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #d6d9ff;
+      box-shadow: 0 10px 24px rgba(31, 35, 41, 0.16);
+      opacity: 0.96;
+    }
+
+    .row-drag-ghost table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .row-drag-ghost td {
+      height: 46px;
+      padding: 0 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      border-right: 1px solid rgba(238, 238, 240, 0.72);
+      background: #f5f5ff;
+    }
+
+    .row-drag-ghost .col-drag {
+      padding: 0;
+      text-align: center;
+    }
+
+    .avatar-cell {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      gap: 8px;
+    }
+
+    .avatar {
+      display: inline-grid;
+      flex: none;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      color: #333fff;
+      background: linear-gradient(180deg, #d9f0ff 0%, #f7e5d5 100%);
+      border: 1px solid #fff;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .soft-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      color: #505266;
+      background: #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .switch-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 50px;
+      height: 22px;
+      padding-left: 6px;
+      color: #fff;
+      background: #333fff;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .switch-pill::after {
+      content: "";
+      position: absolute;
+      right: 3px;
+      top: 3px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 999px;
+    }
+
+    .switch-pill.is-off {
+      justify-content: flex-end;
+      padding-right: 6px;
+      padding-left: 0;
+      color: #505266;
+      background: #eeeef0;
+    }
+
+    .switch-pill.is-off::after {
+      right: auto;
+      left: 3px;
+    }
+
+    .progress-cell {
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      overflow: hidden;
+      background: #eeeef0;
+      border-radius: 999px;
+    }
+
+    .progress-bar {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #333fff;
+    }
+
+    .progress-text {
+      flex: none;
+      width: 34px;
+      color: #505266;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .row-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .text-action {
+      padding: 0;
+      color: #333fff;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .more-action {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      color: #505266;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .more-action:hover { color: #333fff; background: #f5f5ff; }
+    .more-action:active { background: #ebecff; }
+
+    .basic-pagination {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      color: #505266;
+      background: #fff;
+      border-top: 1px solid #eeeef0;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .basic-pagination .page-spacer { flex: 1; }
+    .page-size,
+    .page-jump {
+      height: 26px;
+      padding: 0 8px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+    }
+
+    .page-jump { width: 42px; text-align: center; }
+
+    .page-list {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .page-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      color: #505266;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .page-item.is-active {
+      color: #000;
+      background: #eeeef0;
+      font-weight: 600;
+    }
+
+    .page-item:disabled { color: #c9cdd4; cursor: not-allowed; }
+
+    @media (max-width: 1100px) {
+      .basic-table-search { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .query-actions { grid-column: 1 / -1; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="basic-table-page">
+    <header class="basic-table-header">
+      <div class="basic-table-title"><span>基础表格</span></div>
+    </header>
+
+    <section class="basic-table-search" aria-label="查询条件">
+      <div class="query-field">
+        <label for="keyword">关键字</label>
+        <input id="keyword" placeholder="请输入标题/负责人" />
+      </div>
+      <div class="query-field">
+        <label for="category">分类</label>
+        <select id="category">
+          <option>全部</option>
+          <option>培养管理</option>
+          <option>项目管理</option>
+          <option>数据治理</option>
+        </select>
+      </div>
+      <div class="query-field">
+        <label for="status">状态</label>
+        <select id="status">
+          <option>全部</option>
+          <option>启用</option>
+          <option>停用</option>
+        </select>
+      </div>
+      <div class="query-field">
+        <label for="date">更新日期</label>
+        <input id="date" placeholder="请选择日期" />
+      </div>
+      <div class="query-actions">
+        <button class="basic-button" type="button">重置</button>
+        <button class="basic-button primary" type="button">查询</button>
+      </div>
+    </section>
+
+    <section class="basic-toolbar" aria-label="表格操作">
+      <button class="basic-button primary" type="button">新增</button>
+      <button class="basic-button" type="button">批量启用</button>
+      <button class="basic-button" type="button">批量停用</button>
+      <button class="basic-button" type="button">导入</button>
+      <button class="basic-button" type="button">导出</button>
+      <button class="basic-button" type="button">删除</button>
+      <div class="toolbar-right">
+        <button class="icon-button" type="button" aria-label="刷新">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M13 7a5 5 0 1 0-1.46 3.54M13 3v4H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-button" type="button" aria-label="列设置">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h4v8H3V4ZM9 4h4v8H9V4Z" stroke="currentColor" stroke-width="1.4"/><path d="M5 6v4M11 6v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-button" type="button" aria-label="全屏">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M6 3H3v3M10 3h3v3M6 13H3v-3M10 13h3v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="table-stage">
+      <div class="basic-table-wrap">
+        <table class="basic-table" aria-label="基础表格">
+          <colgroup>
+            <col class="col-drag" />
+            <col class="col-check" />
+            <col class="col-index" />
+            <col class="col-title" />
+            <col class="col-person" />
+            <col class="col-number" />
+            <col class="col-tag" />
+            <col class="col-switch" />
+            <col class="col-progress" />
+            <col class="col-date" />
+            <col class="col-actions" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="col-drag is-fixed-left fixed-drag"></th>
+              <th class="col-check is-fixed-left fixed-check"><input id="checkAll" type="checkbox" aria-label="全选" /></th>
+              <th class="col-index is-fixed-left fixed-index">序号</th>
+              <th class="col-title is-fixed-left fixed-title">标题</th>
+              <th class="col-person">标题</th>
+              <th class="col-number">标题</th>
+              <th class="col-tag">标题</th>
+              <th class="col-switch">标题</th>
+              <th class="col-progress">标题</th>
+              <th class="col-date">标题</th>
+              <th class="col-actions is-fixed-right fixed-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="basic-pagination">
+      <span>共 100 条</span>
+      <select class="page-size" aria-label="每页条数">
+        <option>10条/页</option>
+        <option>20条/页</option>
+        <option>50条/页</option>
+      </select>
+      <span class="page-spacer"></span>
+      <div class="page-list" aria-label="分页">
+        <button class="page-item" type="button" disabled>‹</button>
+        <button class="page-item is-active" type="button">1</button>
+        <button class="page-item" type="button">2</button>
+        <button class="page-item" type="button">…</button>
+        <button class="page-item" type="button">10</button>
+        <button class="page-item" type="button">›</button>
+      </div>
+      <span>跳至</span>
+      <input class="page-jump" value="1" aria-label="跳转页码" />
+      <span>页</span>
+    </footer>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表格',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+
+  const rows = [
+    { title: '培养方案模板维护', person: '张明', count: 24, tag: '标签', enabled: true, progress: 0, date: '2026-05-17' },
+    { title: '年度招生计划配置', person: '李华', count: 14563, tag: '标签', enabled: true, progress: 100, date: '2026-05-15' },
+    { title: '导师资格审核规则', person: '王宁', count: 768, tag: '标签', enabled: true, progress: 20, date: '2026-05-12' },
+    { title: '协议条款库管理', person: '赵阳', count: 62765, tag: '标签', enabled: true, progress: 20, date: '2026-05-09' },
+    { title: '项目成果归档范围', person: '陈晨', count: 668, tag: '标签', enabled: true, progress: 20, date: '2026-05-06' },
+    { title: '导入字段映射配置', person: '周琳', count: 43, tag: '标签', enabled: false, progress: 20, date: '2026-05-02' },
+    { title: '流程节点权限设置', person: '郑可', count: 76, tag: '标签', enabled: true, progress: 20, date: '2026-04-28' },
+    { title: '通知模板维护', person: '刘洋', count: 7292, tag: '标签', enabled: true, progress: 20, date: '2026-04-25' },
+    { title: '数据字典同步', person: '何青', count: 582, tag: '标签', enabled: true, progress: 20, date: '2026-04-21' },
+    { title: '页面字段显隐配置', person: '孙一', count: 692, tag: '标签', enabled: false, progress: 20, date: '2026-04-18' }
+  ];
+
+  const progressColors = ['#333fff', '#2fb8a6', '#ff994a', '#ff5555', '#333fff'];
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = rows.map((row, index) => {
+    const color = progressColors[index] || '#333fff';
+    return `
+      <tr>
+        <td class="col-drag is-fixed-left fixed-drag"><span class="drag-handle" role="img" aria-label="按住后可以拖拽更换顺序" title="按住后可以拖拽更换顺序"><img src="./assets/icons/drag-sort-line.svg" alt="" /></span></td>
+        <td class="col-check is-fixed-left fixed-check"><input class="row-check" type="checkbox" aria-label="选择第 ${index + 1} 行" /></td>
+        <td class="col-index is-fixed-left fixed-index">${index + 1}</td>
+        <td class="col-title is-fixed-left fixed-title" title="${row.title}">${row.title}</td>
+        <td class="col-person">
+          <span class="avatar-cell"><span class="avatar">${row.person.slice(0, 1)}</span><span>${row.person}</span></span>
+        </td>
+        <td class="col-number">${row.count}</td>
+        <td class="col-tag"><span class="soft-tag">${row.tag}</span></td>
+        <td class="col-switch"><span class="switch-pill ${row.enabled ? '' : 'is-off'}">${row.enabled ? '是' : '否'}</span></td>
+        <td class="col-progress">
+          <span class="progress-cell">
+            <span class="progress-track"><span class="progress-bar" style="width:${row.progress}%;background:${color}"></span></span>
+            <span class="progress-text">${row.progress}%</span>
+          </span>
+        </td>
+        <td class="col-date">${row.date}</td>
+        <td class="col-actions is-fixed-right fixed-actions">
+          <span class="row-actions">
+            <button class="text-action" type="button">按钮</button>
+            <button class="text-action" type="button">按钮</button>
+            <button class="more-action" type="button" aria-label="更多操作">...</button>
+          </span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  const checkAll = document.getElementById('checkAll');
+  checkAll.addEventListener('change', (event) => {
+    document.querySelectorAll('.row-check').forEach((checkbox) => {
+      checkbox.checked = event.target.checked;
+      checkbox.closest('tr').classList.toggle('is-selected', event.target.checked);
+    });
+  });
+
+  tbody.addEventListener('change', (event) => {
+    if (!event.target.classList.contains('row-check')) return;
+    event.target.closest('tr').classList.toggle('is-selected', event.target.checked);
+    const checks = [...document.querySelectorAll('.row-check')];
+    checkAll.checked = checks.every((checkbox) => checkbox.checked);
+  });
+
+  tbody.addEventListener('click', (event) => {
+    const switchNode = event.target.closest('.switch-pill');
+    if (!switchNode) return;
+    switchNode.classList.toggle('is-off');
+    switchNode.textContent = switchNode.classList.contains('is-off') ? '否' : '是';
+  });
+
+  let dragState = null;
+
+  function refreshRowIndex() {
+    [...tbody.querySelectorAll('tr')].forEach((row, index) => {
+      row.querySelector('.col-index').textContent = index + 1;
+      const checkbox = row.querySelector('.row-check');
+      checkbox?.setAttribute('aria-label', `选择第 ${index + 1} 行`);
+    });
+  }
+
+  function getDragAfterRow(container, y) {
+    const rows = [...container.querySelectorAll('tr:not(.is-dragging)')];
+    return rows.reduce((closest, row) => {
+      const rect = row.getBoundingClientRect();
+      const offset = y - rect.top - rect.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset, row };
+      }
+      return closest;
+    }, { offset: Number.NEGATIVE_INFINITY, row: null }).row;
+  }
+
+  function createDragGhost(row, pointerEvent) {
+    const rowRect = row.getBoundingClientRect();
+    const ghost = document.createElement('div');
+    ghost.className = 'row-drag-ghost';
+    ghost.style.left = `${rowRect.left}px`;
+    ghost.style.top = `${rowRect.top}px`;
+    ghost.style.width = `${rowRect.width}px`;
+    ghost.style.height = `${rowRect.height}px`;
+
+    const table = document.createElement('table');
+    const colgroup = document.createElement('colgroup');
+    const ghostBody = document.createElement('tbody');
+    [...row.children].forEach((cell) => {
+      const col = document.createElement('col');
+      col.style.width = `${cell.getBoundingClientRect().width}px`;
+      colgroup.appendChild(col);
+    });
+    table.appendChild(colgroup);
+    ghostBody.appendChild(row.cloneNode(true));
+    table.appendChild(ghostBody);
+    ghost.appendChild(table);
+    document.body.appendChild(ghost);
+
+    return {
+      ghost,
+      offsetX: pointerEvent.clientX - rowRect.left,
+      offsetY: pointerEvent.clientY - rowRect.top,
+    };
+  }
+
+  function moveDragGhost(pointerEvent) {
+    if (!dragState?.ghost) return;
+    dragState.ghost.style.left = `${pointerEvent.clientX - dragState.offsetX}px`;
+    dragState.ghost.style.top = `${pointerEvent.clientY - dragState.offsetY}px`;
+  }
+
+  function finishDrag() {
+    if (!dragState) return;
+    dragState.row.classList.remove('is-dragging');
+    dragState.ghost?.remove();
+    tbody.querySelectorAll('.is-drag-over').forEach((row) => row.classList.remove('is-drag-over'));
+    dragState = null;
+    refreshRowIndex();
+  }
+
+  tbody.addEventListener('pointerdown', (event) => {
+    const handle = event.target.closest('.drag-handle');
+    if (!handle) return;
+    const row = handle.closest('tr');
+    event.preventDefault();
+    handle.setPointerCapture?.(event.pointerId);
+    const ghostState = createDragGhost(row, event);
+    dragState = {
+      row,
+      pointerId: event.pointerId,
+      ...ghostState,
+    };
+    row.classList.add('is-dragging');
+  });
+
+  tbody.addEventListener('pointermove', (event) => {
+    if (!dragState || event.pointerId !== dragState.pointerId) return;
+    event.preventDefault();
+    moveDragGhost(event);
+    const afterRow = getDragAfterRow(tbody, event.clientY);
+    tbody.querySelectorAll('.is-drag-over').forEach((row) => row.classList.remove('is-drag-over'));
+    if (afterRow) {
+      afterRow.classList.add('is-drag-over');
+      tbody.insertBefore(dragState.row, afterRow);
+    } else {
+      tbody.appendChild(dragState.row);
+    }
+  });
+
+  tbody.addEventListener('pointerup', (event) => {
+    if (!dragState || event.pointerId !== dragState.pointerId) return;
+    finishDrag();
+  });
+
+  tbody.addEventListener('pointercancel', finishDrag);
+  window.addEventListener('blur', finishDrag);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') finishDrag();
+  });
+</script>
+</body>
+</html>

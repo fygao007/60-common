@@ -1,0 +1,161 @@
+@import '../tokens.css';
+
+.ds-process-tag {
+  box-sizing: border-box;
+  width: max-content;
+  max-width: 100%;
+  border: 0;
+  font-family: var(--ds-font-family);
+  font-weight: var(--ds-font-weight-regular);
+}
+
+.ds-process-tag--filled {
+  min-width: 40px;
+  height: 24px;
+  gap: var(--ds-space-1);
+  padding: 2px var(--ds-space-2);
+  border-radius: var(--ds-radius-sm);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+/* 标签标准样式：浅色底 + 彩色文字，4px 圆角，无边框。
+   六色语义：灰=未开始/未提交，蓝=进行中/待审核，绿=已通过/已发布，
+   橙=退回/递补/补交，红=不通过/不合格，青=已完成/办结。 */
+.ds-process-tag--filled.ds-tag--neutral {
+  color: #8c8c8c;
+  background: #f5f5f5;
+}
+
+.ds-process-tag--filled.ds-tag--primary,
+.ds-process-tag--filled.ds-tag--info {
+  color: #1677ff;
+  background: #e6f4ff;
+}
+
+.ds-process-tag--filled.ds-tag--success {
+  color: #52c41a;
+  background: #f6ffed;
+}
+
+.ds-process-tag--filled.ds-tag--danger {
+  color: #f5222d;
+  background: #fff1f0;
+}
+
+.ds-process-tag--filled.ds-tag--warning {
+  color: #fa8c16;
+  background: #fff7e6;
+}
+
+.ds-process-tag--filled.ds-tag--teal {
+  color: #13c2c2;
+  background: #e6fffb;
+}
+
+.ds-process-tag--filled.ds-tag--secondary {
+  color: #3d3d3d;
+  background: #e6e6e8;
+}
+
+.ds-process-tag__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-process-tag--icon {
+  height: 22px;
+  gap: var(--ds-space-1);
+  padding: 0;
+  color: var(--ds-color-black);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-process-tag__icon,
+.ds-process-tag__custom-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-process-tag--icon.ds-tag--neutral .ds-process-tag__icon {
+  background: url('../../../../assets/tag-icons/svg_148bc5a7.svg') center / 16px 16px no-repeat;
+}
+
+.ds-process-tag--icon.ds-tag--primary .ds-process-tag__icon,
+.ds-process-tag--icon.ds-tag--info .ds-process-tag__icon {
+  background: url('../../../../assets/tag-icons/svg_7000704d.svg') center / 16px 16px no-repeat;
+}
+
+.ds-process-tag--icon.ds-tag--success .ds-process-tag__icon {
+  background: url('../../../../assets/tag-icons/svg_4d26b7cb.svg') center / 16px 16px no-repeat;
+}
+
+.ds-process-tag--icon.ds-tag--danger .ds-process-tag__icon {
+  background: url('../../../../assets/tag-icons/svg_3bf8aeb8.svg') center / 16px 16px no-repeat;
+}
+
+.ds-process-tag--icon.ds-tag--warning .ds-process-tag__icon {
+  background: #d86617;
+  border-radius: 50%;
+}
+
+.ds-process-tag--stamp {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  color: #505266;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.ds-process-tag--stamp.ds-tag--primary,
+.ds-process-tag--stamp.ds-tag--info {
+  color: #333fff;
+}
+
+.ds-process-tag--stamp.ds-tag--success {
+  color: #1fb09d;
+}
+
+.ds-process-tag--stamp.ds-tag--danger {
+  color: #fa5151;
+}
+
+.ds-process-tag--stamp.ds-tag--warning {
+  color: #d86617;
+}
+
+.ds-process-tag__stamp-shape {
+  position: absolute;
+  inset: 0;
+  background: url('../../../../assets/tag-icons/svg_79e4dc39.svg') center / 48px 48px no-repeat;
+}
+
+.ds-process-tag__stamp-text {
+  position: absolute;
+  top: 24px;
+  left: 3px;
+  width: 36px;
+  overflow: hidden;
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-xs);
+  text-align: center;
+  text-overflow: clip;
+  white-space: nowrap;
+  transform: rotate(-29deg);
+  transform-origin: center;
+}

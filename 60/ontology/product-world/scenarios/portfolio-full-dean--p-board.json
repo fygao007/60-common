@@ -1,0 +1,74 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "portfolio-full-dean--p-board",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "icloud-original",
+        "type": "existing-product",
+        "title": "iCloud 教学档案袋 dean/p-board/p-board.html"
+      }
+    ],
+    "actors": [
+      {
+        "id": "dean",
+        "name": "学院管理"
+      }
+    ],
+    "goals": [
+      "保留原页面业务内容，使用统一框架独立访问"
+    ],
+    "painPoints": [
+      "入口分散，旧角色目录中的页面未全部展示"
+    ],
+    "openQuestions": [
+      "旧 Demo 中未实现的服务端保存与权限规则仍需业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "教学档案管理",
+    "actorRefs": [
+      "dean"
+    ],
+    "preconditions": [
+      "从教学档案袋（全）进入"
+    ],
+    "mainFlow": [
+      "打开独立菜单页面",
+      "查看原页面业务内容并操作已有功能",
+      "通过框架切换应用或功能"
+    ],
+    "exceptions": [
+      "空数据使用设计系统空状态"
+    ]
+  },
+  "page": {
+    "title": "教学档案管理",
+    "templateId": "dashboard",
+    "menuRef": "teaching-portfolio-full.all:dean--p-board",
+    "fieldRefs": [],
+    "components": [
+      "DSCard",
+      "DSButton",
+      "DSDataTable",
+      "DSRegularListTemplate"
+    ],
+    "demoPath": "demos/teaching-portfolio-full/dean/p-board/p-board.html"
+  },
+  "requirements": {
+    "rules": [
+      "仅使用框架2与设计系统公共组件",
+      "通过注册菜单获取页面地址",
+      "保留原有页面内容和交互，不共享另一个应用的业务实现"
+    ],
+    "acceptanceCriteria": [
+      "顶部教学档案袋分组显示两个应用",
+      "页面独立加载且框架标识为 teaching-portfolio-full",
+      "包括 orphans 在内的业务页面可从菜单到达"
+    ]
+  },
+  "artifacts": {
+    "requirementDoc": "docs/generated/portfolio-full-dean--p-board.md"
+  }
+}

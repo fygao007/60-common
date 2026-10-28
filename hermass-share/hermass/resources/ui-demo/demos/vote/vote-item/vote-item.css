@@ -1,0 +1,28 @@
+@import '../../../framework/react-page-host.css';
+
+.vote-item-page {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  width: 100%;
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-container);
+}
+
+.vote-item-page > .ds-regular-list-template {
+  flex: 1;
+  min-height: 0;
+}
+
+.vi-toast {
+  position: fixed;
+  z-index: 80;
+  right: 24px;
+  bottom: 24px;
+  padding: 9px 16px;
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-primary);
+  box-shadow: var(--ds-shadow-lg);
+  color: var(--ds-color-text-inverse);
+}

@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>首页工作台场景</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Tag/index.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+      font-size: var(--ds-font-size-md);
+      line-height: var(--ds-line-height-md);
+    }
+
+    .whp-page {
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .whp-shell {
+      display: grid;
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      gap: 12px;
+    }
+
+    .whp-card {
+      min-width: 0;
+      padding: 16px;
+      background: var(--ds-color-bg-container);
+      border-radius: var(--ds-radius-xl);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .whp-hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .whp-identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .whp-avatar {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      color: #fff;
+      background: var(--ds-color-primary, #333fff);
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .whp-identity__text {
+      display: grid;
+      gap: 2px;
+    }
+
+    .whp-identity__text strong {
+      font-size: 16px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .whp-identity__text span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .whp-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .whp-stat {
+      display: grid;
+      gap: 2px;
+      padding: 12px 16px;
+      background: var(--ds-color-bg-page);
+      border-radius: var(--ds-radius-lg);
+    }
+
+    .whp-stat span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .whp-stat strong {
+      font-size: 22px;
+      line-height: 30px;
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .whp-columns {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .whp-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 12px;
+    }
+
+    .whp-section-title h2 {
+      margin: 0;
+      font-size: var(--ds-font-size-md);
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .whp-todo-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .whp-todo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 12px;
+      padding: 12px;
+      background: var(--ds-color-bg-page);
+      border-radius: var(--ds-radius-lg);
+    }
+
+    .whp-todo__main {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .whp-todo__main strong {
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .whp-todo__main span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .whp-todo__side {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .whp-entries {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .whp-entry {
+      display: grid;
+      gap: 2px;
+      padding: 12px;
+      text-align: left;
+      background: var(--ds-color-bg-page);
+      border: 0;
+      border-radius: var(--ds-radius-lg);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .whp-entry:hover {
+      background: #f5f5ff;
+    }
+
+    .whp-entry strong {
+      font-weight: var(--ds-font-weight-semibold);
+    }
+
+    .whp-entry span {
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .whp-notice-list {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .whp-notice {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: var(--ds-font-size-sm);
+    }
+
+    .whp-notice time {
+      flex: none;
+      color: var(--ds-color-text-secondary);
+    }
+
+    .whp-toast {
+      position: fixed;
+      z-index: 50;
+      right: 24px;
+      bottom: 24px;
+      padding: 9px 16px;
+      color: #fff;
+      background: rgba(31, 38, 153, .94);
+      border-radius: var(--ds-radius-md);
+      box-shadow: var(--ds-shadow-sm);
+    }
+
+    .whp-toast[hidden] { display: none; }
+
+    @media (max-width: 980px) {
+      .whp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .whp-columns { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="whp-page ds-scope">
+    <div class="whp-shell">
+      <section class="whp-card whp-hero">
+        <div class="whp-identity">
+          <div class="whp-avatar">金</div>
+          <div class="whp-identity__text">
+            <strong>金晓智，下午好</strong>
+            <span>示例学院 · 副教授 · 今天是 2026 年 7 月 5 日</span>
+          </div>
+        </div>
+        <button class="ds-button ds-button--primary ds-button--default-size" type="button" data-action="进入常用功能">
+          <span class="ds-button__label">进入常用功能</span>
+        </button>
+      </section>
+
+      <section class="whp-card">
+        <div class="whp-stats" aria-label="数据概览">
+          <div class="whp-stat"><span>待办事项</span><strong>4</strong></div>
+          <div class="whp-stat"><span>本学期已提交</span><strong>12</strong></div>
+          <div class="whp-stat"><span>退回待处理</span><strong>1</strong></div>
+          <div class="whp-stat"><span>未读消息</span><strong>6</strong></div>
+        </div>
+      </section>
+
+      <div class="whp-columns">
+        <section class="whp-card">
+          <div class="whp-section-title">
+            <h2>我的待办</h2>
+            <button class="ds-button ds-button--link ds-button--small" type="button" data-action="查看全部待办">
+              <span class="ds-button__label">查看全部</span>
+            </button>
+          </div>
+          <ul class="whp-todo-list">
+            <li class="whp-todo">
+              <div class="whp-todo__main">
+                <strong>2026 春季批次材料提交</strong>
+                <span>截止 2026-07-10 · 还剩 5 天</span>
+              </div>
+              <div class="whp-todo__side">
+                <span class="ds-tag ds-process-tag ds-process-tag--filled ds-tag--warning">待提交</span>
+                <button class="ds-button ds-button--default ds-button--small" type="button" data-action="去处理：材料提交"><span class="ds-button__label">去处理</span></button>
+              </div>
+            </li>
+            <li class="whp-todo">
+              <div class="whp-todo__main">
+                <strong>课程信息确认</strong>
+                <span>教务同步数据待确认 · 3 门课程</span>
+              </div>
+              <div class="whp-todo__side">
+                <span class="ds-tag ds-process-tag ds-process-tag--filled ds-tag--primary">进行中</span>
+                <button class="ds-button ds-button--default ds-button--small" type="button" data-action="去处理：课程确认"><span class="ds-button__label">去处理</span></button>
+              </div>
+            </li>
+            <li class="whp-todo">
+              <div class="whp-todo__main">
+                <strong>退回材料修改</strong>
+                <span>「实践记录」被退回 · 请补充佐证材料</span>
+              </div>
+              <div class="whp-todo__side">
+                <span class="ds-tag ds-process-tag ds-process-tag--filled ds-tag--danger">已退回</span>
+                <button class="ds-button ds-button--default ds-button--small" type="button" data-action="去处理：退回修改"><span class="ds-button__label">去处理</span></button>
+              </div>
+            </li>
+            <li class="whp-todo">
+              <div class="whp-todo__main">
+                <strong>年度总结填报</strong>
+                <span>开放中 · 截止 2026-07-31</span>
+              </div>
+              <div class="whp-todo__side">
+                <span class="ds-tag ds-process-tag ds-process-tag--filled ds-tag--neutral">未开始</span>
+                <button class="ds-button ds-button--default ds-button--small" type="button" data-action="去处理：年度总结"><span class="ds-button__label">去处理</span></button>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <div class="whp-shell">
+          <section class="whp-card">
+            <div class="whp-section-title"><h2>快捷入口</h2></div>
+            <div class="whp-entries">
+              <button class="whp-entry" type="button" data-action="打开：我的档案"><strong>我的档案</strong><span>查看与维护个人材料</span></button>
+              <button class="whp-entry" type="button" data-action="打开：材料提交"><strong>材料提交</strong><span>按批次提交考核材料</span></button>
+              <button class="whp-entry" type="button" data-action="打开：数据看板"><strong>数据看板</strong><span>完成率与质量分析</span></button>
+              <button class="whp-entry" type="button" data-action="打开：消息中心"><strong>消息中心</strong><span>通知与退回提醒</span></button>
+            </div>
+          </section>
+
+          <section class="whp-card">
+            <div class="whp-section-title"><h2>通知公告</h2></div>
+            <ul class="whp-notice-list">
+              <li class="whp-notice"><span>关于开展 2026 春季批次考核工作的通知</span><time>07-01</time></li>
+              <li class="whp-notice"><span>数据补采窗口将于本周五关闭</span><time>06-28</time></li>
+              <li class="whp-notice"><span>平台新增材料批量导入功能</span><time>06-20</time></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="whp-toast" role="status" data-toast hidden></div>
+
+  <script>
+    const toast = document.querySelector('[data-toast]');
+    document.querySelector('.whp-page').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-action]');
+      if (!button) return;
+      toast.textContent = `演示：${button.dataset.action}`;
+      toast.hidden = false;
+      window.clearTimeout(window.__whpTimer);
+      window.__whpTimer = window.setTimeout(() => { toast.hidden = true; }, 1600);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "wisedu-ui-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:edit-overlay-spec": "node ./scripts/generate-edit-overlay-spec.mjs",
+    "build:previews": "npm run generate:edit-overlay-spec && node ./scripts/build-react-previews.mjs",
+    "validate:framework2": "node ./framework/validate-framework-2.mjs",
+    "validate:links": "node ./validate-local-links.mjs",
+    "validate:edit-overlays": "node ./scripts/validate-edit-overlay-contract.mjs",
+    "validate:no-overlay-internals": "node ./scripts/validate-no-new-overlay-internals.mjs",
+    "validate:business-pages": "node ./scripts/validate-business-page-contract.mjs",
+    "accept:business-page-baseline": "node ./scripts/generate-business-page-baseline.mjs --accept",
+    "sync:field-ontology": "node ./scripts/sync-field-ontology.mjs",
+    "validate:field-ontology": "node ./scripts/validate-field-ontology-contract.mjs",
+    "validate:product-world": "node ./scripts/validate-product-world.mjs",
+    "validate:page-compositions": "node ./scripts/validate-page-compositions.mjs",
+    "generate:requirement": "node ./scripts/generate-requirement.mjs",
+    "generate:demo-context": "node ./scripts/generate-demo-context.mjs",
+    "validate": "npm run build:previews && npm run validate:links && npm run validate:framework2 && npm run validate:field-ontology && npm run validate:product-world && npm run validate:page-compositions && npm run validate:business-pages && npm run validate:edit-overlays && npm run validate:no-overlay-internals",
+    "test:edit-overlays": "npm run build:previews && node ./scripts/verify-edit-overlay-visual.mjs",
+    "test:edit-overlays:update": "npm run build:previews && node ./scripts/verify-edit-overlay-visual.mjs --update",
+    "test:business-pages": "npm run build:previews && node ./scripts/verify-business-pages.mjs",
+    "test:business-pages:update": "npm run build:previews && node ./scripts/verify-business-pages.mjs --update",
+    "test:ui": "npm run test:edit-overlays && npm run test:business-pages"
+  },
+  "dependencies": {
+    "echarts": "^6.1.0",
+    "lit": "^3.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.5",
+    "pixelmatch": "^7.1.0",
+    "playwright-core": "^1.52.0",
+    "pngjs": "^7.0.0"
+  }
+}

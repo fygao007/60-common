@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多选组状态</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    .fis-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: #fff; }
+    .fis-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: #fff; }
+    .fis-content { display: flex; flex-direction: column; gap: 24px; width: 693px; }
+    .fis-title { color: #000; font-size: 14px; font-weight: 600; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-rows { display: grid; grid-template-columns: 133px 560px; row-gap: 20px; }
+    .fis-state { align-self: start; padding-top: 5px; color: #505266; font-size: 14px; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-field { display: flex; align-items: flex-start; gap: 16px; }
+    .fis-field-label { flex: none; display: flex; align-items: center; justify-content: flex-end; width: 94px; height: 32px; color: #505266; font-size: 14px; line-height: 20px; text-align: right; font-family: 'PingFang SC', var(--ds-font-family); }
+    .fis-field-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+    .fis-choice-group { display: flex; flex-wrap: wrap; align-items: center; column-gap: 16px; row-gap: 8px; padding: 5px 0; }
+    .fis-choice-item { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .fis-choice-icon { display: inline-flex; width: 14px; height: 14px; }
+    .fis-choice-icon svg { width: 100%; height: 100%; display: block; }
+    .fis-choice-label { color: #000; font-size: 14px; line-height: 22px; font-family: 'PingFang SC', var(--ds-font-family); }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="fis-page">
+    <section class="fis-stage">
+      <div class="fis-content">
+        <span class="fis-title">状态</span>
+        <div class="fis-rows">
+          <div class="fis-state">未选中</div>
+          <div class="fis-field">
+            <span class="fis-field-label">标题名称</span>
+            <div class="fis-field-body">
+              <div class="fis-choice-group" role="group">
+                <label class="fis-choice-item"><span class="fis-choice-icon" data-wise-icon="checkboxOff"></span><span class="fis-choice-label">多选项</span></label>
+                <label class="fis-choice-item"><span class="fis-choice-icon" data-wise-icon="checkboxOff"></span><span class="fis-choice-label">多选项</span></label>
+                <label class="fis-choice-item"><span class="fis-choice-icon" data-wise-icon="checkboxOff"></span><span class="fis-choice-label">多选项</span></label>
+                <label class="fis-choice-item"><span class="fis-choice-icon" data-wise-icon="checkboxOff"></span><span class="fis-choice-label">多选项</span></label>
+                <label class="fis-choice-item"><span class="fis-choice-icon" data-wise-icon="checkboxOff"></span><span class="fis-choice-label">多选项</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

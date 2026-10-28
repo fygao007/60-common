@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>职称评审 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">职称评审</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">职</span>2026年度职称评审申报</h1>
+        <div class="ap-actions"><button class="ap-btn primary" type="button">进入申报材料填写</button></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>申报概况</h2></div>
+        <div class="ap-panel-body ap-info-grid">
+          <div class="ap-info-item"><p>申报系列</p><h4>高等学校教师系列</h4></div>
+          <div class="ap-info-item"><p>申报职称</p><h4>教授</h4></div>
+          <div class="ap-info-item"><p>现有职称</p><h4>副教授（2019年评定）</h4></div>
+          <div class="ap-info-item"><p>申报截止时间</p><h4>2026-06-20</h4></div>
+          <div class="ap-info-item"><p>评审周期</p><h4>预计 2026年9月公布结果</h4></div>
+          <div class="ap-info-item"><p>当前环节</p><h4 style="color:var(--ap-blue)">材料提前采集中</h4></div>
+        </div>
+      </section>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>评审进度</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-timeline">
+              <div class="ap-tl-item done"><span class="ap-tl-dot">✓</span><div class="ap-tl-body"><h4>资格条件自查</h4><p>已完成，符合申报条件</p></div></div>
+              <div class="ap-tl-item current"><span class="ap-tl-dot">2</span><div class="ap-tl-body"><h4>材料提前采集</h4><p>截止时间 2026-06-20，剩余 3 天，请尽快完成填报</p></div></div>
+              <div class="ap-tl-item"><span class="ap-tl-dot">3</span><div class="ap-tl-body"><h4>系所推荐与公示</h4><p>等待中</p></div></div>
+              <div class="ap-tl-item"><span class="ap-tl-dot">4</span><div class="ap-tl-body"><h4>学校学科组评审</h4><p>等待中</p></div></div>
+              <div class="ap-tl-item"><span class="ap-tl-dot">5</span><div class="ap-tl-body"><h4>市级评审委员会评审</h4><p>等待中</p></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>申报材料清单</h2></div>
+          <div class="ap-panel-body" style="padding:0">
+            <table class="ap-table">
+              <thead><tr><th>材料项</th><th>要求</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>个人专业技术工作总结</td><td>不少于3000字</td><td><span class="ap-tag green">已提交</span></td></tr>
+                <tr><td>近5年教学工作量证明</td><td>系统自动生成</td><td><span class="ap-tag green">已生成</span></td></tr>
+                <tr><td>代表性论文/著作</td><td>不少于2篇（部）</td><td><span class="ap-tag orange">待上传</span></td></tr>
+                <tr><td>科研项目结题证明</td><td>主持市级及以上项目1项</td><td><span class="ap-tag orange">待上传</span></td></tr>
+                <tr><td>师德师风考核证明</td><td>近5年考核均为合格以上</td><td><span class="ap-tag green">已生成</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>历史评审记录</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>申报年度</th><th>申报职称</th><th>评审结果</th><th>公布时间</th></tr></thead>
+            <tbody>
+              <tr><td>2019年度</td><td>副教授</td><td><span class="ap-tag green">通过</span></td><td>2019-09-28</td></tr>
+              <tr><td>2014年度</td><td>讲师</td><td><span class="ap-tag green">通过</span></td><td>2014-10-16</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'title-review', versionLabel:'职称评审', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'title-review',label:'职称评审',closable:true}]
+});
+</script>
+</body>
+</html>

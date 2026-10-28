@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教学档案袋（教职工） - 框架2</title>
+  <link rel="stylesheet" href="../framework/theme.css" />
+  <link rel="stylesheet" href="../assets/bundles/pages/teaching-portfolio-teacher.bundle.css" />
+</head>
+<body>
+  <div class="frame2-stage ds-scope" data-ds-page="react">
+    <div id="app"></div>
+  </div>
+
+  <script src="../assets/icon-registry.js"></script>
+  <script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+  <script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+  <script src="../framework/framework-2.js?v=2.2.3"></script>
+  <script>
+    window.__DS_PAGE__ = {
+      activeFeature: 'tp-achievements'
+    };
+
+    WiseFramework2.mount({
+      roleName: '教职工',
+      activeApp: 'teaching-portfolio',
+      activeFeature: window.__DS_PAGE__.activeFeature,
+      userName: '金晓智',
+      versionLabel: '教学档案袋',
+      appMenus: {
+        'teaching-portfolio': [
+          { key: 'tp-overview', label: '档案总览', icon: 'home' },
+          { key: 'tp-mine', label: '我的教学档案', icon: 'prepare', children: [
+            { key: 'tp-courses', label: '课程教学档案' },
+            { key: 'tp-upload', label: '教学文件上传' },
+            { key: 'tp-reflect', label: '教学总结与反思' },
+            { key: 'tp-achievements', label: '荣誉与成果' }
+          ] },
+          { key: 'tp-special', label: '特色档案', icon: 'camp', children: [
+            { key: 'tp-club', label: '学生社团档案' },
+            { key: 'tp-coop', label: '现场工程师班' }
+          ] },
+          { key: 'tp-review-group', label: '审核与开放', icon: 'recommend', children: [
+            { key: 'tp-feedback', label: '我收到的反馈' },
+            { key: 'tp-visibility', label: '开放范围设置' }
+          ] },
+          { key: 'tp-growth', label: '目标与画像', icon: 'exam', children: [
+            { key: 'tp-kpi', label: '我的目标' },
+            { key: 'tp-portrait', label: '成长画像' }
+          ] }
+        ]
+      },
+      tabs: [
+        { key: 'tp-achievements', label: '荣誉与成果', closable: true }
+      ],
+      onFeatureChange: function (key) {
+        window.__DS_PAGE__.activeFeature = key;
+        window.dispatchEvent(new CustomEvent('ds:feature-change', { detail: { key: key } }));
+      }
+    });
+  </script>
+  <script defer src="../assets/bundles/pages/teaching-portfolio-teacher.bundle.js"></script>
+</body>
+</html>

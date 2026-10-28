@@ -1,0 +1,10 @@
+@import '../../../framework/react-page-host.css';
+
+.progress-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  color: var(--ds-color-text-heading);
+  background: var(--ds-color-bg-container);
+}

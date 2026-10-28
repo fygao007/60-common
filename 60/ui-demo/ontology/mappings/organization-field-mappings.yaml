@@ -1,0 +1,284 @@
+ontology: szpu-hr
+version: 0.3.0
+domain: organization
+title: 组织机构字段映射
+
+mappings:
+  - sourceTable: T_RS_JGGL_XZJG
+    sourceTableLabel: 行政机构表
+    targetEntity: Organization
+    recordCount: 355
+    capturedAt: 2026-09-04
+    authority: system-export
+    description: 行政机构表到组织实体的字段映射
+    
+    fields:
+      - sourceField: ID
+        sourceLabel: 主键
+        targetAttribute: organizationId
+        mappingRule: direct
+        transformation: "prefix with 'org-xzjg-'"
+        required: true
+        
+      - sourceField: DM
+        sourceLabel: 代码
+        targetAttribute: organizationCode
+        mappingRule: direct
+        required: true
+        unique: true
+        example: "107"
+        
+      - sourceField: MC
+        sourceLabel: 名称
+        targetAttribute: name
+        mappingRule: direct
+        required: true
+        example: "深汕校区管理办公室"
+        
+      - sourceField: YWMC
+        sourceLabel: 英文名称
+        targetAttribute: nameEn
+        mappingRule: direct
+        nullable: true
+        dataQuality: mostly-null
+        
+      - sourceField: JC
+        sourceLabel: 简称
+        targetAttribute: shortName
+        mappingRule: direct
+        nullable: true
+        
+      - sourceField: CC
+        sourceLabel: 层次
+        targetAttribute: level
+        mappingRule: vocabulary-lookup
+        vocabulary: OrganizationLevel
+        transformation: "integer to level code"
+        required: true
+        example: 3
+        note: 取值范围1-4，表示组织层级深度
+        
+      - sourceField: LS
+        sourceLabel: 隶属
+        targetAttribute: parentOrganizationCode
+        mappingRule: reference-by-code
+        transformation: "lookup organizationId by code"
+        nullable: true
+        example: "100"
+        note: 指向上级组织的 DM 字段
+        
+      - sourceField: LB
+        sourceLabel: 类别
+        targetAttribute: organizationCategory
+        mappingRule: vocabulary-lookup
+        vocabulary: OrganizationCategory
+        nullable: true
+        example: "100"
+        note: 对应组织大类代码
+        
+      - sourceField: JB
+        sourceLabel: 级别
+        targetAttribute: organizationLevel
+        mappingRule: vocabulary-lookup
+        vocabulary: OrganizationLevel
+        example: "1"
+        note: 与 CC 字段语义重叠，需业务确认区别
+        
+      - sourceField: CLRQ
+        sourceLabel: 成立日期
+        targetAttribute: establishedDate
+        mappingRule: direct
+        nullable: true
+        dataQuality: mostly-null
+        
+      - sourceField: CLWH
+        sourceLabel: 成立文号
+        targetAttribute: establishmentDocument
+        mappingRule: direct
+        nullable: true
+        dataQuality: mostly-null
+        
+      - sourceField: CXRQ
+        sourceLabel: 撤销日期
+        targetAttribute: abolishedDate
+        mappingRule: direct
+        nullable: true
+        dataQuality: mostly-null
+        note: 用于组织生命周期管理
+        
+      - sourceField: CXWH
+        sourceLabel: 撤销文号
+        targetAttribute: abolishmentDocument
+        mappingRule: direct
+        nullable: true
+        dataQuality: mostly-null
+        
+      - sourceField: DWZZ
+        sourceLabel: 单位职责
+        targetAttribute: responsibilities
+        mappingRule: direct
+        nullable: true
+        dataQuality: mostly-null
+        
+      - sourceField: SFQY
+        sourceLabel: 是否启用
+        targetAttribute: isActive
+        mappingRule: boolean-conversion
+        transformation: "'1' -> true, '0' or null -> false"
+        required: true
+        example: "1"
+        
+      - sourceField: PX
+        sourceLabel: 排序
+        targetAttribute: sortOrder
+        mappingRule: direct
+        required: true
+        example: 9
+        
+      - sourceField: SFGK
+        sourceLabel: 是否挂靠
+        targetAttribute: isAffiliated
+        mappingRule: boolean-conversion
+        transformation: "'1' -> true, '0' or null -> false"
+        example: "0"
+        
+      - sourceField: GKGX
+        sourceLabel: 挂靠关系
+        targetAttribute: affiliatedToCode
+        mappingRule: reference-by-code
+        nullable: true
+        dataQuality: mostly-null
+        note: 指向挂靠上级组织的代码，需建立独立关系
+        
+      - sourceField: FWWJ
+        sourceLabel: 范围文件
+        targetAttribute: null
+        mappingRule: skip
+        reason: 业务含义不明确，暂不映射
+        
+      - sourceField: CREATE_BY
+        sourceLabel: 创建人
+        targetAttribute: metadata.createdBy
+        mappingRule: audit-field
+        
+      - sourceField: CREATE_TIME
+        sourceLabel: 创建时间
+        targetAttribute: metadata.createdAt
+        mappingRule: audit-field
+        
+      - sourceField: UPDATE_BY
+        sourceLabel: 更新人
+        targetAttribute: metadata.updatedBy
+        mappingRule: audit-field
+        
+      - sourceField: UPDATE_TIME
+        sourceLabel: 更新时间
+        targetAttribute: metadata.updatedAt
+        mappingRule: audit-field
+        
+      - sourceField: DRWJ
+        sourceLabel: 导入文件
+        targetAttribute: metadata.importSource
+        mappingRule: audit-field
+
+  - sourceTable: T_RS_ZXBZ_DW
+    sourceTableLabel: 执行标准-单位表
+    targetEntity: Organization
+    recordCount: 355
+    capturedAt: 2026-09-04
+    authority: system-export
+    description: 单位表到组织实体的字段映射（与 T_RS_JGGL_XZJG 高度重叠）
+    status: need-clarification
+    
+    fields:
+      - sourceField: DM
+        targetAttribute: organizationCode
+        mappingRule: direct
+        
+      - sourceField: MC
+        targetAttribute: name
+        mappingRule: direct
+        
+      - sourceField: MC_EN
+        targetAttribute: nameEn
+        mappingRule: direct
+        note: 相比 XZJG.YWMC，此字段命名更规范
+        
+      - sourceField: JC
+        targetAttribute: shortName
+        mappingRule: direct
+        
+      - sourceField: CC
+        targetAttribute: level
+        mappingRule: vocabulary-lookup
+        note: 此表 CC 为字符串类型，XZJG 为整数
+        
+      - sourceField: LS
+        targetAttribute: parentOrganizationCode
+        mappingRule: reference-by-code
+        
+      - sourceField: LBDM
+        targetAttribute: organizationCategory
+        mappingRule: vocabulary-lookup
+        vocabulary: OrganizationCategory
+        
+      - sourceField: SFSY
+        targetAttribute: isActive
+        mappingRule: boolean-conversion
+        
+      - sourceField: PX
+        targetAttribute: sortOrder
+        mappingRule: direct
+        
+      - sourceField: BZLY
+        targetAttribute: dataSource
+        mappingRule: direct
+        note: 标准来源字段，用于数据溯源
+
+dataQualityIssues:
+  - issue: 两表数据重复
+    description: T_RS_JGGL_XZJG 和 T_RS_ZXBZ_DW 记录数完全相同（355条），代码和名称高度重叠
+    recommendation: 需业务确认两表区别、使用场景和优先级
+    priority: high
+    
+  - issue: 生命周期字段缺失
+    description: CLRQ、CLWH、CXRQ、CXWH 等字段在大部分记录中为空
+    recommendation: 补充组织成立和撤销的历史信息，完善生命周期管理
+    priority: medium
+    
+  - issue: 层级字段语义重叠
+    description: CC（层次）和 JB（级别）字段含义接近，但取值不完全一致
+    recommendation: 明确两字段的业务区别，或统一为一个字段
+    priority: medium
+    
+  - issue: 挂靠关系数据缺失
+    description: GKGX 字段绝大部分为空，挂靠关系信息不完整
+    recommendation: 如需支持双重领导关系，需补充挂靠信息
+    priority: low
+
+transformationRules:
+  - name: 组织代码到组织ID转换
+    description: 通过组织代码查找对应的组织主键
+    logic: |
+      organizationId = lookup(Organization, organizationCode == sourceValue).organizationId
+      
+  - name: 层级编码规则
+    description: 组织代码体现层级关系
+    logic: |
+      一级单位：1-999（如 100、300）
+      二级单位：父代码 + 两位序号（如 107、319）
+      三级单位：父代码 + 三位序号（如 319012）
+      
+  - name: 启用状态转换
+    description: 字符串 '1'/'0' 转布尔值
+    logic: |
+      '1' -> true
+      '0' -> false
+      null -> false
+
+notes:
+  - 本映射基于 2026-09-04 数据快照，实际使用需从权威数据源重新提取
+  - 组织实体的 organizationType 字段需根据 organizationCategory 和业务规则派生
+  - 父子关系需通过 parentOrganizationCode 反查建立，注意循环引用检测
+  - 挂靠关系应建模为独立的 OrganizationAffiliation 关系实体
+  - 审计字段（CREATE_BY 等）建议统一存储在 metadata 对象中

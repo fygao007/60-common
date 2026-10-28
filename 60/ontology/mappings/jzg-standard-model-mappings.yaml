@@ -1,0 +1,321 @@
+ontology: szpu-hr
+version: 0.1.0
+source: jzg-standard-model-v4.3.1
+sourceAuthority: approved-data-standard
+scope: 教职工基本信息标准模型 V4.3.1 的 90 张主表、1374 个业务字段到本体标准实体的映射草案。
+statement: >-
+  本文件只记录标准模型表与本体概念的对应关系、差异和缺口，不定义字段。
+  物理列原样保存在 sources/legacy-schemas/jzg-standard-model-v4.3.1.json；
+  标准字段定义以 model-library/entity-field-models.json 与
+  basic-information/basic-information-fields.json 为准。
+  T_TB_JZG_* 共 86 张为教师端填报镜像表，字段随主表，不单独映射。
+
+masterTableAlignment:
+  table: T_JZG_JBXX
+  target: StaffBasicInformation
+  result: 已对齐
+  detail: >-
+    xlsx 主表 171 个有代码字段与现有 158 个 StaffBasicInformation 字段按 sourceCode 比对，
+    交集 143。差异不构成缺口：仅 xlsx 有的 28 个中，25 个是 BY01-BY20 备用位与
+    WID/CZRQ/CZZ/CZZXM/TBRQ/TBLX 技术列；仅 ontology 有的 15 个中，11 个是平台公共列。
+  namingConflicts:
+    - standard: { code: SFZJLXDM, label: 身份证件类型 }
+      ontology: { fieldId: StaffBasicInformation.zjlx, label: 证件类型 }
+      status: synonym
+      action: 需统一命名，二者语义目标同为 PersonIdentity.documentType。
+    - standard: { code: SFZJH, label: 身份证件号 }
+      ontology: { fieldId: StaffBasicInformation.zjhm, label: 证件号码 }
+      status: synonym
+      action: 同上，语义目标同为 PersonIdentity.documentNumber。
+    - standard: { code: null, label: 姓名全拼, seq: 60 }
+      ontology: { fieldId: StaffBasicInformation.xmqp }
+      status: standard-missing-code
+      detail: V4.3.1 该行未给字段代码，ontology 侧已自定 XMQP，需回标准库确认。
+    - standard: { code: null, label: 双师认定日期, seq: 1030 }
+      ontology: { fieldId: StaffBasicInformation.ssrdrq }
+      status: standard-missing-code
+    - ontologyOnly: [ZCDM, SFZZ, RSZZZT, QYZT, PX, FJ]
+      status: business-extension-candidate
+      detail: >-
+        ZCDM（职称）与标准 ZYJSZWDM（专业技术职务）同绑 RS.ZXBZ.ZYJSZW；
+        SFZZ / RSZZZT 与标准 DQZTDM（当前状态）语义重叠。需按
+        governance/field-reuse-policy.md 第 5 条评审去重。
+
+# ============ 一、可映射到现有标准实体 ============
+mappedToStandard:
+  - tables: [T_JZG_JBXX]
+    target: Person + StaffBasicInformation
+    note: 见 masterTableAlignment。
+
+  - tables: [T_JZG_GW, T_JZG_XPGW]
+    target: EmploymentAssignment + Position
+    columns:
+      - { column: GWDM, concept: Position.positionCode }
+      - { column: GWLBDM, concept: Position.positionCategory, dictionary: T_RS_ZXBZ_GWLB }
+      - { column: GWDJDM, concept: Position.positionLevel, dictionary: T_RS_ZXBZ_GWDJ }
+      - { column: SPDWDM, concept: EmploymentAssignment.organizationId }
+      - { column: GWPRKSRQ, concept: EmploymentAssignment.validFrom }
+      - { column: GWPRJSRQ, concept: EmploymentAssignment.validTo }
+      - { column: KHJL, concept: null, status: gap, note: 岗位聘期考核结论，本体无 }
+    note: PositionLevel 词表当前 concepts 为空数组，可由 T_RS_ZXBZ_GWDJ 的 39 个码值填充。
+
+  - tables: [T_JZG_DZZW]
+    target: EmploymentAssignment
+    discriminator: assignmentType = 党政职务
+  - tables: [T_JZG_XNDD]
+    target: EmploymentAssignment + HREvent
+    discriminator: eventType = AssignmentChanged
+  - tables: [T_JZG_HT]
+    target: Contract
+  - tables: [T_JZG_ZZMM]
+    target: StaffBasicInformation
+    group: 04政治面貌
+  - tables: [T_JZG_JSZGXX, T_JZG_ZSXX, T_JZG_GJYYZS, T_JZG_QTJN, T_JZG_YYNL]
+    target: StaffBasicInformation
+    group: 10资质信息
+    note: 标准模型按证书类型拆成 5 张表，ontology 侧压缩在资质信息分组的 12 个字段内，粒度不同。
+  - tables: [T_JZG_SSXJSRD]
+    target: StaffBasicInformation
+    group: 11双师信息
+    columns:
+      - { column: ZZRDJB, concept: StaffBasicInformation.ssrdjb }
+      - { column: YXQKSSJ, concept: null, status: gap, note: 双师认定有效期，ontology 只有认定日期 ssrdrq，无有效期 }
+
+  - tables: [T_JZG_QYSJDL]
+    target: EnterprisePractice
+    columns:
+      - { column: SJQYMC, concept: EnterprisePractice.enterpriseName, status: candidate }
+      - { column: SJGW, concept: EnterprisePractice.practicePosition }
+      - { column: SJKSSJ, concept: EnterprisePractice.startDate }
+      - { column: SJJSSJ, concept: EnterprisePractice.endDate }
+      - { column: GZRW, concept: EnterprisePractice.practiceContent }
+      - { column: KHJL, concept: EnterprisePractice.status, status: code-mismatch, note: 考核结论词表与 EvidenceReviewStatus 不同 }
+      - { column: RDQYSJTS, concept: null, status: gap, note: 认定企业实践天数，本体无。可用于双师认定核算 }
+      - { column: SJXS, concept: null, status: gap, note: 实践形式 }
+      - { column: SJLB, concept: null, status: gap, note: 实践类别 }
+
+  - tables: [T_JZG_JXPXQK, T_JZG_GNJX, T_JZG_GNPX, T_JZG_HWYXXX, T_JZG_GDSBXX]
+    target: TrainingExperience
+    discriminator: trainingType 区分进修 / 国内培训 / 海外研修 / 攻读硕博
+    columns:
+      - { column: PXXS, concept: TrainingExperience.hours, note: 来自 T_JZG_JXPXQK 培训学时 }
+      - { column: JXDW, concept: TrainingExperience.provider }
+      - { column: KSSJ, concept: TrainingExperience.startDate }
+      - { column: JSSJ, concept: TrainingExperience.endDate }
+      - { column: ZFYS, concept: null, status: gap, note: 总费用/个人承担/学校承担三项经费，本体无 }
+
+  - tables: [T_JZG_SHJZ, T_JZG_XSTTJZ, T_JZG_JZ]
+    target: ProfessionalAppointment
+    discriminator: appointmentType 区分社会兼职 / 学术团体兼职 / 其他兼职
+
+  - tables: [T_JZG_JXCGHJ]
+    target: TeachingAchievement
+    discriminator: achievementType = 教学成果奖
+    columns:
+      - { column: HJMC, concept: TeachingAchievement.title }
+      - { column: JLJB, concept: TeachingAchievement.level, dictionary: T_RS_ZXBZ_JLJB }
+      - { column: HJRQ, concept: TeachingAchievement.achievedAt }
+      - { column: BJDW, concept: TeachingAchievement.awardingOrganization }
+      - { column: PM, concept: TeachingAchievement.role, status: partially-mapped, note: 现网存排名数字，本体 role 是文本角色 }
+
+  - tables: [T_JZG_JGXM]
+    target: TeachingAchievement
+    discriminator: achievementType = 教研项目
+    supports: 首页「教研与学术统计 · 教研项目 12 项」
+    columns:
+      - { column: XMMC, concept: TeachingAchievement.title }
+      - { column: XMJBDM, concept: TeachingAchievement.level }
+      - { column: LXRQ, concept: TeachingAchievement.achievedAt, status: candidate, note: 立项日期与「取得日期」语义不同，需确认 }
+      - { column: XMJF, concept: null, status: gap, note: 项目经费，本体 TeachingAchievement 无金额字段 }
+      - { column: GZL, concept: null, status: gap, note: 工作量 }
+
+  - tables: [T_JZG_JLJRY, T_JZG_RYXX]
+    target: TeachingAchievement
+    discriminator: achievementType = 荣誉称号
+  - tables: [T_JZG_ZDXSCJJSHJ, T_JZG_ZDXSHJQK]
+    target: TeachingAchievement
+    discriminator: achievementType = 学生竞赛指导
+  - tables: [T_JZG_KYZL, T_JZG_RJZZQ, T_JZG_SB]
+    target: TeachingAchievement
+    discriminator: achievementType = 专利
+    note: 软件著作权与商标在 TeachingAchievementType 词表中无对应值，暂并入专利，需评审是否扩词表。
+
+# ============ 二、本体缺失、需新增标准实体 ============
+pendingStandardEntities:
+
+  - proposedEntity: TeachingWorkload
+    label: 教学工作量
+    domain: teaching-portfolio
+    source: T_JZG_JXGZL
+    supports: 首页「业绩纵览 · 教学工作量 288 学时」
+    rationale: >-
+      本体现有 TeachingAssignment.completedHours 是按授课任务记的完成学时，
+      而标准模型按学年学期分别记录工作量、教学时数、个人承担学时数和其他工作折合课时数四个口径，
+      多人合上一门课时只有「个人承担学时数」可归属到个人。现有单一字段无法表达。
+    columns:
+      - { column: XN, proposedField: academicYear }
+      - { column: XQDM, proposedField: term, vocabulary: AcademicTerm }
+      - { column: GZL, proposedField: workload, note: 工作量 }
+      - { column: JXSS, proposedField: teachingHours, note: 教学时数 }
+      - { column: GRCDXSS, proposedField: personalHours, note: 个人承担学时数，按人统计时应取此列 }
+      - { column: QTGZZHKSS, proposedField: otherConvertedHours }
+      - { column: KCXZ, proposedField: courseNature }
+      - { column: JXNR, proposedField: teachingContent }
+      - { column: SKDX, proposedField: audience }
+      - { column: SKRS, proposedField: audienceCount }
+      - { column: JXQSRQ, proposedField: startDate }
+      - { column: JXZZRQ, proposedField: endDate }
+
+  - proposedEntity: StudentSupervision
+    label: 指导学生情况
+    domain: teaching-portfolio
+    source: T_JZG_ZDXSQK
+    supports: 首页「业绩纵览 · 指导学生 18 人」与「指导学生统计」环形图
+    rationale: >-
+      上一轮页面分析判定「指导学生」无数据来源。标准模型此表按年份和培养层次记录
+      指导学生人数与指导毕业生人数，直接构成环形图的分组维度和数值。
+      本体在此之前没有任何师生指导关系。
+    columns:
+      - { column: NF, proposedField: year }
+      - { column: PYCCDM, proposedField: educationLevel, note: 培养层次，环形图「专科生/本科生」的分组维度 }
+      - { column: ZDXSRS, proposedField: supervisedStudentCount }
+      - { column: ZDBYSRS, proposedField: supervisedGraduateCount }
+      - { column: XZZDXSRS, proposedField: assistedStudentCount }
+      - { column: XZZDBYSRS, proposedField: assistedGraduateCount }
+      - { column: ZDXSXM, proposedField: null, status: privacy-review, note: 指导学生姓名为学生个人信息，分级需按 restricted 评审后再决定是否进本体 }
+
+  - proposedEntity: ResearchProject
+    label: 科研项目
+    domain: research
+    source: T_JZG_KYXM
+    supports: 首页「业绩纵览 · 科研经费 42.6 万元」与「教研与学术统计 · 科研项目 8 项」
+    rationale: >-
+      上一轮判定科研经费与科研项目全本体零命中。标准模型此表含四个独立金额口径，
+      是首页科研经费的唯一可能来源。需新开 research 域，本体现有 domain 列表不含科研。
+    columns:
+      - { column: XMMC, proposedField: name }
+      - { column: XMJBDM, proposedField: projectLevel }
+      - { column: XMLYDM, proposedField: projectSource }
+      - { column: XMZXZTDM, proposedField: executionStatus }
+      - { column: LXRQ, proposedField: approvedAt }
+      - { column: JXRQ, proposedField: closedAt }
+      - { column: HTJF, proposedField: contractFunding, note: 合同经费 }
+      - { column: PTJF, proposedField: matchingFunding, note: 配套经费 }
+      - { column: DZJF, proposedField: receivedFunding, note: 到账经费 }
+      - { column: SJZCJE, proposedField: actualExpenditure, note: 实际支出金额 }
+      - { column: BRPM, proposedField: personalRank }
+      - { column: JSDM, proposedField: role }
+    openQuestion: >-
+      首页「科研经费」取合同经费、到账经费还是实际支出？三者口径不同，
+      通常对外统计用到账经费。需产品明确后才能写 SQL。
+
+  - proposedEntity: ResearchPaper
+    label: 科研论文
+    domain: research
+    source: T_JZG_KYLW + T_JZG_KYLWSL
+    supports: 首页「业绩纵览 · 发表论文 6 篇」与「教研与学术统计 · 论文/著作 10 项」
+    rationale: >-
+      本体现用 TeachingAchievement.achievementType='论文' 承载，但该实体只有 8 个通用字段，
+      装不下刊物级别、ISSN、影响因子、SCI 分区、卷期页码、是否通讯作者等 40 个论文专有属性。
+      科研论文属科研域，与教学成果不是同一类事实。
+    keyColumns: [LWMC, KWMC, KWJBDM, ISSN, YXYZ, FBRQ, SFTXZZ, BRPM, LWLXDM, SFDBZ]
+
+  - proposedEntity: ResearchPublication
+    label: 科研著作
+    domain: research
+    source: T_JZG_KYZZ
+    supports: 首页「教研与学术统计 · 论文/著作」中的「著作」
+    rationale: TeachingAchievementType 词表有「教材」无「著作」，二者不等价，需独立实体。
+
+  - proposedEntity: PerformanceAssessment
+    label: 考核信息
+    domain: workforce
+    source: T_JZG_KH
+    rationale: 年度考核是人事核心事实，本体完全缺失。岗位表 T_JZG_GW.KHJL 也依赖考核结论。
+    keyColumns: [KHMC, KHRQ, KHLBDM, KHJL, KHNY, KHDWMC]
+
+  - proposedEntity: WorkExperience
+    label: 工作经历
+    domain: workforce
+    source: T_JZG_GZJL
+    rationale: Person 无入校前工作经历，招聘资格审查与职称评审均需要。
+
+  - proposedEntity: EducationRecord
+    label: 学历学位记录
+    domain: workforce
+    source: T_JZG_XLXW
+    rationale: >-
+      StaffBasicInformation 的 05 最高学历学位信息只有 6 个单值字段，
+      标准模型 T_JZG_XLXW 是多条历史记录。当前无法回答「第一学历」「历次学位」。
+
+  - proposedEntity: ProfessionalTitleRecord
+    label: 职称记录
+    domain: workforce
+    source: T_JZG_ZYJSZW
+    rationale: >-
+      同上，StaffBasicInformation 06 组是单值现聘职务，
+      T_JZG_ZYJSZW 是评聘历史。ontology 现有 zcdm 与 zyjszwdm 双字段的重叠问题也源于此。
+
+pendingEntitiesStatus: >-
+  以上 9 个实体均为提案。确认后先在 ontology/model-library/entity-field-models.json 定义，
+  再执行 npm run sync:field-ontology 和 npm run validate:field-ontology。
+  不得先在页面或运行时代码中创建字段。
+  ResearchProject / ResearchPaper / ResearchPublication 需先确认 research 域是否纳入本体范围。
+
+# ============ 三、不进入本体 ============
+outOfScope:
+  - tables: [T_JZG_CL, T_JZG_JJ, T_JZG_TS, T_JZG_WWCLP, T_JZG_YQSB]
+    reason: 车辆、家俱、图书、文物陈列品、设备属资产域，不是人事事实。
+  - tables: [T_JZG_GRWLK, T_JZG_YHK, T_JZG_XMZ, T_JZG_JBDY]
+    reason: 往来款、银行卡、项目账、基本待遇属财务域；银行卡为 restricted 数据，按 governance/data-classification.yaml 不得进入通用模型。
+  - tables: [T_JZG_ZP]
+    reason: 照片属附件存储，不是字段。
+  - tables: [T_JZG_BSHXX, T_JZG_BSH_DSBGSQ, T_JZG_BSH_KHGL, T_JZG_BSH_KHZCY, T_JZG_BSH_KTBGJL, T_JZG_BSH_KTXX, T_JZG_BSH_TXSQ, T_JZG_BSH_XZXX, T_JZG_BSH_YQCZSQ, T_JZG_BSH_YQCZXX, T_JZG_BSH_ZZHXMQK]
+    reason: 博士后业务 11 张表属独立业务域，本期 60 系统建设范围未覆盖，待立项后单独建模。
+  - tables: [T_JZG_JTCY]
+    reason: 家庭成员含第三方个人信息，需先完成隐私影响评估再决定是否建模。
+    status: privacy-review
+
+# ============ 四、字典差异 ============
+dictionaryAlignment:
+  standardModelDictionaries: 456
+  ontologyDictionaries: 145
+  intersection: 131
+  onlyInOntology: 14
+  valueMismatch: 31
+  detail: >-
+    交集 131 套中有 31 套条目不一致，标准模型条目普遍多于 ontology。
+    但不可直接以标准模型覆盖：ontology 现有字典来自 rs-model-public-dictionaries-20260610
+    （2026-06 导出），V4.3.1 模型日期为 2024-12，导出时间更晚。
+    authorityOrder 中 approved-data-standard 高于 system-export，但版本时间相反，
+    必须逐套人工裁决，不得批量同步。
+  examples:
+    - { dictionary: T_RS_ZXBZ_GWDJ, standard: 39, ontology: 24, note: 岗位等级，标准模型多 15 个码值，可用于填充当前为空的 PositionLevel 词表 }
+    - { dictionary: T_RS_ZXBZ_JB, standard: 20, ontology: 14 }
+    - { dictionary: T_RS_ZXBZ_HYJB, standard: 8, ontology: 5 }
+    - { dictionary: T_RS_ZXBZ_GJDQ, standard: 0, ontology: 253, note: 标准模型此表为空壳，ontology 侧数据更完整 }
+  action: 需产品与数据管理方确认基准版本后，逐套裁决，结论回写 basic-information/dictionary-catalog.json。
+
+# ============ 五、仍然无解的缺口 ============
+remainingGaps:
+  - id: no-teaching-evaluation
+    detail: >-
+      90 张标准模型表中无学生评教、教学质量评价、听课督导相关表。
+      首页「学生评教均分 4.78」在人事标准模型中同样无来源。
+    conclusion: 确认属教务系统数据，须按集成需求单独登记来源，不在人事本体内解决。
+  - id: no-course-master-data
+    detail: >-
+      标准模型无课程表，首页「课程建设统计」的国家级/省部级/校级/院级四档仍无来源。
+      教学工作量表只有课程性质 KCXZ，没有课程建设级别。
+    conclusion: 与前两轮结论一致，需改用 TeachingAchievement.level 按项统计，或由教务系统提供。
+  - id: research-domain-not-in-ontology
+    detail: 本体 domain 列表为 workforce / organization / position / recruitment / onboarding / teaching-portfolio / governance，无科研域。
+    conclusion: 纳入 ResearchProject 等实体前需先决定是否扩展 domain。
+
+unresolved:
+  - 需确认 SFZJLXDM/SFZJH 与 ontology 的 ZJLX/ZJHM 以哪套命名为准。
+  - 需确认 ZCDM 与 ZYJSZWDM 的去重方案。
+  - 需确认首页科研经费取合同经费、到账经费还是实际支出。
+  - 需确认 456 套标准模型字典与 145 套现有字典的基准版本。
+  - 需确认科研域是否纳入本体建设范围。
+  - 需完成 T_JZG_ZDXSQK 指导学生姓名与 T_JZG_JTCY 家庭成员的隐私影响评估。

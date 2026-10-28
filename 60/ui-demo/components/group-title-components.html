@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一级标题分组组件</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <script defer src="../packages/design-system/web-components/GroupTitle/ds-group-title.js"></script>
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+    }
+
+    .group-title-page {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .group-title-page__head {
+      width: min(1038px, 100%);
+      margin-bottom: 20px;
+    }
+
+    .group-title-page__head h1 {
+      margin: 0;
+      color: var(--ds-color-text-heading);
+      font-size: var(--ds-font-size-title);
+      font-weight: var(--ds-font-weight-semibold);
+      line-height: var(--ds-line-height-title);
+    }
+
+    .group-title-page__head p {
+      margin: 6px 0 0;
+      color: var(--ds-color-text-secondary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .group-title-demo {
+      display: grid;
+      gap: 20px;
+      width: min(1088px, 100%);
+      padding: 24px;
+      background: var(--ds-color-white);
+      border: 1px solid var(--ds-color-border-secondary);
+      border-radius: var(--ds-radius-lg);
+      box-shadow: var(--ds-shadow-xs);
+    }
+
+    .group-title-example {
+      display: grid;
+      gap: 8px;
+    }
+
+    .group-title-example__label {
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-xs);
+      line-height: var(--ds-line-height-xs);
+    }
+
+    .demo-leading {
+      width: 4px;
+      height: 14px;
+      background: var(--ds-color-primary);
+      border-radius: var(--ds-radius-pill);
+    }
+
+    .demo-action {
+      padding: 0;
+      color: var(--ds-color-primary);
+      background: transparent;
+      border: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .demo-action:hover {
+      color: var(--ds-color-primary-hover);
+    }
+
+    .demo-log {
+      min-height: 20px;
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-xs);
+      line-height: var(--ds-line-height-xs);
+    }
+  </style>
+</head>
+<body>
+  <main class="group-title-page ds-scope">
+    <header class="group-title-page__head">
+      <h1>一级标题分组组件</h1>
+      <p>DSGroupTitle：38px 固定高度，用于内容区一级分组标题，支持前置内容和右侧扩展操作。</p>
+    </header>
+
+    <section class="group-title-demo" aria-label="一级标题分组示例">
+      <div class="group-title-example">
+        <span class="group-title-example__label">标准样式 / 参考宽度 1038px</span>
+        <ds-group-title title="分组名称"></ds-group-title>
+      </div>
+
+      <div class="group-title-example">
+        <span class="group-title-example__label">带前置标识和右侧操作</span>
+        <ds-group-title title="基本信息">
+          <span class="demo-leading" slot="leading"></span>
+          <button class="demo-action" slot="extra" type="button" data-demo-action>查看说明</button>
+        </ds-group-title>
+        <div class="demo-log" aria-live="polite" data-demo-log>右侧区域可放按钮、链接或状态信息。</div>
+      </div>
+
+      <div class="group-title-example">
+        <span class="group-title-example__label">长标题省略</span>
+        <ds-group-title title="教职工培养发展与企业实践认定材料信息分组" style="max-width: 300px">
+          <span slot="extra">共 12 项</span>
+        </ds-group-title>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const action = document.querySelector('[data-demo-action]')
+    const log = document.querySelector('[data-demo-log]')
+    action.addEventListener('click', () => {
+      log.textContent = '已触发右侧扩展操作。'
+    })
+  </script>
+</body>
+</html>

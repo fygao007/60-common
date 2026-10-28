@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>功能索引</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    .index-page {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .index-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 16px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .index-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .index-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .index-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .index-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .index-desc {
+      margin: 6px 0 0;
+      color: #737585;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .index-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #505266;
+      font-size: 13px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .index-summary strong {
+      color: #000;
+      font-weight: 600;
+    }
+
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
+      gap: 16px;
+      width: min(1180px, 100%);
+    }
+
+    .index-section {
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .index-section.is-wide {
+      grid-column: 1 / -1;
+    }
+
+    .index-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 44px;
+      padding: 0 16px;
+      background: #fafafa;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .index-section-title {
+      margin: 0;
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .index-section-count {
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .index-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .index-section.is-wide .index-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .index-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-height: 74px;
+      padding: 12px 16px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .index-item:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .index-section.is-wide .index-item:nth-child(2n) {
+      border-right: 1px solid #eeeef0;
+    }
+
+    .index-section.is-wide .index-item:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .index-link {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      color: #333fff;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .index-link:hover {
+      color: #1f2cff;
+    }
+
+    .index-meta {
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .index-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .index-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      color: #505266;
+      background: #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px;
+    }
+
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      color: #333fff;
+      background: #f5f5ff;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .index-grid,
+      .index-list,
+      .index-section.is-wide .index-list {
+        grid-template-columns: 1fr;
+      }
+
+      .index-item,
+      .index-item:nth-child(2n),
+      .index-section.is-wide .index-item:nth-child(2n),
+      .index-section.is-wide .index-item:nth-child(3n) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="index-page">
+    <section class="index-stage">
+      <header class="index-head">
+        <div>
+          <h1 class="index-title"><span>功能索引</span></h1>
+          <p class="index-desc">组件库总入口。先从这里进入当前组件、Ant 全量目录、组件预览、表单、表格和框架规范。</p>
+        </div>
+        <div class="index-summary"><strong>30</strong><span>个预览入口</span></div>
+      </header>
+
+      <div class="index-grid">
+        <section class="index-section is-wide">
+          <div class="index-section-head">
+            <h2 class="index-section-title">核心入口</h2>
+            <span class="index-section-count">9 个入口</span>
+          </div>
+          <div class="index-list">
+            <article class="index-item">
+              <a class="index-link" href="./current-components-index.html">当前组件</a>
+              <span class="index-meta">按本地组件库实际已沉淀组件整理，包含预览页和源码入口</span>
+              <div class="index-tag-row"><span class="index-tag">推荐入口</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./ant-components-page.html">Ant 风格组件总览</a>
+              <span class="index-meta">按 Ant Design 官方分类生成 70 个基础组件交互稿</span>
+              <div class="index-tag-row"><span class="index-tag">推荐入口</span><span class="index-tag">待逐项调样式</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./button-states.html">按钮状态</a>
+              <span class="index-meta">展示 Primary、Default、Ghost、Text、Link、Danger、AI 的默认、悬浮、按下、聚焦、禁用、加载状态</span>
+              <div class="index-tag-row"><span class="index-tag">Button</span><span class="index-tag">状态稿</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./button-group-states.html">按钮组状态</a>
+              <span class="index-meta">展示普通按钮组、主次组合、工具栏、分段、图标、块级、禁用和加载状态</span>
+              <div class="index-tag-row"><span class="index-tag">ButtonGroup</span><span class="index-tag">状态稿</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./link-button-components.html">链接按钮组件</a>
+              <span class="index-meta">从 MasterGo 链接样式提取 LinkButton 和 LinkButtonGroup 独立组件</span>
+              <div class="index-tag-row"><span class="index-tag">LinkButton</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./steps-components.html">步骤条组件</a>
+              <span class="index-meta">从 MasterGo 步骤条样式提取 DSSteps 通用组件</span>
+              <div class="index-tag-row"><span class="index-tag">Steps</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./audit-flow-page.html">审核流程组件</a>
+              <span class="index-meta">个人提交 → 院系秘书 → 院系领导 → 人事处 的横向审核走向，支持已通过/审核中/已退回/不通过/未开始</span>
+              <div class="index-tag-row"><span class="index-tag">AuditFlow</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./audit-log-page.html">审核日志组件</a>
+              <span class="index-meta">垂直时间轴展示每个审核节点的操作记录，含提交/通过/退回/不通过/会签，支持退回原因</span>
+              <div class="index-tag-row"><span class="index-tag">AuditLog</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./anchor-components.html">锚点组件</a>
+              <span class="index-meta">从 MasterGo 锚点样式提取 DSAnchor 通用组件</span>
+              <div class="index-tag-row"><span class="index-tag">Anchor</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./group-title-components.html">一级标题分组</a>
+              <span class="index-meta">内容区一级分组标题，支持前置内容、右侧扩展和长标题省略</span>
+              <div class="index-tag-row"><span class="index-tag">GroupTitle</span><span class="index-tag">已组件化</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./all-components-index.html">Ant 全量目录</a>
+              <span class="index-meta">按组件逐项管理入口、分类、用途和样式调整状态</span>
+              <div class="index-tag-row"><span class="index-tag">总目录</span><span class="index-tag">组件级菜单</span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="index-section is-wide">
+          <div class="index-section-head">
+            <h2 class="index-section-title">表单组件</h2>
+            <span class="index-section-count">16 个入口</span>
+          </div>
+          <div class="index-list">
+            <article class="index-item">
+              <a class="index-link" href="./form-components-page.html">完整表单页面</a>
+              <span class="index-meta">整合输入、下拉、日期、开关、上传等全部表单控件</span>
+              <div class="index-tag-row"><span class="index-tag">推荐入口</span><span class="index-tag">可交互</span></div>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-input-states.html">录入输入框</a>
+              <span class="index-meta">默认、悬浮、点击、禁用、只读、报错</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-select-states.html">下拉选择</a>
+              <span class="index-meta">选择器基础状态</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-cascader-states.html">级联选择器</a>
+              <span class="index-meta">多列级联、搜索、清除</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-textarea-states.html">文本域</a>
+              <span class="index-meta">多行录入、字数提示、缩放标识</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-rich-text-editor-states.html">富文本编辑器</a>
+              <span class="index-meta">工具栏、正文编辑、字数统计</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-radio-group-states.html">单选组</a>
+              <span class="index-meta">横向单选项布局</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-checkbox-group-states.html">多选组</a>
+              <span class="index-meta">横向多选项布局</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-switch-states.html">开关</a>
+              <span class="index-meta">启用 / 停用状态</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-date-picker-states.html">日期选择</a>
+              <span class="index-meta">日期输入框与日历图标</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-date-range-states.html">日期范围</a>
+              <span class="index-meta">开始日期到结束日期</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-time-picker-states.html">时间选择</a>
+              <span class="index-meta">时间输入框与时钟图标</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-time-range-states.html">时间范围</a>
+              <span class="index-meta">开始时间到结束时间</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-datetime-picker-states.html">日期时间选择</a>
+              <span class="index-meta">日期与时间组合录入</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-upload-button-states.html">附件上传</a>
+              <span class="index-meta">按钮式上传入口</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./form-upload-dragger-states.html">拖拽上传</a>
+              <span class="index-meta">拖拽区域上传入口</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="index-section">
+          <div class="index-section-head">
+            <h2 class="index-section-title">表格组件</h2>
+            <span class="index-section-count">4 个入口</span>
+          </div>
+          <div class="index-list">
+            <article class="index-item">
+              <a class="index-link" href="./basic-table-page.html">基础表格</a>
+              <span class="index-meta">查询、批量操作、分页、拖拽排序</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./multi-level-table-page.html">多级表格</a>
+              <span class="index-meta">多级表头、分组表头、统计列</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./lowcode-table-page.html">低代码表格</a>
+              <span class="index-meta">低代码页面表格样式沉淀</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="index-section">
+          <div class="index-section-head">
+            <h2 class="index-section-title">框架与规范</h2>
+            <span class="index-section-count">3 个入口</span>
+          </div>
+          <div class="index-list">
+            <article class="index-item">
+              <a class="index-link" href="./primary-nav.html">框架1</a>
+              <span class="index-meta">一级竖向导航、二级导航、操作区框架</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./framework-2/">框架2</a>
+              <span class="index-meta">顶部主导航、左侧菜单、页签工作区的新框架版本</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./README.md">UI Demo 说明</a>
+              <span class="index-meta">目录、流程、组件覆盖范围</span>
+            </article>
+            <article class="index-item">
+              <a class="index-link" href="./packages/design-system/README.md">组件库 README</a>
+              <span class="index-meta">React 组件用法与 HTML 预览规则</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="index-section is-wide">
+          <div class="index-section-head">
+            <h2 class="index-section-title">React 组件源码入口</h2>
+            <span class="index-section-count">按模块维护</span>
+          </div>
+          <div class="source-list">
+            <a class="source-link" href="./packages/design-system/src/Field/index.jsx">Field / Input / Select / Textarea</a>
+            <a class="source-link" href="./packages/design-system/src/Cascader/index.jsx">Cascader</a>
+            <a class="source-link" href="./packages/design-system/src/RichTextEditor/index.jsx">RichTextEditor</a>
+            <a class="source-link" href="./packages/design-system/src/TimePicker/index.jsx">TimePicker</a>
+            <a class="source-link" href="./packages/design-system/src/DataTable/index.jsx">DataTable</a>
+            <a class="source-link" href="./packages/design-system/src/Switch/index.jsx">Switch</a>
+            <a class="source-link" href="./packages/design-system/src/Pagination/index.jsx">Pagination</a>
+            <a class="source-link" href="./packages/design-system/src/AppShell/index.jsx">AppShell</a>
+            <a class="source-link" href="./packages/design-system/src/AppShellV2/app-shell-v2.js">AppShellV2</a>
+            <a class="source-link" href="./packages/design-system/src/Button/index.jsx">Button</a>
+            <a class="source-link" href="./packages/design-system/src/LinkButton/index.jsx">LinkButton</a>
+            <a class="source-link" href="./packages/design-system/src/LinkButtonGroup/index.jsx">LinkButtonGroup</a>
+            <a class="source-link" href="./packages/design-system/src/Steps/index.jsx">Steps</a>
+            <a class="source-link" href="./packages/design-system/src/AuditFlow/index.jsx">AuditFlow</a>
+            <a class="source-link" href="./packages/design-system/src/AuditLog/index.jsx">AuditLog</a>
+            <a class="source-link" href="./packages/design-system/src/Anchor/index.jsx">Anchor</a>
+            <a class="source-link" href="./packages/design-system/src/GroupTitle/index.jsx">GroupTitle</a>
+            <a class="source-link" href="./packages/design-system/web-components/GroupTitle/ds-group-title.js">GroupTitle Web Component</a>
+            <a class="source-link" href="./packages/design-system/docs/button.md">Button Spec</a>
+            <a class="source-link" href="./packages/design-system/docs/button-group.md">ButtonGroup Spec</a>
+            <a class="source-link" href="./packages/design-system/src/Modal/index.jsx">Modal</a>
+            <a class="source-link" href="./packages/design-system/src/Drawer/index.jsx">Drawer</a>
+            <a class="source-link" href="./packages/design-system/src/Tabs/index.jsx">Tabs</a>
+            <a class="source-link" href="./assets/icon-registry.js">Icon Registry</a>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  const componentFeatureRoutes = {
+    '功能索引': './component-library-index.html',
+    '当前组件': './current-components-index.html',
+    'Ant目录': './all-components-index.html',
+    '组件总览': './ant-components-page.html',
+    '表单': './form-components-page.html',
+    '表格': './basic-table-page.html',
+    '框架': './primary-nav.html'
+  };
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '功能索引',
+    onFeatureChange(feature) {
+      const target = componentFeatureRoutes[feature];
+      if (!target) return;
+      window.location.href = target;
+    }
+  });
+</script>
+</body>
+</html>

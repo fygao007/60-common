@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核状态标签页 DSAuditStatusTabs</title>
+  <link rel="stylesheet" href="packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="packages/design-system/src/AuditStatusTabs/index.css" />
+  <style>
+    body { margin: 0; background: var(--ds-color-bg-page); font-family: var(--ds-font-family); color: var(--ds-color-text); }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .page-header p { margin: 0; color: var(--ds-color-text-tertiary); font-size: 14px; }
+
+    .demo-section { margin-bottom: 32px; }
+    .demo-section__title { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .demo-section__desc { margin: 0 0 16px; font-size: 13px; color: var(--ds-color-text-tertiary); }
+    .demo-card { background: var(--ds-color-white); border: 1px solid var(--ds-color-border-secondary); border-radius: 8px; overflow: hidden; }
+    .demo-card__body { padding: 0 24px; }
+    .demo-card__footer { padding: 16px 0 24px; }
+
+    .current-info { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--ds-color-primary-light); color: var(--ds-color-primary); font-size: 13px; border-radius: 4px; }
+    .current-info strong { font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>审核状态标签页 DSAuditStatusTabs</h1>
+    <p>用于审核类列表页切换筛选"待审核/已审核/全部"等状态</p>
+  </header>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">基础用法</h2>
+    <p class="demo-section__desc">默认 tabs：待审核（带计数）、已审核、全部。下方蓝条为激活态指示。</p>
+    <div class="demo-card">
+      <div class="demo-card__body">
+        <nav class="ds-audit-status-tabs" aria-label="审核状态" id="tabs1">
+          <button class="ds-audit-status-tabs__item is-active" type="button" data-key="pending">
+            <span>待审核</span><em>5</em>
+          </button>
+          <button class="ds-audit-status-tabs__item" type="button" data-key="reviewed">
+            <span>已审核</span><em>128</em>
+          </button>
+          <button class="ds-audit-status-tabs__item" type="button" data-key="all">
+            <span>全部</span>
+          </button>
+        </nav>
+      </div>
+      <div class="demo-card__footer">
+        <div class="current-info">当前选中：<strong id="result1">待审核</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">不带计数</h2>
+    <p class="demo-section__desc">所有 tab 都不传 count 时，不显示红色徽章。</p>
+    <div class="demo-card">
+      <div class="demo-card__body">
+        <nav class="ds-audit-status-tabs" aria-label="审核状态" id="tabs2">
+          <button class="ds-audit-status-tabs__item is-active" type="button" data-key="pending"><span>待审核</span></button>
+          <button class="ds-audit-status-tabs__item" type="button" data-key="reviewed"><span>已审核</span></button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">禁用某项</h2>
+    <p class="demo-section__desc">disabled 项呈灰色且不可点。</p>
+    <div class="demo-card">
+      <div class="demo-card__body">
+        <nav class="ds-audit-status-tabs" aria-label="审核状态">
+          <button class="ds-audit-status-tabs__item is-active" type="button"><span>待审核</span><em>3</em></button>
+          <button class="ds-audit-status-tabs__item" type="button"><span>已审核</span><em>56</em></button>
+          <button class="ds-audit-status-tabs__item" type="button" disabled><span>已归档</span></button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">多状态扩展</h2>
+    <p class="demo-section__desc">支持更多状态：待我审、待他人审、已通过、已退回、不通过。</p>
+    <div class="demo-card">
+      <div class="demo-card__body">
+        <nav class="ds-audit-status-tabs" aria-label="审核状态" id="tabs3">
+          <button class="ds-audit-status-tabs__item is-active" type="button"><span>待我审</span><em>2</em></button>
+          <button class="ds-audit-status-tabs__item" type="button"><span>待他人审</span><em>7</em></button>
+          <button class="ds-audit-status-tabs__item" type="button"><span>已通过</span><em>156</em></button>
+          <button class="ds-audit-status-tabs__item" type="button"><span>已退回</span><em>4</em></button>
+          <button class="ds-audit-status-tabs__item" type="button"><span>不通过</span><em>1</em></button>
+        </nav>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function bindTabs(id, resultId) {
+    var tabs = document.getElementById(id);
+    if (!tabs) return;
+    tabs.querySelectorAll('.ds-audit-status-tabs__item').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        tabs.querySelectorAll('.ds-audit-status-tabs__item').forEach(function(b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        var label = btn.querySelector('span').textContent;
+        var result = document.getElementById(resultId);
+        if (result) result.textContent = label;
+      });
+    });
+  }
+  bindTabs('tabs1', 'result1');
+  bindTabs('tabs2');
+  bindTabs('tabs3');
+</script>
+</body>
+</html>

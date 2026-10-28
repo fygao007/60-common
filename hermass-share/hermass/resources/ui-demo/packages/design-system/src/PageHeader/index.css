@@ -1,0 +1,21 @@
+@import '../tokens.css';
+
+.ds-page-header {
+  display: grid;
+  gap: var(--ds-space-3);
+  margin-bottom: var(--ds-space-4);
+}
+
+.ds-page-header__main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+}
+
+.ds-page-header__actions,
+.ds-page-header__extra {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}

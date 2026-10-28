@@ -1,0 +1,24 @@
+{
+  "application": {
+    "key": "recruitment",
+    "label": "招聘管理"
+  },
+  "role": {
+    "key": "hr",
+    "label": "人事处管理员"
+  },
+  "menu": {
+    "key": "process-audit",
+    "label": "招聘办理",
+    "group": "招聘过程管理",
+    "defaultFeature": "process-audit"
+  },
+  "pages": [
+    {
+      "key": "recruitment-hr-process-audit",
+      "label": "招聘办理（人事处管理员）",
+      "type": "static-prototype-menu",
+      "html": "process-audit.html"
+    }
+  ]
+}

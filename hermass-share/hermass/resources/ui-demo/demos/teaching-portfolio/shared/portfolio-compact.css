@@ -1,0 +1,269 @@
+/* 教学档案袋全站紧凑布局规范
+ * 目标：页面四周 12px；标题行高 32px；标题→表格/表单 8px；按钮→表格/表单 8px；
+ *       左树到分割线 12px，分割线到内容 12px；表单行高 40px。
+ */
+
+/* 根节点不预留滚动条槽。历史页面的 scrollbar-gutter: stable
+   会在无滚动条时仍吃掉右侧 15–20px，让根容器看起来被裁掉一条。 */
+.frame2-stage.ds-scope #app {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  scrollbar-gutter: auto !important;
+}
+
+.ds-scope [data-ds-business-page] {
+  --ds-page-padding: 12px;
+}
+
+/* 旧版 pf-view 页面：框架壳必须通铺到窗口边缘（与 React 业务页一致）。
+   内容留白固定由框架统一管理，业务页不得调整。 */
+body:has(> .frame2-stage.ds-scope:not(:has([data-ds-business-page]))) {
+  margin: 0;
+}
+
+.frame2-stage.ds-scope:not(:has([data-ds-business-page])) {
+  box-sizing: border-box;
+  padding: 0;
+}/* 常规工作台和列表页统一四周留白。详情型、全高型页面继续由内部容器控制。 */
+.ds-scope :is(
+  .sys-admin-page,
+  .pb-page,
+  .pr-page,
+  .ld-page,
+  .th-page,
+  .mtp-page,
+  .pmg-page,
+  .hrh-page,
+  .hrp-page,
+  .hrmg-page,
+  .hs-page,
+  .chart-designer-page,
+  .to-page,
+  .pd-page,
+  .ah-page,
+  .bi-page,
+  .ep-page,
+  .ti-page
+){
+  padding: 0;
+}/* 框架内容区已提供左右留白，这些页面无需再叠加 16px 横向内边距，否则两侧留白
+   合计约 32px、显得过宽。撤销横向部分让内容更贴边（保留上下 16px）。同特异性
+   (0,2,0) 靠后置声明胜出。 */
+.ds-scope :is(.hrp-page, .hrmg-page, .hs-page, .mtp-page){
+  padding-inline: 0;
+}/* 页面区块和卡片之间由外层容器的 grid/flex gap 控制间距，不再叠加 margin-top。 */
+.ds-scope [data-ds-business-page] :is(
+  .ds-card + .ds-card,
+  .ds-section + .ds-section,
+  .ap-panel + .ap-panel
+){
+  margin-top: 0;
+}/* 上面的相邻卡片间距是给"纵向堆叠"的卡片用的；栅格里并排的卡片间距应由
+   grid gap 控制。这里撤销栅格卡片被误加的 margin-top，避免同一行卡片被下移、
+   高度/顶边错乱（如 hr-home 指标卡行、t-home 顶部/底部卡片行）。同特异性
+   (0,4,0) 靠后置声明胜出。 */
+.ds-scope [data-ds-business-page] :is(.hrh-metrics, .th-grid) > .ds-card{
+  margin-top: 0;
+}.ds-scope [data-ds-business-page] :is(
+  .ap-stat-row,
+  .ap-info-grid,
+  .ap-form-grid,
+  .ap-card-grid,
+  .to-folder-grid,
+  .to-idea-grid
+){
+  gap: 16px;
+}
+
+/* 标题行与其后的正文、列表或表格保持 8px。 */
+.ds-scope [data-ds-business-page] :is(
+  .ap-title-row,
+  .ap-panel-head,
+  .to-section-title,
+  .pr-section-title,
+  .pmg-section-head,
+  .mtp-section-header,
+  .hrh-section-head,
+  .ti-section-head,
+  .bi-section-head,
+  .ep-section-head,
+  .ah-section-head
+) + * {
+  margin-top: 8px;
+}
+
+/* 标题行高度统一为 32px（覆盖各页面级 44/48/52px 定义）。
+   注意：详情页标题行 .ds-sub-page-header 独立为 48px，见下方规则。 */
+.ds-scope [data-ds-business-page] :is(
+  .hrh-section-head,
+  .pmg-section-head,
+  .pr-section-title,
+  .ld-section-head,
+  .mtp-section-header,
+  .bi-primary-group__title
+) {
+  min-height: 32px !important;
+}
+
+/* 详情页标题行统一 48px。 */
+.ds-scope [data-ds-business-page] .ds-sub-page-header {
+  min-height: 48px !important;
+}
+
+/* 通用面板内部保持 16px，标题行上下更紧凑。 */
+.ds-scope [data-ds-business-page] .ap-panel-head {
+  padding: 12px 16px;
+}
+
+.ds-scope [data-ds-business-page] .ap-panel-body {
+  padding: 16px;
+}.ds-scope [data-ds-business-page] .ap-stat,
+.ds-scope [data-ds-business-page] .ap-mini-card{
+  padding: 16px;
+}
+
+.ds-scope [data-ds-business-page] .ap-table :is(th, td) {
+  padding: 8px 16px;
+}/* 页面级筛选、表格、分页之间统一使用 16px。 */
+.ds-scope [data-ds-business-page] :is(
+  .ds-page,
+  .pf-views
+){
+  gap: 16px;
+}/* 我的教学档案入口：压缩卡片高度、标题行和卡片间距。 */
+.ds-scope .to-page{
+  gap: 12px;
+  box-sizing: border-box;
+  padding: 0 !important;
+  border-radius: 8px;
+}.ds-scope .to-page .to-idea-card{
+  min-height: 220px;
+  gap: 12px;
+  padding: 12px 16px 16px;
+}.ds-scope .to-page .to-idea-card__header{
+  min-height: 32px;
+}.ds-scope .to-page .to-idea-item{
+  min-height: 160px;
+}.ds-scope .to-page .to-idea-item__head{
+  min-height: 40px;
+  padding: 8px 12px;
+}.ds-scope .to-page .to-idea-item__body{
+  padding: 12px;
+}.ds-scope .to-page .to-files-panel{
+  gap: 12px;
+  padding: 16px;
+}.ds-scope .to-page .to-section-title{
+  min-height: 32px;
+  gap: 16px;
+}.ds-scope .to-page .to-folder-grid{
+  gap: 16px;
+}.ds-scope .to-page .to-folder-card__inner{
+  min-height: 128px;
+  padding: 16px;
+}/* 我的教学档案详情：内容区 16px、组间 16px、标题行约 36px。 */
+.ds-scope .bi-page .bi-main{
+  gap: 16px;
+  padding: 16px;
+}.ds-scope .bi-page .bi-primary-group{
+  gap: 12px;
+}.ds-scope .bi-page .bi-primary-group__title{
+  min-height: 36px;
+  padding: 0 12px;
+}.ds-scope .bi-page .bi-primary-group__body{
+  gap: 16px;
+}.ds-scope .bi-page .bi-section{
+  gap: 8px;
+}.ds-scope .bi-page .bi-section-head{
+  min-height: 32px;
+}.ds-scope .bi-page .ethics-entry{
+  margin: 0;
+  padding: 12px 16px;
+}/* 标准子页标题行在档案相关页面统一收紧，左右保留 16px。 */
+.ds-scope :is(.bi-page, .pd-page, .ts-page) .ds-sub-page-header{
+  min-height: 48px;
+  padding: 0 16px;
+}/* 教学档案列表不额外制造 16px 纵向间隔。 */
+.ds-scope .pb-page .ds-regular-list-template{
+  gap: 0;
+}.ds-scope .pb-page .ds-regular-list-template__content{
+  padding: 8px 16px 0;
+}/* 专业群看板：压缩页头、分组标题；分组卡片间距 16px（对齐图表看板页规范）。 */
+.ds-scope .pmg-page{
+  gap: var(--ds-space-4);
+  border-radius: 8px;
+}.ds-scope .pmg-page .pmg-header{
+  min-height: 72px;
+  gap: 16px;
+  padding: 8px 16px;
+}.ds-scope .pmg-page .pmg-header__identity h1{
+  margin-bottom: 8px;
+}.ds-scope .pmg-page .pmg-section-head{
+  min-height: 40px !important;
+  padding: 8px 16px;
+}/* 专业群教学档案详情避免外层与教学信息页重复叠加边距。 */
+.ds-scope .pd-page .pd-header-row{
+  padding: 0;
+}.ds-scope .pd-page .ti-page{
+  padding: 0 !important;
+  border-radius: 8px;
+}.ds-scope .pd-page .ti-course-pane,
+.ds-scope .pd-page .ti-tab-body,
+.ds-scope .pd-page .pd-more-main{
+  gap: 16px;
+  padding: 16px;
+}
+
+.ds-scope [data-ds-business-page] .pf-views {
+  padding: 16px;
+}
+
+/* 字段设置自身是完整向导容器，外层不再重复叠加一圈 16px。 */
+.ds-scope .sys-admin-page--form-management[data-ds-business-page] {
+  padding: 0 !important;
+}
+
+/* 编辑表单字段之间使用 16px，字段内部标签与控件使用 8px。 */
+.ds-scope [data-ds-business-page] :is(.ap-field, .ds-field) {
+  gap: 8px;
+}
+
+.ds-scope [data-ds-business-page] :is(.ap-form-actions, .ds-form-actions) {
+  gap: 8px;
+  padding-top: 8px;
+}
+
+/* 表单每行高度统一为 40px（DS 默认 32px）。
+   注意：.ab-detail-group 的 28px 特殊紧凑覆盖保持不变（局部变量优先）。 */
+.ds-scope [data-ds-business-page] .ds-edit-form {
+  --ds-edit-control-height: 40px;
+}
+
+/* 只读表单（详情页）行高统一为 40px（DS 默认 56px）。 */
+.ds-scope [data-ds-business-page] .ds-readonly-form {
+  --ds-readonly-row-height: 40px;
+}
+
+@media (max-width: 860px) {.ds-scope :is(
+    .sys-admin-page,
+    .pb-page,
+    .pr-page,
+    .ld-page,
+    .th-page,
+    .mtp-page,
+    .pmg-page,
+    .hrh-page,
+    .hrp-page,
+    .hrmg-page,
+    .hs-page,
+    .chart-designer-page,
+    .to-page,
+    .pd-page,
+    .ah-page,
+    .bi-page,
+    .ep-page,
+    .ti-page
+  ){
+    padding: 0;
+  }
+}

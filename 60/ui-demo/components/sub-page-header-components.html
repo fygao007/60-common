@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>二级页面顶部导航</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/SubPageHeader/index.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/Button/index.css" />
+  <style>
+    body {
+      margin: 0;
+      color: var(--ds-color-text);
+      background: var(--ds-color-bg-page);
+      font-family: var(--ds-font-family);
+    }
+
+    .preview-page {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .preview-stack {
+      display: grid;
+      gap: 16px;
+      width: min(1180px, 100%);
+    }
+
+    .preview-label {
+      margin: 0 0 8px;
+      color: var(--ds-color-text-tertiary);
+      font-size: var(--ds-font-size-sm);
+      line-height: var(--ds-line-height-sm);
+    }
+
+    .preview-panel {
+      display: grid;
+      gap: 8px;
+    }
+
+    .preview-content {
+      min-height: 220px;
+      padding: 16px;
+      background: var(--ds-color-bg-container);
+      border-radius: var(--ds-radius-xl);
+    }
+  </style>
+</head>
+<body>
+  <main class="preview-page ds-scope">
+    <div class="preview-stack">
+      <section class="preview-panel" aria-label="默认状态">
+        <p class="preview-label">默认状态</p>
+        <header class="ds-sub-page-header ds-sub-page-header--surface">
+          <button class="ds-sub-page-header__back" type="button" aria-label="返回">
+            <span class="ds-sub-page-header__back-icon">
+              <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M4.5666184640625005 6.416479784374999H11.6669521640625V7.583146584375H4.5666184640625005L7.6956181640625 10.712146784375L6.8707852640625 11.536979684375L2.3336181640625 6.999813084375L6.8707852640625 2.462646484375L7.6956181640625 3.287479874375L4.5666184640625005 6.416479784374999Z" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="ds-sub-page-header__back-label">返回</span>
+          </button>
+          <span class="ds-sub-page-header__divider" aria-hidden="true"></span>
+          <div class="ds-sub-page-header__title-wrap">
+            <h1 class="ds-sub-page-header__title">新增异动类型</h1>
+          </div>
+        </header>
+      </section>
+
+      <section class="preview-panel" aria-label="右侧操作">
+        <p class="preview-label">带右侧操作</p>
+        <header class="ds-sub-page-header ds-sub-page-header--surface">
+          <button class="ds-sub-page-header__back" type="button" aria-label="返回">
+            <span class="ds-sub-page-header__back-icon">
+              <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M4.5666184640625005 6.416479784374999H11.6669521640625V7.583146584375H4.5666184640625005L7.6956181640625 10.712146784375L6.8707852640625 11.536979684375L2.3336181640625 6.999813084375L6.8707852640625 2.462646484375L7.6956181640625 3.287479874375L4.5666184640625005 6.416479784374999Z" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="ds-sub-page-header__back-label">返回</span>
+          </button>
+          <span class="ds-sub-page-header__divider" aria-hidden="true"></span>
+          <div class="ds-sub-page-header__title-wrap">
+            <h1 class="ds-sub-page-header__title">异动类型配置</h1>
+          </div>
+          <div class="ds-sub-page-header__actions">
+            <button class="ds-button ds-button--default ds-button--default-size" type="button"><span class="ds-button__label">取消</span></button>
+            <button class="ds-button ds-button--primary ds-button--default-size" type="button"><span class="ds-button__label">保存</span></button>
+          </div>
+        </header>
+      </section>
+
+      <section class="preview-panel" aria-label="页面组合">
+        <p class="preview-label">二级页面组合</p>
+        <header class="ds-sub-page-header ds-sub-page-header--surface">
+          <button class="ds-sub-page-header__back" type="button" aria-label="返回">
+            <span class="ds-sub-page-header__back-icon">
+              <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M4.5666184640625005 6.416479784374999H11.6669521640625V7.583146584375H4.5666184640625005L7.6956181640625 10.712146784375L6.8707852640625 11.536979684375L2.3336181640625 6.999813084375L6.8707852640625 2.462646484375L7.6956181640625 3.287479874375L4.5666184640625005 6.416479784374999Z" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="ds-sub-page-header__back-label">返回</span>
+          </button>
+          <span class="ds-sub-page-header__divider" aria-hidden="true"></span>
+          <div class="ds-sub-page-header__title-wrap">
+            <h1 class="ds-sub-page-header__title">这里展示标题</h1>
+          </div>
+        </header>
+        <div class="preview-content" aria-hidden="true"></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

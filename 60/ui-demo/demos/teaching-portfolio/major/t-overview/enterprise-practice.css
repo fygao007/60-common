@@ -1,0 +1,217 @@
+/* 企业实践详情页 · 时间轴业务布局样式（不覆盖 .ds-* / .frame2-*，颜色使用设计 token） */
+@import '../../shared/portfolio-v3.css';
+
+.ep-page{
+  min-height: 100%;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.ep-content-card{
+  width: 100%;
+  min-height: calc(100vh - 92px);
+  overflow: hidden;
+  background: var(--ds-color-bg-container);
+  border-radius: 0;
+}
+
+.ep-top-header {
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+  border-radius: 0;
+}
+
+.ep-records {
+  display: grid;
+  gap: 20px;
+  padding: 24px 24px 40px;
+  background: var(--ds-color-bg-container);
+}
+
+.ep-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ep-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-xl);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-xl);
+}
+
+.ep-section-title::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-primary);
+}
+
+.ep-source-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  color: var(--ds-color-text-secondary);
+  white-space: nowrap;
+}
+
+.ep-source-note strong {
+  color: var(--ds-color-black);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ep-timeline {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding-left: 28px;
+}
+
+.ep-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px;
+  width: 1px;
+  background: var(--ds-color-primary-light);
+}
+
+.ep-timeline-item {
+  position: relative;
+  min-width: 0;
+}
+
+.ep-timeline-dot {
+  position: absolute;
+  top: 32px;
+  left: -28px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary-light);
+  box-shadow: 0 0 0 3px var(--ds-color-bg-container);
+}.ep-practice-card{
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ds-color-border-secondary);
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.ep-practice-card__head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 62px;
+  padding: 0 24px;
+  background: linear-gradient(90deg, var(--ds-color-primary-light), var(--ds-color-bg-subtle));
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+}.ep-practice-card__head h3{
+  min-width: 240px;
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-xl);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-xl);
+}
+
+.ep-practice-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 18px 28px;
+  min-width: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-lg);
+  line-height: var(--ds-line-height-lg);
+}
+
+.ep-practice-meta span {
+  white-space: nowrap;
+}
+
+.ep-practice-meta strong {
+  margin-left: 8px;
+  color: var(--ds-color-black);
+  font-weight: var(--ds-font-weight-medium);
+}.ep-practice-card__body{
+  display: grid;
+  gap: 22px;
+  padding: 26px 24px 24px;
+}.ep-practice-block{
+  display: grid;
+  gap: 12px;
+}
+
+.ep-practice-block__title {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-lg);
+  line-height: var(--ds-line-height-lg);
+}
+
+.ep-practice-block__content {
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-lg);
+  line-height: 1.8;
+}.ep-practice-card__actions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 24px 24px;
+}
+
+@media (max-width: 1100px) {.ep-practice-card__head{
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 20px;
+  }.ep-practice-card__head h3{
+    min-width: 0;
+  }
+
+  .ep-practice-meta {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 760px) {
+  .ep-records {
+    padding: 20px 16px 32px;
+  }
+
+  .ep-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ep-timeline {
+    padding-left: 18px;
+  }
+
+  .ep-timeline-dot {
+    left: -18px;
+  }.ep-practice-card__head,
+  .ep-practice-card__body,
+  .ep-practice-card__actions{
+    padding-inline: 16px;
+  }
+
+  .ep-practice-meta {
+    gap: 8px 16px;
+    font-size: var(--ds-font-size-md);
+    line-height: var(--ds-line-height-md);
+  }
+
+  .ep-practice-meta span {
+    white-space: normal;
+  }.ep-practice-card__actions{
+    flex-wrap: wrap;
+  }
+}

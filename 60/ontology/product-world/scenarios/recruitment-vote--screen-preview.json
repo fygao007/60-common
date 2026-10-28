@@ -1,0 +1,80 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--screen-preview",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "在投放前按 16:9 核对大屏文案、排名与倒计时效果",
+      "提供暂停 / 重置倒计时的现场控场手段"
+    ],
+    "painPoints": [
+      "原系统只能在真实会议现场验证大屏效果，出错难以补救"
+    ],
+    "openQuestions": [
+      "大屏是否需要在投票过程中实时刷新票数，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "大屏预览",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "已完成大屏配置"
+    ],
+    "mainFlow": [
+      "从大屏配置点击「预览大屏」，在独立窗口打开本页",
+      "核对大屏标题、欢迎语、候选人排名与票数条",
+      "观察倒计时是否按配置秒数推进",
+      "按需暂停倒计时或重置后重新核对"
+    ],
+    "exceptions": [
+      "倒计时归零后停在 00:00 不再递减",
+      "窄屏下隐藏票数条与职务，保证可读"
+    ]
+  },
+  "page": {
+    "title": "大屏预览",
+    "templateId": "display-board",
+    "menuRef": "recruitment.vote:screen-preview",
+    "fieldRefs": [
+      "Business.vote.screenTitle",
+      "Business.vote.welcomeWords",
+      "Business.vote.endWords",
+      "Business.vote.screenBackground"
+    ],
+    "components": [
+      "DSButton",
+      "DSTag"
+    ],
+    "demoPath": "demos/vote/screen-preview/screen-preview.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内",
+      "展示形态与常规业务页差异较大，采用 fallback 策略用原始组件组装"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「展示端」分组下「大屏预览」处于高亮态",
+      "大屏画面按 16:9 呈现标题、欢迎语、候选人排名与票数条",
+      "倒计时逐秒递减，暂停与重置按钮生效",
+      "从大屏配置点击预览可在独立窗口打开本页"
+    ]
+  }
+}

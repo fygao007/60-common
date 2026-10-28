@@ -1,0 +1,3215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 智慧人事一体化服务系统首页</title>
+  <link rel="stylesheet" href="../../../../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../../../../framework/theme.css" />
+  <style>
+    body { margin: 0; }
+
+    .portal-home-frame {
+      --pf-blue: #2f6bff;
+      --pf-blue-deep: #1d4fd8;
+      --pf-ink: #1f2937;
+      --pf-text: #4b5563;
+      --pf-muted: #8a93a6;
+      --pf-line: #edf1f7;
+      --pf-page: #f4f7fb;
+      --pf-card: #fff;
+      --pf-orange: #ff7d35;
+      --pf-red: #ff4d4f;
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+      font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .portal-home {
+      height: 100%;
+      overflow: auto;
+      overflow-x: hidden;
+      color: var(--pf-ink);
+      background: transparent;
+    }
+
+    .portal-home button { font: inherit; cursor: pointer; }
+
+    .portal-layout {
+      display: grid;
+      grid-template-columns: minmax(760px, 3.4fr) minmax(380px, 1.7fr);
+      gap: 12px;
+      width: 100%;
+      min-width: 1304px;
+      margin: 0 auto;
+      padding: 0 0 32px;
+    }
+
+    .portal-left, .portal-right { min-width: 0; display: grid; gap: 12px; align-content: start; }
+
+    /* 欢迎横幅 */
+    .welcome-card {
+      position: relative;
+      height: 196px;
+      padding: 38px 48px;
+      overflow: hidden;
+      background:
+        linear-gradient(120deg, rgba(40,76,209,.78) 0%, rgba(63,118,255,.55) 46%, rgba(120,170,255,.35) 100%),
+        linear-gradient(120deg, #2756d6 0%, #4a7dff 60%, #8db2ff 100%);
+      border-radius: 6px;
+    }
+
+    .welcome-card h1 {
+      margin: 0;
+      color: #fff;
+      font-size: 28px;
+      line-height: 38px;
+      font-weight: 800;
+    }
+
+    .welcome-card p {
+      margin: 12px 0 24px;
+      max-width: 760px;
+      color: rgba(255,255,255,.86);
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .welcome-search {
+      display: flex;
+      max-width: 620px;
+      height: 46px;
+      background: rgba(255,255,255,.94);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .welcome-search input {
+      flex: 1;
+      padding: 0 18px;
+      border: 0;
+      outline: none;
+      font-size: 14px;
+      color: var(--pf-ink);
+      background: transparent;
+    }
+
+    .welcome-search input::placeholder { color: var(--pf-muted); }
+
+    .welcome-search button {
+      padding: 0 28px;
+      color: #fff;
+      background: var(--pf-blue);
+      border: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* 全部应用 */
+    .panel {
+      background: var(--pf-card);
+      border: 1px solid var(--pf-line);
+      border-radius: 6px;
+      box-shadow: 0 6px 20px rgba(31,59,105,.04);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 24px 0;
+    }
+
+    .panel-head .head-left {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+
+    .panel-head h2 .dot {
+      display: inline-block;
+      width: 6px;
+      height: 16px;
+      background: var(--pf-blue);
+      border-radius: 3px;
+    }
+
+    .tab-link {
+      padding: 10px 0;
+      color: var(--pf-muted);
+      font-size: 15px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-link.active {
+      color: var(--pf-blue);
+      font-weight: 700;
+      border-bottom-color: var(--pf-blue);
+    }
+
+    .panel-head a.more {
+      color: var(--pf-blue);
+      font-size: 14px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 18px 12px;
+      padding: 22px 24px 26px;
+    }
+
+    .app-tile {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      padding: 14px 6px;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .app-tile:hover { background: var(--pf-page); }
+    .app-tile[hidden] { display: none; }
+
+    .app-icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      font-size: 22px;
+      color: #fff;
+    }
+
+    .app-tile span { font-size: 14px; color: var(--pf-text); }
+
+    .ic-1 { background: linear-gradient(135deg,#ff9966,#ff7043); }
+    .ic-2 { background: linear-gradient(135deg,#5bc0ff,#3d8bff); }
+    .ic-3 { background: linear-gradient(135deg,#9b8cff,#7a6bff); }
+    .ic-4 { background: linear-gradient(135deg,#ff8fb1,#ff6f9c); }
+    .ic-5 { background: linear-gradient(135deg,#7c8ba1,#5b6b82); }
+    .ic-6 { background: linear-gradient(135deg,#7fd9c4,#4fc3a1); }
+    .ic-7 { background: linear-gradient(135deg,#ffd34f,#f6b82e); }
+    .ic-8 { background: linear-gradient(135deg,#5dd0a6,#34b88a); }
+    .ic-9 { background: linear-gradient(135deg,#7aa6ff,#577dff); }
+    .ic-10 { background: linear-gradient(135deg,#ffab6e,#ff8a3d); }
+    .ic-11 { background: linear-gradient(135deg,#9adf8e,#6fcf6a); }
+    .ic-12 { background: linear-gradient(135deg,#ffb259,#ff9234); }
+
+    /* 我的申请 */
+    .apply-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      padding: 18px 24px 24px;
+    }
+
+    .apply-card {
+      padding: 18px 20px;
+      border: 1px solid var(--pf-line);
+      border-left: 3px solid var(--pf-blue);
+      border-radius: 4px;
+      background: #fafcff;
+    }
+
+    .apply-card.is-returned { border-left-color: var(--pf-orange); }
+
+    .apply-card .apply-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .apply-card .apply-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-tag.progress { color: #1d6fff; background: #e8f1ff; }
+    .status-tag.returned { color: #ff7d35; background: #fff1e6; }
+
+    .apply-card a.detail {
+      color: var(--pf-blue);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .apply-card p {
+      margin: 0 0 6px;
+      color: var(--pf-text);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .apply-card .step {
+      color: var(--pf-blue);
+      font-weight: 600;
+    }
+
+    .apply-card .reason {
+      margin-top: 8px;
+      padding: 8px 12px;
+      color: var(--pf-orange);
+      background: #fff4ec;
+      border-radius: 4px;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .apply-card .note {
+      margin-top: 8px;
+      color: var(--pf-muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    /* 待办卡片：系统需要本人去做的事项 */
+    .todo-card {
+      padding: 18px 20px;
+      border: 1px solid var(--pf-line);
+      border-left: 3px solid var(--pf-blue);
+      border-radius: 4px;
+      background: #fafcff;
+    }
+
+    .todo-card.is-urgent {
+      border-left-color: var(--pf-red);
+    }
+
+    .todo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .todo-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+
+    .todo-deadline {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d6fff;
+      background: #e8f1ff;
+      white-space: nowrap;
+    }
+
+    .todo-deadline.urgent {
+      color: #ff4d4f;
+      background: #ffe8e8;
+    }
+
+    .todo-desc {
+      margin: 0 0 14px;
+      color: var(--pf-text);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .todo-action {
+      color: var(--pf-blue);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .todo-action:hover {
+      text-decoration: underline;
+    }
+
+    /* 右栏：日程 */
+    .schedule-card { padding: 20px 22px; }
+
+    .schedule-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .schedule-date {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .schedule-date .day-num {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      color: #fff;
+      background: linear-gradient(135deg,#5b8cff,#3565ea);
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .schedule-date .day-meta p { margin: 0; color: var(--pf-muted); font-size: 13px; }
+    .schedule-date .day-meta h3 { margin: 2px 0 0; font-size: 17px; font-weight: 700; color: var(--pf-ink); }
+
+    .schedule-actions { display: flex; gap: 14px; }
+    .schedule-actions a { color: var(--pf-blue); font-size: 14px; text-decoration: none; white-space: nowrap; }
+
+    .schedule-event {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 14px 16px;
+      background: var(--pf-page);
+      border-radius: 6px;
+    }
+
+    .schedule-event .ck {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      color: #fff;
+      background: #18b981;
+      border-radius: 50%;
+      font-size: 13px;
+    }
+
+    .schedule-event h4 { margin: 0 0 6px; font-size: 15px; font-weight: 700; color: var(--pf-ink); }
+    .schedule-event p { margin: 0; color: var(--pf-muted); font-size: 13px; }
+
+    /* 通知 */
+    .notice-list { padding: 4px 24px 16px; display: grid; }
+
+    .notice-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--pf-line);
+    }
+
+    .notice-item:last-child { border-bottom: none; }
+
+    .notice-item {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .notice-item:hover h3 { color: var(--pf-blue); }
+
+    .notice-item .dot-mark {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin: 8px 8px 0 0;
+      background: var(--pf-red);
+      border-radius: 50%;
+      flex: none;
+    }
+    .notice-item .dot-mark.normal { background: #c6cdd9; }
+
+    .notice-item .text {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .notice-item h3 {
+      margin: 0;
+      overflow: hidden;
+      color: var(--pf-text);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* 已读/未读仅通过左侧圆点区分，标题字体颜色与字重保持一致 */
+
+    .notice-pin {
+      display: inline-flex;
+      align-items: center;
+      flex: none;
+      height: 22px;
+      padding: 0 7px;
+      color: #fff;
+      background: var(--pf-blue);
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .notice-item time {
+      flex: none;
+      color: var(--pf-muted);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notice-unread-badge {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--pf-red);
+      border-radius: 50%;
+    }
+
+    /* 政策文件 */
+    .policy-search {
+      display: flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 12px;
+      gap: 6px;
+      color: var(--pf-muted);
+      background: var(--pf-page);
+      border-radius: 17px;
+      font-size: 13px;
+      width: 168px;
+    }
+
+    .policy-search input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--pf-text);
+    }
+
+    .policy-list { padding: 4px 24px 20px; display: grid; }
+
+    .policy-item {
+      display: block;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--pf-line);
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .policy-item:last-child { border-bottom: none; }
+
+    .policy-item:hover h3 { color: var(--pf-blue); }
+
+    .policy-item h3 {
+      margin: 0 0 8px;
+      overflow: hidden;
+      color: var(--pf-text);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* 置顶项仅通过左侧"置顶"标签区分，标题字体颜色与字重与普通项保持一致 */
+
+    .policy-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--pf-muted);
+      font-size: 12px;
+    }
+
+    .top-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      margin-right: 6px;
+      padding: 0 6px;
+      color: #fff;
+      background: var(--pf-blue);
+      border-radius: 3px;
+      font-size: 11px;
+      vertical-align: 2px;
+    }
+    /* 全局搜索弹窗 */
+    .gs-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      display: none;
+      background: rgba(17,28,52,.45);
+      backdrop-filter: blur(2px);
+    }
+    .gs-mask.is-open { display: block; }
+
+    .gs-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 736px;
+      max-width: calc(100% - 48px);
+      max-height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+
+    .gs-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      border-bottom: 1px solid #EEEEF0;
+      flex: none;
+    }
+    .gs-input-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      border: 1px solid #DCDCE0;
+      border-radius: 4px;
+      padding: 0 12px;
+    }
+    .gs-input-wrap:focus-within { border-color: #4752FF; }
+    .gs-input-wrap input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      font-size: 14px;
+      color: #1D2129;
+      background: transparent;
+      min-width: 0;
+    }
+    .gs-input-wrap input::placeholder { color: #C9CAD4; }
+    .gs-close {
+      flex: none;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+      border-radius: 4px;
+    }
+    .gs-close:hover { background: #f4f4f6; }
+
+    .gs-body {
+      overflow-y: auto;
+      padding: 6px 0 14px;
+    }
+
+    .gs-hint {
+      padding: 14px 22px 4px;
+      color: var(--pf-muted);
+      font-size: 13px;
+    }
+
+    /* AI 智能搜索助手卡片（默认态） */
+    .gs-ai {
+      margin: 16px 16px 0;
+      padding: 12px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #EDF4FF 0%, #F2EDFF 100%);
+    }
+    .gs-ai-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .gs-ai-head .ai-title {
+      background: linear-gradient(90deg, #4752FF 0%, #7847FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gs-ai-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .gs-ai-prompts button {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: none;
+      background: #fff;
+      color: #505266;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .gs-ai-prompts button:hover { background: #e8eeff; }
+    /* 历史查询 */
+    .gs-history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 8px;
+    }
+    .gs-history-title { font-size: 12px; color: #737585; }
+    .gs-history-clear {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .gs-history-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 16px 16px;
+    }
+    .gs-history-chip {
+      background: #EEEEF0;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      color: #505266;
+      cursor: pointer;
+      border: none;
+    }
+    .gs-history-chip:hover { background: #dddde2; }
+    /* 无历史记录空状态 */
+    .gs-empty-img {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 48px;
+    }
+    .gs-empty-img img { width: 120px; height: 120px; }
+    .gs-empty-title {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1D2129;
+    }
+    .gs-empty-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #737585;
+    }
+
+    /* AI 回答卡片：在搜索结果上方展示 AI 对自然语言提问的理解与总结 */
+    .gs-ai-answer {
+      margin: 14px 22px 4px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f3f6ff 0%, #faf6ff 100%);
+      border: 1px solid #e6ebfb;
+    }
+    .gs-ai-answer-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--pf-ink);
+    }
+    .gs-ai-answer-head .spark {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #fff;
+      background: linear-gradient(135deg, #6a8bff, #b07bff);
+    }
+    .gs-ai-answer-text {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 22px;
+      color: var(--pf-text);
+    }
+    .gs-think-dots { display: flex; gap: 5px; margin: 12px 2px 2px; }
+    .gs-think-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #b3c0e6;
+      animation: gsThinkBounce 1.1s infinite ease-in-out;
+    }
+    .gs-think-dots span:nth-child(2) { animation-delay: .15s; }
+    .gs-think-dots span:nth-child(3) { animation-delay: .3s; }
+    @keyframes gsThinkBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: .5; }
+      40% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    .gs-group { padding: 6px 22px 4px; }
+
+    .gs-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0 6px;
+      color: var(--pf-muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .gs-group-title .cnt { color: var(--pf-muted); font-weight: 400; }
+
+    .gs-result {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .gs-result:hover { background: var(--pf-page); }
+
+    .gs-result .gs-badge {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .gs-result .gs-meta { min-width: 0; flex: 1; }
+    .gs-result .gs-meta h4 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--pf-ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gs-mask mark {
+      background: none;
+      color: var(--pf-blue);
+      font-weight: 600;
+      border-radius: 0;
+      padding: 0;
+    }
+
+    /* 分类切换 Tab */
+    .gs-tabs {
+      flex: none;
+      display: flex;
+      gap: 22px;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--pf-line);
+      overflow-x: auto;
+    }
+    .gs-tab {
+      flex: none;
+      padding: 12px 1px;
+      font-size: 14px;
+      color: var(--pf-muted);
+      background: none;
+      border: 0;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+    }
+    .gs-tab:hover { color: var(--pf-ink); }
+    .gs-tab.active { color: var(--pf-blue); font-weight: 600; }
+    .gs-tab.active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
+      height: 2px; background: var(--pf-blue); border-radius: 1px;
+    }
+
+    /* 综合 / 分类结果分组 */
+    .gs-sec { padding: 12px 22px 4px; }
+    .gs-sec.gs-sec-flat { padding-top: 10px; }
+    .gs-sec-title {
+      margin: 0 0 6px; padding: 6px 0;
+      font-size: 13px; font-weight: 600; color: var(--pf-muted);
+    }
+    .gs-more {
+      display: inline-flex; align-items: center; gap: 2px;
+      margin: 4px 0 8px; padding: 4px 0; border: 0; background: none;
+      font-size: 13px; color: var(--pf-blue); cursor: pointer;
+    }
+    .gs-more:hover { text-decoration: underline; }
+
+    /* 教职工结果行 */
+    .gs-person {
+      display: flex; align-items: center; gap: 14px;
+      padding: 10px 12px; border-radius: 6px; text-decoration: none; color: inherit;
+    }
+    .gs-person:hover { background: var(--pf-page); }
+    .gs-avatar {
+      flex: none; width: 34px; height: 34px; border-radius: 50%;
+      display: grid; place-items: center; font-size: 16px; background: #eef1f6;
+    }
+    .gs-p-name { font-size: 14px; font-weight: 600; color: var(--pf-ink); }
+    .gs-p-id { font-size: 13px; color: var(--pf-muted); }
+    .gs-p-college { margin-left: auto; font-size: 13px; color: var(--pf-muted); flex: none; }
+
+    /* 应用结果：双列宫格 */
+    .gs-app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; }
+    .gs-app-item {
+      display: flex; align-items: center; gap: 10px; min-width: 0;
+      padding: 10px 12px; border-radius: 6px; text-decoration: none; color: inherit;
+    }
+    .gs-app-item:hover { background: var(--pf-page); }
+    .gs-app-item h4 {
+      margin: 0; font-size: 14px; font-weight: 500; color: var(--pf-ink);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* 待办 / 消息 / 通知 / 政策：标题 + 元信息行 */
+    .gs-task {
+      display: block; padding: 10px 12px; border-radius: 6px;
+      text-decoration: none; color: inherit;
+    }
+    .gs-task:hover { background: var(--pf-page); }
+    .gs-task h4 {
+      margin: 0; font-size: 14px; font-weight: 600; color: var(--pf-ink);
+      line-height: 21px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .gs-task .gs-sub {
+      margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 18px;
+      font-size: 12px; color: var(--pf-muted);
+    }
+
+    /* 文档结果：文件图标 + 信息 */
+    .gs-info {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 6px; text-decoration: none; color: inherit;
+    }
+    .gs-info:hover { background: var(--pf-page); }
+    .gs-file-ico {
+      flex: none; width: 34px; height: 34px; border-radius: 8px;
+      display: grid; place-items: center; color: #fff; font-size: 14px; font-weight: 700;
+    }
+    .gs-file-ico.is-doc { background: linear-gradient(135deg,#5bc0ff,#3d8bff); }
+    .gs-file-ico.is-xls { background: linear-gradient(135deg,#7bd99a,#33b06a); }
+    .gs-info .gs-meta h4 {
+      margin: 0; font-size: 14px; font-weight: 600; color: var(--pf-ink);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .gs-info .gs-meta .gs-sub {
+      margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px 18px;
+      font-size: 12px; color: var(--pf-muted);
+    }
+    .gs-result .gs-meta p {
+      margin: 3px 0 0;
+      font-size: 13px;
+      color: var(--pf-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .gs-result .gs-cat {
+      flex: none;
+      padding: 3px 9px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: var(--pf-blue);
+      background: #eaf1ff;
+    }
+
+    .gs-empty {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      padding: 56px 20px 64px;
+      color: var(--pf-muted);
+      font-size: 14px;
+      text-align: center;
+    }
+    .gs-empty .ico { font-size: 30px; }
+
+    /* 我的申请 - 已办状态补充配色 */
+    .status-tag.approved { color: #0a8f5f; background: #e3f8ef; }
+    .status-tag.rejected { color: #ff4d4f; background: #ffe8e8; }
+    .apply-card.is-approved { border-left-color: #0a8f5f; }
+    .apply-card.is-rejected { border-left-color: #ff4d4f; }
+    .apply-empty { padding: 40px 20px; text-align: center; color: var(--pf-muted); font-size: 14px; grid-column: 1 / -1; }
+
+    /* MasterGo 193705377860925-106-010977：教职工首页视觉规范 */
+    .portal-home-frame {
+      --pf-blue: #3167ff;
+      --pf-ink: #000;
+      --pf-text: #505266;
+      --pf-muted: #9697a3;
+      --pf-line: #eeeef0;
+      --pf-page: #f4f7fc;
+    }
+
+    .portal-home {
+      padding: 0;
+      padding-bottom: 24px;
+      background: transparent;
+    }
+
+    .portal-layout {
+      grid-template-columns: minmax(0, 2.2fr) minmax(320px, 1fr);
+      gap: clamp(10px, .8vw, 12px);
+      width: 100%;
+      max-width: 1920px;
+      min-width: 0;
+      padding: 0;
+    }
+
+    .portal-left,
+    .portal-right {
+      grid-template-rows: 176px 248px 292px;
+      gap: 12px;
+    }
+
+    .panel {
+      height: 100%;
+      overflow: hidden;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(154, 181, 234, .2);
+    }
+
+    .welcome-card {
+      height: 174px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, .9);
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(154, 181, 234, .2);
+      background: #d9ebff;
+    }
+
+    .welcome-card::before,
+    .welcome-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .welcome-card::before {
+      background: url("./assets/staff-home-campus.png") 20% 34% / 118% auto no-repeat;
+      transform: scaleX(-1);
+    }
+
+    .welcome-card::after {
+      background: linear-gradient(100deg, rgba(217, 235, 255, .98) 0%, rgba(226, 240, 255, .9) 51%, rgba(209, 214, 255, .68) 100%);
+    }
+
+    .welcome-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-card h1 {
+      color: #000;
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 42px;
+    }
+
+    .welcome-card p {
+      margin: 8px 0 16px;
+      max-width: 670px;
+      color: #4a4a4f;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .welcome-search {
+      width: min(624px, 72%);
+      max-width: none;
+      height: 40px;
+      background: #fff;
+      border: 1px solid #fff;
+      border-radius: 4px;
+    }
+
+    .welcome-search input {
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .welcome-search button {
+      width: 68px;
+      padding: 0;
+      background: #3167ff;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .panel-head {
+      position: relative;
+      height: 48px;
+      min-width: 0;
+      margin: 0 clamp(14px, 1.25vw, 18px);
+      padding: 0 0 0 24px;
+      border-bottom: 1px solid #f6f6f7;
+    }
+
+    .panel-head::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      background: linear-gradient(135deg, #8eb0ff, #3167ff);
+      border-radius: 4px 8px 4px 8px;
+    }
+
+    .panel-head .head-left {
+      min-width: 0;
+      height: 100%;
+      gap: 24px;
+    }
+
+    .tab-link {
+      position: relative;
+      height: 100%;
+      padding: 0;
+      color: #737585;
+      border: 0;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    .tab-link.active {
+      color: #3167ff;
+      border: 0;
+      font-weight: 600;
+    }
+
+    .tab-link.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 24px;
+      height: 3px;
+      transform: translateX(-50%);
+      background: #3167ff;
+      border-radius: 14px;
+    }
+
+    .panel-head a.more {
+      flex: none;
+      color: #226efd;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .app-grid {
+      height: 202px;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-rows: repeat(2, 68px);
+      column-gap: clamp(8px, 1vw, 20px);
+      row-gap: 18px;
+      padding: 19px clamp(18px, 2vw, 28px);
+    }
+
+    .app-tile {
+      min-width: 0;
+      align-content: start;
+      gap: 8px;
+      padding: 0 4px;
+      border-radius: 6px;
+    }
+
+    img.app-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: block;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .ic-1, .ic-2 { background: linear-gradient(202deg, #fba657, #fe5e33 98%); }
+    .ic-3 { background: linear-gradient(202deg, #b37cff, #7f43f6); }
+    .ic-4 { background: linear-gradient(207deg, #73b9ff, #3073f9); }
+    .ic-5 { background: linear-gradient(208deg, #6dd4c6, #2abf86); }
+    .ic-6 { background: linear-gradient(202deg, #ff85aa, #f24e79); }
+    .ic-7 { background: linear-gradient(202deg, #ffca66, #ff913b); }
+    .ic-8 { background: linear-gradient(202deg, #6bd4c4, #24b888); }
+    .ic-9 { background: linear-gradient(42deg, #823bfb, #ab7dfc); }
+    .ic-10 { background: linear-gradient(202deg, #ffaf6e, #ff7a3d); }
+    .ic-11 { background: linear-gradient(202deg, #69d5a9, #28b77e); }
+    .ic-12 { background: linear-gradient(202deg, #fba657, #fe5e33 98%); }
+
+    .app-tile > span:last-child,
+    .app-tile > span {
+      color: #505266;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .apply-grid {
+      height: 200px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 16px clamp(14px, 1.25vw, 18px) 18px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .apply-grid:has(.todo-card:nth-child(3)) {
+      grid-template-columns: repeat(3, minmax(430px, 1fr));
+    }
+
+    .apply-card,
+    .todo-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      height: 164px;
+      padding: 14px 16px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-left: 3px solid #3167ff;
+      border-radius: 4px;
+    }
+
+    .apply-card.is-returned { border-left-color: #ff913b; }
+
+    .apply-card .apply-head {
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .apply-card .apply-title,
+    .todo-title {
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 26px;
+    }
+
+    .status-tag,
+    .todo-deadline {
+      height: 20px;
+      padding: 0 5px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+
+    .status-tag.progress { color: #3167ff; background: linear-gradient(90deg, #edf4ff, #f2edff); }
+    .status-tag.returned { color: #ff913b; background: linear-gradient(90deg, #fff6ed, #ffefec); }
+
+    .apply-card p {
+      margin: 0;
+      color: #737585;
+      font-size: 14px;
+      line-height: 24px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .apply-card .reason {
+      margin-top: 6px;
+      padding: 3px 8px;
+      color: #ff913b;
+      background: #fef7f4;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .schedule-card {
+      padding: 14px 18px;
+    }
+
+    .schedule-top {
+      height: 42px;
+      gap: 12px;
+    }
+
+    .schedule-date {
+      gap: 12px;
+    }
+
+    .schedule-date .day-num {
+      position: relative;
+      width: 36px;
+      height: 40px;
+      padding-top: 15px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #92b3ff;
+      border-top: 10px solid #488ff9;
+      border-radius: 4px;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .schedule-date .day-meta p {
+      color: #505266;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 18px;
+    }
+
+    .schedule-date .day-meta h3 {
+      margin: 0;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22px;
+    }
+
+    .schedule-actions {
+      flex: none;
+      gap: 20px;
+    }
+
+    .schedule-actions a {
+      color: #3167ff;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .schedule-event {
+      height: 78px;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, #f0f6ff, rgba(240,246,255,.43));
+      border-radius: 4px;
+    }
+
+    .schedule-event .ck {
+      width: 18px;
+      height: 18px;
+      margin-top: 0;
+      color: transparent;
+      background: url("./assets/staff-home-check.svg") center / contain no-repeat;
+    }
+
+    .schedule-event > div {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .schedule-event h4 {
+      margin: 0 0 8px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+    }
+
+    .schedule-event p {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #737585;
+      font-size: 13px;
+      line-height: 22px;
+    }
+
+    .schedule-event .event-time::before,
+    .schedule-event .event-place::before {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin: 0 4px -2px 0;
+      background: center / contain no-repeat;
+    }
+
+    .schedule-event .event-time::before { background-image: url("./assets/staff-home-time.svg"); }
+    .schedule-event .event-place::before { background-image: url("./assets/staff-home-location.svg"); }
+
+    .notice-list {
+      display: flex;
+      flex-direction: column;
+      height: 202px;
+      padding: 4px clamp(14px, 1.25vw, 18px) 12px;
+    }
+
+    .notice-item {
+      height: 40px;
+      flex: none;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 0;
+    }
+
+    .notice-item .text {
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notice-item .dot-mark {
+      width: 8px;
+      height: 8px;
+      margin: 0;
+      background: #b9bac2;
+    }
+
+    .notice-item h3 {
+      min-width: 0;
+      color: #000;
+      font-family: "Microsoft YaHei UI", "PingFang SC", sans-serif;
+      line-height: 22px;
+    }
+
+    .notice-pin {
+      height: 20px;
+      padding: 0 4px;
+      background: linear-gradient(90deg, #3167ff 4%, #9771ff);
+      border-radius: 4px;
+      line-height: 20px;
+    }
+
+    .notice-item time {
+      color: #9697a3;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .notice-unread-badge { display: none; }
+
+    .policy-search {
+      flex: none;
+      margin-left: auto;
+      width: 128px;
+      height: 24px;
+      padding: 0 7px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .policy-search span {
+      order: 2;
+      width: 14px;
+      height: 14px;
+      color: transparent;
+      background: url("./assets/staff-home-search.svg") center / contain no-repeat;
+    }
+
+    .policy-search input {
+      min-width: 0;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .policy-list {
+      display: flex;
+      flex-direction: column;
+      height: 200px;
+      padding: 4px clamp(14px, 1.25vw, 18px) 12px;
+    }
+
+    .policy-item {
+      display: flex;
+      flex: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      height: 40px;
+      padding: 9px 0;
+      border-bottom: 0;
+    }
+
+    .policy-item h3 {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      color: #000;
+      line-height: 22px;
+    }
+
+    .policy-meta {
+      flex: none;
+      color: #9697a3;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .policy-meta span:last-child { display: none; }
+    .top-tag { display: none; }
+
+    /* 工作台视图：由顶栏角色下拉控制显示 教职工工作台 / 人事处工作台 */
+    .workbench-view[hidden] { display: none; }
+
+    /* 人事处工作台：占位（内容待填充） */
+    .hr-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      color: var(--pf-muted);
+      font-size: 14px;
+      background: var(--pf-card);
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(154, 181, 234, .2);
+    }
+
+    @media (max-width: 1180px) {
+      .portal-layout {
+        grid-template-columns: minmax(0, 1.9fr) minmax(300px, 1fr);
+      }
+
+      .welcome-card {
+        padding: 22px;
+      }
+
+      .welcome-card h1 {
+        font-size: 26px;
+        line-height: 36px;
+      }
+
+      .welcome-card p {
+        margin-bottom: 14px;
+      }
+
+      .welcome-search {
+        width: min(560px, 82%);
+      }
+
+      .panel-head .head-left {
+        gap: 18px;
+      }
+
+      .tab-link {
+        font-size: 15px;
+      }
+
+      .policy-search {
+        width: 108px;
+      }
+
+      .schedule-card {
+        padding-inline: 14px;
+      }
+
+      .schedule-actions {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .portal-home {
+        overflow-x: hidden;
+      }
+
+      .portal-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .portal-left,
+      .portal-right {
+        grid-template-rows: none;
+        grid-auto-rows: auto;
+      }
+
+      .panel,
+      .welcome-card,
+      .schedule-card {
+        height: auto;
+      }
+
+      .app-grid,
+      .apply-grid,
+      .notice-list,
+      .policy-list {
+        height: auto;
+      }
+
+      .app-grid {
+        min-height: 202px;
+      }
+
+      .apply-grid {
+        min-height: 200px;
+      }
+
+      .notice-list,
+      .policy-list {
+        min-height: 136px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .welcome-card {
+        min-height: 190px;
+        padding: 18px;
+      }
+
+      .welcome-card h1 {
+        font-size: 22px;
+        line-height: 32px;
+      }
+
+      .welcome-card p {
+        margin: 6px 0 12px;
+        line-height: 20px;
+      }
+
+      .welcome-search {
+        width: 100%;
+      }
+
+      .app-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: repeat(4, 68px);
+        min-height: 356px;
+      }
+
+      .apply-grid,
+      .apply-grid:has(.todo-card:nth-child(3)) {
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 0;
+        overflow: visible;
+      }
+
+      .apply-card,
+      .todo-card {
+        height: auto;
+        min-height: 164px;
+      }
+
+      .policy-search {
+        display: none;
+      }
+
+      .schedule-actions a:first-child {
+        display: none;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .panel-head {
+        padding-left: 20px;
+      }
+
+      .panel-head::before {
+        width: 12px;
+        height: 12px;
+      }
+
+      .panel-head .head-left {
+        gap: 14px;
+      }
+
+      .tab-link {
+        font-size: 14px;
+      }
+
+      .app-grid {
+        padding-inline: 12px;
+      }
+
+      .schedule-event {
+        padding-inline: 12px;
+      }
+
+      .schedule-event p {
+        gap: 6px;
+        font-size: 12px;
+      }
+    }
+
+  /* 自定义应用分组 Modal */
+  .ac-mask {
+    position: fixed; inset: 0; z-index: 1300;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.85);
+  }
+  .ac-mask.is-open { display: flex; }
+  .ac-dialog {
+    width: min(1200px, calc(100vw - 80px));
+    height: min(680px, calc(100vh - 80px));
+    background: #fff; border-radius: 8px;
+    display: flex; flex-direction: column; overflow: hidden;
+    border: 1px solid #EEEEF0;
+  }
+  .ac-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid #EEEEF0; flex: none;
+  }
+  .ac-title { font-size: 16px; font-weight: 600; color: #000; }
+  .ac-hclose {
+    display: grid; place-items: center; width: 32px; height: 32px;
+    border: 0; background: none; cursor: pointer; border-radius: 4px;
+  }
+  .ac-hclose:hover { background: #f4f4f6; }
+  .ac-body { flex: 1; display: flex; overflow: hidden; }
+  .ac-sidebar {
+    width: 240px; flex: none; border-right: 1px solid #EEEEF0;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .ac-sidebar-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; flex: none;
+  }
+  .ac-sidebar-label { font-size: 14px; font-weight: 600; color: #000; }
+  .ac-add-group-btn {
+    display: flex; align-items: center; gap: 4px;
+    background: none; border: 0; color: #3167FF; font-size: 13px;
+    cursor: pointer; padding: 2px 6px; border-radius: 3px;
+  }
+  .ac-add-group-btn:hover { background: #f0f6ff; }
+  .ac-sidebar-list { flex: 1; overflow-y: auto; padding: 8px; }
+  .ac-group-item {
+    position: relative;
+    height: 40px; display: flex; align-items: center;
+    border-radius: 4px; padding: 0 8px 0 11px;
+    cursor: pointer; color: #000; font-size: 14px;
+    gap: 4px; user-select: none;
+  }
+  .ac-group-item:hover { background: #f6f8ff; }
+  .ac-group-item.active { background: #F0F6FF; color: #3167FF; }
+  .ac-group-item.active::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 0;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+    background: #3167FF;
+  }
+  .ac-group-item .gname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ac-group-item .gacts { display: none; align-items: center; gap: 6px; }
+  .ac-group-item.active .gacts { display: flex; }
+  .ac-group-item .gacts button {
+    display: grid; place-items: center; width: 20px; height: 20px;
+    border: 0; background: none; padding: 0; cursor: pointer; border-radius: 3px;
+  }
+  .ac-group-item .gacts button:hover { background: #dce8ff; }
+  .ac-content { flex: 1; padding: 20px 24px; overflow-y: auto; }
+  .ac-content-title { font-size: 14px; font-weight: 600; color: #000; margin: 0 0 16px; }
+  .ac-app-grid { display: flex; flex-wrap: wrap; gap: 20px 24px; }
+  .ac-app-tile {
+    position: relative; display: flex; flex-direction: column;
+    align-items: center; gap: 6px; width: 64px;
+  }
+  .ac-app-link {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-decoration: none; padding: 4px; border-radius: 6px; width: 64px;
+  }
+  .ac-app-link:hover { background: #f5f8ff; }
+  .ac-app-icon {
+    width: 40px; height: 40px; border-radius: 50%; display: block;
+    padding: 8px; box-sizing: border-box; flex: none;
+  }
+  .ac-app-name { font-size: 12px; color: #505266; text-align: center; line-height: 16px; }
+  .ac-remove {
+    position: absolute; top: -4px; right: -4px; width: 16px; height: 16px;
+    border: 0; background: none; padding: 0; cursor: pointer;
+    display: grid; place-items: center; z-index: 1;
+  }
+  .ac-add-tile {
+    width: 64px; height: 80px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 4px;
+    border: 1px dashed #DCDCE0; border-radius: 4px;
+    background: #F6F6F7; color: #737585; font-size: 12px;
+    cursor: pointer; padding: 0;
+  }
+  .ac-add-tile:hover { border-color: #3167FF; color: #3167FF; background: #f0f6ff; }
+  .ac-footer {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 10px; padding: 12px 20px; border-top: 1px solid #EEEEF0; flex: none;
+  }
+  .ac-btn-cancel {
+    padding: 5px 16px; border: 1px solid #DCDCE0; border-radius: 4px;
+    background: #fff; font-size: 14px; color: #000; cursor: pointer;
+  }
+  .ac-btn-cancel:hover { background: #f4f4f6; }
+  .ac-btn-confirm {
+    padding: 5px 16px; border: 0; border-radius: 4px;
+    background: #3167FF; font-size: 14px; color: #fff; cursor: pointer;
+  }
+  .ac-btn-confirm:hover { background: #2555e0; }
+
+  /* 穿梭框 */
+  .ac-tf-mask {
+    position: fixed; inset: 0; z-index: 1400;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.45);
+  }
+  .ac-tf-mask.is-open { display: flex; }
+  .ac-tf-dialog {
+    width: 800px; background: #fff; border-radius: 8px;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,.16);
+    max-height: calc(100vh - 80px);
+    font-family: 'PingFang SC', -apple-system, sans-serif;
+    border: 1px solid #EEEEF0;
+  }
+  .ac-tf-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; flex: none; background: #fff;
+  }
+  .ac-tf-title { font-size: 16px; font-weight: 600; color: #000; line-height: 24px; }
+  .ac-tf-body {
+    flex: 1; display: flex; gap: 12px; padding: 0 16px;
+    overflow: hidden; min-height: 480px;
+  }
+  /* 左侧面板 */
+  .ac-tf-panel-left {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0;
+    border: 1px solid #EEEEF0; border-radius: 4px;
+  }
+  .ac-tf-panel-head {
+    height: 48px; display: flex; align-items: center;
+    padding: 0 12px; background: #FAFAFA; flex: none;
+    border-bottom: 1px solid #EEEEF0; gap: 4px;
+  }
+  .ac-tf-panel-title { font-size: 14px; font-weight: 600; color: #000; }
+  .ac-tf-panel-count { font-size: 14px; font-weight: 600; color: #000; }
+  .ac-tf-panel-body { flex: 1; display: flex; overflow: hidden; }
+  /* 左侧分类栏 */
+  .ac-tf-cat-sidebar {
+    width: 140px; flex: none; border-right: 1px solid #EEEEF0;
+    padding: 12px 12px 12px 0; display: flex; flex-direction: column;
+    gap: 8px; overflow-y: auto;
+  }
+  .ac-tf-cat-item {
+    display: flex; align-items: center; gap: 4px;
+    padding: 7px 8px 7px 12px; border-radius: 4px;
+    font-size: 14px; color: #000; line-height: 22px;
+    cursor: pointer;
+  }
+  .ac-tf-cat-item:hover { background: #F0F6FF; color: #3167FF; }
+  .ac-tf-cat-item.active { background: #F0F6FF; color: #3167FF; }
+  .ac-tf-cat-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ac-tf-cat-count { font-size: 12px; color: #737585; line-height: 20px; flex-shrink: 0; }
+  .ac-tf-tree-parent { height: 32px; display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 4px; flex: none; cursor: default; user-select: none; }
+  .ac-tf-tree-child { height: 32px; display: flex; align-items: center; gap: 8px; padding: 4px 8px 4px 28px; border-radius: 4px; flex: none; cursor: pointer; user-select: none; }
+  .ac-tf-tree-child:hover { background: #F5F5FF; }
+  .ac-tf-tree-chevron { width: 16px; height: 16px; flex: none; display: grid; place-items: center; }
+  .ac-tf-tree-cb { width: 14px; height: 14px; flex: none; display: grid; place-items: center; }
+  /* 左侧列表区域 */
+  .ac-tf-item-area {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 12px; gap: 8px; overflow: hidden; min-width: 0;
+  }
+  .ac-tf-search-wrap {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #DCDCE0; border-radius: 4px;
+    padding: 5px 12px; flex: none;
+  }
+  .ac-tf-search-wrap input {
+    flex: 1; border: 0; outline: none; font-size: 14px; color: #000;
+    background: transparent; font-family: inherit; line-height: 22px;
+  }
+  .ac-tf-search-wrap input::placeholder { color: #9697A3; }
+  .ac-tf-panel-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0; }
+  .ic-menu { background: linear-gradient(135deg, #7a9bff 0%, #3167FF 100%); }
+  .ac-tf-menu-icon { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  .ac-menu-icon-big { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  /* 左侧条目（点击即添加到右侧） */
+  .ac-tf-item {
+    height: 32px; display: flex; align-items: center; gap: 8px;
+    padding: 4px 8px; cursor: pointer; user-select: none; border-radius: 4px; flex: none;
+  }
+  .ac-tf-item:hover { background: #F5F5FF; }
+  .ac-tf-item-cb {
+    width: 14px; height: 14px; flex: none;
+    border: 1px solid #DCDCE0; border-radius: 2px; background: #fff;
+    pointer-events: none;
+  }
+  .ac-tf-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: block; padding: 5px; box-sizing: border-box; flex: none;
+  }
+  .ac-tf-item-name { font-size: 14px; color: #000; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 22px; }
+  /* 右侧面板 */
+  .ac-tf-panel-right {
+    width: 300px; flex: none; display: flex; flex-direction: column;
+    border: 1px solid #EEEEF0; border-radius: 4px; overflow: hidden;
+  }
+  .ac-tf-right-head {
+    height: 48px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; background: #FAFAFA; flex: none; border-bottom: 1px solid #EEEEF0;
+  }
+  .ac-tf-right-head-left { display: flex; align-items: center; gap: 4px; }
+  .ac-tf-clear { border: 0; background: none; color: #5C65FF; font-size: 14px; cursor: pointer; padding: 0; white-space: nowrap; line-height: 22px; }
+  .ac-tf-clear:hover { color: #3167FF; }
+  .ac-tf-right-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: #fff; }
+  /* 右侧已选条目 */
+  .ac-tf-chip {
+    display: flex; align-items: center; gap: 4px;
+    padding: 8px; background: #FAFAFA; border-radius: 4px; flex: none;
+  }
+  .ac-tf-chip-drag { flex: none; color: #9697A3; cursor: grab; display: grid; place-items: center; }
+  .ac-tf-chip-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: block; padding: 5px; box-sizing: border-box; flex: none;
+  }
+  .ac-tf-chip-name { flex: 1; font-size: 14px; color: #000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 22px; }
+  .ac-tf-chip-del {
+    width: 16px; height: 16px; flex: none; display: grid; place-items: center;
+    border: 0; background: none; padding: 0; cursor: pointer; color: #737585;
+  }
+  .ac-tf-chip-del:hover { color: #fa5151; }
+  .ac-tf-footer {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 8px; padding: 12px 20px; flex: none; background: #fff;
+  }
+
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <div class="portal-home-frame">
+  <!-- 自定义应用分组 Modal -->
+  <div class="ac-mask" id="acMask">
+    <div class="ac-dialog" role="dialog" aria-modal="true" aria-label="自定义应用分组">
+      <div class="ac-header">
+        <span class="ac-title">自定义应用分组</span>
+        <button class="ac-hclose" id="acClose" type="button" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6.909,8L2,3.091L3.091,2L8,6.909L12.909,2L14,3.091L9.091,8L14,12.909L12.909,14L8,9.091L3.091,14L2,12.909L6.909,8Z" fill="#737585" fill-rule="evenodd"/></svg></button>
+      </div>
+      <div class="ac-body">
+        <div class="ac-sidebar">
+          <div class="ac-sidebar-head">
+            <span class="ac-sidebar-label">分组</span>
+            <button type="button" class="ac-add-group-btn" id="acAddGroupBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M14.667 7.333H8.667V1.333H7.333v6H1.333v1.334h6v6h1.334v-6h6z" fill="#3167FF"/></svg>
+              新增分组
+            </button>
+          </div>
+          <div class="ac-sidebar-list" id="acSidebarList"></div>
+        </div>
+        <div class="ac-content" id="acContent"></div>
+      </div>
+      <div class="ac-footer">
+        <button type="button" class="ac-btn-cancel" id="acCancel">取消</button>
+        <button type="button" class="ac-btn-confirm" id="acConfirm">确定执行</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 穿梭框：分组应用管理 -->
+  <div class="ac-tf-mask" id="acTfMask">
+    <div class="ac-tf-dialog" role="dialog" aria-modal="true" aria-label="应用管理">
+      <div class="ac-tf-header">
+        <span class="ac-tf-title" id="acTfTitle">管理应用</span>
+        <button class="ac-hclose" id="acTfClose" type="button" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M7.057,8L1.862,2.805L2.805,1.862L8,7.057L13.195,1.862L14.138,2.805L8.943,8L14.138,13.195L13.195,14.138L8,8.943L2.805,14.138L1.862,13.195L7.057,8Z" fill="#000" fill-rule="evenodd"/></svg></button>
+      </div>
+      <div class="ac-tf-body">
+        <!-- 左侧：可选 -->
+        <div class="ac-tf-panel-left">
+          <div class="ac-tf-panel-head">
+            <span class="ac-tf-panel-title">待选</span>
+            <span class="ac-tf-panel-count" id="acTfLeftCount">0</span>
+          </div>
+          <div class="ac-tf-panel-body">
+            <!-- 分类侧栏 -->
+            <div class="ac-tf-cat-sidebar">
+              <div class="ac-tf-cat-item active" id="acTfTabApp" data-tab="app"><span class="ac-tf-cat-item-name">应用</span><span class="ac-tf-cat-count" id="acTfCountApp"></span></div>
+              <div class="ac-tf-cat-item" id="acTfTabMenu" data-tab="menu"><span class="ac-tf-cat-item-name">菜单</span><span class="ac-tf-cat-count" id="acTfCountMenu"></span></div>
+            </div>
+            <!-- 搜索 + 列表 -->
+            <div class="ac-tf-item-area">
+              <div class="ac-tf-search-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex:none"><path d="M10.518,9.693L13.016,12.191L12.191,13.016L9.693,10.518C8.764,11.263,7.608,11.668,6.416,11.667C3.518,11.667,1.166,9.315,1.166,6.417C1.166,3.519,3.518,1.167,6.416,1.167C9.314,1.167,11.666,3.519,11.666,6.417C11.668,7.608,11.263,8.764,10.518,9.693ZM9.348,9.260C10.088,8.499,10.501,7.479,10.500,6.417C10.500,4.160,8.672,2.333,6.416,2.333C4.160,2.333,2.333,4.160,2.333,6.417C2.333,8.672,4.160,10.500,6.416,10.500C7.478,10.502,8.499,10.088,9.260,9.348L9.348,9.260Z" fill="#9697A3"/></svg>
+                <input type="text" id="acTfSearch" placeholder="请输入" />
+              </div>
+              <div class="ac-tf-panel-list" id="acTfLeftList"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 右侧：已选 -->
+        <div class="ac-tf-panel-right">
+          <div class="ac-tf-right-head">
+            <div class="ac-tf-right-head-left">
+              <span class="ac-tf-panel-title">已选</span>
+              <span class="ac-tf-panel-count" id="acTfRightCount">0</span>
+            </div>
+            <button class="ac-tf-clear" id="acTfClear" type="button">清空</button>
+          </div>
+          <div class="ac-tf-right-list" id="acTfRightList"></div>
+        </div>
+      </div>
+      <div class="ac-tf-footer">
+        <button type="button" class="ac-btn-cancel" id="acTfCancel">取消</button>
+        <button type="button" class="ac-btn-confirm" id="acTfConfirm">确定执行</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gs-mask" id="gsMask">
+    <div class="gs-dialog" role="dialog" aria-modal="true" aria-label="全局搜索">
+      <div class="gs-input-row">
+        <div class="gs-input-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex:none"><path d="M14.952,13.368L12.576,11.04C13.368,9.928,13.784,8.632,13.784,7.272C13.784,3.68,10.864,0.752,7.272,0.752C3.672,0.752,0.752,3.672,0.752,7.272C0.752,10.864,3.68,13.792,7.272,13.792C8.784,13.792,10.256,13.256,11.44,12.272L13.8,14.592C13.944,14.752,14.16,14.84,14.384,14.84C14.624,14.84,14.84,14.744,14.976,14.576C15.288,14.232,15.28,13.696,14.952,13.368ZM12.248,7.272C12.248,10.016,10.016,12.248,7.272,12.248C4.528,12.248,2.296,10.016,2.296,7.272C2.296,4.528,4.528,2.296,7.272,2.296C10.016,2.296,12.248,4.52,12.248,7.272Z" fill="#4E5969"/></svg>
+          <input id="gsInput" type="text" placeholder="搜索应用、通知、政策文件、我的申请、日程……" autocomplete="off" />
+        </div>
+        <button class="gs-close" id="gsClose" type="button" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6.909,8L2,3.091L3.091,2L8,6.909L12.909,2L14,3.091L9.091,8L14,12.909L12.909,14L8,9.091L3.091,14L2,12.909L6.909,8Z" fill="#4E5969" fill-rule="evenodd"/></svg></button>
+      </div>
+      <div class="gs-tabs" id="gsTabs"></div>
+      <div class="gs-body" id="gsBody"></div>
+    </div>
+  </div>
+
+  <main class="portal-home">
+    <div class="portal-layout workbench-view" id="workbenchStaff">
+      <section class="portal-left" aria-label="首页主区">
+        <div class="welcome-card">
+          <h1>老师，中午好！欢迎来访人事系统</h1>
+          <p>把繁琐留给系统，把时间还给教学。您专注育人，琐事交给我们。让您少跑腿、不操心，把心思留给讲台。</p>
+          <div class="welcome-search">
+            <input id="gsTrigger" type="text" placeholder="您可以搜索应用名称、消息、待办等内容" readonly />
+            <button id="gsTriggerBtn" type="button">搜索</button>
+          </div>
+        </div>
+
+        <section class="panel" aria-label="全部应用">
+          <div class="panel-head">
+            <div class="head-left" id="appTabsWrap">
+              <button class="tab-link active" type="button" data-gid="all">全部应用</button>
+              <button class="tab-link" type="button" data-gid="g1">常用应用</button>
+              <button class="tab-link" type="button" data-gid="g2">考核评价</button>
+            </div>
+            <button class="more" type="button" id="openCustomModal">自定义</button>
+          </div>
+          <div class="app-grid">
+            <a class="app-tile" href="#"><img class="app-icon ic-1" src="./assets/staff-app-profile.svg" alt=""><span>我的信息</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-2" src="./assets/staff-app-leave.svg" alt=""><span>我要请假</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-3" src="./assets/staff-app-period.svg" alt=""><span>聘期考核</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-4" src="./assets/staff-app-dual.svg" alt=""><span>双师认定</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-5" src="./assets/staff-app-certificate.svg" alt=""><span>证明打印</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-6" src="./assets/staff-app-study.svg" alt=""><span>进修申请</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-7" src="./assets/staff-app-annual.svg" alt=""><span>年度考核</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-8" src="./assets/staff-app-title.svg" alt=""><span>职称评审</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-9" src="./assets/staff-app-performance.svg" alt=""><span>业绩数据登记</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-10" src="./assets/staff-app-overseas.svg" alt=""><span>出国境报备</span></a>
+            <a class="app-tile" href="../../../teaching-portfolio/major/t-home/t-home.html"><img class="app-icon ic-11" src="./assets/staff-app-portfolio.svg" alt=""><span>教学档案袋</span></a>
+            <a class="app-tile" href="#"><img class="app-icon ic-12" src="./assets/staff-app-salary.svg" alt=""><span>我的工资</span></a>
+          </div>
+        </section>
+
+        <section class="panel" aria-label="我的申请">
+          <div class="panel-head">
+            <div class="head-left" id="myApplyTabs">
+              <button class="tab-link active" type="button" data-cat="apply" id="myApplyTabBtn">我的申请</button>
+              <button class="tab-link" type="button" data-cat="todo" id="myTodoTabBtn">待办</button>
+            </div>
+            <a class="more" href="./task-center.html" id="myApplyMore">查看全部</a>
+          </div>
+          <div class="apply-grid" id="myApplyGrid"></div>
+        </section>
+      </section>
+
+      <aside class="portal-right" aria-label="日程与通知">
+        <section class="panel schedule-card">
+          <div class="schedule-top">
+            <div class="schedule-date">
+              <span class="day-num" id="scheduleDay"></span>
+              <div class="day-meta">
+                <p id="scheduleYearMonth"></p>
+                <h3 id="scheduleWeekday"></h3>
+              </div>
+            </div>
+            <div class="schedule-actions">
+              <a href="#">＋ 新增</a>
+              <a href="#">查看日程</a>
+            </div>
+          </div>
+          <a class="schedule-event" href="#" style="text-decoration:none;color:inherit">
+            <span class="ck">✓</span>
+            <div>
+              <h4>人事处招聘大会</h4>
+              <p><span class="event-time">09:00:00 - 12:00:00</span><span class="event-place">知行楼3-418</span></p>
+            </div>
+          </a>
+        </section>
+
+        <section class="panel" aria-label="通知消息">
+          <div class="panel-head">
+            <div class="head-left" id="noticeTabs">
+              <button class="tab-link active" type="button" data-cat="notice">通知</button>
+              <button class="tab-link" type="button" data-cat="message">消息</button>
+            </div>
+            <a class="more" href="./notice-center.html" id="noticeMore">»</a>
+          </div>
+          <div class="notice-list" id="noticeList"></div>
+        </section>
+
+        <section class="panel" aria-label="政策文件资料下载">
+          <div class="panel-head">
+            <div class="head-left" id="policyTabs">
+              <button class="tab-link active" type="button" data-cat="policy">政策文件</button>
+              <button class="tab-link" type="button" data-cat="material">资料下载</button>
+            </div>
+            <div class="policy-search">
+              <span>🔍</span>
+              <input type="text" id="policySearchInput" placeholder="搜索文件、资料" />
+            </div>
+            <a class="more" href="./resource-center.html" id="policyMore">»</a>
+          </div>
+          <div class="policy-list" id="policyList"></div>
+        </section>
+      </aside>
+    </div>
+
+    <div class="workbench-view" id="workbenchHr" hidden>
+      <!-- 人事处工作台：内容待填充 -->
+      <div class="hr-placeholder">人事处工作台内容待补充</div>
+    </div>
+  </main>
+  </div>
+</div>
+
+<script src="../../../../assets/icon-registry.js"></script>
+<script src="../../../../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../../../../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../../../../framework/framework-2.js?v=2.2.3"></script>
+<script>
+  window.framework2Instance = WiseFramework2.mount({
+    activeApp: 'home',
+    activeFeature: 'home',
+    versionLabel: '首页',
+    userName: '金晓智',
+    roleName: '教职工',
+    secondaryNav: { items: [] },
+    tabs: [{ key: 'home', label: '首页', closable: false }]
+  });
+</script>
+<script>
+(function () {
+  var now = new Date();
+  var weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  document.getElementById('scheduleDay').textContent = String(now.getDate()).padStart(2, '0');
+  document.getElementById('scheduleYearMonth').textContent =
+    now.getFullYear() + '.' + String(now.getMonth() + 1).padStart(2, '0');
+  document.getElementById('scheduleWeekday').textContent = weekdays[now.getDay()];
+})();
+</script>
+<script>
+(function () {
+  // 全局搜索：综合 / 教职工 / 应用 / 待办 / 消息 / 通知 / 文档 / 政策
+  var SEARCH_CATS = ['综合', '教职工', '应用', '待办', '消息', '通知', '文档', '政策'];
+
+  var SEARCH_INDEX = [
+    // 教职工
+    { cat: '教职工', name: '诸葛查查', staffId: '01123789', college: '土木工程学院', avatar: '🧑‍🏫' },
+    { cat: '教职工', name: '查圆', staffId: '01123790', college: '经济管理学院', avatar: '👩‍🏫' },
+    { cat: '教职工', name: '李查明', staffId: '01123822', college: '信息工程学院', avatar: '🧑‍💻' },
+
+    // 应用
+    { cat: '应用', icon: 'ic-1', badge: '人', title: '我的信息', desc: '查看和维护个人基础信息', url: '#' },
+    { cat: '应用', icon: 'ic-2', badge: '假', title: '我要请假', desc: '发起请假申请并查看审批进度', url: '#' },
+    { cat: '应用', icon: 'ic-3', badge: '聘', title: '聘期考核', desc: '查看聘期考核任务与结果', url: '#' },
+    { cat: '应用', icon: 'ic-4', badge: '师', title: '双师认定', desc: '提交双师型教师认定申请', url: '#' },
+    { cat: '应用', icon: 'ic-5', badge: '证', title: '证明打印', desc: '申请并打印教职工证明材料', url: '#' },
+    { cat: '应用', icon: 'ic-3', badge: '修', title: '进修申请', desc: '提交进修学习申请', url: '#' },
+    { cat: '应用', icon: 'ic-7', badge: '年', title: '年度考核', desc: '填报年度考核材料', url: '#' },
+    { cat: '应用', icon: 'ic-8', badge: '职', title: '职称评审', desc: '申报职称并跟踪评审进度', url: '#' },
+    { cat: '应用', icon: 'ic-9', badge: '绩', title: '业绩数据登记', desc: '登记教学科研业绩数据', url: '#' },
+    { cat: '应用', icon: 'ic-10', badge: '境', title: '出国境报备', desc: '办理出国境事项报备', url: '#' },
+    { cat: '应用', icon: 'ic-11', badge: '档', title: '教学档案袋', desc: '查看个人教学档案', url: '../../../teaching-portfolio/major/t-home/t-home.html' },
+    { cat: '应用', icon: 'ic-12', badge: '资', title: '我的工资', desc: '查询工资与薪酬明细', url: '#' },
+
+    // 待办
+    { cat: '待办', title: '实验室设备采购计划编制：调研需求、编制采购查计划、招标准备等事项', submitter: '张思远', time: '2024-09-12 11:23:08', app: '设备管理系统' },
+    { cat: '待办', title: '学生公寓电费缴纳通知：请及时查费，避免停电影响正常生活', submitter: '张思远', time: '2024-09-12 11:23:08', app: '后勤服务平台' },
+
+    // 消息
+    { cat: '消息', title: '实验室设备采购计划编制：调研需求、编制采购计划、查查准备等事项', time: '2024-09-12 11:23:08', app: '设备管理系统' },
+    { cat: '消息', title: '学生公寓电费缴纳通知：请及时缴费，避免查停电影响正常生活', time: '2024-09-12 11:23:08', app: '后勤服务平台' },
+
+    // 通知
+    { cat: '通知', title: '设备采购计划编制：调研需求、招标准备查事项', time: '2024-09-12' },
+    { cat: '通知', title: '关于2025年元旦放查的通知', time: '2024-09-12' },
+
+    // 文档
+    { cat: '文档', ext: 'docx', title: '贫困家庭查申请表.docx', uploadTime: '2024-09-12 11:23:08', downloads: 2398 },
+    { cat: '文档', ext: 'xlsx', title: '国家级奖学金申查料.excel', uploadTime: '2024-09-12 11:23:08', downloads: 2398 },
+
+    // 政策
+    { cat: '政策', title: '【人事管理】文件名称查名称', time: '2024-09-12', stat: '下载量：2398次' },
+    { cat: '政策', title: '【人事管理】查查名称名称名称', time: '2024-09-12', stat: '浏览量：2398次' }
+  ];
+
+  // 综合视图下每个分组最多展示的条数（应用按双列宫格展示，可多放几个）
+  var SECTION_LIMIT = { '教职工': 2, '应用': 4, '待办': 2, '消息': 2, '通知': 2, '文档': 2, '政策': 2 };
+
+  // AI 智能搜索助手：用自然语言提问，由 AI 理解意图后给出搜索结果（演示用预设问法）
+  var AI_PROMPTS = [
+    { ico: '🗓️', text: '本周还有哪些待办日程没处理？' },
+    { ico: '📄', text: '帮我找一下贫困家庭相关的申请表' },
+    { ico: '🧾', text: '查一下我的合同台账信息' },
+    { ico: '📢', text: '最近有哪些和放假相关的通知？' },
+    { ico: '📚', text: '查一下教职工管理相关的政策文件' }
+  ];
+
+  // D2C 设计稿对应的三条建议提问（显示在默认态 AI 横幅中）
+  var AI_PROMPTS_D2C = [
+    '本周有哪些待办没有处理？',
+    '帮我查一下聘期内任务完成情况',
+    '帮我查一下教职工职称评审相关的政策文件'
+  ];
+
+  // 历史记录管理
+  var HISTORY_KEY = 'gs_search_history';
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { return []; }
+  }
+  function saveToHistory(kw) {
+    if (!kw.trim()) return;
+    var h = loadHistory().filter(function (s) { return s !== kw; });
+    h.unshift(kw);
+    if (h.length > 10) h = h.slice(0, 10);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  }
+  function clearHistory() {
+    try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
+  }
+
+  // 自然语言提问的意图识别规则：命中即认为该问题是在找某一类内容
+  // （顺序很重要——更具体的规则放前面，避免被宽泛的规则提前截获）
+  var INTENT_RULES = [
+    { test: /政策|制度|管理办法|规定/, cat: '政策' },
+    { test: /待办|事项|任务|没处理|未处理|要做/, cat: '待办' },
+    { test: /消息|提醒/, cat: '消息' },
+    { test: /通知|公告|放假|安排/, cat: '通知' },
+    { test: /合同|台账/, cat: '应用', kw: '台账' },
+    { test: /文件|文档|表格|申请表|材料/, cat: '文档' },
+    { test: /教职工|老师|同事|联系方式/, cat: '教职工' }
+  ];
+
+  // 粗略判断输入是否为"自然语言提问"（区别于普通关键词搜索）
+  function looksLikeQuestion(s) {
+    if (s.length < 5) return false;
+    return /[？?]|哪些|怎么|如何|帮我|查一下|找一下|看一下|有没有|是否|多少|什么|吗$|呢$/.test(s);
+  }
+
+  function detectIntent(question) {
+    for (var i = 0; i < INTENT_RULES.length; i++) {
+      if (INTENT_RULES[i].test.test(question)) return INTENT_RULES[i];
+    }
+    return null;
+  }
+
+  // 根据问题与命中的结果，组织一段"AI 助手"的自然语言回答
+  function buildAiAnswer(question, matched) {
+    if (!matched.length) {
+      return '抱歉，没有在系统中找到与“' + escapeHtml(question) + '”相关的内容。您可以换个说法再问问，或切换到上方分类标签自行查找。';
+    }
+    var byCat = {};
+    matched.forEach(function (it) { (byCat[it.cat] = byCat[it.cat] || []).push(it); });
+    function pickTitle(it) {
+      var t = it.title || it.name || '';
+      return t.length > 22 ? t.slice(0, 22) + '…' : t;
+    }
+    var parts = [];
+    if (byCat['待办']) parts.push('有 ' + byCat['待办'].length + ' 项待办尚待处理，例如《' + escapeHtml(pickTitle(byCat['待办'][0])) + '》，建议尽快跟进');
+    if (byCat['消息']) parts.push(byCat['消息'].length + ' 条相关消息');
+    if (byCat['通知']) parts.push('最新一条相关通知是《' + escapeHtml(pickTitle(byCat['通知'][0])) + '》');
+    if (byCat['应用']) parts.push('可以使用「' + escapeHtml(pickTitle(byCat['应用'][0])) + '」等 ' + byCat['应用'].length + ' 个相关应用办理');
+    if (byCat['教职工']) parts.push('找到 ' + byCat['教职工'].length + ' 位相关教职工，例如 ' + escapeHtml(byCat['教职工'][0].name));
+    if (byCat['文档']) parts.push(byCat['文档'].length + ' 份相关文件，例如《' + escapeHtml(pickTitle(byCat['文档'][0])) + '》');
+    if (byCat['政策']) parts.push(byCat['政策'].length + ' 篇相关政策文件');
+
+    var summary = '已经帮您找到 ' + matched.length + ' 条相关结果';
+    summary += parts.length ? ('：' + parts.join('；') + '。') : '。';
+    summary += '下面是详细内容，您也可以点击上方分类标签切换查看～';
+    return summary;
+  }
+
+  function aiAnswerBlock(text) {
+    return '<div class="gs-ai-answer">' +
+      '<div class="gs-ai-answer-head"><span class="spark">✨</span>AI 智能助手</div>' +
+      '<p class="gs-ai-answer-text">' + text + '</p>' +
+    '</div>';
+  }
+
+  function renderThinking() {
+    body.innerHTML =
+      '<div class="gs-ai-answer">' +
+        '<div class="gs-ai-answer-head"><span class="spark">✨</span>AI 正在理解您的问题…</div>' +
+        '<div class="gs-think-dots"><span></span><span></span><span></span></div>' +
+      '</div>';
+  }
+
+  var mask = document.getElementById('gsMask');
+  var input = document.getElementById('gsInput');
+  var body = document.getElementById('gsBody');
+  var tabsWrap = document.getElementById('gsTabs');
+  var closeBtn = document.getElementById('gsClose');
+  var trigger = document.getElementById('gsTrigger');
+  var triggerBtn = document.getElementById('gsTriggerBtn');
+
+  var activeTab = '综合';
+  // 缓存当前问题对应的 AI 回答，避免切换分类标签时重复触发"思考中"动画
+  var aiState = { kw: '', answer: '', isQuestion: false };
+  var aiTimer = null;
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function highlight(text, kw) {
+    if (!kw) return escapeHtml(text);
+    var idx = text.toLowerCase().indexOf(kw.toLowerCase());
+    if (idx === -1) return escapeHtml(text);
+    return escapeHtml(text.slice(0, idx)) + '<mark>' + escapeHtml(text.slice(idx, idx + kw.length)) + '</mark>' + escapeHtml(text.slice(idx + kw.length));
+  }
+
+  // 不同分类的可匹配文本（用于关键字过滤）
+  function matchText(item) {
+    switch (item.cat) {
+      case '教职工': return item.name + ' ' + item.staffId + ' ' + item.college;
+      case '应用': return item.title + ' ' + item.desc;
+      case '待办':
+      case '消息': return item.title + ' ' + (item.submitter || '') + ' ' + (item.app || '');
+      case '通知': return item.title;
+      case '文档': return item.title;
+      case '政策': return item.title;
+      default: return item.title || '';
+    }
+  }
+
+  // 不同分类对应不同的结果行外观
+  function rowPerson(item, kw) {
+    return '<a class="gs-person" href="#">' +
+      '<span class="gs-avatar">' + item.avatar + '</span>' +
+      '<span class="gs-p-name">' + highlight(item.name, kw) + '</span>' +
+      '<span class="gs-p-id">' + escapeHtml(item.staffId) + '</span>' +
+      '<span class="gs-p-college">' + escapeHtml(item.college) + '</span>' +
+    '</a>';
+  }
+  function rowApp(item, kw) {
+    return '<a class="gs-app-item" href="' + item.url + '">' +
+      '<span class="gs-badge ' + item.icon + '">' + escapeHtml(item.badge) + '</span>' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+    '</a>';
+  }
+  function rowTask(item, kw) {
+    return '<a class="gs-task" href="#">' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+      '<span class="gs-sub">' +
+        (item.submitter ? '<span>👤 ' + escapeHtml(item.submitter) + '</span>' : '') +
+        '<span>🕐 ' + escapeHtml(item.time) + '</span>' +
+        (item.app ? '<span>🗂 ' + escapeHtml(item.app) + '</span>' : '') +
+      '</span>' +
+    '</a>';
+  }
+  function rowNotice(item, kw) {
+    return '<a class="gs-task" href="#">' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+      '<span class="gs-sub"><span>🕐 ' + escapeHtml(item.time) + '</span></span>' +
+    '</a>';
+  }
+  function rowDoc(item, kw) {
+    var isXls = item.ext === 'xlsx';
+    return '<a class="gs-info" href="#">' +
+      '<span class="gs-file-ico ' + (isXls ? 'is-xls' : 'is-doc') + '">' + (isXls ? 'X' : 'W') + '</span>' +
+      '<span class="gs-meta">' +
+        '<h4>' + highlight(item.title, kw) + '</h4>' +
+        '<span class="gs-sub"><span>上传时间：' + escapeHtml(item.uploadTime) + '</span><span>下载量：' + item.downloads + ' 次</span></span>' +
+      '</span>' +
+    '</a>';
+  }
+  function rowPolicy(item, kw) {
+    return '<a class="gs-task" href="#">' +
+      '<h4>' + highlight(item.title, kw) + '</h4>' +
+      '<span class="gs-sub"><span>发布时间：' + escapeHtml(item.time) + '</span><span>' + escapeHtml(item.stat) + '</span></span>' +
+    '</a>';
+  }
+
+  function renderRow(item, kw) {
+    switch (item.cat) {
+      case '教职工': return rowPerson(item, kw);
+      case '应用': return rowApp(item, kw);
+      case '待办':
+      case '消息': return rowTask(item, kw);
+      case '通知': return rowNotice(item, kw);
+      case '文档': return rowDoc(item, kw);
+      case '政策': return rowPolicy(item, kw);
+      default: return '';
+    }
+  }
+
+  function renderRows(cat, items, kw) {
+    if (cat === '应用') {
+      return '<div class="gs-app-grid">' + items.map(function (it) { return renderRow(it, kw); }).join('') + '</div>';
+    }
+    return items.map(function (it) { return renderRow(it, kw); }).join('');
+  }
+
+  // 综合视图：按分类分组展示，超出上限时给出"在 XX 中查看更多"入口（点击即切到该分类 Tab）
+  function renderGroup(cat, items, kw) {
+    var limit = SECTION_LIMIT[cat] || 2;
+    var shown = items.slice(0, limit);
+    var more = items.length > limit
+      ? '<button type="button" class="gs-more" data-cat="' + escapeHtml(cat) + '">在' + escapeHtml(cat) + '中查看更多 <span aria-hidden="true">›</span></button>'
+      : '';
+    return '<div class="gs-sec"><h3 class="gs-sec-title">' + escapeHtml(cat) + '</h3>' + renderRows(cat, shown, kw) + more + '</div>';
+  }
+
+  function emptyHtml(kw) {
+    return '<div class="gs-empty"><span class="ico">🔍</span>' +
+      '<span>没有找到与"' + escapeHtml(kw) + '"相关的内容</span>' +
+      '<span style="font-size:13px">换个关键词试试，或切换到其他分类查看</span></div>';
+  }
+
+  var AI_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex:none"><defs><linearGradient x1="0" y1="0.5" x2="1" y2="0.5" id="gs-ai-g"><stop offset="0%" stop-color="#4752FF"/><stop offset="100%" stop-color="#7847FF"/></linearGradient></defs><path d="M13.64,5.8L13.81,5.42C14.1,4.75,14.63,4.21,15.29,3.92L15.79,3.69C16.07,3.57,16.07,3.17,15.79,3.05L15.32,2.84C14.64,2.54,14.1,1.98,13.82,1.29L13.65,0.88C13.53,0.6,13.14,0.6,13.02,0.88L12.85,1.29C12.56,1.98,12.03,2.54,11.35,2.84L10.87,3.05C10.6,3.17,10.6,3.57,10.87,3.69L11.38,3.92C12.04,4.21,12.56,4.75,12.86,5.42L13.02,5.8C13.14,6.07,13.52,6.07,13.64,5.8ZM3.87,10.67L5.3,10.67L5.7,9.67L7.63,9.67L8.03,10.67L9.47,10.67L7.33,5.33L6,5.33L3.87,10.67ZM6.67,7.26L7.1,8.33L6.24,8.33L6.67,7.26ZM10,10.67L10,5.33L11.33,5.33L11.33,10.67L10,10.67ZM2,2C1.63,2,1.33,2.3,1.33,2.67L1.33,13.33C1.33,13.7,1.63,14,2,14L14,14C14.37,14,14.67,13.7,14.67,13.33L14.67,7.33L13.33,7.33L13.33,12.67L2.67,12.67L2.67,3.33L9.33,3.33L9.33,2L2,2Z" fill="url(#gs-ai-g)"/></svg>';
+  var TRASH_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11.33,4L14.67,4L14.67,5.33L13.33,5.33L13.33,14C13.33,14.37,13.03,14.67,12.67,14.67L3.33,14.67C2.97,14.67,2.67,14.37,2.67,14L2.67,5.33L1.33,5.33L1.33,4L4.67,4L4.67,2C4.67,1.63,4.97,1.33,5.33,1.33L10.67,1.33C11.03,1.33,11.33,1.63,11.33,2L11.33,4ZM12,5.33L4,5.33L4,13.33L12,13.33L12,5.33ZM6,2.67L6,4L10,4L10,2.67L6,2.67Z" fill="#737585"/></svg>';
+
+  function renderDefault() {
+    var history = loadHistory();
+    var aiBannerHtml =
+      '<div class="gs-ai">' +
+        '<div class="gs-ai-head">' + AI_ICON_SVG + '<span class="ai-title">AI智能搜索助手</span></div>' +
+        '<div class="gs-ai-prompts" id="gsAiPrompts">' +
+          AI_PROMPTS_D2C.map(function (p) {
+            return '<button type="button" data-kw="' + escapeHtml(p) + '">' + escapeHtml(p) + '</button>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+
+    var bottomHtml;
+    if (history.length) {
+      bottomHtml =
+        '<div class="gs-history-head">' +
+          '<span class="gs-history-title">历史查询</span>' +
+          '<button type="button" class="gs-history-clear" id="gsHistClear" aria-label="清空历史">' + TRASH_ICON_SVG + '</button>' +
+        '</div>' +
+        '<div class="gs-history-chips" id="gsHistChips">' +
+          history.map(function (h) {
+            return '<button type="button" class="gs-history-chip" data-kw="' + escapeHtml(h) + '">' + escapeHtml(h) + '</button>';
+          }).join('') +
+        '</div>';
+    } else {
+      bottomHtml =
+        '<div class="gs-empty-img">' +
+          '<img src="./assets/d2c-search/asset/images/5d63b46b15fc17dc2a6d675d779bd2e2.png" alt="">' +
+          '<span class="gs-empty-title">暂无数据</span>' +
+          '<span class="gs-empty-sub">这里空空如也，等等再来</span>' +
+        '</div>';
+    }
+
+    body.innerHTML = aiBannerHtml + bottomHtml;
+
+    document.getElementById('gsAiPrompts').querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        input.value = btn.getAttribute('data-kw');
+        runSearch(input.value);
+        input.focus();
+      });
+    });
+
+    var chipsEl = document.getElementById('gsHistChips');
+    if (chipsEl) {
+      chipsEl.querySelectorAll('.gs-history-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          input.value = chip.getAttribute('data-kw');
+          runSearch(input.value);
+          input.focus();
+        });
+      });
+    }
+
+    var clearEl = document.getElementById('gsHistClear');
+    if (clearEl) {
+      clearEl.addEventListener('click', function () {
+        clearHistory();
+        renderDefault();
+      });
+    }
+  }
+
+  function bindMore() {
+    body.querySelectorAll('.gs-more').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setActiveTab(btn.getAttribute('data-cat'));
+      });
+    });
+  }
+
+  function renderTabs() {
+    tabsWrap.innerHTML = SEARCH_CATS.map(function (cat) {
+      return '<button type="button" class="gs-tab' + (cat === activeTab ? ' active' : '') + '" data-cat="' + escapeHtml(cat) + '">' + escapeHtml(cat) + '</button>';
+    }).join('');
+    tabsWrap.querySelectorAll('.gs-tab').forEach(function (btn) {
+      btn.addEventListener('click', function () { setActiveTab(btn.getAttribute('data-cat')); });
+    });
+  }
+
+  function setActiveTab(cat) {
+    if (activeTab === cat) return;
+    activeTab = cat;
+    renderTabs();
+    runSearch(input.value);
+  }
+
+  // 实际渲染搜索结果（AI 回答区 + 分类列表）。effectiveKw 用于过滤与高亮，
+  // displayKw 用于"无结果"提示中向用户复述其原始输入
+  function renderResults(displayKw, effectiveKw, matched) {
+    var aiHtml = (aiState.isQuestion && aiState.kw === displayKw) ? aiAnswerBlock(aiState.answer) : '';
+
+    if (!matched.length) {
+      body.innerHTML = aiHtml + emptyHtml(displayKw);
+      bindMore();
+      return;
+    }
+
+    var html = '';
+    if (activeTab === '综合') {
+      // 按固定分类顺序分组展示，每组限量 + "查看更多" 跳转到对应 Tab
+      SEARCH_CATS.slice(1).forEach(function (cat) {
+        var items = matched.filter(function (item) { return item.cat === cat; });
+        if (items.length) html += renderGroup(cat, items, effectiveKw);
+      });
+    } else {
+      var items = matched.filter(function (item) { return item.cat === activeTab; });
+      if (!items.length) { body.innerHTML = aiHtml + emptyHtml(displayKw); bindMore(); return; }
+      html = '<div class="gs-sec gs-sec-flat">' + renderRows(activeTab, items, effectiveKw) + '</div>';
+    }
+
+    body.innerHTML = aiHtml + (html || emptyHtml(displayKw));
+    bindMore();
+  }
+
+  function plainFilter(text) {
+    return SEARCH_INDEX.filter(function (item) {
+      return matchText(item).toLowerCase().indexOf(text.toLowerCase()) !== -1;
+    });
+  }
+
+  function runSearch(keyword) {
+    var kw = (keyword || '').trim();
+    if (aiTimer) { clearTimeout(aiTimer); aiTimer = null; }
+
+    if (!kw) {
+      aiState = { kw: '', answer: '', isQuestion: false };
+      renderDefault();
+      return;
+    }
+
+    var isNewKw = (kw !== aiState.kw);
+    var isQuestion = looksLikeQuestion(kw);
+
+    if (isNewKw && isQuestion) {
+      // 新的自然语言提问：先模拟"AI 思考中"，再给出理解后的回答 + 结果
+      renderThinking();
+      aiTimer = setTimeout(function () {
+        aiTimer = null;
+        var intent = detectIntent(kw);
+        var matched, effectiveKw;
+        if (intent) {
+          effectiveKw = intent.kw || '';
+          matched = SEARCH_INDEX.filter(function (item) {
+            if (item.cat !== intent.cat) return false;
+            return effectiveKw ? matchText(item).toLowerCase().indexOf(effectiveKw.toLowerCase()) !== -1 : true;
+          });
+        } else {
+          effectiveKw = kw;
+          matched = plainFilter(kw);
+        }
+        aiState = { kw: kw, answer: buildAiAnswer(kw, matched), isQuestion: true, effectiveKw: effectiveKw, matched: matched };
+        renderResults(kw, effectiveKw, matched);
+      }, 650);
+      return;
+    }
+
+    if (isNewKw) {
+      // 普通关键词搜索：直接按字面匹配，不触发 AI 回答
+      aiState = { kw: kw, answer: '', isQuestion: false, effectiveKw: kw, matched: plainFilter(kw) };
+    }
+
+    renderResults(kw, aiState.effectiveKw, aiState.matched);
+  }
+
+  function openDialog(presetKeyword) {
+    mask.classList.add('is-open');
+    activeTab = '综合';
+    aiState = { kw: '', answer: '', isQuestion: false };
+    if (aiTimer) { clearTimeout(aiTimer); aiTimer = null; }
+    renderTabs();
+    input.value = presetKeyword || '';
+    if (presetKeyword) { runSearch(presetKeyword); } else { renderDefault(); }
+    setTimeout(function () { input.focus(); }, 0);
+  }
+
+  function closeDialog() {
+    mask.classList.remove('is-open');
+    if (aiTimer) { clearTimeout(aiTimer); aiTimer = null; }
+  }
+
+  trigger.addEventListener('click', function () { openDialog(''); });
+  triggerBtn.addEventListener('click', function () { openDialog(''); });
+  closeBtn.addEventListener('click', closeDialog);
+  mask.addEventListener('click', function (e) { if (e.target === mask) closeDialog(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && mask.classList.contains('is-open')) closeDialog();
+  });
+  input.addEventListener('input', function () { runSearch(input.value); });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && input.value.trim()) saveToHistory(input.value.trim());
+  });
+
+  // ---------- 我的申请：待办/已办 切换 + "查看全部"详情弹窗 ----------
+  // 我的申请：教职工本人提交、尚未结束的申请；已结束的申请在首页保留展示 7 天
+  var MY_APPLICATIONS = [
+    { id: 'leave', title: '年休假申请', status: 'progress', statusLabel: '进行中', borderClass: '',
+      lines: ['申请时间：2026.05.06 至 2026.05.08，共2天', '提交时间：2026.05.05 16:32:01'],
+      step: '待学院审批', detailUrl: '#' },
+    { id: 'practice', title: '企业实践认定申请', status: 'returned', statusLabel: '被退回', borderClass: 'is-returned',
+      lines: ['深圳市智造科技有限公司，实践周期32天', '提交时间：2026.05.05 16:32:01'],
+      step: '待个人提交', reason: '退回原因：缺少企业导师评价附件，请补充重新提交。', detailUrl: '#' },
+  ];
+
+  // 待办：系统需要教职工去做的事项（如提交职称申请、补充材料等），与本人已提交的申请是两类不同的数据
+  var TODO_ITEMS = [
+    { id: 'title-submit', title: '提交职称评审申报材料', urgent: true, deadline: '剩余 3 天',
+      desc: '根据《2026年度职称评审工作通知》，请于截止日期前完成评审材料填报与提交。',
+      actionLabel: '去提交', actionUrl: '#' },
+    { id: 'overseas-supplement', title: '补充出国（境）报备申请材料', urgent: false, deadline: '剩余 5 天',
+      desc: '您的出国（境）报备申请已被退回，需补充邀请函翻译件后重新提交审批。',
+      actionLabel: '去补充', actionUrl: '#' },
+    { id: 'perf-data', title: '登记本学期业绩数据', urgent: false, deadline: '剩余 10 天',
+      desc: '请完善本学期教学、科研等业绩数据登记，作为年度考核评定依据。',
+      actionLabel: '去登记', actionUrl: '#' }
+  ];
+
+  function applyCardHtml(item) {
+    return '<article class="apply-card' + (item.borderClass ? ' ' + item.borderClass : '') + '">' +
+      '<div class="apply-head">' +
+        '<span class="apply-title">' + escapeHtml(item.title) + ' <span class="status-tag ' + item.status + '">' + escapeHtml(item.statusLabel) + '</span></span>' +
+        '<a class="detail" href="' + item.detailUrl + '">查看详情</a>' +
+      '</div>' +
+      item.lines.map(function (l) { return '<p>' + escapeHtml(l) + '</p>'; }).join('') +
+      '<p>当前环节：<span class="step">' + escapeHtml(item.step) + '</span></p>' +
+      (item.reason ? '<p class="reason">' + escapeHtml(item.reason) + '</p>' : '') +
+      (item.note ? '<p class="note">' + escapeHtml(item.note) + '</p>' : '') +
+    '</article>';
+  }
+
+  function todoCardHtml(item) {
+    return '<article class="todo-card' + (item.urgent ? ' is-urgent' : '') + '">' +
+      '<div class="todo-head">' +
+        '<span class="todo-title">' + escapeHtml(item.title) + '</span>' +
+        '<span class="todo-deadline' + (item.urgent ? ' urgent' : '') + '">' + escapeHtml(item.deadline) + '</span>' +
+      '</div>' +
+      '<p class="todo-desc">' + escapeHtml(item.desc) + '</p>' +
+      '<a class="todo-action" href="' + item.actionUrl + '">' + escapeHtml(item.actionLabel) + ' →</a>' +
+    '</article>';
+  }
+
+  function applyEmptyHtml(label) {
+    return '<div class="apply-empty">暂无' + escapeHtml(label || '相关') + '事项</div>';
+  }
+
+  // 面板内 我的申请/待办 切换
+  var myApplyGrid = document.getElementById('myApplyGrid');
+  var myApplyTabsWrap = document.getElementById('myApplyTabs');
+  var myApplyTabBtn = document.getElementById('myApplyTabBtn');
+  var myTodoTabBtn = document.getElementById('myTodoTabBtn');
+  var myApplyTab = 'apply';
+
+  myApplyTabBtn.textContent = '我的申请(' + MY_APPLICATIONS.length + ')';
+  myTodoTabBtn.textContent = '待办（12）';
+
+  function renderMyApply() {
+    if (myApplyTab === 'apply') {
+      myApplyGrid.innerHTML = MY_APPLICATIONS.length ? MY_APPLICATIONS.map(applyCardHtml).join('') : applyEmptyHtml('申请');
+    } else {
+      myApplyGrid.innerHTML = TODO_ITEMS.length ? TODO_ITEMS.map(todoCardHtml).join('') : applyEmptyHtml('待办');
+    }
+  }
+
+  myApplyTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.getAttribute('data-cat');
+      if (cat === myApplyTab) return;
+      myApplyTab = cat;
+      myApplyTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderMyApply();
+    });
+  });
+
+  // "查看全部"改为跳转独立详情页（任务中心），不再使用弹窗
+  renderMyApply();
+
+  // ------- 通知 / 消息：两个分类 tab，各自独立数据，支持已读未读状态 -------
+  var NOTICES = [
+    { id: 'n1', title: '深圳职业大学2026年人事处分工名单', time: '2026-05-12', pinned: true, read: false },
+    { id: 'n2', title: '关于启动 2025 年度教职工绩效考核填报工作的通知（各二级学院人事干事对接）', time: '2026-05-10', pinned: false, read: false },
+    { id: 'n3', title: '关于组织 2026 新入职辅导员岗前素养培训的报名通知', time: '2026-05-10', pinned: false, read: true }
+  ];
+  var MESSAGES = [
+    { id: 'm1', title: '实验室设备采购计划编制：调研需求、编制采购计划、招标准备等事项', time: '2026-05-11', pinned: false, read: false },
+    { id: 'm2', title: '学生公寓电费缴纳通知：请及时缴费，避免停电影响正常生活', time: '2026-05-10', pinned: false, read: true }
+  ];
+
+  var noticeTabsWrap = document.getElementById('noticeTabs');
+  var noticeListEl = document.getElementById('noticeList');
+  var noticeMoreLink = document.getElementById('noticeMore');
+  var noticeTab = 'notice';
+
+  function noticeItemHtml(item, type) {
+    var unreadMark = item.pinned
+      ? '<span class="notice-pin">置顶</span>'
+      : '<span class="dot-mark' + (item.read ? ' normal' : '') + '"></span>';
+    return '<a class="notice-item' + (item.read ? ' is-read' : '') + '" href="#' + type + '&id=' + item.id + '">' +
+        '<span class="text">' + unreadMark + '<h3>' + escapeHtml(item.title) + '</h3></span>' +
+        '<time>' + (item.read ? '' : '<span class="notice-unread-badge"></span>') + escapeHtml(item.time) + '</time>' +
+      '</a>';
+  }
+
+  function renderNotice() {
+    var list = noticeTab === 'notice' ? NOTICES : MESSAGES;
+    noticeListEl.innerHTML = list.map(function (it) { return noticeItemHtml(it, noticeTab); }).join('');
+    noticeMoreLink.href = './notice-center.html?type=' + noticeTab;
+  }
+
+  noticeTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.getAttribute('data-cat');
+      if (cat === noticeTab) return;
+      noticeTab = cat;
+      noticeTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderNotice();
+    });
+  });
+
+  renderNotice();
+
+  // ------- 政策文件 / 资料下载：两个分类 tab，各自独立数据 -------
+  var POLICIES = [
+    { id: 'p1', title: '中共深圳职业技术大学委员会关于印发《深职大教职工岗位聘用管理办法（2026修订版）》', time: '2026-05-20', views: 2398, pinned: true },
+    { id: 'p2', title: '深圳职业技术大学绩效工资核算实施细则（试行）', time: '2026-05-20', views: 531, pinned: false },
+    { id: 'p3', title: '【劳资福利】教职工带薪休假与考勤管理制度', time: '2026-05-18', views: 64, pinned: false }
+  ];
+  var MATERIALS = [
+    { id: 'd1', title: '2026年度职称评审申报材料模板.docx', time: '2026-08-20 10:12:09', views: 1206, pinned: true },
+    { id: 'd2', title: '教职工因公出国（境）报备材料清单.xlsx', time: '2026-07-02 09:05:33', views: 842, pinned: false },
+    { id: 'd3', title: '新教师入职培训手册.pdf', time: '2026-03-15 14:30:02', views: 2031, pinned: false }
+  ];
+
+  var policyTabsWrap = document.getElementById('policyTabs');
+  var policyListEl = document.getElementById('policyList');
+  var policySearchInput = document.getElementById('policySearchInput');
+  var policyMoreLink = document.getElementById('policyMore');
+  var policyTab = 'policy';
+
+  function policyItemHtml(item, type) {
+    var countLabel = type === 'material' ? '下载量' : '浏览量';
+    return '<a class="policy-item' + (item.pinned ? ' is-top' : '') + '" href="#' + type + '&id=' + item.id + '">' +
+        '<h3>' + (item.pinned ? '<span class="top-tag">置顶</span>' : '') + escapeHtml(item.title) + '</h3>' +
+        '<div class="policy-meta"><span>' + escapeHtml(item.time) + '</span><span>' + countLabel + '：' + item.views + '</span></div>' +
+      '</a>';
+  }
+
+  function renderPolicy() {
+    var list = policyTab === 'policy' ? POLICIES : MATERIALS;
+    var keyword = policySearchInput.value.trim().toLowerCase();
+    if (keyword) {
+      list = list.filter(function (item) {
+        return item.title.toLowerCase().indexOf(keyword) !== -1;
+      });
+    }
+    policyListEl.innerHTML = list.map(function (it) { return policyItemHtml(it, policyTab); }).join('');
+    policySearchInput.placeholder = policyTab === 'material' ? '搜索资料、模板' : '搜索文件、政策';
+    policyMoreLink.href = './resource-center.html?type=' + policyTab;
+  }
+
+  policyTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cat = btn.getAttribute('data-cat');
+      if (cat === policyTab) return;
+      policyTab = cat;
+      policyTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderPolicy();
+    });
+  });
+
+  policySearchInput.addEventListener('input', renderPolicy);
+
+  renderPolicy();
+
+  renderTabs();
+  renderDefault();
+
+  // ------- 工作台切换：由顶栏角色下拉控制 -------
+  // 仅「教职工」角色显示教职工工作台，其余所有角色显示人事处工作台
+  var STAFF_WORKBENCH_ROLES = ['教职工'];
+
+  // 特定角色的应用白名单（文件名不含 ./ 和 .html）；未配置的角色显示全部应用
+  var ROLE_APP_FILTER = {
+    '离退休人员': ['my-info', 'certificate-print', 'my-salary']
+  };
+
+  var wbViews = {
+    staff: document.getElementById('workbenchStaff'),
+    hr: document.getElementById('workbenchHr')
+  };
+
+  function applyAppFilter(roleName) {
+    var allowed = Object.prototype.hasOwnProperty.call(ROLE_APP_FILTER, roleName)
+      ? ROLE_APP_FILTER[roleName]
+      : null;
+    document.querySelectorAll('.app-grid .app-tile').forEach(function (tile) {
+      if (!allowed) { tile.hidden = false; return; }
+      var key = (tile.getAttribute('href') || '').replace('./', '').replace('.html', '');
+      tile.hidden = allowed.indexOf(key) === -1;
+    });
+  }
+
+  function applyWorkbenchByRole(roleName) {
+    var isStaff = STAFF_WORKBENCH_ROLES.indexOf((roleName || '').trim()) !== -1;
+    wbViews.staff.hidden = !isStaff;
+    wbViews.hr.hidden = isStaff;
+    applyAppFilter(roleName);
+  }
+
+  var frameworkShell = window.framework2Instance?.shell
+    || document.querySelector('.frame2-stage')?.shadowRoot?.querySelector('[data-frame2-shell-root]');
+  var currentRoleNode = frameworkShell && frameworkShell.querySelector('[data-current-role]');
+  if (currentRoleNode) applyWorkbenchByRole(currentRoleNode.textContent);
+
+  (frameworkShell || document).addEventListener('click', function (e) {
+    var roleBtn = e.target.closest && e.target.closest('[data-user-role]');
+    if (roleBtn) applyWorkbenchByRole(roleBtn.getAttribute('data-user-role'));
+  });
+})();
+</script>
+<script>
+(function () {
+  var AC_APPS = [
+    { key: 'my-info',   ic: 'ic-1',  src: './assets/staff-app-profile.svg',     label: '我的信息',     url: '#' },
+    { key: 'leave',     ic: 'ic-2',  src: './assets/staff-app-leave.svg',        label: '我要请假',     url: '#' },
+    { key: 'period',    ic: 'ic-3',  src: './assets/staff-app-period.svg',       label: '聘期考核',     url: '#' },
+    { key: 'dual',      ic: 'ic-4',  src: './assets/staff-app-dual.svg',         label: '双师认定',     url: '#' },
+    { key: 'cert',      ic: 'ic-5',  src: './assets/staff-app-certificate.svg',  label: '证明打印',     url: '#' },
+    { key: 'further',   ic: 'ic-6',  src: './assets/staff-app-study.svg',        label: '进修申请',     url: '#' },
+    { key: 'annual',    ic: 'ic-7',  src: './assets/staff-app-annual.svg',       label: '年度考核',     url: '#' },
+    { key: 'title',     ic: 'ic-8',  src: './assets/staff-app-title.svg',        label: '职称评审',     url: '#' },
+    { key: 'perf',      ic: 'ic-9',  src: './assets/staff-app-performance.svg',  label: '业绩数据登记', url: '#' },
+    { key: 'overseas',  ic: 'ic-10', src: './assets/staff-app-overseas.svg',     label: '出国境报备',   url: '#' },
+    { key: 'portfolio', ic: 'ic-11', src: './assets/staff-app-portfolio.svg',    label: '教学档案袋',   url: '../../../teaching-portfolio/major/t-home/t-home.html' },
+    { key: 'salary',    ic: 'ic-12', src: './assets/staff-app-salary.svg',       label: '我的工资',     url: '#' }
+  ];
+  var ALL_KEYS = AC_APPS.map(function (a) { return a.key; });
+
+  var acGroups = [
+    { id: 'all',  name: '全部应用',  apps: ALL_KEYS.slice(), readonly: true },
+    { id: 'g1',   name: '常用应用',  apps: ['my-info', 'leave', 'period', 'dual', 'cert', 'further', 'annual', 'title', 'perf', 'overseas', 'portfolio', 'salary'] },
+    { id: 'g2',   name: '考核管理',  apps: ['period', 'annual', 'perf'] },
+    { id: 'g3',   name: '薪酬管理',  apps: ['salary'] }
+  ];
+  var acGroupSeq = acGroups.length;
+  var acActiveId = 'g1';
+
+  var acMask      = document.getElementById('acMask');
+  var acSidebar   = document.getElementById('acSidebarList');
+  var acContentEl = document.getElementById('acContent');
+
+  var RENAME_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 11.5V14h2.5l7.373-7.373-2.5-2.5L2 11.5zm11.807-6.807a.664.664 0 000-.94l-1.56-1.56a.664.664 0 00-.94 0l-1.22 1.22 2.5 2.5 1.22-1.22z" fill="#3167FF"/></svg>';
+  var DELETE_SVG  = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M11.33 4H14.67V5.33H13.33V14c0 .37-.3.67-.67.67H3.33C2.97 14.67 2.67 14.37 2.67 14V5.33H1.33V4H4.67V2c0-.37.3-.67.67-.67h5.33c.37 0 .67.3.67.67V4zM12 5.33H4V13.33H12V5.33zM6 2.67V4H10V2.67H6Z" fill="#3167FF"/></svg>';
+  var REMOVE_SVG  = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" fill="#FA5151"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  var PLUS_SVG    = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M14.667 7.333H8.667V1.333H7.333v6H1.333v1.334h6v6h1.334v-6h6z" fill="#C9CAD4"/></svg>';
+
+  function escAc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  var AC_MENUS = [
+    { key: 'menu-announce', type: 'menu', label: '人事公告', parentKey: 'my-info', url: '#' },
+    { key: 'menu-recruit',  type: 'menu', label: '招聘信息', parentKey: 'my-info', url: '#' },
+    { key: 'menu-policy',   type: 'menu', label: '政策文件', parentKey: 'cert',    url: '#' },
+    { key: 'menu-org',      type: 'menu', label: '组织架构', parentKey: 'cert',    url: '#' },
+    { key: 'menu-train',    type: 'menu', label: '培训计划', parentKey: 'annual',  url: '#' },
+    { key: 'menu-attend',   type: 'menu', label: '考勤记录', parentKey: 'annual',  url: '#' },
+    { key: 'menu-contract', type: 'menu', label: '合同管理', parentKey: 'salary',  url: '#' },
+    { key: 'menu-welfare',  type: 'menu', label: '福利待遇', parentKey: 'salary',  url: '#' },
+  ];
+  var MENU_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4.5h12M2 8h12M2 11.5h8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  var CHEVRON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10.667L4 6.667L12 6.667Z" fill="#000"/></svg>';
+  var MENU_CB_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="0" width="14" height="14" rx="2" fill="#FFF"/><rect x="0.5" y="0.5" width="13" height="13" rx="1.5" fill="none" stroke="#DCDCE0" stroke-width="1"/></svg>';
+
+  function findAcGroup(id) {
+    for (var i = 0; i < acGroups.length; i++) if (acGroups[i].id === id) return acGroups[i];
+    return null;
+  }
+  function appByKey(key) {
+    for (var i = 0; i < AC_APPS.length; i++) if (AC_APPS[i].key === key) return AC_APPS[i];
+    return null;
+  }
+  function menuByKey(key) {
+    for (var i = 0; i < AC_MENUS.length; i++) if (AC_MENUS[i].key === key) return AC_MENUS[i];
+    return null;
+  }
+  function isMenuKey(key) { return key.indexOf('menu-') === 0; }
+
+  function renderAcSidebar() {
+    acSidebar.innerHTML = acGroups.map(function (g) {
+      var active = g.id === acActiveId;
+      var actions = (!g.readonly)
+        ? '<span class="gacts">' +
+            '<button type="button" data-act="rename" aria-label="重命名">' + RENAME_SVG + '</button>' +
+            '<button type="button" data-act="delete" aria-label="删除">' + DELETE_SVG + '</button>' +
+          '</span>'
+        : '';
+      return '<div class="ac-group-item' + (active ? ' active' : '') + '" data-id="' + g.id + '">' +
+        '<span class="gname">' + escAc(g.name) + '</span>' + actions +
+      '</div>';
+    }).join('');
+    acSidebar.querySelectorAll('.ac-group-item').forEach(function (item) {
+      var gid = item.getAttribute('data-id');
+      item.addEventListener('click', function (e) {
+        if (e.target.closest('[data-act]')) return;
+        acActiveId = gid; renderAcSidebar(); renderAcContent();
+      });
+      var renBtn = item.querySelector('[data-act="rename"]');
+      if (renBtn) renBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var g = findAcGroup(gid);
+        var name = window.prompt('重命名分组', g ? g.name : '');
+        if (name && name.trim()) { if (g) g.name = name.trim(); renderAcSidebar(); renderAcContent(); }
+      });
+      var delBtn = item.querySelector('[data-act="delete"]');
+      if (delBtn) delBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var g = findAcGroup(gid);
+        if (!window.confirm('确定要删除分组「' + (g ? g.name : '') + '」吗？')) return;
+        acGroups = acGroups.filter(function (x) { return x.id !== gid; });
+        if (acActiveId === gid) acActiveId = acGroups.length ? acGroups[0].id : null;
+        renderAcSidebar(); renderAcContent();
+      });
+    });
+  }
+
+  function renderAcContent() {
+    var g = findAcGroup(acActiveId);
+    if (!g) { acContentEl.innerHTML = ''; return; }
+    var readonly = !!g.readonly;
+    var tiles = g.apps.map(function (key) {
+      var app = appByKey(key);
+      var item = app || menuByKey(key);
+      if (!item) return '';
+      var removeBtn = readonly ? '' : '<button class="ac-remove" type="button" data-act="remove" data-key="' + key + '" aria-label="移除">' + REMOVE_SVG + '</button>';
+      var iconHtml = app
+        ? '<img class="ac-app-icon ' + app.ic + '" src="' + app.src + '" alt="" />'
+        : '<div class="ac-app-icon ac-menu-icon-big ic-menu">' + MENU_ICON_SVG + '</div>';
+      return '<div class="ac-app-tile">' +
+        removeBtn +
+        '<a class="ac-app-link" href="' + item.url + '" onclick="return false">' +
+          iconHtml +
+          '<span class="ac-app-name">' + escAc(item.label) + '</span>' +
+        '</a>' +
+      '</div>';
+    }).join('');
+    var addBtn = readonly ? '' : '<button class="ac-add-tile" type="button" data-act="add">' + PLUS_SVG + '<span>添加应用</span></button>';
+    acContentEl.innerHTML = '<h3 class="ac-content-title">' + escAc(g.name) + '</h3>' +
+      '<div class="ac-app-grid">' + tiles + addBtn + '</div>';
+    acContentEl.querySelectorAll('[data-act="remove"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        g.apps = g.apps.filter(function (k) { return k !== btn.getAttribute('data-key'); });
+        renderAcContent();
+      });
+    });
+    var addTile = acContentEl.querySelector('[data-act="add"]');
+    if (addTile) addTile.addEventListener('click', function () { openTransfer(g.id); });
+  }
+
+  // ── 穿梭框 ──────────────────────────────────────────────
+  var DRAG_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.5,2C4.95,2,4.5,2.45,4.5,3C4.5,3.55,4.95,4,5.5,4C6.05,4,6.5,3.55,6.5,3C6.5,2.45,6.05,2,5.5,2ZM5.5,12C4.95,12,4.5,12.45,4.5,13C4.5,13.55,4.95,14,5.5,14C6.05,14,6.5,13.55,6.5,13C6.5,12.45,6.05,12,5.5,12ZM5.5,7C4.95,7,4.5,7.45,4.5,8C4.5,8.55,4.95,9,5.5,9C6.05,9,6.5,8.55,6.5,8C6.5,7.45,6.05,7,5.5,7ZM10.5,2C9.95,2,9.5,2.45,9.5,3C9.5,3.55,9.95,4,10.5,4C11.05,4,11.5,3.55,11.5,3C11.5,2.45,11.05,2,10.5,2ZM10.5,12C9.95,12,9.5,12.45,9.5,13C9.5,13.55,9.95,14,10.5,14C11.05,14,11.5,13.55,11.5,13C11.5,12.45,11.05,12,10.5,12ZM10.5,7C9.95,7,9.5,7.45,9.5,8C9.5,8.55,9.95,9,10.5,9C11.05,9,11.5,8.55,11.5,8C11.5,7.45,11.05,7,10.5,7Z" fill="#9697A3"/></svg>';
+  var DEL_SVG  = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8,7.057L3.805,2.862L2.862,3.805L7.057,8L2.862,12.195L3.805,13.138L8,8.943L12.195,13.138L13.138,12.195L8.943,8L13.138,3.805L12.195,2.862L8,7.057Z" fill="currentColor" fill-rule="evenodd"/></svg>';
+
+  var tfMask       = document.getElementById('acTfMask');
+  var tfTitle      = document.getElementById('acTfTitle');
+  var tfLeftList   = document.getElementById('acTfLeftList');
+  var tfRightList  = document.getElementById('acTfRightList');
+  var tfLeftCount  = document.getElementById('acTfLeftCount');
+  var tfRightCount = document.getElementById('acTfRightCount');
+  var tfSearchEl   = document.getElementById('acTfSearch');
+  var tfTargetId   = null;
+  var tfLeft  = [];
+  var tfRight = [];
+  var tfLeftTab = 'app';
+  var tfSearchQ = '';
+
+  function tfVisibleLeft() {
+    return tfLeft.filter(function (k) {
+      if (tfLeftTab === 'menu' ? !isMenuKey(k) : isMenuKey(k)) return false;
+      if (!tfSearchQ) return true;
+      var item = appByKey(k) || menuByKey(k);
+      return item && item.label.indexOf(tfSearchQ) !== -1;
+    });
+  }
+
+  function tfMenuTreeHtml() {
+    var visibleKeys = tfVisibleLeft();
+    var groups = {};
+    visibleKeys.forEach(function (k) {
+      var m = menuByKey(k);
+      if (!m) return;
+      var pk = m.parentKey || '__none__';
+      if (!groups[pk]) groups[pk] = [];
+      groups[pk].push(k);
+    });
+    var html = '';
+    AC_APPS.forEach(function (app) {
+      var children = groups[app.key];
+      if (!children || children.length === 0) return;
+      html += '<div class="ac-tf-tree-parent">' +
+        '<span class="ac-tf-tree-chevron">' + CHEVRON_SVG + '</span>' +
+        '<span class="ac-tf-item-name">' + escAc(app.label) + '</span>' +
+      '</div>';
+      children.forEach(function (k) {
+        var m = menuByKey(k);
+        if (!m) return;
+        html += '<div class="ac-tf-tree-child" data-key="' + k + '">' +
+          '<span class="ac-tf-tree-cb">' + MENU_CB_SVG + '</span>' +
+          '<span class="ac-tf-item-name">' + escAc(m.label) + '</span>' +
+        '</div>';
+      });
+    });
+    return html;
+  }
+
+  function tfUpdateTabCounts() {
+    var appCount  = tfLeft.filter(function (k) { return !isMenuKey(k); }).length;
+    var menuCount = tfLeft.filter(function (k) { return  isMenuKey(k); }).length;
+    var appEl  = document.getElementById('acTfCountApp');
+    var menuEl = document.getElementById('acTfCountMenu');
+    if (appEl)  appEl.textContent  = appCount;
+    if (menuEl) menuEl.textContent = menuCount;
+  }
+
+  function tfLeftItemHtml(key) {
+    var app = appByKey(key);
+    var item = app || menuByKey(key);
+    if (!item) return '';
+    var iconHtml = app
+      ? '<img class="ac-tf-icon ' + app.ic + '" src="' + app.src + '" alt="" />'
+      : '<div class="ac-tf-icon ac-tf-menu-icon ic-menu">' + MENU_ICON_SVG + '</div>';
+    return '<div class="ac-tf-item" data-key="' + key + '">' +
+      '<div class="ac-tf-item-cb"></div>' +
+      iconHtml +
+      '<span class="ac-tf-item-name">' + escAc(item.label) + '</span>' +
+    '</div>';
+  }
+
+  function tfRightChipHtml(key) {
+    var app = appByKey(key);
+    var item = app || menuByKey(key);
+    if (!item) return '';
+    var iconHtml = app
+      ? '<img class="ac-tf-chip-icon ' + app.ic + '" src="' + app.src + '" alt="" />'
+      : '<div class="ac-tf-chip-icon ac-tf-menu-icon ic-menu">' + MENU_ICON_SVG + '</div>';
+    return '<div class="ac-tf-chip" data-key="' + key + '">' +
+      '<span class="ac-tf-chip-drag">' + DRAG_SVG + '</span>' +
+      iconHtml +
+      '<span class="ac-tf-chip-name">' + escAc(item.label) + '</span>' +
+      '<button class="ac-tf-chip-del" type="button" data-key="' + key + '" aria-label="移除">' + DEL_SVG + '</button>' +
+    '</div>';
+  }
+
+  function tfRenderLeft() {
+    var list = tfVisibleLeft();
+    tfLeftCount.textContent = list.length;
+    tfUpdateTabCounts();
+    if (tfLeftTab === 'menu') {
+      tfLeftList.innerHTML = tfMenuTreeHtml();
+      tfLeftList.querySelectorAll('.ac-tf-tree-child').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var k = el.getAttribute('data-key');
+          tfLeft  = tfLeft.filter(function (x) { return x !== k; });
+          tfRight = tfRight.concat([k]);
+          tfRenderLeft(); tfRenderRight();
+        });
+      });
+    } else {
+      tfLeftList.innerHTML = list.map(tfLeftItemHtml).join('');
+      tfLeftList.querySelectorAll('.ac-tf-item').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var k = el.getAttribute('data-key');
+          tfLeft  = tfLeft.filter(function (x) { return x !== k; });
+          tfRight = tfRight.concat([k]);
+          tfRenderLeft(); tfRenderRight();
+        });
+      });
+    }
+  }
+
+  function tfRenderRight() {
+    tfRightList.innerHTML = tfRight.map(tfRightChipHtml).join('');
+    tfRightCount.textContent = tfRight.length;
+    tfRightList.querySelectorAll('.ac-tf-chip-del').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var k = btn.getAttribute('data-key');
+        tfRight = tfRight.filter(function (x) { return x !== k; });
+        tfLeft.push(k);
+        tfRenderLeft(); tfRenderRight();
+      });
+    });
+  }
+
+  function tfRender() { tfRenderLeft(); tfRenderRight(); }
+
+  tfSearchEl.addEventListener('input', function () {
+    tfSearchQ = tfSearchEl.value.trim();
+    tfRenderLeft();
+  });
+
+  document.getElementById('acTfClear').addEventListener('click', function () {
+    tfLeft = tfLeft.concat(tfRight);
+    tfRight = [];
+    tfRender();
+  });
+
+  function tfSetTab(tab) {
+    tfLeftTab = tab;
+    document.getElementById('acTfTabApp').classList.toggle('active', tab === 'app');
+    document.getElementById('acTfTabMenu').classList.toggle('active', tab === 'menu');
+    tfRenderLeft();
+  }
+
+  document.getElementById('acTfTabApp').addEventListener('click',  function () { tfSetTab('app'); });
+  document.getElementById('acTfTabMenu').addEventListener('click', function () { tfSetTab('menu'); });
+
+  function openTransfer(gid) {
+    var g = findAcGroup(gid);
+    if (!g) return;
+    tfTargetId = gid;
+    tfTitle.textContent = '管理「' + g.name + '」的内容';
+    tfRight = g.apps.slice();
+    var allKeys = AC_APPS.map(function (a) { return a.key; })
+      .concat(AC_MENUS.map(function (m) { return m.key; }));
+    tfLeft = allKeys.filter(function (k) { return tfRight.indexOf(k) === -1; });
+    tfSearchQ = ''; tfSearchEl.value = '';
+    tfSetTab('app');
+    tfMask.classList.add('is-open');
+    tfRender();
+  }
+  function closeTransfer() { tfMask.classList.remove('is-open'); tfTargetId = null; }
+
+  document.getElementById('acTfTabApp').addEventListener('click', function () { tfSetTab('app'); });
+  document.getElementById('acTfTabMenu').addEventListener('click', function () { tfSetTab('menu'); });
+
+  document.getElementById('acTfClose').addEventListener('click', closeTransfer);
+  document.getElementById('acTfCancel').addEventListener('click', closeTransfer);
+  document.getElementById('acTfConfirm').addEventListener('click', function () {
+    var g = findAcGroup(tfTargetId);
+    if (g) { g.apps = tfRight.slice(); renderAcContent(); }
+    closeTransfer();
+  });
+  tfMask.addEventListener('click', function (e) { if (e.target === tfMask) closeTransfer(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && tfMask.classList.contains('is-open')) closeTransfer();
+  });
+
+  function openAcModal() {
+    acMask.classList.add('is-open');
+    renderAcSidebar();
+    renderAcContent();
+  }
+  function closeAcModal() { acMask.classList.remove('is-open'); }
+
+  document.getElementById('openCustomModal').addEventListener('click', openAcModal);
+  document.getElementById('acClose').addEventListener('click', closeAcModal);
+  document.getElementById('acCancel').addEventListener('click', closeAcModal);
+  document.getElementById('acConfirm').addEventListener('click', closeAcModal);
+  acMask.addEventListener('click', function (e) { if (e.target === acMask) closeAcModal(); });
+  document.getElementById('acAddGroupBtn').addEventListener('click', function () {
+    var name = window.prompt('请输入新分组名称');
+    if (!name || !name.trim()) return;
+    acGroupSeq++;
+    var newId = 'ac' + acGroupSeq;
+    acGroups.push({ id: newId, name: name.trim(), apps: [] });
+    acActiveId = newId;
+    renderAcSidebar(); renderAcContent();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && acMask.classList.contains('is-open')) closeAcModal();
+  });
+
+  // ------- 应用分组 tab 切换 -------
+  var appTabsWrap = document.getElementById('appTabsWrap');
+  var appGid = 'all';
+
+  function renderAppGrid() {
+    var g = findAcGroup(appGid);
+    var allowed = (g && appGid !== 'all') ? g.apps : null;
+    if (!allowed) {
+      document.querySelectorAll('.app-grid .app-tile').forEach(function (tile) { tile.hidden = false; });
+      return;
+    }
+    var urlToKey = {};
+    AC_APPS.forEach(function (a) { urlToKey[a.url] = a.key; });
+    document.querySelectorAll('.app-grid .app-tile').forEach(function (tile) {
+      var key = urlToKey[tile.getAttribute('href') || ''];
+      tile.hidden = !key || allowed.indexOf(key) === -1;
+    });
+  }
+
+  appTabsWrap.querySelectorAll('.tab-link').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var gid = btn.getAttribute('data-gid');
+      if (gid === appGid) return;
+      appGid = gid;
+      appTabsWrap.querySelectorAll('.tab-link').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      renderAppGrid();
+    });
+  });
+})();
+</script>
+</body>
+</html>

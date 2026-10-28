@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "t-submission",
+    "label": "教学档案提交",
+    "group": "教学档案提交",
+    "defaultFeature": "t-submission"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-t-submission",
+      "label": "教学档案提交（专业群带头人）",
+      "type": "static-prototype-menu",
+      "html": "t-submission.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../t-overview/t-overview.html",
+          "../t-home/t-home.html",
+          "../p-review/p-review.html",
+          "../t-portrait/t-portrait.html"
+        ]
+      }
+    }
+  ]
+}

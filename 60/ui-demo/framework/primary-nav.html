@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架导航</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #eef5ff; font-family: var(--ds-font-family); }
+    p { margin: 0; }
+
+    .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; background: #eef5ff; }
+    .framework-back {
+      position: fixed;
+      z-index: 100;
+      right: 56px;
+      bottom: 24px;
+      display: inline-flex;
+      height: 34px;
+      align-items: center;
+      padding: 0 16px;
+      color: #333fff;
+      background: #fff;
+      border: 1px solid #cfd3ff;
+      border-radius: 6px;
+      box-shadow: 0 6px 20px rgba(31, 44, 119, .12);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .primary-nav {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 80px;
+      height: 100vh;
+      color: #fff;
+      background: url("../assets/pc-nav-bg.svg") center / cover no-repeat,
+        linear-gradient(180deg, #7454f1 0%, #6a52f1 25%, #524ae4 53%, #5753e4 75%, #507aee 100%);
+      overflow: hidden;
+    }
+
+    .primary-nav-main { display: flex; flex: 1; flex-direction: column; align-items: center; min-height: 0; padding: 0 8px; }
+    .primary-nav-head { display: flex; flex: none; flex-direction: column; align-items: center; width: 48px; gap: 4px; padding: 8px 0; }
+    .primary-logo-frame { position: relative; flex: none; width: 48px; height: 36px; }
+    .primary-logo { position: absolute; left: 0; top: 0; width: 48px; height: 22px; object-fit: contain; }
+    .primary-system-name { align-self: stretch; color: #fff; font-size: 12px; font-weight: 1000; line-height: 16px; text-align: center; }
+
+    .primary-collapse-toggle,
+    .primary-icon-button,
+    .primary-tool {
+      display: grid;
+      place-items: center;
+      color: rgba(255, 255, 255, .9);
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .primary-collapse-toggle { display: none; padding: 6px; }
+    .stage.nav-collapsed .primary-collapse-toggle { display: grid; }
+    .primary-collapse-toggle img { width: 16px; height: 16px; display: block; object-fit: contain; }
+
+    .primary-icon-button { width: 36px; height: 36px; padding: 8px; }
+    .primary-home, .primary-nav-item {
+      display: flex;
+      flex: none;
+      flex-direction: column;
+      align-items: center;
+      width: 48px;
+      color: rgba(255, 255, 255, .8);
+      text-decoration: none;
+    }
+
+    .primary-nav-list {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      width: 48px;
+      min-height: 0;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, .2);
+      border-bottom: 1px solid rgba(255, 255, 255, .2);
+      overflow: hidden;
+    }
+
+    .primary-nav-icon { display: grid; place-items: center; padding: 8px; border-radius: 4px; opacity: .8; }
+    .primary-nav-item.active .primary-nav-icon { color: #fff; background: rgba(255, 255, 255, .2); opacity: 1; }
+    .primary-nav-item.active .primary-label { color: #fff; }
+    .primary-label { max-width: 56px; color: currentColor; font-size: 12px; line-height: 20px; text-align: center; white-space: nowrap; }
+
+    .primary-tools { display: flex; flex: none; flex-direction: column; align-items: center; width: 48px; gap: 4px; padding: 8px 4px; }
+    .primary-tool { width: 32px; height: 32px; padding: 8px; }
+    .primary-avatar { flex: none; width: 32px; height: 32px; margin-bottom: 4px; background: url("../assets/icons/头像.svg") center / cover no-repeat, #ffdcc8; border: 1px solid #fff; border-radius: 4px; overflow: hidden; }
+    .primary-user { display: flex; flex: none; align-items: center; width: 80px; height: 28px; padding: 4px 20px 4px 4px; color: #fff; background: rgba(0,0,0,.8); backdrop-filter: blur(20px); font-size: 12px; font-weight: 600; line-height: 20px; }
+    .primary-user span:first-child { flex: 1; overflow: hidden; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+
+    .wise-icon { display: inline-grid; place-items: center; width: 20px; height: 20px; color: currentColor; }
+    .wise-icon img, .wise-icon svg { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .primary-tool .wise-icon, .primary-user .wise-icon, .navigation-arrow .wise-icon, .navigation-bottom-icon .wise-icon { width: 16px; height: 16px; }
+
+    .navigation-area {
+      position: absolute;
+      z-index: 2;
+      left: 64px;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      display: flex;
+      align-items: stretch;
+      background: linear-gradient(270deg, #f3faff 5%, #f0f7ff 31%, #f1f4ff 64%, #eef1ff 100%);
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+      overflow: hidden;
+    }
+
+    .navigation-menu { display: flex; flex: none; flex-direction: column; align-items: flex-start; width: 180px; min-height: 0; }
+    .navigation-menu-head { display: flex; flex: none; align-items: flex-start; align-self: stretch; gap: 8px; padding: 8px; }
+    .navigation-collapse { display: grid; place-items: center; width: 34px; height: 34px; color: #000; background: #fff; border: 1px solid #ebecff; border-radius: 4px; cursor: pointer; }
+    .navigation-collapse img { width: 16px; height: 16px; display: block; object-fit: contain; }
+    .navigation-head-space { flex: 1; min-width: 0; }
+
+    .navigation-list { display: flex; flex: 1; flex-direction: column; align-items: flex-start; align-self: stretch; gap: 4px; min-height: 0; padding: 8px; overflow: hidden; }
+    .navigation-row, .navigation-child, .navigation-section, .navigation-bottom-row { display: flex; flex: none; align-items: center; align-self: stretch; gap: 8px; border-radius: 4px; text-decoration: none; }
+    .navigation-row, .navigation-bottom-row { padding: 7px 8px; color: #000; }
+    .navigation-child { padding: 7px 8px 7px 24px; color: #505266; }
+    .navigation-row.active, .navigation-child.active { color: #000; background: rgba(51, 63, 255, .1); }
+    .navigation-title, .navigation-child span, .navigation-bottom-text span { flex: 1; min-width: 0; overflow: hidden; font-size: 14px; line-height: 22px; text-overflow: ellipsis; white-space: nowrap; }
+    .navigation-status { display: inline-flex; align-items: center; gap: 4px; color: #737585; font-size: 12px; line-height: 20px; white-space: nowrap; }
+    .navigation-status strong { font-weight: 600; }
+    .navigation-arrow { display: grid; place-items: center; flex: none; width: 16px; height: 16px; color: #737585; }
+    .navigation-section { gap: 4px; padding: 12px 0 0 24px; color: #737585; font-size: 12px; line-height: 12px; }
+    .navigation-section-label { max-width: 118px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .navigation-section-icon { display: inline-grid; place-items: center; flex: none; width: 14px; height: 14px; color: #737585; font-size: 12px; line-height: 14px; }
+    .navigation-menu-foot { display: flex; flex: none; flex-direction: column; align-items: flex-start; align-self: stretch; gap: 4px; padding: 8px; }
+    .navigation-bottom-icon { display: flex; flex: none; align-items: center; justify-content: center; width: 16px; height: 16px; color: #000; }
+    .navigation-bottom-text { display: flex; flex: 1; flex-shrink: 0; align-items: center; justify-content: flex-start; min-width: 0; gap: 8px; color: #000; }
+
+    .stage.nav-collapsed .navigation-menu { display: none; }
+
+    .operation-area {
+      display: flex;
+      flex: 1;
+      align-self: stretch;
+      flex-direction: column;
+      min-width: 0;
+      padding: 12px;
+    }
+
+    .operation-shell {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .operation-tabs-bar {
+      display: flex;
+      flex: none;
+      align-items: center;
+      align-self: stretch;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .operation-tabs {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      white-space: nowrap;
+    }
+
+    .operation-tabs::-webkit-scrollbar { height: 4px; }
+    .operation-tabs::-webkit-scrollbar-thumb { background: rgba(80, 82, 102, .24); border-radius: 999px; }
+
+    .operation-tabs-track {
+      display: flex;
+      flex: none;
+      align-items: center;
+      min-width: max-content;
+    }
+
+    .operation-tab {
+      position: relative;
+      display: flex;
+      flex: none;
+      align-items: center;
+      height: 32px;
+      gap: 8px;
+      padding: 5px 12px;
+      color: #505266;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      font-size: 13px;
+      line-height: 22px;
+      cursor: pointer;
+    }
+
+    .operation-tab span:first-child {
+      max-width: 168px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .operation-tab.active {
+      color: #000;
+      background: #fff;
+    }
+
+    .operation-tab:not(.active)::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: 8px;
+      width: 1px;
+      height: 16px;
+      background: rgba(0,0,0,.1);
+    }
+
+    .operation-tab-close {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 16px;
+      height: 16px;
+      color: #9697a3;
+      font-size: 16px;
+      line-height: 16px;
+      border-radius: 4px;
+    }
+
+    .operation-tab-close:hover { color: #333fff; background: rgba(51, 63, 255, .08); }
+
+    .operation-tab-close-all {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 32px;
+      height: 32px;
+      margin: 0 8px;
+      color: #505266;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .operation-tool {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      color: #505266;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .operation-tab-close-all:hover,
+    .operation-tool:hover { background: rgba(51, 63, 255, .08); }
+
+    .operation-tool .wise-icon,
+    .operation-tab-close-all .wise-icon { width: 24px; height: 24px; }
+
+    .operation-actions {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .operation-body {
+      display: flex;
+      flex: 1;
+      align-self: stretch;
+      min-height: 0;
+      background: #fff;
+      border-top-right-radius: 12px;
+      overflow: hidden;
+    }
+
+    .operation-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .operation-header {
+      display: flex;
+      flex: none;
+      align-items: center;
+      align-self: stretch;
+      gap: 16px;
+      padding: 12px 16px;
+      background: #fff;
+      border-top-right-radius: 12px;
+    }
+
+    .operation-header.is-hidden { display: none; }
+
+    .operation-section-tabs {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .operation-title,
+    .operation-section-tab {
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 2px;
+      background: transparent;
+      border: 0;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .operation-section-tab { color: #505266; cursor: pointer; }
+    .operation-section-tab.is-active { color: #000; }
+
+    .operation-title::after,
+    .operation-section-tab.is-active::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      z-index: 0;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .operation-title span,
+    .operation-section-tab span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .operation-title.is-muted {
+      color: #505266;
+    }
+
+    .operation-title.is-muted::after { display: none; }
+
+    .operation-meta {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 4px;
+      padding: 0 16px;
+      color: #505266;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .operation-header-spacer { flex: 1; min-width: 0; height: 28px; }
+    .operation-buttons { display: flex; flex: none; align-items: center; gap: 8px; }
+    .operation-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 34px;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .operation-table-wrap {
+      flex: 1;
+      min-height: 0;
+      padding: 0 16px 16px;
+      overflow: hidden;
+    }
+
+    .operation-table {
+      width: 100%;
+      border: 1px solid #eeeef0;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+    }
+
+    .operation-table th,
+    .operation-table td {
+      height: 44px;
+      padding: 0 12px;
+      text-align: left;
+      border-bottom: 1px solid #eeeef0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .operation-table th { background: #fafafa; font-weight: 600; }
+    .operation-footer {
+      display: flex;
+      flex: none;
+      align-items: center;
+      align-self: stretch;
+      gap: 16px;
+      padding: 12px 16px;
+      background: #fff;
+      border-top: 1px solid #eeeef0;
+      color: #505266;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .operation-footer-spacer { flex: 1; }
+    .operation-primary {
+      height: 40px;
+      padding: 0 24px;
+      color: #fff;
+      background: #333fff;
+      border: 0;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <a class="framework-back" href="./framework-index.html">返回框架选择</a>
+  <div class="stage">
+    <nav class="primary-nav" aria-label="一级导航">
+      <div class="primary-nav-main">
+        <div class="primary-nav-head">
+          <div class="primary-logo-frame"><img class="primary-logo" src="../assets/icons/金智logo.svg" alt="Wisedu" /></div>
+          <p class="primary-system-name">系统</p>
+          <button class="primary-collapse-toggle" type="button" aria-label="展开导航区" aria-expanded="false">
+            <img src="../assets/icons/indent-increase.png" alt="" aria-hidden="true" />
+          </button>
+          <a class="primary-icon-button" href="#" aria-label="搜索"><span class="wise-icon" data-wise-icon="search"></span></a>
+          <a class="primary-home primary-nav-item" href="#" data-module="home"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="home"></span></span><span class="primary-label">首页</span></a>
+        </div>
+
+        <div class="primary-nav-list">
+          <a class="primary-nav-item" href="#" data-module="prepare"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="prepare"></span></span><span class="primary-label">准备工作</span></a>
+          <a class="primary-nav-item" href="#" data-module="master"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="master"></span></span><span class="primary-label">硕士</span></a>
+          <a class="primary-nav-item active" href="#" data-module="doctor"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="doctor"></span></span><span class="primary-label">博士</span></a>
+          <a class="primary-nav-item" href="#" data-module="camp"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="camp"></span></span><span class="primary-label">夏令营</span></a>
+          <a class="primary-nav-item" href="#" data-module="recommend"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="recommend"></span></span><span class="primary-label">推免</span></a>
+          <a class="primary-nav-item" href="#" data-module="hkmt"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="hkmt"></span></span><span class="primary-label">港澳台</span></a>
+          <a class="primary-nav-item" href="#" data-module="exam"><span class="primary-nav-icon"><span class="wise-icon" data-wise-icon="exam"></span></span><span class="primary-label">考务管理</span></a>
+        </div>
+
+        <div class="primary-tools">
+          <a class="primary-tool" href="#" aria-label="皮肤"><span class="wise-icon" data-wise-icon="skin"></span></a>
+          <a class="primary-tool" href="#" aria-label="下载"><span class="wise-icon" data-wise-icon="download"></span></a>
+          <a class="primary-tool" href="#" aria-label="设置"><span class="wise-icon" data-wise-icon="settings"></span></a>
+        </div>
+        <div class="primary-avatar"></div>
+      </div>
+
+      <div class="primary-user"><span>管理员</span><span class="wise-icon" data-wise-icon="chevronDown"></span></div>
+    </nav>
+
+    <section class="navigation-area" aria-label="导航区">
+      <nav class="navigation-menu" aria-label="二级导航栏">
+        <div class="navigation-menu-head">
+          <button class="navigation-collapse" type="button" aria-label="收起导航区" aria-expanded="true">
+            <img src="../assets/icons/indent-decrease.png" alt="" aria-hidden="true" />
+          </button>
+          <div class="navigation-head-space"></div>
+        </div>
+        <div class="navigation-list"></div>
+        <div class="navigation-menu-foot"></div>
+      </nav>
+      <main class="operation-area" aria-label="操作区">
+        <div class="operation-shell">
+          <div class="operation-tabs-bar">
+            <div class="operation-tabs" aria-label="功能页签"></div>
+            <button class="operation-tool operation-refresh" type="button" aria-label="刷新当前页签"><span class="wise-icon" data-wise-icon="refresh"></span></button>
+            <button class="operation-tool operation-fullscreen" type="button" aria-label="全屏"><span class="wise-icon" data-wise-icon="fullscreen"></span></button>
+          </div>
+          <section class="operation-body">
+            <div class="operation-content">
+              <header class="operation-header">
+                <div class="operation-section-tabs" aria-label="一级页签">
+                  <button class="operation-section-tab is-active" type="button" data-review-tab="pending"><span>待审核</span></button>
+                  <button class="operation-section-tab" type="button" data-review-tab="reviewed"><span>已审核</span></button>
+                </div>
+                <div class="operation-header-spacer"></div>
+              </header>
+              <div class="operation-table-wrap">
+                <table class="operation-table">
+                  <thead><tr><th>业务编号</th><th>业务名称</th><th>所属模块</th><th>状态</th><th>更新时间</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <footer class="operation-footer">
+                <span>共 100 条</span>
+                <span>10条/页</span>
+                <span>1 / 10</span>
+                <span class="operation-footer-spacer"></span>
+                <button class="operation-button" type="button">按钮</button>
+                <button class="operation-primary" type="button">按钮</button>
+              </footer>
+            </div>
+          </section>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <script src="../assets/icon-registry.js"></script>
+  <script>
+    const stage = document.querySelector(".stage");
+    const expandedCollapseButton = document.querySelector(".navigation-collapse");
+    const collapsedExpandButton = document.querySelector(".primary-collapse-toggle");
+    const primaryItems = document.querySelectorAll(".primary-nav-item[data-module]");
+    const navigationList = document.querySelector(".navigation-list");
+    const navigationFoot = document.querySelector(".navigation-menu-foot");
+    const operationTabs = document.querySelector(".operation-tabs");
+    const operationShell = document.querySelector(".operation-shell");
+    const operationRefresh = document.querySelector(".operation-refresh");
+    const operationFullscreen = document.querySelector(".operation-fullscreen");
+    const operationSectionTabs = document.querySelector(".operation-section-tabs");
+    const operationTitleText = document.querySelector(".operation-title span");
+    const operationMeta = document.querySelector(".operation-meta strong");
+    const operationTableBody = document.querySelector(".operation-table tbody");
+    const tabStorageKey = "wise-pc-shell-tabs";
+    const defaultTabs = ["专业研究方向管理", "考试科目采集", "招生计划管理", "专业目录审核", "专业目录参数设置"];
+    let activeFeature = "专业研究方向管理";
+    let openTabs = [...defaultTabs];
+    let tabStates = {};
+    let refreshSerial = 0;
+    let currentModule = "doctor";
+    let activeReviewTab = "pending";
+
+    const moduleMenus = {
+      home: { groups: [{ title: "常用功能", open: true, children: ["我的待办", "最近访问", "消息通知", "个人收藏"] }, { title: "工作台", children: ["数据概览", "流程跟踪", "操作日志"] }], foot: "流程参数设置" },
+      prepare: { groups: [{ title: "准备工作", status: ["进行", "3"], open: true, children: ["年度批次设置", "招生单位维护", "报名材料配置", "通知模板维护"] }, { title: "基础配置", children: ["字典参数管理", "流程参数设置", "公共规则配置"] }], foot: "准备参数设置" },
+      master: { groups: [{ title: "硕士招生", status: ["进行", "5"], open: true, children: ["专业目录管理", "招生计划管理", "考试科目管理", "考试大纲管理", "专业目录审核"] }, { title: "考生管理", open: false, children: ["报名信息管理", "资格审核管理", "准考证管理"] }, { title: "录取管理", open: false, children: ["复试管理", "拟录取管理"] }], foot: "硕士流程参数" },
+      doctor: { groups: [{ title: "专业目录", status: ["进行", "4"], open: true, children: ["专业研究方向管理", "招生计划管理", "考试科目管理", "考试科目采集", "考试大纲管理", "专业目录审核", { section: "通用信息管理", info: true, children: ["招生简章管理", "招生信息发布管理", "年度导师管理"] }, { section: "超管配置", children: ["检查项配置页"] }] }, { title: "考生管理", open: false, children: ["报名信息管理", "资格审核管理", "准考证管理"] }, { title: "初试管理", open: false, children: ["初试安排", "成绩录入", "成绩复核"] }, { title: "复试管理", open: false, children: ["复试安排", "复试名单", "复试成绩"] }, { title: "拟录取管理", open: false, children: ["拟录取名单", "录取确认", "调档函管理"] }], foot: "流程参数设置" },
+      camp: { groups: [{ title: "夏令营", status: ["进行", "2"], open: true, children: ["营员报名管理", "材料审核管理", "活动日程管理", "优秀营员管理"] }, { title: "通知发布", children: ["公告管理", "邮件短信模板"] }], foot: "夏令营参数" },
+      recommend: { groups: [{ title: "推免管理", status: ["进行", "3"], open: true, children: ["推免报名管理", "资格审核管理", "复试安排管理", "拟录取确认"] }, { title: "指标管理", children: ["推免指标维护", "接收学院配置"] }], foot: "推免参数设置" },
+      hkmt: { groups: [{ title: "港澳台招生", status: ["进行", "2"], open: true, children: ["考生报名管理", "材料审核管理", "考试安排管理", "录取结果管理"] }, { title: "通用配置", children: ["招生简章管理", "通知模板管理"] }], foot: "港澳台参数" },
+      exam: { groups: [{ title: "考务管理", status: ["进行", "6"], open: true, children: ["考场编排", "监考安排", "准考证管理", "成绩录入", "成绩复核", "异常情况登记"] }, { title: "考试资源", open: false, children: ["考点管理", "考场管理", "监考教师管理"] }], foot: "考务参数设置" }
+    };
+
+    function rowTemplate(title) {
+      return `<a class="navigation-row" href="#" data-feature="${title}"><span class="navigation-title">${title}</span><span class="navigation-arrow"><span class="wise-icon" data-wise-icon="chevronRight"></span></span></a>`;
+    }
+
+    function childTemplate(child, groupIndex, childIndex) {
+      if (typeof child === "string") {
+        return `<a class="navigation-child${groupIndex === 0 && childIndex === 0 ? " active" : ""}" href="#" data-feature="${child}"><span>${child}</span></a>`;
+      }
+      if (child.section) {
+        const icon = child.info ? '<span class="navigation-section-icon" aria-hidden="true">ⓘ</span>' : "";
+        const children = (child.children || []).map((item) => `<a class="navigation-child" href="#" data-feature="${item}"><span>${item}</span></a>`).join("");
+        return `<div class="navigation-section"><span class="navigation-section-label">${child.section}</span>${icon}</div>${children}`;
+      }
+      return "";
+    }
+
+    function groupTemplate(group, index) {
+      if (group.section) {
+        const icon = group.info ? '<span class="navigation-section-icon" aria-hidden="true">ⓘ</span>' : "";
+        const children = (group.children || []).map((child) => `<a class="navigation-child" href="#" data-feature="${child}"><span>${child}</span></a>`).join("");
+        return `<div class="navigation-section"><span class="navigation-section-label">${group.section}</span>${icon}</div>${children}`;
+      }
+      if (group.rows) return group.rows.map(rowTemplate).join("");
+      const status = group.status ? `<span class="navigation-status">${group.status[0]} <strong>${group.status[1]}</strong></span>` : "";
+      const isOpen = group.open !== false;
+      const children = isOpen ? (group.children || []).map((child, childIndex) => childTemplate(child, index, childIndex)).join("") : "";
+      return `<a class="navigation-row" href="#" data-nav-group="${index}" aria-expanded="${isOpen}"><span class="navigation-title">${group.title}</span>${status}<span class="navigation-arrow"><span class="wise-icon" data-wise-icon="${isOpen ? "chevronUp" : "chevronDown"}"></span></span></a>${children}`;
+    }
+
+    function loadTabState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(tabStorageKey) || "null");
+        if (!saved || !Array.isArray(saved.openTabs)) return;
+        openTabs = saved.openTabs.filter(Boolean);
+        activeFeature = openTabs.includes(saved.activeFeature) ? saved.activeFeature : openTabs[0] || "";
+        tabStates = saved.tabStates && typeof saved.tabStates === "object" ? saved.tabStates : {};
+      } catch (error) {
+        openTabs = [...defaultTabs];
+        activeFeature = "专业研究方向管理";
+        tabStates = {};
+      }
+    }
+
+    function saveTabState() {
+      try {
+        localStorage.setItem(tabStorageKey, JSON.stringify({ openTabs, activeFeature, tabStates }));
+      } catch (error) {
+        // 静态原型允许 localStorage 不可用，状态仍在内存中保持。
+      }
+    }
+
+    function createFeatureState(feature) {
+      refreshSerial += 1;
+      const moduleLabel = document.querySelector(".primary-nav-item.active .primary-label")?.textContent || "博士";
+      const rows = Array.from({ length: 6 }, (_, index) => ({
+        code: `${feature.slice(0, 2).toUpperCase()}-${String(index + 1).padStart(3, "0")}`,
+        name: `${feature} ${index + 1}`,
+        module: moduleLabel,
+        pendingStatus: index % 3 === 0 ? "待补充" : "待审核",
+        reviewedStatus: index % 2 === 0 ? "已通过" : "已退回",
+        updatedAt: `2026-05-${String(11 - index).padStart(2, "0")}`
+      }));
+      return {
+        meta: feature.includes("参数") ? "参数配置" : feature.includes("审核") ? "审核业务" : "选项",
+        rows,
+        refreshCount: refreshSerial
+      };
+    }
+
+    function syncNavigationActive(feature) {
+      document.querySelectorAll(".navigation-row.active, .navigation-child.active, .navigation-bottom-row.active").forEach((item) => item.classList.remove("active"));
+      const current = [...document.querySelectorAll("[data-feature]")].find((item) => item.dataset.feature === feature);
+      if (current) current.classList.add("active");
+    }
+
+    function renderModule(moduleName, options = {}) {
+      currentModule = moduleName;
+      const config = moduleMenus[moduleName] || moduleMenus.doctor;
+      navigationList.innerHTML = config.groups.map(groupTemplate).join("");
+      navigationFoot.innerHTML = `<a class="navigation-bottom-row" href="#" data-feature="${config.foot}"><span class="navigation-bottom-icon"><span class="wise-icon" data-wise-icon="flow"></span></span><span class="navigation-bottom-text"><span>${config.foot}</span></span></a>`;
+      window.WiseIconRegistry.renderIcons(navigationList);
+      window.WiseIconRegistry.renderIcons(navigationFoot);
+      const activeItem = navigationList.querySelector(".navigation-child.active") || navigationList.querySelector(".navigation-child[data-feature], .navigation-row[data-feature]");
+      if (options.openDefault !== false && activeItem) openFeature(activeItem.dataset.feature, { refresh: true, syncNav: false });
+      if (options.openDefault === false) syncNavigationActive(activeFeature);
+    }
+
+    function renderTabs() {
+      operationTabs.innerHTML = `
+        <div class="operation-tabs-track">
+          ${openTabs.map((feature) => `
+            <div class="operation-tab${feature === activeFeature ? " active" : ""}" data-tab="${feature}" title="${feature}">
+              <span>${feature}</span>
+              <span class="operation-tab-close" role="button" aria-label="关闭 ${feature}">×</span>
+            </div>
+          `).join("")}
+          ${openTabs.length ? '<button class="operation-tab-close-all" type="button" aria-label="关闭全部页签"><span class="wise-icon" data-wise-icon="closeAllTabs"></span></button>' : ""}
+        </div>
+      `;
+      window.WiseIconRegistry.renderIcons(operationTabs);
+      operationTabs.querySelector(".operation-tab.active")?.scrollIntoView({ inline: "nearest", block: "nearest" });
+    }
+
+    function renderOperationContent(feature) {
+      if (!feature) {
+        if (operationTitleText) operationTitleText.textContent = "请选择功能";
+        if (operationMeta) operationMeta.textContent = "无";
+        operationTableBody.innerHTML = "";
+        return;
+      }
+      if (!tabStates[feature]) tabStates[feature] = createFeatureState(feature);
+      const state = tabStates[feature];
+      if (operationTitleText) operationTitleText.textContent = feature;
+      if (operationMeta) operationMeta.textContent = state.meta;
+      const statusKey = activeReviewTab === "reviewed" ? "reviewedStatus" : "pendingStatus";
+      operationTableBody.innerHTML = state.rows.map((row) => `
+        <tr>
+          <td>${row.code}</td>
+          <td>${row.name}</td>
+          <td>${row.module}</td>
+          <td>${row[statusKey]}</td>
+          <td>${row.updatedAt}</td>
+        </tr>
+      `).join("");
+    }
+
+    function activateReviewTab(key) {
+      activeReviewTab = key;
+      operationSectionTabs.querySelectorAll("[data-review-tab]").forEach((tab) => {
+        tab.classList.toggle("is-active", tab.dataset.reviewTab === key);
+      });
+      renderOperationContent(activeFeature);
+    }
+
+    function openFeature(feature, options = {}) {
+      if (!feature) return;
+      if (!openTabs.includes(feature)) openTabs.push(feature);
+      activeFeature = feature;
+      if (options.refresh) tabStates[feature] = createFeatureState(feature);
+
+      if (options.syncNav !== false) syncNavigationActive(feature);
+
+      renderTabs();
+      renderOperationContent(feature);
+      saveTabState();
+    }
+
+    function activateTab(feature) {
+      if (!openTabs.includes(feature)) return;
+      activeFeature = feature;
+      syncNavigationActive(feature);
+      renderTabs();
+      renderOperationContent(feature);
+      saveTabState();
+    }
+
+    function closeTab(feature) {
+      const closingIndex = openTabs.indexOf(feature);
+      openTabs = openTabs.filter((item) => item !== feature);
+      delete tabStates[feature];
+      if (activeFeature === feature) {
+        activeFeature = openTabs[closingIndex] || openTabs[closingIndex - 1] || openTabs[0] || "";
+      }
+      syncNavigationActive(activeFeature);
+      renderTabs();
+      renderOperationContent(activeFeature);
+      saveTabState();
+    }
+
+    function closeAllTabs() {
+      openTabs = [];
+      activeFeature = "";
+      tabStates = {};
+      syncNavigationActive("");
+      renderTabs();
+      renderOperationContent("");
+      saveTabState();
+    }
+
+    function toggleNavigationGroup(index) {
+      const config = moduleMenus[currentModule] || moduleMenus.doctor;
+      const group = config.groups[Number(index)];
+      if (!group || (!group.children && !group.rows)) return;
+      group.open = group.open === false;
+      renderModule(currentModule, { openDefault: false });
+    }
+
+    function setCollapsed(collapsed) {
+      stage.classList.toggle("nav-collapsed", collapsed);
+      expandedCollapseButton.setAttribute("aria-expanded", String(!collapsed));
+      expandedCollapseButton.setAttribute("aria-label", collapsed ? "展开导航区" : "收起导航区");
+      collapsedExpandButton.setAttribute("aria-expanded", String(!collapsed));
+      collapsedExpandButton.setAttribute("aria-label", collapsed ? "展开导航区" : "收起导航区");
+    }
+
+    expandedCollapseButton.addEventListener("click", () => setCollapsed(true));
+    collapsedExpandButton.addEventListener("click", () => setCollapsed(false));
+
+    primaryItems.forEach((item) => {
+      item.addEventListener("click", (event) => {
+        event.preventDefault();
+        primaryItems.forEach((current) => current.classList.remove("active"));
+        item.classList.add("active");
+        setCollapsed(false);
+        renderModule(item.dataset.module);
+      });
+    });
+
+    navigationList.addEventListener("click", (event) => {
+      const groupToggle = event.target.closest("[data-nav-group]");
+      if (groupToggle) {
+        event.preventDefault();
+        toggleNavigationGroup(groupToggle.dataset.navGroup);
+        return;
+      }
+
+      const target = event.target.closest("[data-feature]");
+      if (!target) return;
+      event.preventDefault();
+      openFeature(target.dataset.feature, { refresh: true });
+    });
+
+    navigationFoot.addEventListener("click", (event) => {
+      const target = event.target.closest("[data-feature]");
+      if (!target) return;
+      event.preventDefault();
+      openFeature(target.dataset.feature, { refresh: true });
+    });
+
+    operationTabs.addEventListener("click", (event) => {
+      if (event.target.closest(".operation-tab-close-all")) {
+        closeAllTabs();
+        return;
+      }
+      const close = event.target.closest(".operation-tab-close");
+      const tab = event.target.closest(".operation-tab");
+      if (!tab) return;
+      const feature = tab.dataset.tab;
+      if (close) {
+        closeTab(feature);
+        return;
+      }
+      activateTab(feature);
+    });
+
+    operationSectionTabs.addEventListener("click", (event) => {
+      const tab = event.target.closest("[data-review-tab]");
+      if (!tab) return;
+      activateReviewTab(tab.dataset.reviewTab);
+    });
+
+    operationRefresh.addEventListener("click", () => {
+      if (!activeFeature) return;
+      openFeature(activeFeature, { refresh: true });
+    });
+
+    operationFullscreen.addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await operationShell.requestFullscreen?.();
+      } else {
+        await document.exitFullscreen?.();
+      }
+    });
+
+    loadTabState();
+    renderModule("doctor", { openDefault: false });
+    renderTabs();
+    renderOperationContent(activeFeature);
+  </script>
+</body>
+</html>

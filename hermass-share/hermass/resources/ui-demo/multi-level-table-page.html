@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多级表格页面</title>
+  <link rel="stylesheet" href="./packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./packages/design-system/src/AppShell/app-shell.css" />
+  <style>
+    .multi-table-page {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      background: #fff;
+    }
+
+    .multi-table-header {
+      display: flex;
+      flex: none;
+      align-items: center;
+      padding: 12px 16px 8px;
+      background: #fff;
+    }
+
+    .multi-table-title {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      color: #000;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .multi-table-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      z-index: 0;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .multi-table-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .multi-table-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 0 16px 16px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .multi-table-wrap {
+      width: 860px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #eeeef0;
+    }
+
+    .multi-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      color: #000;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .multi-table th,
+    .multi-table td {
+      height: 46px;
+      padding: 0 12px;
+      overflow: hidden;
+      text-align: left;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .multi-table th {
+      height: 40px;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .multi-table thead tr:first-child th {
+      height: 40px;
+    }
+
+    .multi-table thead th[rowspan] {
+      height: 80px;
+      vertical-align: middle;
+    }
+
+    .multi-table th.group-title {
+      text-align: center;
+    }
+
+    .multi-table tr > *:last-child {
+      border-right: 0;
+    }
+
+    .multi-table tbody tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    .multi-table tbody tr:hover td {
+      background: #f6f6f7;
+    }
+
+    .col-college { width: 240px; }
+    .col-count { width: 124px; }
+  </style>
+</head>
+<body>
+<div class="stage ds-scope">
+  <main class="multi-table-page">
+    <header class="multi-table-header">
+      <div class="multi-table-title"><span>多级表格</span></div>
+    </header>
+
+    <section class="multi-table-stage">
+      <div class="multi-table-wrap">
+        <table class="multi-table" aria-label="多级表格">
+          <colgroup>
+            <col class="col-college" />
+            <col class="col-count" />
+            <col class="col-count" />
+            <col class="col-count" />
+            <col class="col-count" />
+            <col class="col-count" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th rowspan="2" scope="col">院系所</th>
+              <th class="group-title" colspan="3" scope="colgroup">总计</th>
+              <th class="group-title" colspan="2" scope="colgroup">统考</th>
+            </tr>
+            <tr>
+              <th scope="col">总计</th>
+              <th scope="col">全日制</th>
+              <th scope="col">非全日制</th>
+              <th scope="col">全日制</th>
+              <th scope="col">非全日制</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>002国际商学院</td>
+              <td>36</td>
+              <td>20</td>
+              <td>16</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>005国际商学院</td>
+              <td>36</td>
+              <td>20</td>
+              <td>16</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>006国际商学院</td>
+              <td>36</td>
+              <td>20</td>
+              <td>16</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>007国际商学院</td>
+              <td>36</td>
+              <td>20</td>
+              <td>16</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>008国际商学院</td>
+              <td>36</td>
+              <td>20</td>
+              <td>16</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./assets/icon-registry.js"></script>
+<script src="./packages/design-system/src/AppShell/app-shell.js"></script>
+<script>
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表格',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': './primary-nav.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

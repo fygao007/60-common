@@ -1,0 +1,184 @@
+/* 基本信息详情页 · 业务布局样式（不覆盖 .ds-* / .frame2-*，颜色使用设计 token） */
+@import '../../shared/portfolio-v3.css';
+
+.bi-page{
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--ds-color-bg-container);
+}.bi-content-card{
+  width: 100%;
+  height: calc(100vh - 92px);
+  min-height: 0;
+  overflow: hidden;
+  background: var(--ds-color-bg-container);
+  border-radius: 0;
+}
+
+.bi-top-header {
+  border-bottom: 1px solid var(--ds-color-border-secondary);
+  border-radius: 0;
+}
+
+.bi-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  height: calc(100vh - 144px);
+  min-height: 0;
+  overflow: hidden;
+}.bi-anchor-panel{
+  width: 100%;
+  min-width: 150px;
+  max-width: 220px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--ds-space-5) 0;
+  background: var(--ds-color-bg-container);
+}
+
+.bi-main {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 28px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px 24px 40px;
+  background: var(--ds-color-bg-container);
+  scroll-behavior: smooth;
+}.bi-primary-group{
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.bi-primary-group__title {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-lg);
+  background: linear-gradient(90deg, var(--ds-color-primary-light), var(--ds-color-bg-container));
+  border-radius: var(--ds-radius-sm);
+}
+
+.bi-primary-group__body {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.bi-source-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  color: var(--ds-color-text-secondary);
+  white-space: nowrap;
+}
+
+.bi-source-note strong {
+  color: var(--ds-color-black);
+  font-weight: var(--ds-font-weight-semibold);
+}.bi-section{
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  scroll-margin-top: 16px;
+}
+
+.bi-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.bi-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--ds-color-black);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-lg);
+}
+
+.bi-section-title::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-primary);
+}
+
+.bi-large-text-copy {
+  min-height: 96px;
+  margin: 0;
+  padding: var(--ds-space-2) 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-md);
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.bi-square-table {
+  border-radius: 0;
+}
+
+.bi-attachment-link {
+  color: var(--ds-color-primary);
+  text-decoration: none;
+}
+
+.bi-attachment-link:hover {
+  color: var(--ds-color-primary-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 1100px) {
+  .bi-detail-layout {
+    grid-template-columns: minmax(0, 1fr) 170px;
+  }
+}
+
+@media (max-width: 860px) {
+  .bi-detail-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100vh - 144px);
+    overflow: visible;
+  }.bi-anchor-panel{
+    order: -1;
+    overflow: visible;
+    padding: var(--ds-space-4);
+    border-bottom: 1px solid var(--ds-color-border-secondary);
+    border-left: 0;
+  }
+
+  .bi-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bi-main {
+    overflow: visible;
+  }
+
+}
+
+@media (max-width: 640px) {
+  .bi-main {
+    padding: 16px;
+  }
+
+}

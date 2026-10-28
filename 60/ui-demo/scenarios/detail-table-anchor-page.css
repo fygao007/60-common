@@ -1,0 +1,52 @@
+html, body, #app { width: 100%; min-height: 100%; margin: 0; }
+body { min-height: 100vh; background: linear-gradient(270deg, #ebf5ff 0%, #f0f7ff 33%, #f1f4ff 66%, #fafbff 100%); }
+#app { display: flex; min-height: 100vh; }
+.detail-table-anchor-page { display: flex; width: min(1244px, 100%); height: min(792px, calc(100vh - 24px)); flex: none; flex-direction: column; margin: auto; overflow: hidden; background: #fff; border-radius: 8px; }
+.detail-table-anchor-page__header { min-height: 52px; flex: none; padding: 0 16px; border-radius: 12px 12px 0 0; }
+.detail-table-anchor-page__subtitle { color: #737585; font-size: 12px; line-height: 20px; }
+.detail-table-anchor-page__body { display: grid; grid-template-columns: minmax(0, 1fr) 162px; flex: 1; min-height: 0; overflow: hidden; }
+.detail-table-anchor-page__content { min-width: 0; padding: 0 16px 12px 12px; overflow: auto; }
+.detail-table-anchor-page__anchor { min-width: 0; padding: 0 12px 0 0; overflow: auto; }
+.detail-anchor { width: 100%; }
+.detail-form-section { margin-bottom: 12px; scroll-margin-top: 12px; }
+.detail-group-title { height: 40px; padding: 8px 16px; background: #f0f6ff; border-radius: 4px; }
+.detail-group-title img { width: 14px; height: 14px; object-fit: contain; }
+.detail-form-subsection { min-width: 0; scroll-margin-top: 12px; }
+.detail-form-subsection + .detail-form-subsection { margin-top: 12px; }
+.detail-form-subtitle { height: 40px; padding: 0; background: transparent; }
+.detail-subtitle-mark { display: block; width: 4px; height: 12px; flex: none; background: #3167ff; border-radius: 100px; }
+.detail-form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: hidden; border: 1px solid #e8e9eb; }
+.detail-form-field { display: grid; min-width: 0; grid-template-columns: 110px minmax(0, 1fr); align-items: stretch; border-bottom: 1px solid #e8e9eb; border-left: 1px solid #e8e9eb; }
+.detail-form-field:nth-child(3n + 1) { border-left: 0; }
+.detail-form-field:nth-last-child(-n + 3) { border-bottom: 0; }
+.detail-form-field__label { display: flex; min-height: 40px; align-items: center; padding: 0 12px; color: #505266; background: #fafafa; border-right: 1px solid #e8e9eb; font-size: 14px; line-height: 16px; }
+.detail-form-field__control { display: flex; min-width: 0; align-items: center; padding: 4px; }
+.detail-control { width: 100%; min-width: 0; }
+.detail-switch { margin-inline: 12px; }
+.detail-range { display: flex; width: 100%; min-width: 0; align-items: center; gap: 6px; }
+.detail-range > .detail-control { min-width: 0; flex: 1; }
+.detail-range > img { width: 12px; height: 12px; flex: none; object-fit: contain; }
+.detail-table-section { min-width: 0; scroll-margin-top: 12px; }
+.detail-data-table { width: 100%; margin-top: 8px; }
+.detail-table-anchor-page__footer { display: flex; min-height: 64px; flex: none; align-items: center; justify-content: center; padding: 12px 16px; border-top: 1px solid #eeeef0; }
+@media (max-width: 900px) {
+  .detail-table-anchor-page__body { grid-template-columns: minmax(0, 1fr) 144px; }
+  .detail-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-form-field:nth-child(3n + 1) { border-left: 1px solid #e8e9eb; }
+  .detail-form-field:nth-child(2n + 1) { border-left: 0; }
+  .detail-form-field:nth-last-child(-n + 3) { border-bottom: 1px solid #e8e9eb; }
+  .detail-form-field:nth-last-child(-n + 2) { border-bottom: 0; }
+  .detail-form-field { grid-template-columns: 100px minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .detail-table-anchor-page { width: 100%; height: auto; min-height: 100vh; border-radius: 0; }
+  .detail-table-anchor-page__body { display: flex; flex-direction: column-reverse; overflow: visible; }
+  .detail-table-anchor-page__anchor { max-height: 176px; padding: 0; border: 0; border-bottom: 1px solid #e8e9eb; }
+  .detail-table-anchor-page__content { padding: 0 12px 12px; overflow: visible; }
+  .detail-form-grid { grid-template-columns: 1fr; }
+  .detail-form-field,
+  .detail-form-field:nth-child(2n + 1),
+  .detail-form-field:nth-child(3n + 1) { border-left: 0; }
+  .detail-form-field:nth-last-child(-n + 3) { border-bottom: 1px solid #e8e9eb; }
+  .detail-form-field:last-child { border-bottom: 0; }
+}

@@ -1,0 +1,355 @@
+{
+  "initialize": {
+    "result": {
+      "protocolVersion": "2024-11-05",
+      "capabilities": {
+        "tools": {
+          "listChanged": true
+        }
+      },
+      "serverInfo": {
+        "name": "MasterGoMcpServer",
+        "version": "0.0.1"
+      },
+      "instructions": "\n## MasterGo Design DSL - Section-by-Section Workflow\n\n### Step 0: Get Layout Overview (MANDATORY)\nCall `mcp__getDesignSections` WITHOUT sectionIndex first.\nThe response contains `sections` array with `nodeCount` per section, `totalSections`, and `totalNodes`.\nUse this to understand the design scope before fetching details.\n\n`rootMetadata` (if present) provides the root layer's dimensions (width, height), name, type, and optional fill/styles. Use these as the page frame size and background.\n`splitContainers` (if present) lists containers that were too large and split into child sections. Each entry provides the container's name, type, id, and layout properties (layoutMode, itemSpacing, padding). Use these to understand how the split sections should be arranged — they share the container's layout direction and spacing.\n\n### Step 1: Fetch Each Section DSL (MANDATORY - ALL N sections)\nFor i = 0 to N-1, call `mcp__getDesignSections` with `sectionIndex=i`.\nYou MUST call this tool N times. Do NOT skip any section.\nCRITICAL: Fetch sections in BATCHES of 3-5 at a time. Do NOT request all sections simultaneously — too many concurrent requests will cause timeouts. Send 3-5 sectionIndex calls, wait for all results, then send the next batch.\n\n### Step 2: Fetch SVG and Text Data (MANDATORY)\nAfter ALL N sections have been fetched, call BOTH tools below:\n\n**SVG Data** — Call `mcp__getDesignSvgs` with the same fileId/layerId.\nThis returns all cached SVG HTML strings. Each key uses format `S{sectionIndex}:{namedAncestor}|{ancestorId}`.\n- Match each SVG to its section by the `S{sectionIndex}` prefix.\n- Insert the svgHtml string directly where the icon/PATH should appear.\n- Do NOT construct your own SVG — use the exact svgHtml from the response.\n\n**Text Data** — Call `mcp__getDesignTexts` with the same fileId/layerId.\nThis returns exact text content for large text nodes (>50 chars). In the section DSL, these TEXT nodes have their `text` field replaced with a key like `T{sectionIndex}|{nodeId}`.\n- Look up the key in the returned texts map to get the exact text string.\n- Insert the text string VERBATIM — do NOT paraphrase, translate, summarize, or invent text.\n- This is the ONLY source of truth for large text content. The DSL key is a reference, not the actual text.\n\n### Step 3: Generate Complete Code\nAfter ALL N sections have been fetched and SVG data retrieved:\n- Generate a single complete HTML file containing ALL sections in order.\n- token fields must be generated as CSS variables with comments indicating the token name.\n- If componentDocumentLinks exists, call mcp__getComponentLink to fetch documentation.\n\n### Tool Selection Rules:\n- `mcp__getDesignSections` is the PRIMARY tool. Always start here.\n- `mcp__getDsl` is a FALLBACK — call it ONLY if `getDesignSections` returns an error (e.g. tool not available on older servers).\n- NEVER call both `getDesignSections` AND `getDsl` / `extractSvg` for the same design.\n- The section workflow provides COMPLETE data. Do NOT call `getDsl` to \"verify\".\n\n### Text Fidelity Rules:\n- TEXT nodes contain actual text in node.text array. Read EACH node's text and use it EXACTLY.\n- Do NOT duplicate text from one node to another — each TEXT node has unique content.\n- Do NOT skip any child nodes. Render ALL nodes: every tab, every button, every text element.\n\n### Background & Color Rules:\n- The DSL `styles` map contains fill/stroke style definitions. Use the node's `fillStyleId`/`strokeStyleId` to look up the actual color from `styles`.\n- The root/frame node's background comes from its fill style. Do NOT invent gradient or solid backgrounds — use ONLY the colors from the DSL data.\n- If a node has no fill or the fill style is empty/transparent, do NOT add a background color. Leave it transparent or inherit from parent.\n- Status bar, title bar, and other container backgrounds MUST match the DSL fill data exactly.\n\n### Anti-Hallucination Rules:\n- NEVER fabricate SVG path data for icons or vector shapes — use the svgHtml from mcp__getDesignSvgs.\n- NEVER fabricate background colors, gradients, or decorations that are not present in the DSL data.\n"
+    },
+    "jsonrpc": "2.0",
+    "id": 1
+  },
+  "tools": {
+    "result": {
+      "tools": [
+        {
+          "name": "version_0_2_0",
+          "description": "the current version is 0.2.0",
+          "inputSchema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {}
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getDesignSections",
+          "description": "\n[PRIMARY] This is the main tool for all designs. Operates in TWO modes:\n\nMode 1 — Get layout overview (sectionIndex NOT provided):\nReturns the list of all sections with id, name, type, and nodeCount, plus totalSections and totalNodes.\nAlso returns rootMetadata (root layer width/height/name/type/fill) when available.\nUse this FIRST to understand the design scope.\nExample: { \"fileId\": \"123\", \"layerId\": \"456:789\" }\n\nMode 2 — Get section DSL (sectionIndex provided):\nReturns the full DSL for ONE specific section.\n- PATH nodes have their svgHtml stripped. After fetching ALL sections, call mcp__getDesignSvgs to retrieve them.\n\nIMPORTANT workflow:\n1. First call WITHOUT sectionIndex to get the section list with node counts.\n2. Then call WITH sectionIndex=0, sectionIndex=1, ... up to totalSections-1.\n3. You MUST fetch ALL sections. Do NOT skip any section index.\n4. CRITICAL: Fetch sections in BATCHES of 3-5 at a time. Do NOT request all sections simultaneously — too many concurrent requests will cause timeouts. Send 3-5 sectionIndex calls, wait for all results, then send the next batch.\n5. After fetching all sections, call mcp__getDesignSvgs to get SVG icons.\n6. Generate the complete HTML with all SVG data.\n\nDO NOT call mcp__getDsl after completing this workflow — all data is already provided.\nIf this tool returns an error (e.g. old server), fall back to mcp__getDsl.\n\nYou can provide either:\n1. fileId and layerId directly, or\n2. a short link (like https://{domain}/goto/LhGgBAK)\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID. Required if shortLink is not provided."
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Root layer ID of the design. Required if shortLink is not provided."
+              },
+              "shortLink": {
+                "type": "string",
+                "description": "Short link (like https://{domain}/goto/LhGgBAK)."
+              },
+              "sourceLayerId": {
+                "type": "string",
+                "description": "Source layer ID from URL parameter source_layer_id. When provided, use this instead of layerId for all queries."
+              },
+              "sectionIndex": {
+                "type": "number",
+                "description": "0-based section index. If omitted, returns the section list only. If provided, returns full DSL for that specific section."
+              }
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getDesignSvgs",
+          "description": "\nAfter fetching ALL sections via mcp__getDesignSections, call this tool to retrieve all cached SVG HTML strings.\nEach PATH node in the DSL has an id. Look up that id in the returned svgs map to get the complete SVG string.\nInsert the svgHtml string directly into HTML where icons should appear.\n\nYou can provide either:\n1. fileId and layerId directly, or\n2. a short link (like https://{domain}/goto/LhGgBAK)\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID. Required if shortLink is not provided."
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Root layer ID of the design. Required if shortLink is not provided."
+              },
+              "sourceLayerId": {
+                "type": "string",
+                "description": "Source layer ID from URL parameter source_layer_id. When provided, use this instead of layerId for all queries."
+              },
+              "shortLink": {
+                "type": "string",
+                "description": "Short link (like https://{domain}/goto/LhGgBAK)."
+              }
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getDesignTexts",
+          "description": "\nAfter fetching ALL sections via mcp__getDesignSections, call this tool to retrieve exact text content for large text nodes.\nIn the section DSL, TEXT nodes with long content (>50 chars) have their \"text\" field replaced with a key like \"T{sectionIndex}|{nodeId}\".\nThis tool returns the original text mapped by those keys. You MUST use the exact text from this response — never invent, paraphrase, or translate text.\n\nYou can provide either:\n1. fileId and layerId directly, or\n2. a short link (like https://{domain}/goto/LhGgBAK)\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID. Required if shortLink is not provided."
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Root layer ID of the design. Required if shortLink is not provided."
+              },
+              "sourceLayerId": {
+                "type": "string",
+                "description": "Source layer ID from URL parameter source_layer_id. When provided, use this instead of layerId for all queries."
+              },
+              "shortLink": {
+                "type": "string",
+                "description": "Short link (like https://{domain}/goto/LhGgBAK)."
+              }
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getDsl",
+          "description": "\n[FALLBACK] Use only when mcp__getDesignSections is unavailable or returns an error.\nThis returns the FULL DSL in one response — may be large and exceed context limits for complex designs.\nPrefer mcp__getDesignSections as the primary tool for all designs.\nYou can provide either:\n1. fileId and layerId directly, or\n2. a short link (like https://{domain}/goto/LhGgBAK)\nThis tool returns the raw DSL data in JSON format that you can then parse and analyze.\nThis tool also returns the rules you must follow when generating code.\nThe DSL data can also be used to transform and generate code for different frameworks.\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID (format: file/<fileId> in MasterGo URL). Required if shortLink is not provided."
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Layer ID of the specific component or element to retrieve (format: ?layer_id=<layerId> / file=<fileId> in MasterGo URL). Required if shortLink is not provided."
+              },
+              "sourceLayerId": {
+                "type": "string",
+                "description": "Source layer ID from URL parameter source_layer_id. When provided, use this instead of layerId for all queries."
+              },
+              "shortLink": {
+                "type": "string",
+                "description": "Short link (like https://{domain}/goto/LhGgBAK)."
+              }
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getD2c",
+          "description": "\n使用此工具从 MasterGo 获取 D2C 数据，并在本地落盘：\n1）将返回的 code 写入 html；\n2）将返回的 svg / image 资源按 resourcePath 落盘到对应目录；\n3）返回落盘摘要，避免把大体积资源塞进上下文。\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "contentId": {
+                "type": "string",
+                "description": "MasterGo D2C contentId，例如 mastergo://getd2c/176452330285910-2-2845 中的 176452330285910-2-2845。"
+              },
+              "documentId": {
+                "type": "string",
+                "description": "MasterGo 文档 ID，通常为 contentId 的第一段，例如 contentId 为 176452330285910-2-9032 时 documentId 为 176452330285910。"
+              },
+              "outDir": {
+                "type": "string",
+                "description": "可选，输出目录（绝对路径或相对当前工作目录）。"
+              }
+            },
+            "required": [
+              "contentId",
+              "documentId"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__C2d",
+          "description": "\n使用此工具将代码文件发送到 MasterGo MCP 服务进行 C2D（代码转设计）处理，将用户代码同步到设计稿。\n\n参数说明：\n- filePath：HTML 文件的完整路径（如 /path/to/file.html），工具会自动读取文件内容并发送给后端。\n- fileId： 不提供 shortLink 时至少需要 fileId。layerId 不是必填，没有就不要传。\n- layerId： 可选。图层 ID（只读取 URL 参数 layer_id）。不传或解析不到则仅按 file 维度同步；pageid/page_id 不会被当作 layerId。\n- shortLink：可选，短链接形式（例如 https://{domain}/goto/xxxx）。\n  注意事项：只允许使用 URL 中的 layer_id 参数作为 layerId，严禁将 pageid/page_id 等任何页面 ID 当作 layerId。\n  如果短链接或 URL 中没有解析出 layer_id，则不传 layerId。\n\n工具会读取 filePath 指定文件的内容，并传给后端，附带 fileId 与可选的 layerId。\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "filePath": {
+                "type": "string",
+                "minLength": 1,
+                "description": "HTML 文件的完整路径，工具会读取文件内容并发送给后端"
+              },
+              "fileId": {
+                "type": "string",
+                "description": "文件 ID（URL 中 file= 或路径中的数字段）。未传 shortLink 时必填。"
+              },
+              "layerId": {
+                "type": "string",
+                "description": "可选。图层 ID（只读取 URL 参数 layer_id）。不传或解析不到则仅按 file 维度同步；pageid/page_id 不会被当作 layerId。"
+              },
+              "shortLink": {
+                "type": "string",
+                "description": "Short link (like https://{domain}/goto/LhGgBAK)."
+              }
+            },
+            "required": [
+              "filePath"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getComponentLink",
+          "description": "When the data returned by mcp__getDsl contains a non-empty componentDocumentLinks array, this tool is used to sequentially retrieve URLs from the componentDocumentLinks array and then obtain component documentation data. The returned document data is used for you to generate frontend code based on components.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Component documentation link URL, from the componentDocumentLinks property, please ensure the URL is valid"
+              }
+            },
+            "required": [
+              "url"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getMeta",
+          "description": "\nUse this tool when the user intends to build a complete website or needs to obtain high-level site\nconfiguration information. You must provide a fileld and layerld to identify the specific design element.\nThis tool returns the rules and results of the site and page. The rules is a markdown file, you must\nfollow the rules and use the results to analyze the site and page.\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID (format: file/<fileId> in MasterGo URL)"
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Layer ID of the specific component or element to retrieve (format: ?layer_id=<layerId> / file=<fileId> in MasterGo URL)"
+              },
+              "sourceLayerId": {
+                "type": "string",
+                "description": "Source layer ID from URL parameter source_layer_id. When provided, use this instead of layerId for all queries."
+              }
+            },
+            "required": [
+              "fileId",
+              "layerId"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__getComponentGenerator",
+          "description": "\nUsers need to actively call this tool to get the component development workflow. When Generator is mentioned, please actively call this tool.\nThis tool provides a structured workflow for component development following best practices.\nYou must provide an absolute rootPath of workspace to save workflow files.\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "rootPath": {
+                "type": "string",
+                "description": "The root path of the project, if the user does not provide, you can use the current directory as the root path"
+              },
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID (format: file/<fileId> in MasterGo URL)"
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Layer ID of the specific component or element to retrieve (format: ?layer_id=<layerId> / file=<fileId> in MasterGo URL)"
+              },
+              "sourceLayerId": {
+                "type": "string",
+                "description": "Source layer ID from URL parameter source_layer_id. When provided, use this instead of layerId for all queries."
+              }
+            },
+            "required": [
+              "rootPath",
+              "fileId",
+              "layerId"
+            ],
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        },
+        {
+          "name": "mcp__extractSvg",
+          "description": "\nExtract SVG data from MasterGo design files. This tool retrieves the DSL from a design layer, finds all PATH nodes (typically inside INSTANCE/icon components), resolves their color references, and generates SVG markup strings.\nYou can provide either:\n1. fileId and layerId directly, or\n2. a short link (like https://{domain}/goto/LhGgBAK)\nReturns an array of SVG strings, one per icon/instance found in the design.\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "fileId": {
+                "type": "string",
+                "description": "MasterGo design file ID (format: file/<fileId> in MasterGo URL). Required if shortLink is not provided."
+              },
+              "layerId": {
+                "type": "string",
+                "description": "Layer ID of the specific component or element to retrieve (format: ?layer_id=<layerId>). Required if shortLink is not provided."
+              },
+              "shortLink": {
+                "type": "string",
+                "description": "Short link (like https://{domain}/goto/LhGgBAK)."
+              },
+              "backgroundColor": {
+                "type": "string",
+                "description": "Solid background color for the SVG (e.g. '#000000', 'black'). Useful for previewing white/light icons."
+              }
+            },
+            "additionalProperties": false,
+            "$schema": "http://json-schema.org/draft-07/schema#"
+          },
+          "execution": {
+            "taskSupport": "forbidden"
+          }
+        }
+      ]
+    },
+    "jsonrpc": "2.0",
+    "id": 2
+  },
+  "call": {
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"code\":\"00000\",\"message\":\"✅ 请求成功\",\"status\":200,\"data\":[{\"_id\":\"6a2bcac14cd06ed37d220b40\",\"contentId\":\"195991886967017-2-003917\",\"createdAt\":\"2026-06-12T09:00:49.844Z\",\"payload\":{\"code\":\"<!DOCTYPE html>\\n<html lang=\\\"en\\\">\\n  <head>\\n    <meta charset=\\\"UTF-8\\\" />\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1.0\\\" />\\n    <title>Document</title>\\n    <style>\\n      *,*::before,*::after { box-sizing: border-box }\\n      body { padding: 0; margin: 0 }\\n      p { margin: 0 }\\n    </style>\\n  </head>\\n  <body>\\n    <div\\n      style=\\\"width: 900px; height: 820px; display: flex; flex: none; justify-content: flex-start; align-items: center; flex-direction: column; background: #FFFFFF; border-style: solid; border-color: #F6F6F7; border-top-width: 0px; border-bottom-width: 0px; border-right-width: 0px; border-left-width: 1px; overflow: hidden\\\">\\n      <div\\n        style=\\\"display: flex; align-self: stretch; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; overflow: hidden; padding: 12px 20px\\\">\\n        <p\\n          style=\\\"flex: 1; flex-shrink: 0; color: #000000; font-size: 16px; font-family: PingFang SC; font-weight: 600; line-height: 24px\\\">\\n          新增科目\\n        </p>\\n        <div\\n          style=\\\"display: flex; flex-shrink: 0; justify-content: center; align-items: center; padding: 8px; border-radius: 4px\\\">\\n          <div\\n            style=\\\"display: flex; justify-content: center; align-items: center\\\">\\n            <img\\n              src=\\\"./asset/icons/svg_233b9b60.svg\\\"\\n              style=\\\"width: 16px; height: 16px\\\" />\\n          </div>\\n        </div>\\n      </div>\\n      <div\\n        style=\\\"display: flex; align-self: stretch; flex: 1; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-5); padding-right: 20px; padding-left: 20px; position: relative\\\">\\n        <div\\n          style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: 16px; position: relative; z-index: 0\\\">\\n          <div\\n            style=\\\"display: flex; flex-wrap: wrap; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; column-gap: 16px; row-gap: 20px\\\">\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; flex: 1; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    科目类别\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #F6F6F7; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #505266; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n                    初试\\n                  </p>\\n                  <div\\n                    style=\\\"display: flex; flex-shrink: 0; justify-content: center; align-items: center\\\">\\n                    <img\\n                      src=\\\"./asset/icons/svg_001956de.svg\\\"\\n                      style=\\\"width: 14px; height: 14px\\\" />\\n                  </div>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; flex: 1; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    考核方式\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n                    请选择\\n                  </p>\\n                  <div\\n                    style=\\\"display: flex; flex-shrink: 0; justify-content: center; align-items: center\\\">\\n                    <img\\n                      src=\\\"./asset/icons/svg_001956de.svg\\\"\\n                      style=\\\"width: 14px; height: 14px\\\" />\\n                  </div>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <span\\n                    style=\\\"color: #FA5151; font-size: 14px; font-family: PingFang SC; line-height: 20px\\\">\\n                    *\\n                  </span>\\n                  <p\\n                    style=\\\"color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    命题性质\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n                    请选择\\n                  </p>\\n                  <div\\n                    style=\\\"display: flex; flex-shrink: 0; justify-content: center; align-items: center\\\">\\n                    <img\\n                      src=\\\"./asset/icons/svg_001956de.svg\\\"\\n                      style=\\\"width: 14px; height: 14px\\\" />\\n                  </div>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <span\\n                    style=\\\"color: #FA5151; font-size: 14px; font-family: PingFang SC; line-height: 20px\\\">\\n                    *\\n                  </span>\\n                  <p\\n                    style=\\\"color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    命题院系\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n                    请选择\\n                  </p>\\n                  <div\\n                    style=\\\"display: flex; flex-shrink: 0; justify-content: center; align-items: center\\\">\\n                    <img\\n                      src=\\\"./asset/icons/svg_001956de.svg\\\"\\n                      style=\\\"width: 14px; height: 14px\\\" />\\n                  </div>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <span\\n                    style=\\\"color: #FA5151; font-size: 14px; font-family: PingFang SC; line-height: 20px\\\">\\n                    *\\n                  </span>\\n                  <p\\n                    style=\\\"color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    科目代码\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <span\\n                    style=\\\"flex: 1; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; --line: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap\\\">\\n                    请输入\\n                  </span>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <span\\n                    style=\\\"color: #FA5151; font-size: 14px; font-family: PingFang SC; line-height: 20px\\\">\\n                    *\\n                  </span>\\n                  <p\\n                    style=\\\"color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    科目名称\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <span\\n                    style=\\\"flex: 1; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; --line: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap\\\">\\n                    请输入\\n                  </span>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <span\\n                    style=\\\"color: #FA5151; font-size: 14px; font-family: PingFang SC; line-height: 20px\\\">\\n                    *\\n                  </span>\\n                  <p\\n                    style=\\\"color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    单元\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <p\\n                    style=\\\"flex: 1; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n                    请选择\\n                  </p>\\n                  <div\\n                    style=\\\"display: flex; flex-shrink: 0; justify-content: center; align-items: center\\\">\\n                    <img\\n                      src=\\\"./asset/icons/svg_001956de.svg\\\"\\n                      style=\\\"width: 14px; height: 14px\\\" />\\n                  </div>\\n                </div>\\n              </div>\\n            </div>\\n            <div\\n              style=\\\"min-width: 370px; max-width: 600px; display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-4)\\\">\\n              <div\\n                style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: center; gap: 2px\\\">\\n                <div\\n                  style=\\\"display: flex; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n                  <p\\n                    style=\\\"color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                    满分分值\\n                  </p>\\n                </div>\\n              </div>\\n              <div\\n                style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n                <div\\n                  style=\\\"display: flex; align-self: stretch; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n                  <span\\n                    style=\\\"flex: 1; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; --line: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap\\\">\\n                    请输入\\n                  </span>\\n                </div>\\n              </div>\\n            </div>\\n          </div>\\n        </div>\\n        <p\\n          style=\\\"width: 88px; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; position: absolute; left: 594px; top: 161px; z-index: 1\\\">\\n          请输入\\n        </p>\\n        <p\\n          style=\\\"width: 88px; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; position: absolute; left: 594px; top: 109px; z-index: 2\\\">\\n          请输入\\n        </p>\\n        <div\\n          style=\\\"height: 82px; min-width: 370px; display: flex; align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: var(--space-4); position: relative; z-index: 3\\\">\\n          <div\\n            style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: flex-start; gap: 2px; padding-top: 6px; padding-bottom: 6px\\\">\\n            <div\\n              style=\\\"display: flex; flex: 1; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n              <p\\n                style=\\\"flex: 1; flex-shrink: 0; color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                参考书目\\n              </p>\\n            </div>\\n          </div>\\n          <div\\n            style=\\\"display: flex; flex: 1; align-self: stretch; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n            <div\\n              style=\\\"display: flex; align-self: stretch; flex: 1; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; position: relative; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n              <div\\n                style=\\\"align-self: stretch; flex: 1; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; position: relative; z-index: 0\\\">\\n                请输入\\n              </div>\\n              <p\\n                style=\\\"align-self: stretch; flex-shrink: 0; color: #737585; font-size: 12px; font-family: PingFang SC; text-align: right; line-height: 20px; position: relative; z-index: 1\\\">\\n                0/250\\n              </p>\\n              <div\\n                style=\\\"position: absolute; right: 0px; bottom: 0px; z-index: 2\\\">\\n                <img src=\\\"./asset/icons/svg_005e1830.svg\\\" />\\n              </div>\\n            </div>\\n          </div>\\n        </div>\\n        <div\\n          style=\\\"height: 104px; min-width: 370px; display: flex; align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: var(--space-4); position: relative; z-index: 4\\\">\\n          <div\\n            style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: flex-start; gap: 2px; padding-top: 6px; padding-bottom: 6px\\\">\\n            <div\\n              style=\\\"display: flex; flex: 1; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n              <p\\n                style=\\\"flex: 1; flex-shrink: 0; color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                携带工具\\n              </p>\\n            </div>\\n          </div>\\n          <div\\n            style=\\\"display: flex; flex: 1; align-self: stretch; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n            <div\\n              style=\\\"display: flex; align-self: stretch; flex: 1; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; position: relative; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n              <div\\n                style=\\\"align-self: stretch; flex: 1; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; position: relative; z-index: 0\\\">\\n                请输入\\n              </div>\\n              <p\\n                style=\\\"align-self: stretch; flex-shrink: 0; color: #737585; font-size: 12px; font-family: PingFang SC; text-align: right; line-height: 20px; position: relative; z-index: 1\\\">\\n                0/1000\\n              </p>\\n              <div\\n                style=\\\"position: absolute; right: 0px; bottom: 0px; z-index: 2\\\">\\n                <img src=\\\"./asset/icons/svg_005e1830.svg\\\" />\\n              </div>\\n            </div>\\n          </div>\\n        </div>\\n        <div\\n          style=\\\"height: 104px; min-width: 370px; display: flex; align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: var(--space-4); position: relative; z-index: 5\\\">\\n          <div\\n            style=\\\"width: 94px; height: 32px; display: flex; flex: none; justify-content: flex-end; align-items: flex-start; gap: 2px; padding-top: 6px; padding-bottom: 6px\\\">\\n            <div\\n              style=\\\"display: flex; flex: 1; justify-content: flex-start; align-items: flex-start; gap: 2px\\\">\\n              <p\\n                style=\\\"flex: 1; flex-shrink: 0; color: #505266; font-size: 14px; font-family: PingFang SC; text-align: right; line-height: 20px\\\">\\n                备注\\n              </p>\\n            </div>\\n          </div>\\n          <div\\n            style=\\\"display: flex; flex: 1; align-self: stretch; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-1)\\\">\\n            <div\\n              style=\\\"display: flex; align-self: stretch; flex: 1; justify-content: flex-start; align-items: flex-start; flex-direction: column; gap: var(--space-2); background: #FFFFFF; border-radius: 4px; position: relative; padding: 5px 12px; border: 1px solid #DCDCE0\\\">\\n              <div\\n                style=\\\"align-self: stretch; flex: 1; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; position: relative; z-index: 0\\\">\\n                请输入\\n              </div>\\n              <p\\n                style=\\\"align-self: stretch; flex-shrink: 0; color: #737585; font-size: 12px; font-family: PingFang SC; text-align: right; line-height: 20px; position: relative; z-index: 1\\\">\\n                0/1000\\n              </p>\\n              <div\\n                style=\\\"position: absolute; right: 0px; bottom: 0px; z-index: 2\\\">\\n                <img src=\\\"./asset/icons/svg_005e1830.svg\\\" />\\n              </div>\\n            </div>\\n          </div>\\n        </div>\\n        <p\\n          style=\\\"width: 88px; flex-shrink: 0; color: #9697A3; font-size: 14px; font-family: PingFang SC; line-height: 22px; position: absolute; left: 156px; top: 109px; z-index: 6\\\">\\n          请输入\\n        </p>\\n      </div>\\n      <div\\n        style=\\\"display: flex; align-self: stretch; justify-content: flex-end; align-items: center; gap: var(--space-2); background: #FFFFFF; overflow: hidden; padding: 12px 20px\\\">\\n        <div\\n          style=\\\"display: flex; flex: 1; flex-shrink: 0; justify-content: flex-start; align-items: center; gap: var(--space-2)\\\"></div>\\n        <div\\n          style=\\\"display: flex; flex-shrink: 0; justify-content: flex-start; align-items: flex-start; gap: var(--space-2)\\\">\\n          <div\\n            style=\\\"display: flex; justify-content: center; align-items: center; gap: var(--space-1); background: #FFFFFF; border-radius: 4px; padding: 5px 16px; border: 1px solid #DCDCE0\\\">\\n            <span\\n              style=\\\"color: #000000; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n              取消\\n            </span>\\n          </div>\\n          <div\\n            style=\\\"display: flex; justify-content: center; align-items: center; gap: var(--space-1); background: #FFFFFF; border-radius: 4px; padding: 5px 16px; border: 1px solid #DCDCE0\\\">\\n            <span\\n              style=\\\"color: #000000; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n              保存\\n            </span>\\n          </div>\\n          <div\\n            style=\\\"display: flex; justify-content: center; align-items: center; gap: var(--space-1); background: #333FFF; border-radius: 4px; padding: 5px 16px\\\">\\n            <span\\n              style=\\\"color: #FFFFFF; font-size: 14px; font-family: PingFang SC; line-height: 22px\\\">\\n              保存并新增\\n            </span>\\n          </div>\\n        </div>\\n      </div>\\n    </div>\\n  </body>\\n</html>\\n\",\"shape\":\"\",\"svg\":{\"svg_233b9b60.svg\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" xmlns:xlink=\\\"http://www.w3.org/1999/xlink\\\" fill=\\\"none\\\" version=\\\"1.1\\\" width=\\\"16\\\" height=\\\"16\\\" viewBox=\\\"0 0 16 16\\\"><defs><clipPath id=\\\"master_svg0_2_003917/2_47294/2_44905/2_33551/2_27860\\\"><rect x=\\\"0\\\" y=\\\"0\\\" width=\\\"16\\\" height=\\\"16\\\" rx=\\\"0\\\"/></clipPath></defs><g clip-path=\\\"url(#master_svg0_2_003917/2_47294/2_44905/2_33551/2_27860)\\\"><path d=\\\"M7.05710360625,8.0000381765625L1.86181640625,2.8047450765625L2.80462312625,1.8619384765625L7.99990370625,7.0571717765625L13.19516940625,1.8619384765625L14.13796940625,2.8047450765625L8.94270320625,8.0000381765625L14.13796940625,13.1952394765625L13.19516940625,14.1381054765625L7.99990370625,8.9428381765625L2.80462312625,14.1381054765625L1.86181640625,13.1952394765625L7.05710360625,8.0000381765625Z\\\" fill=\\\"#000000\\\" fill-opacity=\\\"1\\\"/></g></svg>\",\"svg_001956de.svg\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" xmlns:xlink=\\\"http://www.w3.org/1999/xlink\\\" fill=\\\"none\\\" version=\\\"1.1\\\" width=\\\"14\\\" height=\\\"14\\\" viewBox=\\\"0 0 14 14\\\"><defs><clipPath id=\\\"master_svg0_2_004001/2_44613/2_36532/2_27862\\\"><rect x=\\\"0\\\" y=\\\"0\\\" width=\\\"14\\\" height=\\\"14\\\" rx=\\\"0\\\"/></clipPath></defs><g clip-path=\\\"url(#master_svg0_2_004001/2_44613/2_36532/2_27862)\\\"><path d=\\\"M6.9995651453125,7.6837646484375L9.887066345312501,4.7962646484375L10.7118988453125,5.6210977484375L6.9995651453125,9.333431248437499L3.2872314453125,5.6210977484375L4.1120648953125,4.7962646484375L6.9995651453125,7.6837646484375Z\\\" fill=\\\"#505266\\\" fill-opacity=\\\"1\\\"/></g></svg>\",\"svg_005e1830.svg\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" xmlns:xlink=\\\"http://www.w3.org/1999/xlink\\\" fill=\\\"none\\\" version=\\\"1.1\\\" width=\\\"10\\\" height=\\\"10\\\" viewBox=\\\"0 0 10 10\\\"><path d=\\\"M1.81801644421875,7.47487642421875L2.52512320421875,8.18198342421875L8.18198342421875,2.52512320421875L7.47487642421875,1.81801644421875L1.81801644421875,7.47487642421875ZM5.3535530242187495,8.18198342421875L8.18198342421875,5.3535530242187495L7.47487642421875,4.64644642421875L4.64644642421875,7.47487642421875L5.3535530242187495,8.18198342421875Z\\\" fill-rule=\\\"evenodd\\\" fill=\\\"#505266\\\" fill-opacity=\\\"1\\\"/></svg>\"},\"image\":\"\",\"resourcePath\":{\"image\":\"./asset/images/\",\"svg\":\"./asset/icons/\",\"shape\":\"\"},\"fileInfo\":{\"documentId\":195991886967017,\"documentName\":\"新文件\",\"documentPageId\":\"M\",\"documentPageName\":\"页面 1\",\"nodeId\":\"2:003917\",\"nodeName\":\"抽屉\",\"nodeType\":\"instance\",\"parentDirection\":\"row\",\"parentId\":\"2:003916\",\"rootId\":\"2:003916\",\"isInstanceChild\":false},\"frameType\":\"html\"},\"updatedAt\":\"2026-06-12T09:00:49.844Z\",\"userId\":\"d2cpro\"}]}"
+        }
+      ]
+    },
+    "jsonrpc": "2.0",
+    "id": 3
+  }
+}

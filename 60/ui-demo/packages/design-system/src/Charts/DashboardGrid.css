@@ -1,0 +1,82 @@
+/* DashboardGrid 样式 - 不覆盖 .ds-* 和 .frame2-* 内部样式 */
+
+.ds-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--ds-dashboard-grid-columns, 6), 1fr);
+  gap: var(--ds-dashboard-grid-gap, 16px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+  .ds-dashboard-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .ds-dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ds-dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .ds-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Grid Item */
+.ds-dashboard-grid__item {
+  grid-column: span var(--ds-dashboard-grid-item-span, 3);
+  min-width: 0; /* 防止内容溢出 */
+}
+
+/* 响应式 span 调整 */
+@media (max-width: 1200px) {
+  .ds-dashboard-grid__item {
+    grid-column: span min(var(--ds-dashboard-grid-item-span, 3), 4);
+  }
+}
+
+@media (max-width: 900px) {
+  .ds-dashboard-grid__item {
+    grid-column: span min(var(--ds-dashboard-grid-item-span, 3), 3);
+  }
+}
+
+@media (max-width: 600px) {
+  .ds-dashboard-grid__item {
+    grid-column: span min(var(--ds-dashboard-grid-item-span, 3), 2);
+  }
+}
+
+@media (max-width: 400px) {
+  .ds-dashboard-grid__item {
+    grid-column: span 1;
+  }
+}
+
+/* 区块间距 */
+.ds-dashboard-grid--section-gap {
+  margin-bottom: var(--ds-dashboard-grid-section-gap, 24px);
+}
+
+/* Flex 布局模式（用于特殊场景） */
+.ds-dashboard-grid--flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-dashboard-grid-gap, 16px);
+}
+
+.ds-dashboard-grid--flex .ds-dashboard-grid__item {
+  flex: 0 0 auto;
+  width: calc((100% - var(--ds-dashboard-grid-gap, 16px) * (var(--ds-dashboard-grid-columns, 6) - 1)) / var(--ds-dashboard-grid-columns, 6) * var(--ds-dashboard-grid-item-span, 3) + var(--ds-dashboard-grid-gap, 16px) * (var(--ds-dashboard-grid-item-span, 3) - 1));
+}

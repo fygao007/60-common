@@ -1,0 +1,239 @@
+@import '../tokens.css';
+
+.ds-audit-log {
+  width: 100%;
+  margin: 0;
+  padding: 20px 24px 12px;
+  background: var(--ds-color-white);
+  color: var(--ds-color-text);
+}
+
+.ds-audit-log__header {
+  margin-bottom: 16px;
+}
+
+.ds-audit-log__title {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-audit-log__desc {
+  margin: 4px 0 0;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-audit-log__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-audit-log__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 0 20px;
+}
+
+.ds-audit-log__item.is-last {
+  padding-bottom: 0;
+}
+
+.ds-audit-log__dot {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 11px;
+  height: 11px;
+  margin-top: 5px;
+}
+
+.ds-audit-log__dot-inner {
+  width: 9px;
+  height: 9px;
+  background: var(--ds-color-primary);
+  border: 2px solid var(--ds-color-primary-light);
+  border-radius: var(--ds-radius-pill);
+}
+
+.ds-audit-log__line {
+  position: absolute;
+  top: 10px;
+  bottom: -4px;
+  left: 5px;
+  width: 1px;
+  background: var(--ds-color-border-secondary);
+}
+
+.ds-audit-log__item.is-last .ds-audit-log__line {
+  display: none;
+}
+
+.ds-audit-log__panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-audit-log__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ds-audit-log__stage {
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-md);
+}
+
+.ds-audit-log__status {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  background: var(--ds-color-bg-disabled);
+  color: var(--ds-color-text-secondary);
+  border-radius: var(--ds-radius-pill);
+  font-size: var(--ds-font-size-xs);
+  line-height: 20px;
+}
+
+.ds-audit-log__status.is-primary {
+  color: var(--ds-color-primary);
+  background: var(--ds-color-primary-light);
+}
+
+.ds-audit-log__status.is-success {
+  color: var(--ds-color-success);
+  background: var(--ds-color-success-light);
+}
+
+.ds-audit-log__status.is-warning {
+  color: var(--ds-color-warning-text);
+  background: var(--ds-color-warning-light);
+}
+
+.ds-audit-log__status.is-danger {
+  color: var(--ds-color-danger);
+  background: var(--ds-color-danger-light);
+}
+
+.ds-audit-log__status.is-info {
+  color: var(--ds-color-info);
+  background: var(--ds-color-info-light);
+}
+
+.ds-audit-log__extra {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  color: var(--ds-color-text-tertiary);
+  background: var(--ds-color-bg-soft);
+  border-radius: var(--ds-radius-pill);
+  font-size: var(--ds-font-size-xs);
+  line-height: 20px;
+}
+
+.ds-audit-log__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  color: var(--ds-color-text-tertiary);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-audit-log__meta-item {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.ds-audit-log__remark {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--ds-color-danger-light);
+  color: var(--ds-color-danger);
+  border-left: 3px solid var(--ds-color-danger);
+  border-radius: var(--ds-radius-sm);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+.ds-audit-log__opinion {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--ds-color-bg-soft);
+  color: var(--ds-color-text-secondary);
+  border-radius: var(--ds-radius-sm);
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-xs);
+}
+
+/* 危险节点用红点 */
+.ds-audit-log__item--danger .ds-audit-log__dot-inner {
+  background: var(--ds-color-danger);
+  border-color: var(--ds-color-danger-light);
+}
+
+/* 警告节点用橙点 */
+.ds-audit-log__item--warning .ds-audit-log__dot-inner {
+  background: var(--ds-color-warning);
+  border-color: var(--ds-color-warning-light);
+}
+
+/* 成功节点用绿点 */
+.ds-audit-log__item--success .ds-audit-log__dot-inner {
+  background: var(--ds-color-success);
+  border-color: var(--ds-color-success-light);
+}
+
+/* 水平方向预览（紧凑），保留垂直为默认 */
+.ds-audit-log--horizontal .ds-audit-log__list {
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 16px;
+}
+
+.ds-audit-log--horizontal .ds-audit-log__item {
+  flex-direction: column;
+  gap: 8px;
+  min-width: 220px;
+  padding: 0;
+}
+
+.ds-audit-log--horizontal .ds-audit-log__dot-inner {
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  background: var(--ds-color-primary);
+  border: 0;
+}
+
+.ds-audit-log--horizontal .ds-audit-log__line,
+.ds-audit-log--horizontal .ds-audit-log__item.is-last .ds-audit-log__line {
+  top: 16px;
+  bottom: auto;
+  left: 32px;
+  height: 1px;
+  width: calc(100% - 32px + 16px);
+  background: var(--ds-color-border-secondary);
+}
+
+.ds-audit-log--horizontal .ds-audit-log__item.is-last .ds-audit-log__line {
+  display: block;
+}

@@ -1,0 +1,92 @@
+@import '../../../../framework/react-page-host.css';
+
+/* M07-1 方案确认详情（二级页）：只写页面专属布局，状态与详情分区样式在 shared/mp-audit-views.css */
+
+.mpad-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+  color: var(--ds-color-text-heading);
+}
+
+/* 标题右侧的编号 · 版本 · 提交时间 */
+.mpad-meta {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.mpad-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: start;
+  gap: 16px;
+}
+
+.mpad-process-panel {
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 180px);
+  overflow: auto;
+  padding: 12px 10px 16px 4px;
+  background: var(--ds-color-bg-container);
+  scrollbar-color: var(--ds-color-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+
+.mpad-process-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+  padding-top: 4px;
+}
+
+@media (max-width: 1040px) {
+  .mpad-workspace {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 820px) {
+  .mpad-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mpad-process-panel {
+    position: static;
+    max-height: none;
+    border-top: 1px solid var(--ds-color-border-secondary);
+  }
+}
+
+/* 无确认权限时的说明（本人回避等） */
+.mpad-note {
+  padding: 10px 14px;
+  border-left: 2px solid var(--ds-color-info);
+  background: var(--ds-color-info-light);
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  line-height: 1.7;
+}
+
+/* 底部动作条：左侧上下文，右侧返回队列 */
+.mpad-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-color-bg-container);
+}
+
+.mpad-footer__hint {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+}

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核意见弹窗 DSAuditOpinionModal</title>
+  <link rel="stylesheet" href="packages/design-system/src/tokens.css" />
+  <link rel="stylesheet" href="packages/design-system/src/AuditOpinionModal/index.css" />
+  <style>
+    body { margin: 0; background: var(--ds-color-bg-page); font-family: var(--ds-font-family); color: var(--ds-color-text); }
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 48px; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .page-header p { margin: 0; color: var(--ds-color-text-tertiary); font-size: 14px; }
+
+    .demo-section { margin-bottom: 32px; }
+    .demo-section__title { margin: 0 0 12px; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .demo-section__desc { margin: 0 0 16px; font-size: 13px; color: var(--ds-color-text-tertiary); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; margin-right: 8px; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.danger { color: var(--ds-color-danger); border-color: var(--ds-color-danger); }
+    .btn.warning { color: var(--ds-color-warning-text); border-color: var(--ds-color-warning); }
+
+    /* Modal */
+    .ds-modal__overlay { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; background: var(--ds-color-bg-mask); visibility: hidden; opacity: 0; transition: opacity 0.2s ease, visibility 0.2s ease; padding: 24px; }
+    .ds-modal__overlay.is-open { visibility: visible; opacity: 1; }
+    .ds-modal { width: 480px; max-width: 100%; max-height: calc(100vh - 48px); background: var(--ds-color-white); border-radius: 8px; box-shadow: var(--ds-shadow-lg); display: flex; flex-direction: column; transform: scale(0.95); transition: transform 0.2s ease; overflow: hidden; }
+    .ds-modal__overlay.is-open .ds-modal { transform: scale(1); }
+    .ds-modal__header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 16px; border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .ds-modal__header h3 { margin: 0; font-size: 16px; font-weight: 600; color: var(--ds-color-text-heading); }
+    .ds-modal__close { width: 28px; height: 28px; background: transparent; border: 0; border-radius: 4px; color: var(--ds-color-text-tertiary); cursor: pointer; font-size: 18px; }
+    .ds-modal__close:hover { background: var(--ds-color-bg-hover); }
+    .ds-modal__body { flex: 1; min-height: 0; overflow: auto; padding: 20px 24px; }
+    .ds-modal__footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 24px 20px; border-top: 1px solid var(--ds-color-border-secondary); }
+
+    /* Field */
+    .ds-field { display: grid; gap: 6px; }
+    .ds-field__label { display: inline-flex; align-items: center; gap: 2px; color: var(--ds-color-text-secondary); font-size: 14px; }
+    .ds-field__label b { color: var(--ds-color-danger); font-weight: 600; }
+    .ds-textarea { width: 100%; min-height: 96px; padding: 8px 12px; color: var(--ds-color-text); background: var(--ds-color-white); border: 1px solid var(--ds-color-border); border-radius: 4px; resize: vertical; font-size: 14px; outline: none; font-family: inherit; box-sizing: border-box; }
+    .ds-textarea:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px var(--ds-color-focus-ring); }
+    .ds-textarea::placeholder { color: var(--ds-color-text-placeholder); }
+    .ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 72px; height: 36px; padding: 0 16px; border: 1px solid #dcdce0; border-radius: 4px; background: var(--ds-color-white); color: var(--ds-color-text); cursor: pointer; font-size: 14px; }
+    .ds-btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .ds-btn--primary { color: var(--ds-color-white); background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .ds-btn--primary:hover { background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); color: var(--ds-color-white); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>审核意见弹窗 DSAuditOpinionModal</h1>
+    <p>审核操作（通过/不通过/退回）时弹出，用于填写审核意见</p>
+  </header>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">触发</h2>
+    <p class="demo-section__desc">点击不同按钮触发不同的弹窗类型。</p>
+    <button class="btn" onclick="openModal('pass')">审核通过</button>
+    <button class="btn danger" onclick="openModal('reject')">审核不通过</button>
+    <button class="btn warning" onclick="openModal('return')">退回修改</button>
+  </section>
+
+  <section class="demo-section">
+    <h2 class="demo-section__title">仅意见字段</h2>
+    <p class="demo-section__desc">不传 record 时仅展示意见字段。</p>
+    <button class="btn" onclick="openModal('pass-no-record')">打开弹窗</button>
+  </section>
+</div>
+
+<!-- Modal -->
+<div id="modal-overlay" class="ds-modal__overlay" onclick="closeOnOverlay(event)">
+  <div class="ds-modal">
+    <div class="ds-modal__header">
+      <h3 id="modal-title">审核通过</h3>
+      <button class="ds-modal__close" onclick="closeModal()" aria-label="关闭">&times;</button>
+    </div>
+    <div class="ds-modal__body">
+      <div class="ds-audit-opinion-modal__summary" id="modal-summary">
+        <span>审核对象</span>
+        <strong id="modal-name">张三 (T20210001)</strong>
+      </div>
+      <div class="ds-field">
+        <label class="ds-field__label"><span id="required-mark">意见</span><b>*</b></label>
+        <textarea class="ds-textarea" id="opinion-input" placeholder="请输入审核意见"></textarea>
+      </div>
+    </div>
+    <div class="ds-modal__footer">
+      <button class="ds-btn" onclick="closeModal()">取消</button>
+      <button class="ds-btn ds-btn--primary" onclick="submit()">提交</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const titleMap = { pass: '审核通过', reject: '审核不通过', return: '退回修改' };
+const placeholderMap = { pass: '请输入审核意见（可选）', reject: '请输入不通过理由', return: '请输入退回原因' };
+const requiredMap = { pass: '', reject: '*', return: '*' };
+
+function openModal(type) {
+  const t = type.indexOf('-no-record') >= 0 ? type.replace('-no-record', '') : type;
+  document.getElementById('modal-title').textContent = titleMap[t];
+  document.getElementById('opinion-input').placeholder = placeholderMap[t];
+  document.getElementById('modal-summary').style.display = type.indexOf('no-record') >= 0 ? 'none' : 'grid';
+  document.getElementById('opinion-input').value = '';
+  document.getElementById('modal-overlay').classList.add('is-open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('is-open');
+}
+
+function closeOnOverlay(e) {
+  if (e.target === e.currentTarget) closeModal();
+}
+
+function submit() {
+  const v = document.getElementById('opinion-input').value.trim();
+  if (!v && document.getElementById('opinion-input').placeholder.indexOf('可选') < 0) {
+    alert('请填写审核意见');
+    return;
+  }
+  alert('提交成功');
+  closeModal();
+}
+</script>
+</body>
+</html>

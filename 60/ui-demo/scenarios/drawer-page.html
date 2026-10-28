@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>抽屉页面</title>
+  <link rel="stylesheet" href="../packages/design-system/src/tokens.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    body {
+      color: #000;
+      background: #f5f6f8;
+      font-family: var(--ds-font-family);
+      font-size: 14px;
+      line-height: 22px;
+      overflow: hidden;
+    }
+
+    .demo-page {
+      min-height: 100%;
+      padding: 24px;
+    }
+
+    .demo-card {
+      height: calc(100vh - 48px);
+      min-height: 560px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(31, 41, 55, .05);
+    }
+
+    .demo-heading {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .demo-heading h1 {
+      flex: 1;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 26px;
+    }
+
+    .demo-button,
+    .drawer-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 32px;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+      transition:
+        color 120ms cubic-bezier(.2, 0, 0, 1),
+        border-color 120ms cubic-bezier(.2, 0, 0, 1),
+        background-color 120ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .demo-button:hover,
+    .drawer-button:hover {
+      color: #333fff;
+      border-color: #333fff;
+    }
+
+    .drawer-button.is-primary {
+      color: #fff;
+      background: #333fff;
+      border-color: #333fff;
+    }
+
+    .drawer-button.is-primary:hover {
+      color: #fff;
+      background: #202de8;
+      border-color: #202de8;
+    }
+
+    .demo-filter {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr)) auto;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #fafafc 0%, rgba(255, 255, 255, 0) 100%);
+      border-radius: 8px;
+    }
+
+    .demo-placeholder {
+      height: 32px;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+    }
+
+    .demo-table {
+      overflow: hidden;
+      border: 1px solid #eeeef0;
+    }
+
+    .demo-table-head,
+    .demo-table-row {
+      display: grid;
+      grid-template-columns: 48px repeat(4, minmax(120px, 1fr));
+      min-height: 40px;
+    }
+
+    .demo-table-head {
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .demo-table-row {
+      min-height: 46px;
+    }
+
+    .demo-table span {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+    }
+
+    .drawer-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: flex-end;
+      background: rgba(0, 0, 0, .28);
+      opacity: 1;
+      transition: opacity 180ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .drawer-layer[hidden] {
+      display: none;
+    }
+
+    .drawer-panel {
+      display: flex;
+      width: min(900px, calc(100vw - 48px));
+      height: 100%;
+      flex-direction: column;
+      background: #fff;
+      border-left: 1px solid #f6f6f7;
+      box-shadow: -12px 0 32px rgba(31, 41, 55, .12);
+      transform: translateX(0);
+      animation: drawer-enter 180ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    @keyframes drawer-enter {
+      from {
+        transform: translateX(32px);
+        opacity: .72;
+      }
+    }
+
+    .drawer-header {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 8px 12px 8px 20px;
+      background: #fff;
+    }
+
+    .drawer-title {
+      flex: 1;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .drawer-close {
+      display: inline-grid;
+      width: 32px;
+      height: 32px;
+      padding: 8px;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      border-radius: 4px;
+    }
+
+    .drawer-close:hover {
+      background: #f6f6f7;
+    }
+
+    .drawer-close img {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    .drawer-body {
+      flex: 1;
+      min-height: 0;
+      padding: 0 20px 20px;
+      overflow: auto;
+      scrollbar-color: #c9cdd4 transparent;
+      scrollbar-width: thin;
+    }
+
+    .drawer-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(370px, 1fr));
+      gap: 20px 16px;
+    }
+
+    .form-item {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1fr);
+      align-items: start;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .form-item.is-wide {
+      grid-template-columns: 94px minmax(0, 1fr);
+    }
+
+    .form-label {
+      display: flex;
+      min-height: 32px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 2px;
+      color: #505266;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: right;
+    }
+
+    .form-item.is-textarea .form-label {
+      align-items: flex-start;
+      padding-top: 6px;
+    }
+
+    .required-mark {
+      color: #fa5151;
+    }
+
+    .form-control {
+      position: relative;
+      min-width: 0;
+    }
+
+    .drawer-input,
+    .select-trigger,
+    .drawer-textarea {
+      width: 100%;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      outline: none;
+      transition:
+        border-color 120ms cubic-bezier(.2, 0, 0, 1),
+        box-shadow 120ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .drawer-input,
+    .select-trigger {
+      height: 32px;
+      padding: 5px 12px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .drawer-input::placeholder,
+    .drawer-textarea::placeholder {
+      color: #9697a3;
+    }
+
+    .drawer-input:hover,
+    .select-trigger:not(:disabled):hover,
+    .textarea-shell:hover {
+      border-color: #b7b9c6;
+    }
+
+    .drawer-input:focus,
+    .select.is-open .select-trigger,
+    .drawer-textarea:focus {
+      border-color: #333fff;
+      box-shadow: 0 0 0 2px rgba(51, 63, 255, .12);
+    }
+
+    .select-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .select-trigger:disabled {
+      color: #505266;
+      background: #f6f6f7;
+      cursor: not-allowed;
+    }
+
+    .select-value {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .select-value.is-placeholder {
+      color: #9697a3;
+    }
+
+    .select-arrow {
+      display: block;
+      width: 14px;
+      height: 14px;
+      flex: none;
+      transition: transform 120ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .select.is-open .select-arrow {
+      transform: rotate(180deg);
+    }
+
+    .select-menu {
+      position: absolute;
+      top: 36px;
+      right: 0;
+      left: 0;
+      z-index: 12;
+      display: none;
+      padding: 4px;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 4px;
+      box-shadow: 0 6px 16px rgba(70, 79, 105, .16);
+    }
+
+    .select.is-open .select-menu {
+      display: block;
+    }
+
+    .select-option {
+      display: flex;
+      width: 100%;
+      height: 32px;
+      align-items: center;
+      padding: 0 8px;
+      color: #000;
+      background: #fff;
+      border: 0;
+      border-radius: 4px;
+      text-align: left;
+    }
+
+    .select-option:hover {
+      background: #f6f6f7;
+    }
+
+    .select-option.is-selected {
+      color: #333fff;
+      font-weight: 600;
+      background: #f5f5ff;
+    }
+
+    .textarea-shell {
+      position: relative;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+
+    .drawer-textarea {
+      display: block;
+      height: 100%;
+      min-height: 82px;
+      padding: 5px 12px 25px;
+      font-size: 14px;
+      line-height: 22px;
+      resize: none;
+    }
+
+    .form-item[data-textarea-size="large"] .drawer-textarea {
+      min-height: 104px;
+    }
+
+    .textarea-count {
+      position: absolute;
+      right: 12px;
+      bottom: 5px;
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+      pointer-events: none;
+    }
+
+    .resize-mark {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: block;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+    }
+
+    .drawer-footer {
+      display: flex;
+      min-height: 56px;
+      flex: none;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #fff;
+    }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      z-index: 200;
+      display: flex;
+      min-height: 40px;
+      align-items: center;
+      padding: 8px 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #eeeef0;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, .16);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -8px);
+      transition: opacity 160ms, transform 160ms;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 860px) {
+      .drawer-panel {
+        width: min(560px, 100vw);
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .demo-page {
+        padding: 12px;
+      }
+
+      .demo-filter {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-table {
+        overflow-x: auto;
+      }
+
+      .drawer-panel {
+        width: 100vw;
+        max-width: none;
+      }
+
+      .drawer-header {
+        padding-left: 16px;
+      }
+
+      .drawer-body {
+        padding-right: 16px;
+        padding-left: 16px;
+      }
+
+      .form-item,
+      .form-item.is-wide {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .form-label,
+      .form-item.is-textarea .form-label {
+        min-height: auto;
+        justify-content: flex-start;
+        padding-top: 0;
+        text-align: left;
+      }
+
+      .drawer-footer {
+        padding-right: 16px;
+        padding-left: 16px;
+      }
+
+      .drawer-footer .drawer-button {
+        min-width: 0;
+        padding-right: 12px;
+        padding-left: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo-page" aria-label="科目管理">
+    <section class="demo-card">
+      <header class="demo-heading">
+        <h1>科目管理</h1>
+        <button class="demo-button" id="openDrawer" type="button">新增科目</button>
+      </header>
+      <div class="demo-filter" aria-hidden="true">
+        <span class="demo-placeholder"></span>
+        <span class="demo-placeholder"></span>
+        <span class="demo-placeholder"></span>
+        <span class="demo-placeholder"></span>
+      </div>
+      <div class="demo-table" aria-hidden="true">
+        <div class="demo-table-head">
+          <span></span><span>科目类别</span><span>科目代码</span><span>科目名称</span><span>单元</span>
+        </div>
+        <div class="demo-table-row">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="demo-table-row">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="drawer-layer" id="drawerLayer">
+    <aside
+      class="drawer-panel"
+      id="drawerPanel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drawerTitle"
+    >
+      <header class="drawer-header">
+        <h2 class="drawer-title" id="drawerTitle">新增科目</h2>
+        <button class="drawer-close" id="closeDrawer" type="button" aria-label="关闭抽屉">
+          <img src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_233b9b60.svg" alt="" />
+        </button>
+      </header>
+
+      <div class="drawer-body">
+        <form class="drawer-form" id="subjectForm">
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="form-label" for="subjectType">科目类别</label>
+              <div class="form-control select">
+                <button class="select-trigger" id="subjectType" type="button" disabled>
+                  <span class="select-value">初试</span>
+                  <img class="select-arrow" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_001956de.svg" alt="" />
+                </button>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label" id="assessmentLabel">考核方式</span>
+              <div class="form-control select" data-select>
+                <button class="select-trigger" type="button" aria-labelledby="assessmentLabel" aria-expanded="false">
+                  <span class="select-value is-placeholder">请选择</span>
+                  <img class="select-arrow" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_001956de.svg" alt="" />
+                </button>
+                <div class="select-menu" role="listbox">
+                  <button class="select-option" type="button" role="option">笔试</button>
+                  <button class="select-option" type="button" role="option">面试</button>
+                  <button class="select-option" type="button" role="option">机试</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label" id="propositionLabel"><span class="required-mark">*</span>命题性质</span>
+              <div class="form-control select" data-select>
+                <button class="select-trigger" type="button" aria-labelledby="propositionLabel" aria-expanded="false">
+                  <span class="select-value is-placeholder">请选择</span>
+                  <img class="select-arrow" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_001956de.svg" alt="" />
+                </button>
+                <div class="select-menu" role="listbox">
+                  <button class="select-option" type="button" role="option">自命题</button>
+                  <button class="select-option" type="button" role="option">全国统考</button>
+                  <button class="select-option" type="button" role="option">联合命题</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label" id="collegeLabel"><span class="required-mark">*</span>命题院系</span>
+              <div class="form-control select" data-select>
+                <button class="select-trigger" type="button" aria-labelledby="collegeLabel" aria-expanded="false">
+                  <span class="select-value is-placeholder">请选择</span>
+                  <img class="select-arrow" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_001956de.svg" alt="" />
+                </button>
+                <div class="select-menu" role="listbox">
+                  <button class="select-option" type="button" role="option">计算机学院</button>
+                  <button class="select-option" type="button" role="option">管理学院</button>
+                  <button class="select-option" type="button" role="option">艺术设计学院</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="subjectCode"><span class="required-mark">*</span>科目代码</label>
+              <div class="form-control">
+                <input class="drawer-input" id="subjectCode" name="subjectCode" type="text" placeholder="请输入" />
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="subjectName"><span class="required-mark">*</span>科目名称</label>
+              <div class="form-control">
+                <input class="drawer-input" id="subjectName" name="subjectName" type="text" placeholder="请输入" />
+              </div>
+            </div>
+
+            <div class="form-item">
+              <span class="form-label" id="unitLabel"><span class="required-mark">*</span>单元</span>
+              <div class="form-control select" data-select>
+                <button class="select-trigger" type="button" aria-labelledby="unitLabel" aria-expanded="false">
+                  <span class="select-value is-placeholder">请选择</span>
+                  <img class="select-arrow" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_001956de.svg" alt="" />
+                </button>
+                <div class="select-menu" role="listbox">
+                  <button class="select-option" type="button" role="option">第一单元</button>
+                  <button class="select-option" type="button" role="option">第二单元</button>
+                  <button class="select-option" type="button" role="option">第三单元</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label" for="fullScore">满分分值</label>
+              <div class="form-control">
+                <input class="drawer-input" id="fullScore" name="fullScore" type="number" min="0" placeholder="请输入" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-item is-wide is-textarea">
+            <label class="form-label" for="references">参考书目</label>
+            <div class="form-control textarea-shell">
+              <textarea class="drawer-textarea" id="references" name="references" maxlength="250" placeholder="请输入"></textarea>
+              <span class="textarea-count" data-count-for="references">0/250</span>
+              <img class="resize-mark" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_005e1830.svg" alt="" />
+            </div>
+          </div>
+
+          <div class="form-item is-wide is-textarea" data-textarea-size="large">
+            <label class="form-label" for="tools">携带工具</label>
+            <div class="form-control textarea-shell">
+              <textarea class="drawer-textarea" id="tools" name="tools" maxlength="1000" placeholder="请输入"></textarea>
+              <span class="textarea-count" data-count-for="tools">0/1000</span>
+              <img class="resize-mark" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_005e1830.svg" alt="" />
+            </div>
+          </div>
+
+          <div class="form-item is-wide is-textarea" data-textarea-size="large">
+            <label class="form-label" for="remark">备注</label>
+            <div class="form-control textarea-shell">
+              <textarea class="drawer-textarea" id="remark" name="remark" maxlength="1000" placeholder="请输入"></textarea>
+              <span class="textarea-count" data-count-for="remark">0/1000</span>
+              <img class="resize-mark" src="../../.mastergo/195991886967017-2-003917/asset/icons/svg_005e1830.svg" alt="" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <footer class="drawer-footer">
+        <button class="drawer-button" id="cancelDrawer" type="button">取消</button>
+        <button class="drawer-button" type="submit" form="subjectForm" data-save="close">保存</button>
+        <button class="drawer-button is-primary" type="submit" form="subjectForm" data-save="continue">保存并新增</button>
+      </footer>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">保存成功</div>
+
+  <script>
+    const drawerLayer = document.querySelector('#drawerLayer');
+    const drawerPanel = document.querySelector('#drawerPanel');
+    const openDrawerButton = document.querySelector('#openDrawer');
+    const closeDrawerButton = document.querySelector('#closeDrawer');
+    const cancelDrawerButton = document.querySelector('#cancelDrawer');
+    const form = document.querySelector('#subjectForm');
+    const toast = document.querySelector('#toast');
+    let lastFocusedElement = openDrawerButton;
+    let toastTimer;
+
+    function openDrawer() {
+      lastFocusedElement = document.activeElement;
+      drawerLayer.hidden = false;
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => closeDrawerButton.focus());
+    }
+
+    function closeDrawer() {
+      drawerLayer.hidden = true;
+      document.body.style.overflow = '';
+      lastFocusedElement?.focus();
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 1800);
+    }
+
+    function closeAllSelects(except) {
+      document.querySelectorAll('[data-select].is-open').forEach((select) => {
+        if (select === except) return;
+        select.classList.remove('is-open');
+        select.querySelector('.select-trigger').setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    document.querySelectorAll('[data-select]').forEach((select) => {
+      const trigger = select.querySelector('.select-trigger');
+      const value = select.querySelector('.select-value');
+      const options = select.querySelectorAll('.select-option');
+
+      trigger.addEventListener('click', () => {
+        const willOpen = !select.classList.contains('is-open');
+        closeAllSelects(select);
+        select.classList.toggle('is-open', willOpen);
+        trigger.setAttribute('aria-expanded', String(willOpen));
+      });
+
+      options.forEach((option) => {
+        option.addEventListener('click', () => {
+          options.forEach((item) => {
+            item.classList.toggle('is-selected', item === option);
+            item.setAttribute('aria-selected', String(item === option));
+          });
+          value.textContent = option.textContent;
+          value.classList.remove('is-placeholder');
+          select.classList.remove('is-open');
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.focus();
+        });
+      });
+    });
+
+    document.querySelectorAll('.drawer-textarea').forEach((textarea) => {
+      const counter = document.querySelector(`[data-count-for="${textarea.id}"]`);
+      textarea.addEventListener('input', () => {
+        counter.textContent = `${textarea.value.length}/${textarea.maxLength}`;
+      });
+    });
+
+    openDrawerButton.addEventListener('click', openDrawer);
+    closeDrawerButton.addEventListener('click', closeDrawer);
+    cancelDrawerButton.addEventListener('click', closeDrawer);
+
+    drawerLayer.addEventListener('click', (event) => {
+      if (event.target === drawerLayer) closeDrawer();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-select]')) closeAllSelects();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !drawerLayer.hidden) closeDrawer();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const action = event.submitter?.dataset.save;
+      showToast(action === 'continue' ? '保存成功，已清空表单' : '保存成功');
+
+      if (action === 'continue') {
+        form.reset();
+        document.querySelectorAll('[data-select]').forEach((select) => {
+          select.querySelector('.select-value').textContent = '请选择';
+          select.querySelector('.select-value').classList.add('is-placeholder');
+          select.querySelectorAll('.select-option').forEach((option) => option.classList.remove('is-selected'));
+        });
+        document.querySelectorAll('.textarea-count').forEach((counter) => {
+          const textarea = document.querySelector(`#${counter.dataset.countFor}`);
+          counter.textContent = `0/${textarea.maxLength}`;
+        });
+        document.querySelector('#subjectCode').focus();
+      } else {
+        window.setTimeout(closeDrawer, 500);
+      }
+    });
+
+    drawerPanel.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') return;
+      const focusable = [...drawerPanel.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), textarea:not([disabled])'
+      )].filter((element) => element.offsetParent !== null);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  </script>
+</body>
+</html>

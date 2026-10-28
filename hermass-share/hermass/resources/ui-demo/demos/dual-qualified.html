@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>双师认定 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>body{margin:0}</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">双师认定</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">师</span>双师素质教师认定</h1>
+        <div class="ap-actions"><span class="ap-tag gray" style="height:36px;padding:0 16px">当前认定状态：未认定</span></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>认定条件自查</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>认定条件</th><th>具体要求</th><th>本人情况</th><th>是否满足</th></tr></thead>
+            <tbody>
+              <tr><td>专业技术职称</td><td>具有讲师及以上职称</td><td>副教授</td><td><span class="ap-tag green">满足</span></td></tr>
+              <tr><td>企业实践经历</td><td>近5年累计企业实践 ≥ 6 个月</td><td>已完成 32 天，待补充</td><td><span class="ap-tag orange">待完善</span></td></tr>
+              <tr><td>职业资格/行业证书</td><td>持有相关行业职业资格证书</td><td>高级电工证、智能制造系统集成证</td><td><span class="ap-tag green">满足</span></td></tr>
+              <tr><td>实践教学业绩</td><td>主持/参与实训基地建设或技能竞赛指导</td><td>指导省赛获奖2项</td><td><span class="ap-tag green">满足</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="ap-cols-2">
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>提交认定申请</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-form-grid">
+              <div class="ap-field"><label><span class="req">*</span>申请类型</label><select><option>首次认定</option><option>到期复核</option></select></div>
+              <div class="ap-field"><label><span class="req">*</span>认定层级</label><select><option>校级双师素质教师</option><option>省级双师素质教师</option></select></div>
+              <div class="ap-field full"><label><span class="req">*</span>企业实践经历说明</label><textarea placeholder="请填写实践单位、岗位、起止时间及主要工作内容"></textarea></div>
+              <div class="ap-field full"><label>佐证材料上传</label>
+                <span class="ap-upload">⬆ 上传职业资格证书、企业实践证明、获奖证书等扫描件</span>
+                <span class="hint">支持 jpg、png、pdf，单个文件不超过 10MB，最多9个文件</span>
+              </div>
+            </div>
+            <div class="ap-form-actions">
+              <button class="ap-btn" type="button">存为草稿</button>
+              <button class="ap-btn primary" type="button">提交申请</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="ap-panel">
+          <div class="ap-panel-head"><h2><span class="dot"></span>认定记录</h2></div>
+          <div class="ap-panel-body">
+            <div class="ap-timeline">
+              <div class="ap-tl-item done"><span class="ap-tl-dot">✓</span><div class="ap-tl-body"><h4>2022年度认定</h4><p>结果：通过校级双师素质教师认定，有效期至 2025-08</p></div></div>
+              <div class="ap-tl-item done"><span class="ap-tl-dot">✓</span><div class="ap-tl-body"><h4>2025年度复核提醒</h4><p>认定有效期即将到期，建议尽快提交复核材料</p></div></div>
+              <div class="ap-tl-item current"><span class="ap-tl-dot">!</span><div class="ap-tl-body"><h4>本次申请：到期复核</h4><p>状态：材料准备中</p></div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeFeature:'dual-qualified', versionLabel:'双师认定', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'dual-qualified',label:'双师认定',closable:true}]
+});
+</script>
+</body>
+</html>

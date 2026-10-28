@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>教学档案袋 - 框架2</title>
+<link rel="stylesheet" href="../packages/design-system/src/base.css" />
+<link rel="stylesheet" href="../framework/theme.css" />
+<link rel="stylesheet" href="../framework/staff-app-pages.css" />
+<style>
+  body{margin:0}
+  .progress-bar{height:8px;border-radius:4px;background:var(--ap-line);overflow:hidden}
+  .progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#5b8cff,#3565ea);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="app-page app-page-frame">
+    <div class="ap-wrap">
+      <div class="ap-crumb"><a href="./staff-portal-homepage.html">首页</a> / <span class="cur">教学档案袋</span></div>
+      <div class="ap-title-row">
+        <h1><span class="badge">档</span>我的教学档案袋</h1>
+        <div class="ap-actions"><button class="ap-btn" type="button">分享/导出档案</button><button class="ap-btn primary" type="button">+ 上传材料</button></div>
+      </div>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>档案完整度</h2><span style="color:var(--ap-blue);font-weight:700">82%</span></div>
+        <div class="ap-panel-body">
+          <div class="progress-bar"><i style="width:82%"></i></div>
+          <p style="margin:12px 0 0;color:var(--ap-muted);font-size:13px">已根据现有材料生成个人教学画像，建议补充"教学反思"与"听课评议"相关材料以完善档案。</p>
+        </div>
+      </section>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>档案分类</h2></div>
+        <div class="ap-panel-body ap-card-grid">
+          <div class="ap-mini-card"><h4>课程教学材料</h4><p>教案、课件、教学大纲、试卷等</p><p>已收录 24 份</p></div>
+          <div class="ap-mini-card"><h4>实践教学记录</h4><p>实训指导书、企业实践报告</p><p>已收录 9 份</p></div>
+          <div class="ap-mini-card"><h4>学生指导成果</h4><p>毕业设计指导、竞赛指导记录</p><p>已收录 12 份</p></div>
+          <div class="ap-mini-card"><h4>听课评议与反馈</h4><p>同行听课记录、教学督导意见</p><p>已收录 3 份 · 建议补充</p></div>
+          <div class="ap-mini-card"><h4>教研活动与培训</h4><p>教研活动记录、培训证书</p><p>已收录 7 份</p></div>
+          <div class="ap-mini-card"><h4>荣誉与获奖证书</h4><p>教学比赛、表彰奖励证书</p><p>已收录 6 份</p></div>
+        </div>
+      </section>
+
+      <section class="ap-panel">
+        <div class="ap-panel-head"><h2><span class="dot"></span>最近上传</h2></div>
+        <div class="ap-panel-body" style="padding:0">
+          <table class="ap-table">
+            <thead><tr><th>材料名称</th><th>所属分类</th><th>上传时间</th><th>关联学期</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>《机电一体化技术》课程教学大纲（2026版）.pdf</td><td>课程教学材料</td><td>2026-04-22</td><td>2025-2026学年第二学期</td><td class="link">预览</td></tr>
+              <tr><td>智能产线实训指导书.docx</td><td>实践教学记录</td><td>2026-04-08</td><td>2025-2026学年第二学期</td><td class="link">预览</td></tr>
+              <tr><td>第十二届"挑战杯"指导记录.pdf</td><td>学生指导成果</td><td>2026-03-15</td><td>2025-2026学年第二学期</td><td class="link">预览</td></tr>
+              <tr><td>校级教学督导听课评议表.pdf</td><td>听课评议与反馈</td><td>2026-01-09</td><td>2025-2026学年第一学期</td><td class="link">预览</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.3"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+WiseFramework2.mount({
+  activeApp:'home', activeFeature:'teaching-portfolio', versionLabel:'教学档案袋', userName:'金晓智',
+  secondaryNav:{items:[]},
+  tabs:[{key:'teaching-portfolio',label:'教学档案袋',closable:true}]
+});
+</script>
+</body>
+</html>

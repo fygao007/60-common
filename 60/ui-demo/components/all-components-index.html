@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ant 全量目录</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../framework/theme.css" />
+  <style>
+    body {
+      margin: 0;
+      color: #000;
+      background: #fff;
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    .library-page {
+      display: flex;
+      min-height: 100%;
+      background: #fff;
+    }
+
+    .library-stage {
+      flex: 1;
+      padding: 16px 16px 72px;
+      background: #fff;
+    }
+
+    .library-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .library-title {
+      position: relative;
+      display: inline-flex;
+      margin: 0;
+      padding: 2px;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+
+    .library-title::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      height: 8px;
+      background: #d6d9ff;
+    }
+
+    .library-title span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .library-desc {
+      margin: 6px 0 0;
+      color: #737585;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .library-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .library-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 16px;
+      color: #000;
+      background: #fff;
+      border: 1px solid #dcdce0;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .library-btn.primary {
+      color: #fff;
+      background: #333fff;
+      border-color: #333fff;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      width: min(1280px, 100%);
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      padding: 14px 16px;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .summary-card span {
+      display: block;
+      color: #737585;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    .library-table-wrap {
+      width: min(1280px, 100%);
+      overflow: auto;
+      border: 1px solid #eeeef0;
+      background: #fff;
+    }
+
+    .library-table {
+      width: 100%;
+      min-width: 920px;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .library-table th,
+    .library-table td {
+      height: 44px;
+      padding: 10px 12px;
+      text-align: left;
+      border-right: 1px solid #eeeef0;
+      border-bottom: 1px solid #eeeef0;
+      white-space: nowrap;
+    }
+
+    .library-table th {
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .library-table td:last-child,
+    .library-table th:last-child {
+      border-right: 0;
+    }
+
+    .component-link {
+      color: #333fff;
+      font-weight: 600;
+    }
+
+    .status-tag,
+    .type-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .status-tag {
+      color: #e78915;
+      background: #fff5cc;
+    }
+
+    .status-tag.is-built {
+      color: #168a66;
+      background: #e9f8ef;
+    }
+
+    .status-tag.is-demo {
+      color: #333fff;
+      background: #ebecff;
+    }
+
+    .status-tag.is-planned {
+      color: #737585;
+      background: #eeeef0;
+    }
+
+    .type-tag {
+      color: #505266;
+      background: #eeeef0;
+    }
+
+    .category-row td {
+      height: 36px;
+      color: #000;
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1100px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .library-head {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="library-page">
+    <section class="library-stage">
+      <header class="library-head">
+        <div>
+          <h1 class="library-title"><span>Ant 全量目录</span></h1>
+          <p class="library-desc">按 Ant Design 组件体系建立全量待办目录。这里用于排查缺口；已沉淀组件请看“当前组件”。</p>
+        </div>
+        <div class="library-actions">
+          <a class="library-btn" href="./component-library-index.html">功能索引</a>
+          <a class="library-btn primary" href="./current-components-index.html">当前组件</a>
+        </div>
+      </header>
+
+      <section class="summary-grid" aria-label="组件统计">
+        <article class="summary-card"><span>组件总数</span><strong id="totalCount">0</strong></article>
+        <article class="summary-card"><span>组件分类</span><strong id="categoryCount">0</strong></article>
+        <article class="summary-card"><span>已组件化</span><strong id="builtCount">0</strong></article>
+        <article class="summary-card"><span>已有交互页</span><strong id="demoCount">0</strong></article>
+      </section>
+
+      <section class="library-table-wrap">
+        <table class="library-table">
+          <thead>
+            <tr>
+              <th style="width: 150px">分类</th>
+              <th style="width: 220px">组件</th>
+              <th>用途</th>
+              <th style="width: 120px">类型</th>
+              <th style="width: 120px">状态</th>
+              <th style="width: 120px">入口</th>
+            </tr>
+          </thead>
+          <tbody id="componentRows"></tbody>
+        </table>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script>
+  function withFramework2Version(href) {
+    if (!href || !href.includes('.html') || href.includes('framework=2')) return href;
+    const [path, hash] = href.split('#');
+    return `${path}${path.includes('?') ? '&' : '?'}framework=2.2.3${hash ? `#${hash}` : ''}`;
+  }
+
+  const components = [
+    ['通用', 'Button', '按钮、主要操作、次要操作、危险操作', 'General'],
+    ['通用', 'LinkButton', '链接样式按钮、表格行内操作、轻量文本操作', '60 Component', './link-button-components.html'],
+    ['通用', 'LinkButtonGroup', '链接按钮组、表格操作列组合、危险链接操作', '60 Component', './link-button-components.html'],
+    ['通用', 'FloatButton', '悬浮快捷操作', 'General'],
+    ['通用', 'Icon', '图标和图标按钮', 'General'],
+    ['通用', 'Typography', '标题、正文、链接、状态文字', 'General'],
+    ['布局', 'Divider', '分割线', 'Layout'],
+    ['布局', 'Flex', '弹性布局', 'Layout'],
+    ['布局', 'Grid', '栅格布局', 'Layout'],
+    ['布局', 'Layout', '页面框架布局', 'Layout'],
+    ['布局', 'Space', '间距组合', 'Layout'],
+    ['布局', 'Splitter', '分割面板', 'Layout'],
+    ['导航', 'Anchor', '锚点导航', '60 Component', './anchor-components.html'],
+    ['导航', 'Breadcrumb', '页面层级路径', 'Navigation'],
+    ['导航', 'Dropdown', '更多操作菜单', 'Navigation'],
+    ['导航', 'Menu', '侧边菜单、功能菜单', 'Navigation'],
+    ['导航', 'Pagination', '分页器', 'Navigation'],
+    ['导航', 'Steps', '流程步骤', 'Navigation'],
+    ['导航', 'Tabs', '标签页切换', 'Navigation'],
+    ['数据录入', 'AutoComplete', '自动完成', 'Data Entry'],
+    ['数据录入', 'Cascader', '级联选择', 'Data Entry'],
+    ['数据录入', 'Checkbox', '多选', 'Data Entry'],
+    ['数据录入', 'ColorPicker', '颜色选择器', 'Data Entry'],
+    ['数据录入', 'DatePicker', '日期选择', 'Data Entry'],
+    ['数据录入', 'Form', '表单容器和校验', 'Data Entry'],
+    ['数据录入', 'Input', '单行文本输入', 'Data Entry'],
+    ['数据录入', 'InputNumber', '数字输入', 'Data Entry'],
+    ['数据录入', 'Mentions', '提及输入', 'Data Entry'],
+    ['数据录入', 'Radio', '单选', 'Data Entry'],
+    ['数据录入', 'Rate', '评分', 'Data Entry'],
+    ['数据录入', 'Select', '下拉选择', 'Data Entry'],
+    ['数据录入', 'Slider', '滑动输入', 'Data Entry'],
+    ['数据录入', 'Switch', '开关', 'Data Entry'],
+    ['数据录入', 'TimePicker', '时间选择', 'Data Entry'],
+    ['数据录入', 'Transfer', '穿梭框', 'Data Entry'],
+    ['数据录入', 'TreeSelect', '树形下拉选择', 'Data Entry'],
+    ['数据录入', 'Upload', '上传', 'Data Entry'],
+    ['数据展示', 'Avatar', '头像', 'Data Display'],
+    ['数据展示', 'Badge', '徽标', 'Data Display'],
+    ['数据展示', 'Calendar', '日历', 'Data Display'],
+    ['数据展示', 'Card', '卡片', 'Data Display'],
+    ['数据展示', 'Carousel', '走马灯', 'Data Display'],
+    ['数据展示', 'Collapse', '折叠面板', 'Data Display'],
+    ['数据展示', 'Descriptions', '描述列表', 'Data Display'],
+    ['数据展示', 'Empty', '空状态', 'Data Display'],
+    ['数据展示', 'Image', '图片预览', 'Data Display'],
+    ['数据展示', 'List', '列表', 'Data Display'],
+    ['数据展示', 'Popover', '气泡卡片', 'Data Display'],
+    ['数据展示', 'QRCode', '二维码', 'Data Display'],
+    ['数据展示', 'Segmented', '分段控制器', 'Data Display'],
+    ['数据展示', 'Statistic', '统计数值', 'Data Display'],
+    ['数据展示', 'Table', '表格', 'Data Display'],
+    ['数据展示', 'Tag', '标签', 'Data Display'],
+    ['数据展示', 'Timeline', '时间轴', 'Data Display'],
+    ['数据展示', 'Tooltip', '文字提示', 'Data Display'],
+    ['数据展示', 'Tour', '漫游式引导', 'Data Display'],
+    ['数据展示', 'Tree', '树', 'Data Display'],
+    ['反馈', 'Alert', '警告提示', 'Feedback'],
+    ['反馈', 'Drawer', '抽屉', 'Feedback'],
+    ['反馈', 'Message', '全局提示', 'Feedback'],
+    ['反馈', 'Modal', '对话框', 'Feedback'],
+    ['反馈', 'Notification', '通知提醒', 'Feedback'],
+    ['反馈', 'Popconfirm', '气泡确认框', 'Feedback'],
+    ['反馈', 'Progress', '进度条', 'Feedback'],
+    ['反馈', 'Result', '结果页', 'Feedback'],
+    ['反馈', 'Skeleton', '骨架屏', 'Feedback'],
+    ['反馈', 'Spin', '加载中', 'Feedback'],
+    ['反馈', 'Watermark', '水印', 'Feedback'],
+    ['其他', 'Affix', '固钉', 'Other'],
+    ['其他', 'App', '应用包裹组件', 'Other'],
+    ['其他', 'ConfigProvider', '全局配置', 'Other'],
+    ['其他', 'Util', '工具方法', 'Other']
+  ].map(([category, name, usage, type, href]) => [
+    category,
+    name,
+    usage,
+    type,
+    href || `./ant-components-page.html#official-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  ]);
+
+  const capabilityMap = {
+    Button: ['已组件化', 'is-built', './button-states.html'],
+    LinkButton: ['已组件化', 'is-built', './link-button-components.html'],
+    LinkButtonGroup: ['已组件化', 'is-built', './link-button-components.html'],
+    Icon: ['已组件化', 'is-built', './ant-components-page.html#official-button'],
+    Anchor: ['已组件化', 'is-built', './anchor-components.html'],
+    Pagination: ['已组件化', 'is-built', './basic-table-page.html'],
+    Steps: ['已组件化', 'is-built', './steps-components.html'],
+    Tabs: ['已组件化', 'is-built', './ant-components-page.html#official-tabs'],
+    Cascader: ['已组件化', 'is-built', './form-cascader-states.html'],
+    Transfer: ['已组件化', 'is-built', './transfer-components.html'],
+    DatePicker: ['已组件化', 'is-built', './form-date-picker-states.html'],
+    Input: ['已组件化', 'is-built', './form-input-states.html'],
+    Radio: ['已组件化', 'is-built', './form-radio-group-states.html'],
+    Select: ['已组件化', 'is-built', './form-select-states.html'],
+    Switch: ['已组件化', 'is-built', './form-switch-states.html'],
+    TimePicker: ['已组件化', 'is-built', './form-time-picker-states.html'],
+    Table: ['已组件化', 'is-built', './basic-table-page.html'],
+    Card: ['已组件化', 'is-built', './card-components.html'],
+    Empty: ['已组件化', 'is-built', './empty-state-components.html'],
+    Tag: ['已组件化', 'is-built', './tag-components.html'],
+    Drawer: ['已组件化', 'is-built', './ant-components-page.html#official-drawer'],
+    Modal: ['已组件化', 'is-built', './modal-components.html'],
+    Checkbox: ['已有交互页', 'is-demo', './form-checkbox-group-states.html'],
+    Form: ['已有组合页', 'is-demo', './form-components-page.html'],
+    Upload: ['已组件化', 'is-built', './upload-components.html'],
+    Calendar: ['总览占位', 'is-planned', './ant-components-page.html#official-calendar']
+  };
+
+  const tbody = document.getElementById('componentRows');
+  let lastCategory = '';
+  components.forEach(([category, name, usage, type, href]) => {
+    if (category !== lastCategory) {
+      tbody.insertAdjacentHTML('beforeend', `<tr class="category-row"><td colspan="6">${category}</td></tr>`);
+      lastCategory = category;
+    }
+    const capability = capabilityMap[name] || ['总览占位', 'is-planned', href];
+    const targetHref = capability[2] || href;
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${category}</td>
+        <td><a class="component-link" href="${withFramework2Version(targetHref)}">${name}</a></td>
+        <td>${usage}</td>
+        <td><span class="type-tag">${type}</span></td>
+        <td><span class="status-tag ${capability[1]}">${capability[0]}</span></td>
+        <td><a class="component-link" href="${withFramework2Version(targetHref)}">查看</a></td>
+      </tr>
+    `);
+  });
+
+  document.getElementById('totalCount').textContent = components.length;
+  document.getElementById('categoryCount').textContent = new Set(components.map(item => item[0])).size;
+  document.getElementById('builtCount').textContent = Object.values(capabilityMap).filter(item => item[0] === '已组件化').length;
+  document.getElementById('demoCount').textContent = Object.values(capabilityMap).filter(item => item[0] === '已有交互页' || item[0] === '已有组合页').length;
+
+  const componentFeatureRoutes = {
+    'component-library': './component-library-index.html',
+    'scenario-templates': '../scenarios/scenario-templates-index.html',
+    'current-components': './current-components-index.html',
+    'all-components': './all-components-index.html',
+    'framework': '../framework/framework-index.html'
+  };
+
+  WiseFramework2.mount({
+    activeApp: 'component-library',
+    activeFeature: 'all-components',
+    versionLabel: '组件库',
+    appMenus: {
+      'component-library': [
+        {
+          key: 'design-assets',
+          label: '设计资源',
+          icon: 'home',
+          children: [
+            { key: 'component-library', label: '功能索引' },
+            { key: 'scenario-templates', label: '场景模板' },
+            { key: 'current-components', label: '当前组件' },
+            { key: 'all-components', label: 'Ant目录' },
+            { key: 'framework', label: '框架' }
+          ]
+        }
+      ]
+    },
+    tabs: [
+      { key: 'component-library', label: '功能索引', href: './component-library-index.html', closable: false },
+      { key: 'all-components', label: 'Ant目录', href: './all-components-index.html', closable: true }
+    ],
+    onFeatureChange(feature) {
+      const target = componentFeatureRoutes[feature];
+      if (!target) return;
+      window.location.href = target;
+    }
+  });
+</script>
+</body>
+</html>

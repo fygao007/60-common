@@ -1,0 +1,155 @@
+/* SegmentBarCard 条形占比卡片样式 */
+
+.segment-bar-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #dcdce0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.segment-bar-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.segment-bar-card__header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.segment-bar-card__header-bar {
+  width: 3px;
+  height: 14px;
+  background: #3167ff;
+  border-radius: 18px;
+  flex-shrink: 0;
+}
+
+.segment-bar-card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 20px;
+}
+
+.segment-bar-card__action {
+  font-size: 14px;
+  color: #3167ff;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.segment-bar-card__action:hover {
+  color: #1e4ad9;
+  text-decoration: underline;
+}
+
+/* 核心数字区 */
+.segment-bar-card__stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.segment-bar-card__stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.segment-bar-card__stat-value {
+  font-size: 26px;
+  font-weight: 600;
+  color: #000000;
+  line-height: 28px;
+}
+
+.segment-bar-card__stat-value--risk {
+  color: #fa5151;
+}
+
+.segment-bar-card__stat-label {
+  font-size: 12px;
+  color: #9697a3;
+  line-height: 28px;
+}
+
+/* 堆叠占比条 */
+.segment-bar-card__bar-wrapper {
+  margin-bottom: 16px;
+}
+
+.segment-bar-card__bar {
+  display: flex;
+  width: 100%;
+  height: 22px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.segment-bar-card__segment {
+  height: 100%;
+  border-right: 2px solid #ffffff;
+  transition: opacity 0.2s ease;
+}
+
+.segment-bar-card__segment:last-child {
+  border-right: none;
+}
+
+.segment-bar-card__segment:hover {
+  opacity: 0.85;
+}
+
+/* 图例 */
+.segment-bar-card__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.segment-bar-card__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.segment-bar-card__legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 25px;
+  flex-shrink: 0;
+}
+
+.segment-bar-card__legend-label {
+  font-size: 12px;
+  color: #737585;
+  line-height: 28px;
+}
+
+.segment-bar-card__legend-value {
+  font-size: 12px;
+  color: #000000;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+@media (max-width: 768px) {
+  .segment-bar-card__stats {
+    gap: 16px;
+  }
+}

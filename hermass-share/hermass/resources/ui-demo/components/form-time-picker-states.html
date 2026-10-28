@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>时间选择器状态</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShell/app-shell.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/TimePicker/index.css" />
+  <style>
+    body { margin: 0; color: var(--ds-color-text); background: var(--ds-color-bg); font-family: var(--ds-font-family); }
+    .time-page { display: flex; flex: 1; flex-direction: column; min-height: 0; background: var(--ds-color-white); }
+    .time-stage { flex: 1; min-height: 0; padding: 24px; overflow: auto; background: var(--ds-color-white); }
+    .time-content { display: grid; gap: 24px; width: min(1120px, 100%); }
+    .time-title { position: relative; display: inline-flex; margin: 0; padding: 2px; color: var(--ds-color-text); font-size: 16px; font-weight: 600; line-height: 24px; }
+    .time-title::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: var(--ds-color-primary-weak); }
+    .time-title span { position: relative; z-index: 1; }
+    .time-desc { margin: 6px 0 0; color: var(--ds-color-text-secondary); font-size: 13px; line-height: 20px; }
+    .time-section { border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .time-section-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 16px; background: var(--ds-color-bg-subtle); border-bottom: 1px solid var(--ds-color-border-secondary); }
+    .time-section-title { margin: 0; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .time-section-meta { color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .time-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+    .time-card { min-width: 0; min-height: 280px; padding: 16px; border: 1px solid var(--ds-color-border-secondary); background: var(--ds-color-white); }
+    .time-card:nth-child(3n) .ds-time-picker__panel { left: auto; right: 0; }
+    .time-card h3 { margin: 0 0 12px; color: var(--ds-color-text); font-size: 14px; font-weight: 600; line-height: 22px; }
+    .time-card .ds-time-picker { width: 100%; }
+    .time-card p { margin: 10px 0 0; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .time-row { display: grid; grid-template-columns: 108px minmax(0, 260px); gap: 16px; align-items: start; padding: 16px; border-top: 1px solid var(--ds-color-border-secondary); }
+    .time-label { height: 32px; display: flex; align-items: center; justify-content: flex-end; color: var(--ds-color-text-secondary); font-size: 14px; line-height: 20px; text-align: right; }
+    .time-output { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; margin-top: 12px; padding: 10px 12px; color: var(--ds-color-text-secondary); background: var(--ds-color-bg-subtle); border: 1px solid var(--ds-color-border-secondary); font-size: 12px; line-height: 20px; }
+    .time-output strong { color: var(--ds-color-text); font-weight: 500; }
+    .time-message { margin-top: 4px; color: var(--ds-color-text-tertiary); font-size: 12px; line-height: 20px; }
+    .time-message.is-error { color: var(--ds-color-danger); }
+    @media (max-width: 1100px) {
+      .time-grid { grid-template-columns: 1fr; }
+      .time-row { grid-template-columns: 1fr; }
+      .time-label { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope">
+  <main class="time-page">
+    <section class="time-stage">
+      <div class="time-content">
+        <header>
+          <h1 class="time-title"><span>时间选择器</span></h1>
+          <p class="time-desc">基于 MasterGo 基础控件时间选择设计，覆盖输入框、时分秒面板、此刻、确认、清除、禁用和错误状态。</p>
+        </header>
+
+        <section class="time-section">
+          <div class="time-section-head">
+            <h2 class="time-section-title">基础状态</h2>
+            <span class="time-section-meta">Default / Filled / Open / Seconds / Disabled / Error</span>
+          </div>
+          <div class="time-grid">
+            <article class="time-card">
+              <h3>未选择</h3>
+              <div class="ds-time-picker js-time-picker" data-placeholder="请选择时间"></div>
+              <p>默认展示占位文字和时间图标。</p>
+            </article>
+            <article class="time-card">
+              <h3>已选择</h3>
+              <div class="ds-time-picker js-time-picker" data-value="09:30" data-clearable="true"></div>
+              <p>选中后展示时间值，支持清除。</p>
+            </article>
+            <article class="time-card">
+              <h3>展开面板</h3>
+              <div class="ds-time-picker js-time-picker is-open" data-value="09:30" data-clearable="true"></div>
+              <p>面板按小时和分钟分列选择。</p>
+            </article>
+            <article class="time-card">
+              <h3>时分秒</h3>
+              <div class="ds-time-picker js-time-picker is-open" data-value="09:30:20" data-second="true" data-clearable="true"></div>
+              <p>需要精确时间时可启用秒列。</p>
+            </article>
+            <article class="time-card">
+              <h3>禁用</h3>
+              <div class="ds-time-picker js-time-picker is-disabled" data-placeholder="请选择时间"></div>
+              <p>禁用态不可展开、不可选择。</p>
+            </article>
+            <article class="time-card">
+              <h3>错误</h3>
+              <div class="ds-time-picker js-time-picker is-error" data-placeholder="请选择时间"></div>
+              <p class="time-message is-error">请选择办理时间。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="time-section">
+          <div class="time-section-head">
+            <h2 class="time-section-title">表单行示例</h2>
+            <span class="time-section-meta">Form Field</span>
+          </div>
+          <div class="time-row">
+            <span class="time-label">办理时间</span>
+            <div>
+              <div class="ds-time-picker js-time-picker js-time-picker-live" data-placeholder="请选择时间" data-clearable="true"></div>
+              <p class="time-message">点击选择小时和分钟，可使用“此刻”和“确定”。</p>
+              <div class="time-output" aria-live="polite"><span>当前值</span><strong class="js-time-output">未选择</strong></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js?v=2.2.4"></script>
+<script src="../framework/framework-2.staff-preset.js?v=2.2.3"></script>
+<script src="../framework/framework-2.js?v=2.2.3"></script>
+<script src="../framework/legacy-app-shell-adapter.js?v=2.2.3"></script>
+<script>
+  const hours = Array.from({ length: 24 }, (_, index) => String(index).padStart(2, '0'));
+  const minutes = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'));
+
+  function parseTime(value, showSecond) {
+    const parts = String(value || '').split(':');
+    return { hour: parts[0] || '09', minute: parts[1] || '00', second: showSecond ? parts[2] || '00' : undefined };
+  }
+
+  function formatTime(draft, showSecond) {
+    return showSecond ? `${draft.hour}:${draft.minute}:${draft.second}` : `${draft.hour}:${draft.minute}`;
+  }
+
+  function updateTimeOutput(root, state) {
+    if (!root.classList.contains('js-time-picker-live')) return;
+    const output = document.querySelector('.js-time-output');
+    if (output) output.textContent = state.value || '未选择';
+  }
+
+  function renderTimePicker(root, state) {
+    const placeholder = root.dataset.placeholder || '请选择时间';
+    const disabled = root.classList.contains('is-disabled');
+    const clearable = root.dataset.clearable === 'true';
+    root.classList.toggle('has-value', Boolean(state.value));
+    root.innerHTML = `
+      <button class="ds-time-picker__trigger" type="button" ${disabled ? 'disabled' : ''} aria-haspopup="dialog" aria-expanded="${root.classList.contains('is-open')}">
+        <span class="${state.value ? 'ds-time-picker__text' : 'ds-time-picker__placeholder'}">${state.value || placeholder}</span>
+        ${clearable && state.value && !disabled ? '<span class="ds-time-picker__clear" role="button" tabindex="-1" aria-label="清除"></span>' : ''}
+        <span class="ds-time-picker__clock" aria-hidden="true"></span>
+      </button>
+      ${root.classList.contains('is-open') ? renderTimePanel(state) : ''}
+    `;
+    updateTimeOutput(root, state);
+    scrollSelectedTime(root);
+  }
+
+  function scrollSelectedTime(root) {
+    if (!root.classList.contains('is-open')) return;
+    window.requestAnimationFrame(() => {
+      root.querySelectorAll('.ds-time-picker__column').forEach((column) => {
+        column.querySelector('.ds-time-picker__option.is-selected')?.scrollIntoView({ block: 'center' });
+      });
+    });
+  }
+
+  function renderTimePanel(state) {
+    const columns = [['hour', hours], ['minute', minutes], ...(state.showSecond ? [['second', minutes]] : [])];
+    const panelClass = `ds-time-picker__panel${state.showSecond ? ' ds-time-picker__panel--seconds' : ''}`;
+    return `<div class="${panelClass}"><div class="ds-time-picker__columns">${columns.map(([key, values]) => `<div class="ds-time-picker__column" role="listbox">${values.map((value) => `<button class="ds-time-picker__option ${state.draft[key] === value ? 'is-selected' : ''}" type="button" data-part="${key}" data-value="${value}">${value}</button>`).join('')}</div>`).join('')}</div><div class="ds-time-picker__footer"><button class="ds-time-picker__link js-time-now" type="button">此刻</button><button class="ds-time-picker__confirm js-time-confirm" type="button">确定</button></div></div>`;
+  }
+
+  function closeOtherTimePickers(currentRoot) {
+    document.querySelectorAll('.js-time-picker.is-open').forEach((root) => {
+      if (root === currentRoot) return;
+      root.classList.remove('is-open');
+      root.querySelector('.ds-time-picker__panel')?.remove();
+      root.querySelector('.ds-time-picker__trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function initTimePicker(root) {
+    const showSecond = root.dataset.second === 'true';
+    const state = { value: root.dataset.value || '', draft: parseTime(root.dataset.value, showSecond), showSecond };
+    renderTimePicker(root, state);
+
+    root.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (root.classList.contains('is-disabled')) return;
+
+      if (event.target.closest('.ds-time-picker__clear')) {
+        state.value = '';
+        state.draft = parseTime('', showSecond);
+        root.classList.remove('is-open');
+        renderTimePicker(root, state);
+        return;
+      }
+
+      if (event.target.closest('.ds-time-picker__trigger')) {
+        const nextOpen = !root.classList.contains('is-open');
+        closeOtherTimePickers(root);
+        root.classList.toggle('is-open', nextOpen);
+        state.draft = parseTime(state.value, showSecond);
+        renderTimePicker(root, state);
+        return;
+      }
+
+      const option = event.target.closest('.ds-time-picker__option');
+      if (option) {
+        state.draft[option.dataset.part] = option.dataset.value;
+        renderTimePicker(root, state);
+        return;
+      }
+
+      if (event.target.closest('.js-time-now')) {
+        const now = new Date();
+        state.draft = {
+          hour: String(now.getHours()).padStart(2, '0'),
+          minute: String(now.getMinutes()).padStart(2, '0'),
+          second: showSecond ? String(now.getSeconds()).padStart(2, '0') : undefined
+        };
+        renderTimePicker(root, state);
+        return;
+      }
+
+      if (event.target.closest('.js-time-confirm')) {
+        state.value = formatTime(state.draft, showSecond);
+        root.classList.remove('is-open');
+        renderTimePicker(root, state);
+      }
+    });
+  }
+
+  document.querySelectorAll('.js-time-picker').forEach(initTimePicker);
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll('.js-time-picker.is-open').forEach((root) => {
+      if (root.contains(event.target)) return;
+      root.classList.remove('is-open');
+      root.querySelector('.ds-time-picker__panel')?.remove();
+      root.querySelector('.ds-time-picker__trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  WiseAppShell.init({
+    activeModule: 'doctor',
+    secondaryNav: {
+      title: '组件库',
+      status: ['进行', 6],
+      items: ['功能索引', '当前组件', 'Ant目录', '组件总览', '表单', '表格', '框架'],
+      foot: '设计规范'
+    },
+    activeFeature: '表单',
+    onFeatureChange(feature) {
+      const routes = {
+        '功能索引': './component-library-index.html',
+        '当前组件': './current-components-index.html',
+        'Ant目录': './all-components-index.html',
+        '组件总览': './ant-components-page.html',
+        '表单': './form-components-page.html',
+        '表格': './basic-table-page.html',
+        '框架': '../framework/framework-index.html'
+      };
+      window.location.href = routes[feature] || './component-library-index.html';
+    }
+  });
+</script>
+</body>
+</html>

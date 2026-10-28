@@ -1,0 +1,251 @@
+ontology: szpu-hr
+version: 0.4.0
+domain: staff-data
+title: 人员统计口径定义
+description: >-
+  全系统人员统计的唯一口径来源。任何页面、报表、看板需要统计人员数据时，
+  必须引用本文件定义的口径，不得自行实现过滤逻辑。
+  本文件中所有数值均由源数据实算生成，非人工估算。
+
+population:
+  - id: all-records
+    label: 在册总人数
+    value: 4512
+    filter: "无过滤，主表全部记录"
+    usage: 档案总量、历史累计人数
+    caution: 包含离职、退休、死亡人员，不可用于"现有多少人"类问题
+  - id: active
+    label: 在职人数
+    value: 3262
+    filter: "当前状态 == 在职"
+    usage: 默认口径。所有人员总数、教职工数未特别说明时均指本口径
+    caution: 含劳务派遣、校内聘用等非事业编制人员
+  - id: left
+    label: 离职人数
+    value: 632
+  - id: retired
+    label: 退休人数
+    value: 590
+  - id: other
+    label: 其他状态
+    value: 19
+  - id: deceased
+    label: 死亡
+    value: 9
+
+dimensions:
+  - id: byStaffCategory
+    label: 教职工类别
+    field: 教职工类别
+    base: active
+    note: 人员分类主维度，用于师资队伍结构分析
+    values:
+      - { value: "专任教师", count: 1522 }
+      - { value: "行政人员", count: 570 }
+      - { value: "教辅人员", count: 407 }
+      - { value: "工勤人员", count: 242 }
+      - { value: "辅导员", count: 152 }
+      - { value: "科研助理", count: 125 }
+      - { value: "专职研究人员", count: 118 }
+      - { value: "(未填)", count: 93, note: "数据缺口" }
+      - { value: "思政人员", count: 28 }
+      - { value: "双肩挑", count: 5 }
+    rules:
+      - "一人在同一时点只归入一个类别，不重复计数"
+      - "'(未填)' 必须单独展示，不得静默丢弃导致总数对不上"
+
+  - id: byIdentity
+    label: 人员身份（用人方式）
+    field: 人员身份
+    base: active
+    note: 表达用工制度方式，与教职工类别正交，不得互相替代
+    values:
+      - { value: "职员", count: 1222 }
+      - { value: "预聘长聘", count: 746 }
+      - { value: "聘任制", count: 427 }
+      - { value: "校内聘用", count: 321 }
+      - { value: "劳务派遣", count: 250 }
+      - { value: "博士后（全职）", count: 86 }
+      - { value: "高层次人才", count: 83 }
+      - { value: "雇员", count: 82 }
+      - { value: "返聘", count: 26 }
+      - { value: "外籍教师", count: 18 }
+      - { value: "博士后（兼职）", count: 1 }
+
+  - id: byTitleLevel
+    label: 职称等级
+    field: 职称等级
+    base: active
+    values:
+      - { value: "中级", count: 1045 }
+      - { value: "未评定", count: 981 }
+      - { value: "副高级", count: 707 }
+      - { value: "(未填)", count: 233, note: "数据缺口" }
+      - { value: "正高级", count: 196 }
+      - { value: "初级", count: 100 }
+    rules:
+      - "高级职称 = 正高级 + 副高级 = 903"
+      - "职称等级是资格维度，与岗位等级（聘岗等级）不得混用"
+
+  - id: byDegree
+    label: 最高学位
+    field: 最高学位
+    base: active
+    values:
+      - { value: "硕士", count: 1396 }
+      - { value: "博士", count: 1102 }
+      - { value: "无", count: 428 }
+      - { value: "学士", count: 234 }
+      - { value: "(未填)", count: 102, note: "数据缺口" }
+
+  - id: byEducation
+    label: 最高学历
+    field: 最高学历
+    base: active
+    values:
+      - { value: "硕士研究生", count: 1274 }
+      - { value: "博士研究生", count: 1102 }
+      - { value: "本科", count: 517 }
+      - { value: "大专", count: 130 }
+      - { value: "(未填)", count: 93, note: "数据缺口" }
+      - { value: "高中", count: 63 }
+      - { value: "初中", count: 37 }
+      - { value: "中专", count: 37 }
+      - { value: "其他", count: 9 }
+    caution: "学历与学位是不同维度，博士学历 1102 不等于博士学位 1102，差异属正常"
+
+  - id: byGender
+    label: 性别
+    field: 性别
+    base: active
+    values:
+      - { value: "男", count: 1716 }
+      - { value: "女", count: 1533 }
+      - { value: "(未填)", count: 13, note: "数据缺口" }
+
+  - id: byAgeGroup
+    label: 年龄分布
+    field: 年龄
+    base: active
+    transform: 按 5 岁分组
+    values:
+      - { value: "29岁及以下", count: 389 }
+      - { value: "30-34岁", count: 648 }
+      - { value: "35-39岁", count: 623 }
+      - { value: "40-44岁", count: 458 }
+      - { value: "45-49岁", count: 483 }
+      - { value: "50-54岁", count: 367 }
+      - { value: "55-59岁", count: 239 }
+      - { value: "60岁及以上", count: 42 }
+      - { value: "(未知)", count: 13 }
+    caution: "主表年龄为静态字段会随时效失效，精确统计应按出生日期实时计算"
+
+  - id: byMainPost
+    label: 主要岗位
+    field: 主要岗位
+    base: active
+    values:
+      - { value: "专业技术岗", count: 2237 }
+      - { value: "(未填)", count: 292, note: "数据缺口" }
+      - { value: "管理岗", count: 194 }
+      - { value: "专业辅助岗", count: 194 }
+      - { value: "管理辅助岗", count: 107 }
+      - { value: "技术技能岗", count: 86 }
+      - { value: "特聘岗位", count: 82 }
+      - { value: "技能服务岗", count: 50 }
+      - { value: "综合服务岗", count: 13 }
+      - { value: "工勤技能岗", count: 7 }
+
+  - id: byDepartment
+    label: 所在部门
+    field: 所在部门
+    base: active
+    departmentCount: 69
+    note: 部门级明细见 main-distributions.json 的 crossByDepartment
+
+keyIndicators:
+  - id: fullTimeTeacher
+    label: 专任教师数
+    value: 1522
+    formula: "count(在职 且 教职工类别 == 专任教师)"
+  - id: seniorTitleCount
+    label: 高级职称人数
+    value: 903
+    formula: "count(在职 且 职称等级 in [正高级, 副高级])"
+  - id: phdCount
+    label: 博士学位人数
+    value: 1102
+    formula: "count(在职 且 最高学位 == 博士)"
+  - id: phdRatio
+    label: 博士学位占比
+    value: "33.8%"
+    formula: "博士学位人数 / 在职人数"
+  - id: dualQualified
+    label: 双师素质教师数
+    value: 1095
+    formula: "count(在职 且 双师认定级别 非空)"
+    consistencyCheck: "双师信息表覆盖 1124 人，与主表差 29 人，需核对"
+  - id: counselor
+    label: 辅导员数
+    value: 151
+    formula: "count(在职 且 是否辅导员 == 是)"
+    consistencyCheck: |
+      数据不一致：是否辅导员=是 为 151 人，教职工类别=辅导员 为 152 人，
+      相差 1 人。两个口径本应相等，使用前必须先确认以哪个为准。
+
+rules:
+  - id: R1
+    rule: "未注明基数时，一律使用 active（在职 3262）作为分母"
+    reason: "避免离职、退休人员混入在职统计"
+  - id: R2
+    rule: "分类统计各分项之和必须等于基数总数，未填项必须作为独立分项展示"
+    reason: "保证数字可核对，暴露数据缺口而非隐藏"
+  - id: R3
+    rule: "扩展表（一人多条）统计人数时必须按工号去重，统计事项数时才用记录数"
+    appliesTo: [学习经历, 工作经历, 培训信息, 职称资格, 聘岗信息, 考核, 家庭成员, 政治面貌]
+    reason: "学习经历 8196 条记录仅对应 4006 人；政治面貌 3901 条对应 3845 人"
+  - id: R4
+    rule: "跨表统计以主表的当前状态和所在部门为准，不得用扩展表的冗余字段"
+    reason: "扩展表的姓名、部门为冗余字段，可能滞后于主表"
+  - id: R5
+    rule: "时间相关统计必须显式声明时间字段，不得默认取最新"
+    appliesTo: [学年（年度）考核, 师德考核, 培训信息, 聘期考核]
+  - id: R6
+    rule: "职称与岗位必须分列统计，不得合并为职级"
+    reason: "职称是资格，聘岗是实际聘用，本体设计原则第 2 条"
+  - id: R7
+    rule: "统计结果不得输出 restricted 级字段，sensitive 级仅限聚合值"
+    ref: governance/sensitive-fields.yaml
+  - id: R8
+    rule: "可交叉验证的指标必须先做一致性校验再发布"
+    reason: "已发现辅导员口径差 1 人，主表内部存在不一致"
+
+dataGaps:
+  - field: 教职工类别
+    missing: 93
+    impact: "在职人员中该字段为空，分类统计需保留未填项"
+    action: 需人事处补全
+  - field: 职称等级
+    missing: 233
+    impact: 职称结构分析覆盖不完整
+    action: "无职称人员应显式标注未评定而非留空"
+  - field: 主要岗位
+    missing: 292
+    impact: 岗位分布不完整
+  - issue: 班主任经历表仅 6 条记录（4 人）
+    impact: "与主表是否班主任有值的 1438 人严重不匹配，不可用于统计"
+    action: 确认该表是否为完整导出
+  - issue: 扩展表存在孤儿记录（工号不在主表），最多 24 条
+    impact: 跨表关联时会丢失
+    action: 补齐主表或清理孤儿记录
+  - issue: 字典值存在脏数据
+    detail: "如 [电工]未定义、[取得途径取得途]未定义、类型 等"
+    action: 清洗后再用于正式统计
+
+freshness:
+  capturedAt: "2026-09-04"
+  source: "/Volumes/WD/下载/深职大基础数据和扩展信息数据"
+  recordCount: 4512
+  activeCount: 3262
+  regeneration: 源文件更新后需重新生成本目录下所有统计文件
+  warning: 本统计为静态快照，生产环境应改为实时查询主数据源

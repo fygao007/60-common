@@ -1,0 +1,24 @@
+{
+  "application": {
+    "key": "recruitment",
+    "label": "招聘管理"
+  },
+  "role": {
+    "key": "hr",
+    "label": "人事处管理员"
+  },
+  "menu": {
+    "key": "resume-info",
+    "label": "应聘者简历信息表",
+    "group": "招聘过程管理",
+    "defaultFeature": "resume-info"
+  },
+  "pages": [
+    {
+      "key": "recruitment-hr-resume-info",
+      "label": "应聘者简历信息表（人事处管理员）",
+      "type": "static-prototype-menu",
+      "html": "resume-info.html"
+    }
+  ]
+}

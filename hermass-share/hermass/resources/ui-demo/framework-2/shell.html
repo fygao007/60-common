@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架2 - 纯框架</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <link rel="stylesheet" href="./theme.css" />
+  <link rel="stylesheet" href="../packages/design-system/src/AppShellV2/app-shell-v2.css" />
+  <style>
+    body { margin: 0; }
+  </style>
+</head>
+<body>
+<div class="frame2-stage ds-scope"></div>
+
+<script src="../assets/icon-registry.js"></script>
+<script src="../packages/design-system/src/AppShellV2/app-shell-v2.js"></script>
+<script>
+  const appMenus = {
+    home: [
+      { key: 'workspace', label: '工作台', icon: 'home', children: [
+        { key: 'home-overview', label: '首页概览' },
+        { key: 'todo-center', label: '待办中心' },
+        { key: 'message-center', label: '消息中心' }
+      ] },
+      { key: 'quick-entry', label: '快捷入口', icon: 'flow', children: [
+        { key: 'recent-visit', label: '最近访问' },
+        { key: 'favorite-menu', label: '我的收藏' }
+      ] }
+    ],
+    task: [
+      { key: 'task-manage', label: '任务管理', icon: 'flow', children: [
+        { key: 'task-list', label: '任务列表' },
+        { key: 'task-created', label: '我发起的' },
+        { key: 'task-processed', label: '我处理的' }
+      ] },
+      { key: 'task-config', label: '任务配置', icon: 'settings', children: [
+        { key: 'task-rule', label: '任务规则' },
+        { key: 'task-template', label: '任务模板' }
+      ] }
+    ],
+    staff: [
+      { key: 'staff-info', label: '人员信息', icon: 'home', children: [
+        { key: 'staff-roster', label: '人员花名册' },
+        { key: 'staff-profile', label: '个人档案' },
+        { key: 'staff-change', label: '异动管理' }
+      ] },
+      { key: 'org-manage', label: '组织管理', icon: 'flow', children: [
+        { key: 'department', label: '部门维护' },
+        { key: 'position', label: '岗位维护' }
+      ] }
+    ],
+    contract: [
+      { key: 'contract-business', label: '合同业务', icon: 'flow', children: [
+        { key: 'contract-list', label: '合同列表' },
+        { key: 'contract-renew', label: '续签管理' },
+        { key: 'contract-expire', label: '到期提醒' }
+      ] }
+    ],
+    attendance: [
+      { key: 'attendance-business', label: '考勤业务', icon: 'home', children: [
+        { key: 'attendance-calendar', label: '考勤日历' },
+        { key: 'leave-manage', label: '请假管理' },
+        { key: 'business-trip', label: '出差管理' }
+      ] },
+      { key: 'attendance-report', label: '统计报表', icon: 'flow', children: [
+        { key: 'monthly-report', label: '月度统计' },
+        { key: 'exception-report', label: '异常统计' }
+      ] }
+    ],
+    approval: [
+      { key: 'approval-business', label: '流程审批', icon: 'flow', children: [
+        { key: 'approval-pending', label: '待我审批' },
+        { key: 'approval-done', label: '已审批' },
+        { key: 'approval-launch', label: '发起申请' }
+      ] }
+    ],
+    ai: [
+      { key: 'ai-workbench', label: 'AI观察室', icon: 'home', children: [
+        { key: 'ai-assistant', label: '智能助手' },
+        { key: 'ai-analysis', label: '智能分析' },
+        { key: 'ai-knowledge', label: '知识库' }
+      ] }
+    ],
+    stats: [
+      { key: 'stats-center', label: '数据统计', icon: 'flow', children: [
+        { key: 'personnel-dashboard', label: '人员看板' },
+        { key: 'business-dashboard', label: '业务看板' },
+        { key: 'custom-report', label: '自定义报表' }
+      ] }
+    ]
+  };
+
+  WiseAppShellV2.init({
+    systemName: '人力资源管理系统',
+    versionLabel: '框架2',
+    frameworkAssetBase: './assets',
+    activeApp: 'staff',
+    activeFeature: 'staff-roster',
+    emptyContent: true,
+    appGroups: [
+      { key: 'home', label: '首页' },
+      { key: 'task', label: '任务中心' },
+      { key: 'staff', label: '人事服务', apps: [
+        { key: 'staff', label: '教职工管理' },
+        { key: 'contract', label: '合同管理' }
+      ] },
+      { key: 'attendance', label: '日常管理', apps: [
+        { key: 'attendance', label: '考勤管理' },
+        { key: 'approval', label: '流程审批' }
+      ] },
+      { key: 'ai', label: 'AI观察室' },
+      { key: 'stats', label: '数据统计' }
+    ],
+    appMenus,
+    secondaryNav: {
+      items: appMenus.staff
+    },
+    tabs: [
+      { key: 'staff-roster', label: '人员花名册', closable: false },
+      { key: 'staff-profile', label: '个人档案' },
+      { key: 'department', label: '部门维护' }
+    ],
+    topTools: [
+      { key: 'search', label: '搜索', icon: './assets/top-search.svg' },
+      { key: 'skin', label: '换肤', icon: './assets/top-skin.svg' },
+      { key: 'language', label: '语言', icon: './assets/top-language.svg' }
+    ]
+  });
+</script>
+</body>
+</html>

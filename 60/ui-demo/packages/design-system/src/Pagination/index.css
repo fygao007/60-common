@@ -1,0 +1,43 @@
+@import '../tokens.css';
+
+.ds-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-4) var(--ds-card-padding);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-sm);
+}
+
+.ds-pagination__current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  color: var(--ds-color-white);
+  background: var(--ds-color-primary);
+  border-radius: var(--ds-radius-sm);
+}
+
+.ds-pagination .ds-input,
+.ds-pagination .ds-select {
+  height: 28px;
+}
+
+.ds-pagination .ds-input {
+  width: 48px;
+  text-align: center;
+}
+
+.ds-pagination .ds-select {
+  width: 96px;
+}
+
+.ds-pagination__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+}

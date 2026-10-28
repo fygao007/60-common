@@ -1,0 +1,94 @@
+{
+  "generatedFrom": "ontology/product-world/scenarios/portfolio-full-chief--training.json",
+  "scenarioId": "portfolio-full-chief--training",
+  "version": "1.0.0",
+  "generationRules": {
+    "framework": "framework-2",
+    "useTemplateFirst": true,
+    "useDesignSystemOnly": true,
+    "useFieldRefsOnly": true,
+    "copyCrossDemoCode": false,
+    "preserveDeletedCodeAsComments": false
+  },
+  "research": {
+    "sources": [
+      {
+        "id": "icloud-original",
+        "type": "existing-product",
+        "title": "iCloud 教学档案袋 chief/t-overview/training.html"
+      }
+    ],
+    "actors": [
+      {
+        "id": "chief",
+        "name": "专业主任"
+      }
+    ],
+    "goals": [
+      "保留原页面业务内容，使用统一框架独立访问"
+    ],
+    "painPoints": [
+      "入口分散，旧角色目录中的页面未全部展示"
+    ],
+    "openQuestions": [
+      "旧 Demo 中未实现的服务端保存与权限规则仍需业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "进修访学培训",
+    "actorRefs": [
+      "chief"
+    ],
+    "preconditions": [
+      "从教学档案袋（全）进入"
+    ],
+    "mainFlow": [
+      "打开独立菜单页面",
+      "查看原页面业务内容并操作已有功能",
+      "通过框架切换应用或功能"
+    ],
+    "exceptions": [
+      "空数据使用设计系统空状态"
+    ]
+  },
+  "requirements": {
+    "rules": [
+      "仅使用框架2与设计系统公共组件",
+      "通过注册菜单获取页面地址",
+      "保留原有页面内容和交互，不共享另一个应用的业务实现"
+    ],
+    "acceptanceCriteria": [
+      "顶部教学档案袋分组显示两个应用",
+      "页面独立加载且框架标识为 teaching-portfolio-full",
+      "包括 orphans 在内的业务页面可从菜单到达"
+    ]
+  },
+  "page": {
+    "title": "进修访学培训",
+    "templateId": "regular-list",
+    "menuRef": "teaching-portfolio-full.all:chief--training",
+    "fieldRefs": [],
+    "components": [
+      "DSCard",
+      "DSButton",
+      "DSDataTable",
+      "DSRegularListTemplate"
+    ],
+    "demoPath": "demos/teaching-portfolio-full/chief/t-overview/training.html",
+    "template": {
+      "id": "regular-list",
+      "component": "DSRegularListTemplate",
+      "useFor": [
+        "查询列表",
+        "只读列表",
+        "普通台账"
+      ],
+      "requiredComponents": [
+        "DSFilterBar",
+        "DSDataTable",
+        "DSPagination"
+      ]
+    },
+    "resolvedFields": []
+  }
+}

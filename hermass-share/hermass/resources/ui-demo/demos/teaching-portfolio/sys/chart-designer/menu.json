@@ -1,0 +1,35 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "sys",
+    "label": "系统管理员"
+  },
+  "menu": {
+    "key": "chart-designer",
+    "label": "图表配置",
+    "group": "图表配置",
+    "defaultFeature": "chart-designer"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-sys-chart-designer",
+      "label": "图表配置（系统管理员）",
+      "type": "react-business-page",
+      "html": "chart-designer.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ],
+        "siblingMenus": [
+          "../major-group/major-group.html",
+          "../form-management/form-management.html",
+          "../audit-config/audit-config.html",
+          "../batch-publish/batch-publish.html"
+        ]
+      }
+    }
+  ]
+}

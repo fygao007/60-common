@@ -1,0 +1,29 @@
+{
+  "application": {
+    "key": "teaching-portfolio",
+    "label": "教学档案袋"
+  },
+  "role": {
+    "key": "major",
+    "label": "专业群带头人"
+  },
+  "menu": {
+    "key": "c-review",
+    "label": "教学档案审核",
+    "group": "教学档案审核",
+    "defaultFeature": "c-review"
+  },
+  "pages": [
+    {
+      "key": "portfolio-v3-major-c-review",
+      "label": "教学档案审核（专业群带头人）",
+      "type": "static-prototype-menu",
+      "html": "c-review.html",
+      "related": {
+        "upstream": [
+          "../../../home/teacher/home/staff-home.html"
+        ]
+      }
+    }
+  ]
+}

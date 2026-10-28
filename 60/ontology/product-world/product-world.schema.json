@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wisedu.example/schemas/product-world-v1.json",
+  "title": "产品世界模型",
+  "type": "object",
+  "required": ["id", "version", "research", "scenario", "page", "requirements"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+    "version": { "type": "string" },
+    "research": {
+      "type": "object",
+      "required": ["sources", "actors", "goals", "painPoints"],
+      "properties": {
+        "sources": { "type": "array", "items": { "type": "object", "required": ["id", "type", "title"] } },
+        "actors": { "type": "array", "items": { "type": "object", "required": ["id", "name"] } },
+        "goals": { "type": "array", "items": { "type": "string" } },
+        "painPoints": { "type": "array", "items": { "type": "string" } },
+        "openQuestions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["name", "actorRefs", "preconditions", "mainFlow"],
+      "properties": {
+        "name": { "type": "string" },
+        "actorRefs": { "type": "array", "items": { "type": "string" } },
+        "preconditions": { "type": "array", "items": { "type": "string" } },
+        "mainFlow": { "type": "array", "items": { "type": "string" } },
+        "exceptions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "page": {
+      "type": "object",
+      "required": ["title", "templateId", "menuRef", "fieldRefs", "components", "demoPath"],
+      "properties": {
+        "title": { "type": "string" },
+        "templateId": { "type": "string" },
+        "menuRef": { "type": "string" },
+        "fieldRefs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "components": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "demoPath": { "type": "string" }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "required": ["rules", "acceptanceCriteria"],
+      "properties": {
+        "rules": { "type": "array", "items": { "type": "string" } },
+        "acceptanceCriteria": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": { "requirementDoc": { "type": "string" } }
+    }
+  }
+}

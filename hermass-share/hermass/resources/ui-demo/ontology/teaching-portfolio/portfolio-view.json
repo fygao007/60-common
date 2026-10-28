@@ -1,0 +1,40 @@
+{
+  "$schema": "./portfolio-view.schema.json",
+  "viewId": "TeachingPortfolio.default",
+  "version": "1.0.0",
+  "groups": [
+    {
+      "id": "basic-info",
+      "label": "基本信息",
+      "sections": [
+        {
+          "id": "profile",
+          "label": "个人信息",
+          "entityType": "Person",
+          "displayType": "form",
+          "fieldRefs": ["StaffBasicInformation.xm", "StaffBasicInformation.zgh", "StaffBasicInformation.xbdm", "StaffBasicInformation.szdwdm", "StaffBasicInformation.jslx"]
+        },
+        {
+          "id": "education-summary",
+          "label": "学历摘要",
+          "entityType": "Person",
+          "displayType": "form",
+          "fieldRefs": ["StaffBasicInformation.zgxldm", "StaffBasicInformation.zgxwdm", "StaffBasicInformation.byxx", "StaffBasicInformation.sxzy"]
+        }
+      ]
+    },
+    {
+      "id": "teaching-info",
+      "label": "教学信息",
+      "sections": [
+        { "id": "courses", "label": "学期授课", "entityType": "TeachingAssignment", "displayType": "table", "fieldRefs": ["TeachingAssignment.courseId", "TeachingAssignment.academicYear", "TeachingAssignment.term", "TeachingAssignment.className", "TeachingAssignment.plannedHours", "TeachingAssignment.completedHours", "TeachingAssignment.status"] },
+        { "id": "course-portfolio", "label": "课程设计与实施", "entityType": "CoursePortfolio", "displayType": "document", "fieldRefs": ["CoursePortfolio.teachingObjectives", "CoursePortfolio.teachingDesign", "CoursePortfolio.implementationSummary", "CoursePortfolio.reflection", "CoursePortfolio.evidence", "CoursePortfolio.archiveStatus"] }
+      ]
+    },
+    { "id": "enterprise-practice", "label": "企业实践", "sections": [{ "id": "practice-records", "label": "实践经历", "entityType": "EnterprisePractice", "displayType": "timeline", "fieldRefs": ["EnterprisePractice.enterpriseName", "EnterprisePractice.practicePosition", "EnterprisePractice.startDate", "EnterprisePractice.endDate", "EnterprisePractice.practiceContent", "EnterprisePractice.outcome", "EnterprisePractice.evidence", "EnterprisePractice.status"] }] },
+    { "id": "achievements-honors", "label": "成果与荣誉", "sections": [{ "id": "achievements", "label": "教学成果", "entityType": "TeachingAchievement", "displayType": "card", "fieldRefs": ["TeachingAchievement.achievementType", "TeachingAchievement.title", "TeachingAchievement.level", "TeachingAchievement.role", "TeachingAchievement.awardingOrganization", "TeachingAchievement.achievedAt", "TeachingAchievement.evidence", "TeachingAchievement.status"] }] },
+    { "id": "training", "label": "进修（访学）培训", "sections": [{ "id": "training-records", "label": "培训记录", "entityType": "TrainingExperience", "displayType": "timeline", "fieldRefs": ["TrainingExperience.trainingType", "TrainingExperience.name", "TrainingExperience.provider", "TrainingExperience.startDate", "TrainingExperience.endDate", "TrainingExperience.hours", "TrainingExperience.evidence", "TrainingExperience.status"] }] },
+    { "id": "appointment", "label": "专业任职", "sections": [{ "id": "appointment-records", "label": "专业任职记录", "entityType": "ProfessionalAppointment", "displayType": "timeline", "fieldRefs": ["ProfessionalAppointment.organizationName", "ProfessionalAppointment.roleName", "ProfessionalAppointment.appointmentType", "ProfessionalAppointment.startDate", "ProfessionalAppointment.endDate", "ProfessionalAppointment.evidence", "ProfessionalAppointment.status"] }] },
+    { "id": "submission-review", "label": "提交与审核", "sections": [{ "id": "submissions", "label": "档案提交", "entityType": "PortfolioSubmission", "displayType": "table", "fieldRefs": ["PortfolioSubmission.subjectType", "PortfolioSubmission.subjectId", "PortfolioSubmission.submissionType", "PortfolioSubmission.status", "PortfolioSubmission.submittedAt"] }, { "id": "reviews", "label": "审核记录", "entityType": "PortfolioReview", "displayType": "timeline", "fieldRefs": ["PortfolioReview.reviewerPersonId", "PortfolioReview.decision", "PortfolioReview.comment", "PortfolioReview.reviewedAt", "PortfolioReview.sequence"] }] }
+  ]
+}

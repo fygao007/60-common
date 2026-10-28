@@ -1,0 +1,78 @@
+{
+  "$schema": "../product-world.schema.json",
+  "id": "recruitment-vote--report",
+  "version": "1.0.0",
+  "research": {
+    "sources": [
+      {
+        "id": "epx-vote-reverse",
+        "type": "existing-product",
+        "title": "EPXING epxing_vote V9.3.0 前端逆向成果（在线投票应用-功能规格说明书）"
+      },
+      {
+        "id": "vote-ui-plan",
+        "type": "design-doc",
+        "title": "在线投票应用 · UI Demo 落地方案 V1.1"
+      }
+    ],
+    "actors": [
+      { "id": "vote-admin", "name": "投票管理员" }
+    ],
+    "goals": [
+      "集中管理结果、明细、统计与排名四类报表",
+      "一键生成并导出报表，满足评审归档与复议调阅需求"
+    ],
+    "painPoints": [
+      "原系统报表分散在各功能页，缺少统一的生成与导出入口"
+    ],
+    "openQuestions": [
+      "报表是否需要按批次留痕历史版本，待业务确认"
+    ]
+  },
+  "scenario": {
+    "name": "报表中心",
+    "actorRefs": ["vote-admin"],
+    "preconditions": [
+      "投票项目已完成投票"
+    ],
+    "mainFlow": [
+      "进入报表中心，查看可用的报表清单",
+      "按报表名称与类型筛选目标报表",
+      "点击「生成报表」按当前投票数据生成",
+      "在报表行内预览或下载，或批量导出"
+    ],
+    "exceptions": [
+      "筛选无结果时表格展示空态文案",
+      "投票未开始时生成报表给出提示"
+    ]
+  },
+  "page": {
+    "title": "报表中心",
+    "templateId": "regular-list",
+    "menuRef": "recruitment.vote:report",
+    "fieldRefs": [
+      "Business.vote.reportName",
+      "Business.vote.reportType",
+      "Business.vote.reportTemplate"
+    ],
+    "components": [
+      "DSRegularListTemplate",
+      "DSTag"
+    ],
+    "demoPath": "demos/vote/report/report.html"
+  },
+  "requirements": {
+    "rules": [
+      "只使用框架2与设计系统公共组件，不手写基础控件",
+      "字段通过 fieldRef 引用 ontology 单源，页面只声明展示约束",
+      "菜单通过 WiseMenuRegistry 注册，页面只声明菜单 ID 与功能 key",
+      "状态一律落在设计系统六色语义内"
+    ],
+    "acceptanceCriteria": [
+      "左侧菜单「结果与报表」分组下「报表中心」处于高亮态",
+      "报表表格展示报表名称、类型、绑定模板与归属",
+      "按名称与类型筛选后表格按条件收敛",
+      "生成与导出的操作给出明确反馈"
+    ]
+  }
+}

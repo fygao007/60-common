@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>审核流程配置</title>
+  <style>
+    body { margin: 0; background: #fff; }
+    .ds-scope, .ds-page { background: #fff; }
+    .ds-page { padding: 0; }
+    .page-content { flex: 1; padding: 12px 16px 12px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; min-width: 72px; padding: 0 14px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid #dcdce0; background: #fff; color: #000; }
+    .btn:hover { color: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary { color: #fff; background: var(--ds-color-primary); border-color: var(--ds-color-primary); }
+    .btn.primary:hover { color: #fff; background: var(--ds-color-primary-hover); border-color: var(--ds-color-primary-hover); }
+    .btn.danger { color: #fa5151; border-color: #fa5151; }
+    .btn.danger:hover { color: #fff; background: #fa5151; }
+
+    /* 搜索区域 */
+    .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 0 12px; }
+    .filter-item { display: flex; align-items: center; gap: 8px; }
+    .filter-item label { color: #505266; font-size: 14px; white-space: nowrap; }
+    .filter-item input[type="text"] { height: 28px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; width: 180px; }
+    .filter-item input:focus { border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+    .filter-item select { height: 28px; padding: 0 24px 0 8px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; color: #000; background: #fff; outline: none; box-sizing: border-box; min-width: 130px; }
+
+    /* 工具栏 */
+    .toolbar { display: flex; align-items: center; gap: 8px; padding: 0 0 12px; }
+
+    /* Table */
+    .basic-table-wrap { position: relative; overflow: auto; background: #fff; border: 1px solid #eeeef0; }
+    .basic-table { width: 100%; border-collapse: separate; border-spacing: 0; color: #000; font-size: 14px; line-height: 22px; }
+    .basic-table th, .basic-table td { height: 46px; padding: 0 12px; background: #fff; border-bottom: 1px solid #eeeef0; white-space: nowrap; overflow: hidden; text-align: left; text-overflow: ellipsis; }
+    .basic-table th { position: sticky; top: 0; z-index: 5; height: 40px; background: #fafafa; font-weight: 600; }
+    .basic-table th + th, .basic-table td + td { border-left: 1px solid rgba(238, 238, 240, 0.72); }
+    .basic-table tbody tr:hover td { background: #f6f6f7; }
+    .basic-table tbody tr:last-child td { border-bottom: none; }
+    .col-actions { width: 170px; text-align: center; }
+    .row-actions { display: inline-flex; align-items: center; gap: 12px; }
+    .text-action { padding: 0; color: #3167ff; background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .text-action:hover { color: var(--ds-color-primary-hover); }
+    .text-action:disabled { color: #bcbecd; cursor: not-allowed; }
+    .action-divider { width: 1px; height: 12px; background: #dcdce0; }
+
+    /* 标签 */
+    .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; font-size: 12px; background: #f2f3f5; color: #505266; }
+    .tag.primary { background: #e8f0ff; color: #3167ff; }
+    .tag.success { background: #e8f7f1; color: #00B42A; }
+    .tag.warning { background: #fff7e8; color: #ad6800; }
+    .tag.danger { background: #ffebee; color: #F53F3F; }
+    .tag + .tag { margin-left: 4px; }
+
+    .basic-pagination { display: flex; align-items: center; gap: 8px; padding: 12px 16px; color: #505266; background: #fff; border-top: 1px solid #eeeef0; font-size: 12px; }
+    .basic-pagination .page-spacer { flex: 1; }
+
+    /* 弹窗 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.is-open { display: flex; }
+    .modal { width: 560px; max-width: 90vw; max-height: 90vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+    .modal__header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eeeef0; flex-shrink: 0; }
+    .modal__title { margin: 0; font-size: 16px; font-weight: 600; }
+    .modal__close { width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 18px; color: #737585; }
+    .modal__close:hover { background: #f5f5f5; }
+    .modal__body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; }
+    .modal__footer { display: flex; justify-content: center; gap: 12px; padding: 16px 20px; border-top: 1px solid #eeeef0; flex-shrink: 0; }
+
+    /* 表格式表单 */
+    .form-table { display: grid; gap: 12px; }
+    .form-row { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 16px; align-items: center; }
+    .form-row__label { text-align: right; color: #505266; font-size: 14px; }
+    .form-row__label .required { color: #fa5151; margin-right: 2px; }
+    .form-row__control { min-width: 0; }
+    .form-row__control input, .form-row__control select { width: 100%; box-sizing: border-box; height: 32px; padding: 0 12px; border: 1px solid #dcdce0; border-radius: 4px; font-size: 14px; font-family: inherit; background: #fff; color: #000; }
+    .form-row__control select { cursor: pointer; }
+    .form-row__control input:focus, .form-row__control select:focus { outline: none; border-color: var(--ds-color-primary); box-shadow: 0 0 0 2px rgba(51,63,255,0.12); }
+
+    .modal__body p.muted { color: #737585; font-size: 14px; margin: 0 0 8px; }
+    .modal__body b { color: #000; }
+
+    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #20b486; color: #fff; padding: 10px 24px; border-radius: 6px; font-size: 14px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; }
+  </style>
+</head>
+<body>
+<div class="ds-scope ds-page">
+  <div class="page-content">
+    <section class="filter-bar" aria-label="查询条件">
+      <div class="filter-item">
+        <label>流程名称</label>
+        <input type="text" id="filterName" placeholder="流程名称" />
+      </div>
+      <div class="filter-item">
+        <label>流程标识</label>
+        <input type="text" id="filterKey" placeholder="流程标识" />
+      </div>
+      <div class="filter-item">
+        <label>发布状态</label>
+        <select id="filterStatus">
+          <option>全部</option>
+          <option>未发布</option>
+          <option>已发布</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label>所属应用</label>
+        <select id="filterApp">
+          <option>全部</option>
+          <option>教学档案袋</option>
+          <option>人事系统</option>
+          <option>教务系统</option>
+          <option>组织机构</option>
+          <option>数据采集</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label>所属模块</label>
+        <select id="filterModule">
+          <option>全部</option>
+        </select>
+      </div>
+      <button class="btn" type="button" onclick="resetFilter()">重置</button>
+      <button class="btn primary" type="button" onclick="queryList()">查询</button>
+    </section>
+
+    <section class="toolbar" aria-label="操作按钮">
+      <button class="btn primary" type="button" onclick="openCreate()">新增流程</button>
+    </section>
+
+    <section class="basic-table-wrap">
+      <table class="basic-table" aria-label="流程定义列表">
+        <thead>
+          <tr>
+            <th style="width:200px">流程名称</th>
+            <th style="width:200px">流程标识</th>
+            <th style="width:130px">流程分类</th>
+            <th style="width:110px">是否状态机</th>
+            <th style="width:140px">设计器数据格式</th>
+            <th style="width:140px">流程图类型</th>
+            <th style="width:120px">所属应用</th>
+            <th style="width:100px">所属模块</th>
+            <th style="width:100px">发布状态</th>
+            <th style="width:90px">流程来源</th>
+            <th style="width:150px">流程主版本</th>
+            <th style="width:170px">发布时间</th>
+            <th style="width:170px">创建时间</th>
+            <th class="col-actions">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </section>
+    <div class="basic-pagination">
+      <span class="page-spacer"></span>
+      <span id="pageInfo">共 0 条记录</span>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑弹窗 -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="editTitle">新增流程</h3>
+      <button class="modal__close" onclick="closeModal('editModal')">×</button>
+    </div>
+    <div class="modal__body" id="editBody"></div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeModal('editModal')">取消</button>
+      <button class="btn primary" onclick="saveDraft()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 删除确认 -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">确认删除</h3>
+      <button class="modal__close" onclick="closeModal('deleteModal')">×</button>
+    </div>
+    <div class="modal__body" id="deleteBody"></div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeModal('deleteModal')">取消</button>
+      <button class="btn danger" onclick="confirmDelete()">删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 发布确认 -->
+<div class="modal-overlay" id="publishModal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">确认发布</h3>
+      <button class="modal__close" onclick="closeModal('publishModal')">×</button>
+    </div>
+    <div class="modal__body" id="publishBody"></div>
+    <div class="modal__footer">
+      <button class="btn" onclick="closeModal('publishModal')">取消</button>
+      <button class="btn primary" onclick="confirmPublish()">确认发布</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var flowTypeOptions = ['钉钉风格流程图', '飞龙流程图', 'oa流程图', '普通风格流程图'];
+var appOptions = ['教学档案袋', '人事系统', '教务系统', '组织机构', '数据采集'];
+
+var flows = [
+  { id: 'flow-01', name: '学期教学档案考核（标准）', key: 'term_archive_audit__tp', category: '考核审核', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 6, versionActive: true, publishTime: '2026-06-15 09:30:00', createTime: '2026-05-01 10:00:00' },
+  { id: 'flow-02', name: '双高专业群支撑材料考核', key: 'double_high_audit__tp', category: '考核审核', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 3, versionActive: true, publishTime: '2026-06-10 14:20:00', createTime: '2026-04-15 09:30:00' },
+  { id: 'flow-03', name: '青年教师教学成长考核', key: 'young_teacher_audit__tp', category: '考核审核', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 2, versionActive: true, publishTime: '2026-05-20 11:00:00', createTime: '2026-03-10 08:45:00' },
+  { id: 'flow-04', name: '教学档案袋提交流程', key: 'archive_submit__tp', category: '材料提交', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 8, versionActive: true, publishTime: '2026-01-10 16:00:00', createTime: '2025-12-01 09:00:00' },
+  { id: 'flow-05', name: '成果认定审核流程', key: 'achievement_audit__tp', category: '成果认定', isStateMachine: true, designerFormat: 'json', flowType: '飞龙流程图', app: '教学档案袋', module: '-', status: '未发布', source: '线下', version: 1, versionActive: true, publishTime: '', createTime: '2026-06-20 10:30:00' },
+  { id: 'flow-06', name: '职称评审材料审核流程', key: 'title_review_audit__tp', category: '职称评审', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 4, versionActive: true, publishTime: '2026-04-01 09:00:00', createTime: '2026-02-15 14:00:00' },
+  { id: 'flow-07', name: '教学档案袋归档流程', key: 'archive_filing__tp', category: '归档管理', isStateMachine: false, designerFormat: 'flowlong', flowType: '飞龙流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 5, versionActive: true, publishTime: '2026-03-15 10:00:00', createTime: '2026-01-20 11:30:00' },
+  { id: 'flow-08', name: '教学信息变更审批流程', key: 'teaching_info_change__tp', category: '信息变更', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 2, versionActive: true, publishTime: '2026-02-28 15:30:00', createTime: '2026-01-05 09:15:00' },
+  { id: 'flow-09', name: '教学档案袋数据补正流程', key: 'data_correction__tp', category: '数据补正', isStateMachine: false, designerFormat: 'flowlong', flowType: '飞龙流程图', app: '教学档案袋', module: '-', status: '未发布', source: '线下', version: 1, versionActive: true, publishTime: '', createTime: '2026-06-25 08:00:00' },
+  { id: 'flow-10', name: '教学档案袋批量导入审核流程', key: 'batch_import_audit__tp', category: '批量导入', isStateMachine: true, designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-', status: '已发布', source: '线下', version: 3, versionActive: true, publishTime: '2026-05-10 14:00:00', createTime: '2026-04-01 10:00:00' }
+];
+
+var applied = { name: '', key: '', status: '全部', app: '全部', module: '全部' };
+var editor = { mode: 'create', draft: null };
+var deleteTarget = null;
+var publishTarget = null;
+
+var toastTimer = null;
+function notify(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.style.display = 'none'; }, 1800);
+}
+function esc(str) { return String(str == null ? '' : str).replace(/[&<>"']/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); }
+function closeModal(id) { document.getElementById(id).classList.remove('is-open'); }
+
+function render() {
+  var rows = flows.filter(function(r) {
+    if (applied.name && r.name.toLowerCase().indexOf(applied.name.toLowerCase()) < 0) return false;
+    if (applied.key && r.key.toLowerCase().indexOf(applied.key.toLowerCase()) < 0) return false;
+    if (applied.status !== '全部' && r.status !== applied.status) return false;
+    if (applied.app !== '全部' && r.app !== applied.app) return false;
+    if (applied.module !== '全部' && r.module !== applied.module) return false;
+    return true;
+  });
+  var body = '';
+  rows.forEach(function(r) {
+    var actions = '<button class="text-action" onclick="openEdit(\'' + r.id + '\')">编辑</button><span class="action-divider"></span>' +
+      '<button class="text-action" onclick="requestDelete(\'' + r.id + '\')">删除</button><span class="action-divider"></span>' +
+      '<button class="text-action" ' + (r.status === '已发布' ? 'disabled' : '') + ' onclick="requestPublish(\'' + r.id + '\')">发布</button><span class="action-divider"></span>' +
+      '<button class="text-action" ' + (r.status === '未发布' ? 'disabled' : '') + ' onclick="notify(\'版本管理功能开发中\')">版本管理</button>';
+    body += '<tr>' +
+      '<td><b>' + esc(r.name) + '</b></td>' +
+      '<td>' + esc(r.key) + '</td>' +
+      '<td>' + esc(r.category) + '</td>' +
+      '<td>' + (r.isStateMachine ? '是' : '否') + '</td>' +
+      '<td>' + esc(r.designerFormat) + '</td>' +
+      '<td>' + esc(r.flowType) + '</td>' +
+      '<td>' + esc(r.app) + '</td>' +
+      '<td>' + esc(r.module) + '</td>' +
+      '<td><span class="tag ' + (r.status === '已发布' ? 'success' : 'warning') + '">' + r.status + '</span></td>' +
+      '<td><span class="tag ' + (r.source === '线上' ? 'success' : 'warning') + '">' + r.source + '</span></td>' +
+      '<td><span class="tag primary">V:' + r.version + '</span>' + (r.versionActive ? '<span class="tag success">激活</span>' : '') + '</td>' +
+      '<td>' + esc(r.publishTime || '-') + '</td>' +
+      '<td>' + esc(r.createTime) + '</td>' +
+      '<td class="col-actions"><span class="row-actions">' + actions + '</span></td>' +
+      '</tr>';
+  });
+  if (!rows.length) body = '<tr><td colspan="14" style="text-align:center;color:#737585;padding:32px 0">暂无数据</td></tr>';
+  document.getElementById('tableBody').innerHTML = body;
+  document.getElementById('pageInfo').textContent = '共 ' + rows.length + ' 条记录';
+}
+
+function queryList() {
+  applied.name = document.getElementById('filterName').value;
+  applied.key = document.getElementById('filterKey').value;
+  applied.status = document.getElementById('filterStatus').value;
+  applied.app = document.getElementById('filterApp').value;
+  applied.module = document.getElementById('filterModule').value;
+  notify('已按当前条件查询');
+  render();
+}
+function resetFilter() {
+  ['filterName', 'filterKey'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('filterStatus').value = '全部';
+  document.getElementById('filterApp').value = '全部';
+  document.getElementById('filterModule').value = '全部';
+  applied = { name: '', key: '', status: '全部', app: '全部', module: '全部' };
+  render();
+}
+
+// ============== 编辑弹窗 ==============
+function fieldRow(label, controlHtml, required) {
+  return '<div class="form-row"><label class="form-row__label">' + (required ? '<span class="required">*</span>' : '') + label + '</label><div class="form-row__control">' + controlHtml + '</div></div>';
+}
+function selectHtml(id, options, selected) {
+  return '<select id="' + id + '" onchange="onDraftChange(\'' + id + '\',this.value)">' + options.map(function(o) {
+    var v = typeof o === 'string' ? o : o.value;
+    var l = typeof o === 'string' ? o : o.label;
+    return '<option value="' + esc(v) + '"' + (v === selected ? ' selected' : '') + '>' + esc(l) + '</option>';
+  }).join('') + '</select>';
+}
+function inputHtml(id, value, placeholder) {
+  return '<input id="' + id + '" value="' + esc(value) + '" placeholder="' + esc(placeholder || '') + '" onchange="onDraftChange(\'' + id + '\',this.value)">';
+}
+
+function openCreate() {
+  editor = { mode: 'create', draft: {
+    id: 'flow-' + Date.now(), name: '', key: '', category: '默认', isStateMachine: true,
+    designerFormat: 'json', flowType: '钉钉风格流程图', app: '教学档案袋', module: '-',
+    status: '未发布', source: '线下', version: 1, versionActive: true, publishTime: '',
+    createTime: new Date().toISOString().slice(0, 19).replace('T', ' ')
+  }};
+  openEditorModal();
+}
+
+function openEdit(id) {
+  var r = flows.find(function(x){ return x.id === id; });
+  if (!r) return;
+  editor = { mode: 'edit', draft: JSON.parse(JSON.stringify(r)) };
+  openEditorModal();
+}
+
+function openEditorModal() {
+  var d = editor.draft;
+  document.getElementById('editTitle').textContent = (editor.mode === 'create' ? '新增' : '编辑') + '流程';
+  var html = '<div class="form-table">';
+  html += fieldRow('流程名称', inputHtml('e-name', d.name, '请输入流程名称'), true);
+  html += fieldRow('流程标识', inputHtml('e-key', d.key, '请输入流程标识'), true);
+  html += fieldRow('流程分类', selectHtml('e-category', ['默认'], d.category));
+  html += fieldRow('是否状态机', selectHtml('e-isStateMachine', ['是', '否'], d.isStateMachine ? '是' : '否'));
+  html += fieldRow('设计器数据格式', selectHtml('e-designerFormat', ['json', 'flowlong'], d.designerFormat));
+  html += fieldRow('流程图类型', selectHtml('e-flowType', flowTypeOptions, d.flowType));
+  html += fieldRow('所属应用', selectHtml('e-app', appOptions, d.app));
+  html += fieldRow('流程来源', selectHtml('e-source', ['线下', '线上'], d.source));
+  html += '</div>';
+  document.getElementById('editBody').innerHTML = html;
+  document.getElementById('editModal').classList.add('is-open');
+}
+
+function onDraftChange(id, value) {
+  var d = editor.draft;
+  if (!d) return;
+  var map = { 'e-name': 'name', 'e-key': 'key', 'e-category': 'category', 'e-designerFormat': 'designerFormat', 'e-flowType': 'flowType', 'e-app': 'app', 'e-source': 'source' };
+  if (id === 'e-isStateMachine') d.isStateMachine = value === '是';
+  else if (map[id]) d[map[id]] = value;
+}
+
+function saveDraft() {
+  var d = editor.draft;
+  if (!d.name || !d.name.trim()) { notify('流程名称不能为空'); return; }
+  if (!d.key || !d.key.trim()) { notify('流程标识不能为空'); return; }
+  if (editor.mode === 'create') flows.unshift(d);
+  else flows = flows.map(function(x){ return x.id === d.id ? d : x; });
+  closeModal('editModal');
+  notify(editor.mode === 'create' ? '流程已新增' : '流程已保存');
+  render();
+}
+
+function requestDelete(id) {
+  deleteTarget = flows.find(function(x){ return x.id === id; });
+  if (!deleteTarget) return;
+  document.getElementById('deleteBody').innerHTML = '<p class="muted">删除流程"<b>' + esc(deleteTarget.name) + '</b>"后无法恢复，请确认是否继续。</p>';
+  document.getElementById('deleteModal').classList.add('is-open');
+}
+function confirmDelete() {
+  if (deleteTarget) {
+    flows = flows.filter(function(x){ return x.id !== deleteTarget.id; });
+    notify('流程已删除');
+  }
+  deleteTarget = null;
+  closeModal('deleteModal');
+  render();
+}
+
+function requestPublish(id) {
+  var r = flows.find(function(x){ return x.id === id; });
+  if (!r) return;
+  if (r.status === '已发布') { notify('该流程已发布'); return; }
+  publishTarget = r;
+  document.getElementById('publishBody').innerHTML = '<p class="muted">发布流程"<b>' + esc(r.name) + '</b>"后，相关业务将立即生效。</p>';
+  document.getElementById('publishModal').classList.add('is-open');
+}
+function confirmPublish() {
+  if (publishTarget) {
+    publishTarget.status = '已发布';
+    publishTarget.publishTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    notify('流程已发布');
+  }
+  publishTarget = null;
+  closeModal('publishModal');
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

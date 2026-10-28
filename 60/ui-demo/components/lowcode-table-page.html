@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>表格页面</title>
+  <link rel="stylesheet" href="../packages/design-system/src/base.css" />
+  <style>
+    :root { --brand: #333fff; --bg: #eef5ff; --line: #eeeef0; --text: #000; --sub: #505266; --weak: #9697a3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--text); background: var(--bg); font-family: var(--ds-font-family); font-size: 14px; }
+    button, input { font: inherit; }
+    .shell { display: flex; width: 100vw; height: 100vh; overflow: hidden; background: var(--bg); }
+    .nav { display: flex; flex: none; flex-direction: column; align-items: center; width: 64px; color: #fff; background: url("../assets/pc-nav-bg.svg") center/100% 100% no-repeat, linear-gradient(180deg, #7454f1 0%, #524ae4 54%, #4779f0 100%); }
+    .logo { display: grid; justify-items: center; gap: 2px; width: 64px; height: 72px; padding-top: 18px; font-size: 12px; line-height: 18px; text-align: center; }
+    .logo strong { position: relative; display: inline-block; font-size: 15px; line-height: 16px; }
+    .logo strong::after { content: ""; position: absolute; right: -3px; top: -2px; width: 22px; height: 10px; border-top: 2px solid #ffe247; border-radius: 50%; transform: rotate(-16deg); }
+    .nav-action { display: grid; place-items: center; width: 64px; height: 44px; color: rgba(255,255,255,.9); text-decoration: none; }
+    .nav-action svg, .nav-item svg, .nav-footer svg { stroke: currentColor; }
+    .nav-list { display: flex; flex: 1; flex-direction: column; align-items: center; gap: 8px; width: 64px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.18); }
+    .nav-item { display: grid; justify-items: center; gap: 2px; width: 48px; min-height: 56px; padding: 6px 0; color: rgba(255,255,255,.88); border-radius: 4px; text-decoration: none; font-size: 12px; line-height: 18px; }
+    .nav-item.active { background: rgba(255,255,255,.18); color: #fff; }
+    .nav-item svg { width: 20px; height: 20px; }
+    .nav-footer { display: grid; justify-items: center; gap: 10px; width: 64px; padding: 16px 0 8px; border-top: 1px solid rgba(255,255,255,.18); }
+    .avatar { width: 32px; height: 32px; border-radius: 4px; background: #ffdcc8; border: 1px solid rgba(255,255,255,.9); }
+    .user { width: 64px; height: 28px; padding-left: 6px; background: rgba(0,0,0,.78); font-size: 12px; font-weight: 600; line-height: 28px; }
+    .main { display: flex; flex: 1; min-width: 0; padding: 0 10px 10px; }
+    .workspace { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+    .top-tabs { display: flex; flex: none; align-items: center; justify-content: space-between; height: 44px; }
+    .top-tabs-list { display: flex; align-items: stretch; min-width: 0; overflow: hidden; }
+    .top-tab { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; color: var(--sub); white-space: nowrap; }
+    .top-tab.active { color: var(--text); background: #fff; border-radius: 12px 12px 0 0; font-weight: 600; }
+    .top-tab:not(.active)::after { content: ""; position: absolute; right: 0; top: 14px; width: 1px; height: 16px; background: #dfe3ed; }
+    .tab-close { width: 14px; height: 14px; color: #b8bdca; }
+    .top-actions { display: flex; align-items: center; gap: 8px; padding-right: 6px; }
+    .icon-button, .tool-icon { display: inline-grid; place-items: center; width: 28px; height: 28px; color: #000; background: transparent; border: 0; border-radius: 4px; cursor: pointer; }
+    .icon-button svg, .tool-icon svg { width: 16px; height: 16px; stroke: currentColor; }
+    .content { display: flex; flex: 1; flex-direction: column; min-height: 0; padding: 16px; background: #fff; border-radius: 0 16px 16px 16px; overflow: hidden; }
+    .query-row { display: flex; flex: none; align-items: center; justify-content: space-between; height: 44px; margin-bottom: 4px; }
+    .query-left { display: flex; align-items: center; gap: 8px; padding-left: 66px; }
+    .query-label { color: var(--sub); }
+    .query-input { width: 184px; height: 32px; padding: 0 12px; color: var(--text); background: #fff; border: 1px solid #dcdfe6; border-radius: 4px; outline: none; }
+    .query-input::placeholder { color: #aeb4c2; }
+    .query-actions, .buttons-row, .table-tools, .row-actions { display: flex; align-items: center; gap: 8px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-width: 62px; height: 32px; padding: 0 14px; color: var(--text); background: #fff; border: 1px solid #dcdfe6; border-radius: 4px; cursor: pointer; }
+    .btn.primary { color: #fff; background: var(--brand); border-color: var(--brand); }
+    .btn.icon-only { min-width: 32px; width: 32px; padding: 0; }
+    .btn.icon-only svg { width: 16px; height: 16px; stroke: currentColor; }
+    .operation-row { display: flex; flex: none; align-items: center; justify-content: space-between; min-height: 48px; }
+    .table-box { flex: 1; min-height: 0; border: 1px solid var(--line); overflow: auto; }
+    table { width: 100%; min-width: 1420px; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+    th, td { height: 46px; padding: 0 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    th { height: 40px; color: var(--text); font-weight: 600; background: #fafafa; }
+    th + th, td + td { border-left: 1px solid rgba(238,238,240,.65); }
+    tbody tr:nth-child(even) td { background: #fcfcfd; }
+    tbody tr:hover td { background: #f5f5ff; }
+    .col-drag { width: 48px; text-align: center; } .col-check { width: 40px; text-align: center; } .col-code { width: 170px; } .col-name { width: 220px; } .col-type { width: 180px; } .col-owner { width: 180px; } .col-time { width: 180px; } .col-default { width: 150px; } .col-status { width: 170px; } .col-actions { width: 160px; }
+    .drag-handle { display: inline-grid; place-items: center; width: 20px; height: 20px; color: #000; }
+    .drag-handle::before { content: "::"; transform: rotate(90deg); font-weight: 700; letter-spacing: 1px; }
+    input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--brand); }
+    .enable-switch { position: relative; display: inline-flex; align-items: center; width: 54px; height: 22px; padding-left: 7px; color: #fff; background: var(--brand); border-radius: 999px; font-size: 12px; line-height: 20px; }
+    .enable-switch::after { content: ""; position: absolute; right: 3px; top: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; }
+    .enable-switch.off { justify-content: flex-end; padding-right: 7px; padding-left: 0; color: var(--sub); background: #e5e6eb; }
+    .enable-switch.off::after { right: auto; left: 3px; }
+    .link { padding: 0; color: var(--brand); background: transparent; border: 0; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="shell ds-scope">
+    <aside class="nav" aria-label="主导航">
+      <div class="logo"><strong>Wisedu</strong><span>系统</span></div>
+      <a class="nav-action" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M5 12h14M5 17h14" stroke-width="2" stroke-linecap="round"/></svg></a>
+      <a class="nav-action" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10.5 18a7.5 7.5 0 1 1 5.3-12.8A7.5 7.5 0 0 1 10.5 18ZM16 16l5 5" stroke-width="2" stroke-linecap="round"/></svg></a>
+      <div class="nav-list">
+        <a class="nav-item active" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4V5Z" stroke-width="2"/><path d="M8 9h8M8 13h5" stroke-width="2" stroke-linecap="round"/></svg><span>教务</span></a>
+        <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="m4 9 8-4 8 4-8 4-8-4Z" fill="currentColor"/></svg><span>研究生</span></a>
+        <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4 21 20H3L12 4Z" stroke-width="2.4"/></svg><span>本研</span></a>
+      </div>
+      <div class="nav-footer"><div class="avatar"></div></div><div class="user">管理员</div>
+    </aside>
+    <section class="main">
+      <div class="workspace">
+        <nav class="top-tabs">
+          <div class="top-tabs-list">
+            <div class="top-tab">基础信息<svg class="tab-close" viewBox="0 0 16 16" fill="none"><path d="M4.5 4.5 11.5 11.5M11.5 4.5 4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="top-tab active">表格页面<svg class="tab-close" viewBox="0 0 16 16" fill="none"><path d="M4.5 4.5 11.5 11.5M11.5 4.5 4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="top-tab">审核设置<svg class="tab-close" viewBox="0 0 16 16" fill="none"><path d="M4.5 4.5 11.5 11.5M11.5 4.5 4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="top-tab">操作日志<svg class="tab-close" viewBox="0 0 16 16" fill="none"><path d="M4.5 4.5 11.5 11.5M11.5 4.5 4.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="top-actions"><button class="icon-button"><svg viewBox="0 0 16 16" fill="none"><path d="M13 7a5 5 0 1 0-1.46 3.54M13 3v4H9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="icon-button"><svg viewBox="0 0 16 16" fill="none"><path d="M6 3H3v3M10 3h3v3M6 13H3v-3M10 13h3v-3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </nav>
+        <main class="content">
+          <section class="query-row">
+            <div class="query-left"><span class="query-label">关键字</span><input class="query-input" placeholder="编号/名称" /></div>
+            <div class="query-actions"><button class="btn icon-only"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M5 8h6M7 12h2" stroke-width="1.7" stroke-linecap="round"/><path d="M12 10v4M10 12h4" stroke-width="1.5" stroke-linecap="round"/></svg></button><button class="btn">重置</button><button class="btn primary">查询</button></div>
+          </section>
+          <section class="operation-row">
+            <div class="buttons-row"><button class="btn">新增</button><button class="btn">删除</button><button class="btn">导入</button><button class="btn">导出</button></div>
+            <div class="table-tools"><button class="tool-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M6 3H3v3M10 3h3v3M6 13H3v-3M10 13h3v-3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="tool-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h4v8H3V4ZM9 4h4v8H9V4Z" stroke-width="1.5"/></svg></button></div>
+          </section>
+          <section class="table-box">
+            <table>
+              <thead><tr><th class="col-drag"></th><th class="col-check"><input type="checkbox" /></th><th class="col-code">业务编号</th><th class="col-name">业务名称</th><th class="col-type">业务类型</th><th class="col-owner">负责部门</th><th class="col-time">最近更新</th><th class="col-default">是否默认</th><th class="col-status">启用状态</th><th class="col-actions">操作</th></tr></thead>
+              <tbody>
+                <tr><td class="col-drag"><span class="drag-handle"></span></td><td><input type="checkbox" /></td><td>YW-2026-001</td><td>基础数据维护</td><td>基础配置</td><td>教务处</td><td>2026-05-07</td><td>是</td><td><span class="enable-switch">启用</span></td><td><span class="row-actions"><button class="link">编辑</button><button class="link">详情</button><button class="link">删除</button></span></td></tr>
+                <tr><td class="col-drag"><span class="drag-handle"></span></td><td><input type="checkbox" /></td><td>YW-2026-002</td><td>条款规则配置</td><td>协议管理</td><td>研究生院</td><td>2026-05-04</td><td>否</td><td><span class="enable-switch">启用</span></td><td><span class="row-actions"><button class="link">编辑</button><button class="link">详情</button><button class="link">删除</button></span></td></tr>
+                <tr><td class="col-drag"><span class="drag-handle"></span></td><td><input type="checkbox" /></td><td>YW-2026-003</td><td>审核流程配置</td><td>流程设置</td><td>教务处</td><td>2026-04-28</td><td>否</td><td><span class="enable-switch off">停用</span></td><td><span class="row-actions"><button class="link">编辑</button><button class="link">详情</button><button class="link">删除</button></span></td></tr>
+                <tr><td class="col-drag"><span class="drag-handle"></span></td><td><input type="checkbox" /></td><td>YW-2026-004</td><td>数据导入模板</td><td>导入配置</td><td>信息中心</td><td>2026-04-22</td><td>否</td><td><span class="enable-switch">启用</span></td><td><span class="row-actions"><button class="link">编辑</button><button class="link">详情</button><button class="link">删除</button></span></td></tr>
+                <tr><td class="col-drag"><span class="drag-handle"></span></td><td><input type="checkbox" /></td><td>YW-2026-005</td><td>消息通知设置</td><td>系统配置</td><td>信息中心</td><td>2026-04-16</td><td>否</td><td><span class="enable-switch">启用</span></td><td><span class="row-actions"><button class="link">编辑</button><button class="link">详情</button><button class="link">删除</button></span></td></tr>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

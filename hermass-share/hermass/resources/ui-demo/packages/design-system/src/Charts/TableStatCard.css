@@ -1,0 +1,86 @@
+/* TableStatCard 表格统计卡片样式 */
+
+.table-stat-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e6ebf2;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+  padding: 24px 28px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.table-stat-card__header {
+  margin-bottom: 20px;
+}
+
+.table-stat-card__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 30px;
+}
+
+.table-stat-card__table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-stat-card__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.table-stat-card__th {
+  background: #f3f7ff;
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: left;
+  padding: 12px 16px;
+  height: 48px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+/* 表头圆角（首尾） */
+.table-stat-card__th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.table-stat-card__th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.table-stat-card__tr {
+  transition: background-color 0.15s ease;
+}
+
+.table-stat-card__tr:hover {
+  background: #f8fbff;
+}
+
+.table-stat-card__td {
+  padding: 14px 16px;
+  height: 48px;
+  color: #1f2937;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.table-stat-card__tr:last-child .table-stat-card__td {
+  border-bottom: none;
+}
+
+/* 状态标签 - 浅色胶囊 */
+.table-stat-card__status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
